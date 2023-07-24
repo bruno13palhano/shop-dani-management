@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.shopdanimanagement'
+    namespace 'com.bruno13palhano.shopdanimanagement'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.shopdanimanagement"
+        applicationId "com.bruno13palhano.shopdanimanagement"
         minSdk 24
         targetSdk 34
         versionCode 1
