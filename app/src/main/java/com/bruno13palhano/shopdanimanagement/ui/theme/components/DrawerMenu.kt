@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.theme.navigation
+package com.bruno13palhano.shopdanimanagement.ui.theme.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -35,10 +35,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.theme.navigation.MainDestinations
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -72,7 +74,7 @@ fun DrawerMenu(
                             modifier = Modifier
                                 .padding(vertical = 16.dp)
                                 .fillMaxWidth(),
-                            text = "ShopDani Management",
+                            text = stringResource(id = R.string.app_name),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.titleLarge
                         )
@@ -87,7 +89,9 @@ fun DrawerMenu(
                             label = {
                                 Text(text = stringResource(id = screen.resourceId))
                             },
-                            selected = screen.route == selectedItem.route,
+                            selected = currentDestination?.hierarchy?.any { destination ->
+                                destination.route == screen.route
+                            } == true,
                             onClick = {
                                 selectedItem = screen
                                 navController.navigate(screen.route) {
@@ -113,13 +117,12 @@ fun DrawerMenu(
 
 @Composable
 @Preview(showBackground = true)
-fun P() {
+private fun DrawerPreview() {
     DrawerMenu(
         navController = rememberNavController(),
         drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
-    ) {
-
-    }
+        content = {}
+    )
 }
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
