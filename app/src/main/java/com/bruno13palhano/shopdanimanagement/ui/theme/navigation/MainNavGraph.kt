@@ -15,7 +15,8 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.screens.StockScreen
 fun MainNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: String = MainDestinations.HOME_ROUTE
+    startDestination: String = MainDestinations.HOME_ROUTE,
+    onMenuClick: () -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -23,19 +24,28 @@ fun MainNavGraph(
         modifier = modifier
     ) {
         composable(route = MainDestinations.HOME_ROUTE) {
-            HomeScreen()
+            HomeScreen(
+                onMenuClick = onMenuClick
+            )
         }
-        composable(route = MainDestinations.STOCK_ROUTE) {
-            StockScreen()
-        }
+        stockNavGraph(
+            navController = navController,
+            onMenuClick = onMenuClick
+        )
         composable(route = MainDestinations.SHOPPING_ROUTE) {
-            ShoppingScreen()
+            ShoppingScreen(
+                onMenuClick = onMenuClick
+            )
         }
         composable(route = MainDestinations.SALES_ROUTE) {
-            SalesScreen()
+            SalesScreen(
+                onMenuClick = onMenuClick
+            )
         }
         composable(route = MainDestinations.REQUESTS_ROUTE) {
-            RequestsScreen()
+            RequestsScreen(
+                onMenuClick = onMenuClick
+            )
         }
     }
 }
