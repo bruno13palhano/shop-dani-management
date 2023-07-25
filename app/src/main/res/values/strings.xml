@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ShopDaniManagement</string>
+    <string name="stock_label">Stock</string>
+    <string name="shopping_label">Shopping</string>
+    <string name="sales_label">Sales</string>
+    <string name="requests_label">Requests</string>
 </resources>
