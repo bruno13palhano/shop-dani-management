@@ -4,4 +4,21 @@
     <string name="shopping_label">Shopping</string>
     <string name="sales_label">Sales</string>
     <string name="requests_label">Requests</string>
+    <string name="stock_list_label">Stock List</string>
+    <string name="drawer_menu_label">Drawer Menu</string>
+    <string name="add_label">Add</string>
+    <string name="up_button_label">Up button</string>
+    <string name="product_image_label">Product image</string>
+    <string name="category_image_label">Category image</string>
+    <string name="categories_label">Categories</string>
+    <string name="perfumes_label">Perfumes</string>
+    <string name="soaps_label">Soaps</string>
+    <string name="antiperspirant_deodorants_label">Antiperspirant deodorants</string>
+    <string name="deodorants_cologne_label">Deodorants cologne</string>
+    <string name="moisturizers_label">Moisturizes</string>
+    <string name="sunscreens_label">Sunscreens</string>
+    <string name="makeup_label">Makeup</string>
+    <string name="face_label">Face</string>
+    <string name="skin_label">Skin</string>
+    <string name="hair_label">Hair</string>
 </resources>
