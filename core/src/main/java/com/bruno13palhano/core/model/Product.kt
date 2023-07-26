@@ -7,6 +7,7 @@ package com.bruno13palhano.core.model
 * @property id product's id.
 * @property name product's name.
 * @property description product's description.
+* @property categories a list of categories related with this product.
 * @property company the company that produces the product.
 * @property purchasePrice product purchase price.
 * @property salePrice product sale price.
@@ -17,6 +18,7 @@ data class Product(
     val id: Long,
     val name: String,
     val description: String,
+    val categories: List<Category>,
     val company: String,
     val purchasePrice: Float,
     val salePrice: Float,

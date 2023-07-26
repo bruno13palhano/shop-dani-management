@@ -34,7 +34,7 @@ fun StockCategoriesScreen(
     navigateBack: () -> Unit,
 ) {
     val categories = listOf(
-        StockCategory.Gits,
+        StockCategory.Gifts,
         StockCategory.Infant,
         StockCategory.Perfumes,
         StockCategory.Soaps,
@@ -100,7 +100,7 @@ private fun StockCategoriesListPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             val categories = listOf(
-                StockCategory.Gits,
+                StockCategory.Gifts,
                 StockCategory.Infant,
                 StockCategory.Perfumes,
                 StockCategory.Soaps,
@@ -124,7 +124,7 @@ private fun StockCategoriesListPreview() {
 }
 
 sealed class StockCategory(val categoryId: String, @StringRes val category: Int, val icon: ImageVector) {
-    object Gits: StockCategory(CategoryId.GIFTS_ID, R.string.gifts_label, Icons.Filled.Image)
+    object Gifts: StockCategory(CategoryId.GIFTS_ID, R.string.gifts_label, Icons.Filled.Image)
     object Infant: StockCategory(CategoryId.INFANT_ID, R.string.infant_label, Icons.Filled.Image)
     object Perfumes: StockCategory(CategoryId.PERFUMES_ID, R.string.perfumes_label, Icons.Filled.Image)
     object Soaps: StockCategory(CategoryId.SOAPS_ID, R.string.soaps_label, Icons.Filled.Image)

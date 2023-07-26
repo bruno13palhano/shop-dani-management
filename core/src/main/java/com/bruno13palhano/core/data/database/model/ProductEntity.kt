@@ -3,6 +3,7 @@ package com.bruno13palhano.core.data.database.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 
 /**
@@ -12,6 +13,7 @@ import com.bruno13palhano.core.model.Product
  * @property id product's id.
  * @property name product's name.
  * @property description product's description.
+ * @property categories a list of categories related with this product.
  * @property company the company that produces the product.
  * @property purchasePrice product purchase price.
  * @property salePrice product sale price.
@@ -30,6 +32,9 @@ internal data class ProductEntity(
 
     @ColumnInfo(name = "description")
     val description: String,
+
+    @ColumnInfo(name = "categories")
+    val categories: List<Category>,
 
     @ColumnInfo(name = "company")
     val company: String,
@@ -55,6 +60,7 @@ internal fun ProductEntity.asExternalModel() = Product(
     id = id,
     name = name,
     description = description,
+    categories = categories,
     company = company,
     purchasePrice = purchasePrice,
     salePrice = salePrice,
@@ -70,6 +76,7 @@ internal fun Product.asInternalModel() = ProductEntity(
     id = id,
     name = name,
     description = description,
+    categories = categories,
     company = company,
     purchasePrice = purchasePrice,
     salePrice = salePrice,

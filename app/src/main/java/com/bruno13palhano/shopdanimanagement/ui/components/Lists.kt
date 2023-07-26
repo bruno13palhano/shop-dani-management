@@ -31,7 +31,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 fun ProductItem(
     name: String,
     price: String,
-    description: String,
+    quantity: Int,
     isSold: Boolean,
     onClick: () -> Unit
 ) {
@@ -84,10 +84,71 @@ fun ProductItem(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp),
-                    text = description,
+                    text = quantity.toString(),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProductItem2(
+    modifier: Modifier,
+    name: String,
+    price: String,
+    quantity: Int,
+    isSold: Boolean,
+    onClick: () -> Unit
+) {
+    ElevatedCard(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                modifier = Modifier
+                    .size(128.dp),
+                imageVector = Icons.Filled.Image,
+                contentDescription = stringResource(id = R.string.product_image_label),
+            )
+            if (isSold) {
+                Text(
+                    modifier = Modifier
+                        .rotate(-45F),
+                    text = "Product Sold",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp),
+                text = name,
+                style = MaterialTheme.typography.titleLarge
+            )
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp),
+                text = price,
+                style = MaterialTheme.typography.bodyLarge,
+                fontStyle = FontStyle.Italic
+            )
+            Text(
+                modifier = Modifier
+                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+                text = quantity.toString(),
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }
@@ -135,7 +196,28 @@ private fun ProductItemPreview() {
             ProductItem(
                 name = "Essencial",
                 price = "178.99R$",
-                description = "Perfume",
+                quantity = 10,
+                isSold = true,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ProductItemPreview2() {
+    ShopDaniManagementTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            ProductItem2(
+                modifier = Modifier
+                    .fillMaxSize(),
+                name = "Essencial",
+                price = "178.99R$",
+                quantity = 10,
                 isSold = true,
                 onClick = {}
             )
