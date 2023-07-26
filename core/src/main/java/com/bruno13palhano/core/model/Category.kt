@@ -11,6 +11,7 @@ enum class Category(val category: String) {
     PERFUMES("perfumes"),
     SOAPS("soaps"),
     ANTIPERSPIRANT_DEODORANTS("antiperspirant_deodorants"),
+    DEODORANTS_COLOGNE("deodorants_cologne"),
     MOISTURIZERS("moisturizers"),
     SUNSCREENS("sunscreens"),
     MAKEUP("makeup"),
