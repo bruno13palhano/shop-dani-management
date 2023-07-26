@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.StockScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.ProductListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockCategoriesScreen
 
 private const val CATEGORY_ID = "categoryId"
@@ -38,7 +38,7 @@ fun NavGraphBuilder.stockNavGraph(
         }
         composable(route = StockDestinations.STOCK_PRODUCT_LIST_WITH_ID_ROUTE) { backStackEntry ->
             backStackEntry.arguments?.getString(CATEGORY_ID)?.let { categoryId ->
-                ProductListScreen(
+                StockListScreen(
                     categoryId = categoryId,
                     onAddButtonClick = {
 
