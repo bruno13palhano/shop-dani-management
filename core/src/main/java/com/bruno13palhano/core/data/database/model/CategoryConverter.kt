@@ -21,8 +21,8 @@ class CategoryConverter {
     fun categoryToStoredString(categories: List<Category>): String {
         var value = ""
 
-        for (lineType in categories)
-            value += lineType.name + ","
+        for (category in categories)
+            value += category.name + ","
 
         return value
     }
