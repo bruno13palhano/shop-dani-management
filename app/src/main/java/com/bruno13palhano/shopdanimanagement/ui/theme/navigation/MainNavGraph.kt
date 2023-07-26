@@ -9,7 +9,6 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.screens.HomeScreen
 import com.bruno13palhano.shopdanimanagement.ui.theme.screens.RequestsScreen
 import com.bruno13palhano.shopdanimanagement.ui.theme.screens.SalesScreen
 import com.bruno13palhano.shopdanimanagement.ui.theme.screens.ShoppingScreen
-import com.bruno13palhano.shopdanimanagement.ui.theme.screens.StockScreen
 
 @Composable
 fun MainNavGraph(
