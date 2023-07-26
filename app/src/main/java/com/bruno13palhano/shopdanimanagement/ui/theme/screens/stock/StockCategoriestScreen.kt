@@ -29,7 +29,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.bruno13palhano.shopdanimanagement.ui.theme.components.StockItem
 
 @Composable
-fun StockListScreen(
+fun StockCategoriesScreen(
     navigateBack: () -> Unit,
 ) {
     val categories = listOf(
@@ -45,7 +45,7 @@ fun StockListScreen(
         StockCategory.Moisturizers
     )
 
-    StockListContent(
+    StockCategoriesContent(
         navigateBack = navigateBack,
         categories = categories
     )
@@ -53,7 +53,7 @@ fun StockListScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun StockListContent(
+private fun StockCategoriesContent(
     categories: List<StockCategory>,
     navigateBack: () -> Unit
 ) {
@@ -88,7 +88,7 @@ private fun StockListContent(
 @Preview(showBackground = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
-private fun StockListPreview() {
+private fun StockCategoriesListPreview() {
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -107,7 +107,7 @@ private fun StockListPreview() {
                 StockCategory.Moisturizers
             )
 
-            StockListContent(
+            StockCategoriesContent(
                 navigateBack = {},
                 categories = categories
             )

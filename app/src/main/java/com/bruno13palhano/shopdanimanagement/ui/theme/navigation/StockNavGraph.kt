@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.theme.screens.StockScreen
-import com.bruno13palhano.shopdanimanagement.ui.theme.screens.stock.StockListScreen
+import com.bruno13palhano.shopdanimanagement.ui.theme.screens.stock.StockCategoriesScreen
 
 fun NavGraphBuilder.stockNavGraph(
     navController: NavController,
@@ -23,8 +23,8 @@ fun NavGraphBuilder.stockNavGraph(
                 onMenuClick = onMenuClick
             )
         }
-        composable(route = StockDestinations.STOCK_LIST_ROUTE) {
-            StockListScreen(
+        composable(route = StockDestinations.STOCK_CATEGORIES_ROUTE) {
+            StockCategoriesScreen(
                 navigateBack = {
                     navController.navigateUp()
                 },
@@ -35,5 +35,5 @@ fun NavGraphBuilder.stockNavGraph(
 
 object StockDestinations {
     const val MAIN_STOCK_ROUTE = "main_stock_route"
-    const val STOCK_LIST_ROUTE = "stock_list_route"
+    const val STOCK_CATEGORIES_ROUTE = "stock_categories_route"
 }

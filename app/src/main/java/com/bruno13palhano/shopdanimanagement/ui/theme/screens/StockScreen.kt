@@ -69,7 +69,7 @@ fun StockContent(
                     .fillMaxWidth()
                     .fillMaxHeight(0.5F)
                     .padding(16.dp),
-                onClick = { onClick(StockDestinations.STOCK_LIST_ROUTE) }
+                onClick = { onClick(StockDestinations.STOCK_CATEGORIES_ROUTE) }
             ) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
