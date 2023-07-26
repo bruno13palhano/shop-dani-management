@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.theme.components
+package com.bruno13palhano.shopdanimanagement.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -40,7 +40,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.theme.navigation.MainDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.MainDestinations
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)

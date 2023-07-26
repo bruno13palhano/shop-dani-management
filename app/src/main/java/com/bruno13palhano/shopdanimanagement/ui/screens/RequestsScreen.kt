@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.theme.screens
+package com.bruno13palhano.shopdanimanagement.ui.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column

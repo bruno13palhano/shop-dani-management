@@ -1,12 +1,12 @@
-package com.bruno13palhano.shopdanimanagement.ui.theme.navigation
+package com.bruno13palhano.shopdanimanagement.ui.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.ui.theme.screens.StockScreen
-import com.bruno13palhano.shopdanimanagement.ui.theme.screens.stock.ProductListScreen
-import com.bruno13palhano.shopdanimanagement.ui.theme.screens.stock.StockCategoriesScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.StockScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.ProductListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockCategoriesScreen
 
 private const val CATEGORY_ID = "categoryId"
 

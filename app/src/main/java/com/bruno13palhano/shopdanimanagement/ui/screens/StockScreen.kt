@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.theme.screens
+package com.bruno13palhano.shopdanimanagement.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
-import com.bruno13palhano.shopdanimanagement.ui.theme.navigation.StockDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.StockDestinations
 
 @Composable
 fun StockScreen(

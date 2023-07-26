@@ -1,14 +1,14 @@
-package com.bruno13palhano.shopdanimanagement.ui.theme.navigation
+package com.bruno13palhano.shopdanimanagement.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.bruno13palhano.shopdanimanagement.ui.theme.screens.HomeScreen
-import com.bruno13palhano.shopdanimanagement.ui.theme.screens.RequestsScreen
-import com.bruno13palhano.shopdanimanagement.ui.theme.screens.SalesScreen
-import com.bruno13palhano.shopdanimanagement.ui.theme.screens.ShoppingScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.HomeScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.RequestsScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.SalesScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.ShoppingScreen
 
 @Composable
 fun MainNavGraph(

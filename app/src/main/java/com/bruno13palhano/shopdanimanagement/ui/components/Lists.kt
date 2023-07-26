@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.theme.components
+package com.bruno13palhano.shopdanimanagement.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
