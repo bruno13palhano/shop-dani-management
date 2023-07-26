@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.theme.screens.stock
+package com.bruno13palhano.shopdanimanagement.ui.screens.stock
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.StringRes
@@ -24,9 +24,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
-import com.bruno13palhano.shopdanimanagement.ui.theme.components.StockItem
+import com.bruno13palhano.shopdanimanagement.ui.components.StockItem
 
 @Composable
 fun StockCategoriesScreen(
@@ -83,7 +84,7 @@ private fun StockCategoriesContent(
         ) {
             items(categories) { stockCategory ->
                 StockItem(category = stringResource(id = stockCategory.category)) {
-                    onItemClick(stockCategory.categoryId)
+                    onItemClick(stockCategory.categoryId.category)
                 }
             }
         }
@@ -123,32 +124,17 @@ private fun StockCategoriesListPreview() {
     }
 }
 
-sealed class StockCategory(val categoryId: String, @StringRes val category: Int, val icon: ImageVector) {
-    object Gifts: StockCategory(CategoryId.GIFTS_ID, R.string.gifts_label, Icons.Filled.Image)
-    object Infant: StockCategory(CategoryId.INFANT_ID, R.string.infant_label, Icons.Filled.Image)
-    object Perfumes: StockCategory(CategoryId.PERFUMES_ID, R.string.perfumes_label, Icons.Filled.Image)
-    object Soaps: StockCategory(CategoryId.SOAPS_ID, R.string.soaps_label, Icons.Filled.Image)
-    object AntiperspirantDeodorants: StockCategory(CategoryId.ANTIPERSPIRANT_DEODORANTS_ID, R.string.antiperspirant_deodorants_label, Icons.Filled.Image)
-    object DeodorantsCologne: StockCategory(CategoryId.DEODORANTS_COLOGNE_ID, R.string.deodorants_cologne_label, Icons.Filled.Image)
-    object Moisturizers: StockCategory(CategoryId.MOISTURIZERS_ID, R.string.moisturizers_label, Icons.Filled.Image)
-    object Sunscreens: StockCategory(CategoryId.SUNSCREENS_ID, R.string.sunscreens_label, Icons.Filled.Image)
-    object Makeup: StockCategory(CategoryId.MAKEUP_ID, R.string.makeup_label, Icons.Filled.Image)
-    object Face: StockCategory(CategoryId.FACE_ID, R.string.face_label, Icons.Filled.Image)
-    object Skin: StockCategory(CategoryId.SKIN_ID, R.string.skin_label, Icons.Filled.Image)
-    object Hair: StockCategory(CategoryId.HAIR_ID, R.string.hair_label, Icons.Filled.Image)
-}
-
-object CategoryId {
-    const val GIFTS_ID = "gifts_products"
-    const val INFANT_ID = "infant_products"
-    const val PERFUMES_ID = "perfumes_products"
-    const val SOAPS_ID = "soaps_products"
-    const val ANTIPERSPIRANT_DEODORANTS_ID = "antiperspirant_deodorants_products"
-    const val DEODORANTS_COLOGNE_ID = "deodorants_cologne_products"
-    const val MOISTURIZERS_ID = "moisturizers_products"
-    const val SUNSCREENS_ID = "sunscreens_products"
-    const val MAKEUP_ID = "makeup_products"
-    const val FACE_ID = "face_products"
-    const val SKIN_ID = "skin_products"
-    const val HAIR_ID = "hair_products"
+sealed class StockCategory(val categoryId: Category, @StringRes val category: Int, val icon: ImageVector) {
+    object Gifts: StockCategory(Category.GIFTS, R.string.gifts_label, Icons.Filled.Image)
+    object Infant: StockCategory(Category.INFANT, R.string.infant_label, Icons.Filled.Image)
+    object Perfumes: StockCategory(Category.PERFUMES, R.string.perfumes_label, Icons.Filled.Image)
+    object Soaps: StockCategory(Category.SOAPS, R.string.soaps_label, Icons.Filled.Image)
+    object AntiperspirantDeodorants: StockCategory(Category.ANTIPERSPIRANT_DEODORANTS, R.string.antiperspirant_deodorants_label, Icons.Filled.Image)
+    object DeodorantsCologne: StockCategory(Category.DEODORANTS_COLOGNE, R.string.deodorants_cologne_label, Icons.Filled.Image)
+    object Moisturizers: StockCategory(Category.MOISTURIZERS, R.string.moisturizers_label, Icons.Filled.Image)
+    object Sunscreens: StockCategory(Category.SUNSCREENS, R.string.sunscreens_label, Icons.Filled.Image)
+    object Makeup: StockCategory(Category.MAKEUP, R.string.makeup_label, Icons.Filled.Image)
+    object Face: StockCategory(Category.FACE, R.string.face_label, Icons.Filled.Image)
+    object Skin: StockCategory(Category.SKIN, R.string.skin_label, Icons.Filled.Image)
+    object Hair: StockCategory(Category.HAIR, R.string.hair_label, Icons.Filled.Image)
 }
