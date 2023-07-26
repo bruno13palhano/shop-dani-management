@@ -4,7 +4,7 @@
     <string name="shopping_label">Shopping</string>
     <string name="sales_label">Sales</string>
     <string name="requests_label">Requests</string>
-    <string name="stock_list_label">Stock List</string>
+    <string name="stock_categories_label">Stock Categories</string>
     <string name="drawer_menu_label">Drawer Menu</string>
     <string name="add_label">Add</string>
     <string name="up_button_label">Up button</string>
