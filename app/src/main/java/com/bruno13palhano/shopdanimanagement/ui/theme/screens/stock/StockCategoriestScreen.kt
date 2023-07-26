@@ -30,7 +30,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.components.StockItem
 
 @Composable
 fun StockCategoriesScreen(
-    onItemClick: (route: String) -> Unit,
+    onItemClick: (categoryId: String) -> Unit,
     navigateBack: () -> Unit,
 ) {
     val categories = listOf(
@@ -59,7 +59,7 @@ fun StockCategoriesScreen(
 @Composable
 private fun StockCategoriesContent(
     categories: List<StockCategory>,
-    onItemClick: (route: String) -> Unit,
+    onItemClick: (categoryId: String) -> Unit,
     navigateBack: () -> Unit
 ) {
     Scaffold(
