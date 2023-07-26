@@ -11,6 +11,8 @@
     <string name="product_image_label">Product image</string>
     <string name="category_image_label">Category image</string>
     <string name="categories_label">Categories</string>
+    <string name="gifts_label">Gifts</string>
+    <string name="infant_label">Infant</string>
     <string name="perfumes_label">Perfumes</string>
     <string name="soaps_label">Soaps</string>
     <string name="antiperspirant_deodorants_label">Antiperspirant deodorants</string>
@@ -21,4 +23,5 @@
     <string name="face_label">Face</string>
     <string name="skin_label">Skin</string>
     <string name="hair_label">Hair</string>
+    <string name="stock_product_list">Products</string>
 </resources>
