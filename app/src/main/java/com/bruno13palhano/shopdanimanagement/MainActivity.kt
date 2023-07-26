@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
-import com.bruno13palhano.shopdanimanagement.ui.theme.components.DrawerMenu
-import com.bruno13palhano.shopdanimanagement.ui.theme.navigation.MainNavGraph
+import com.bruno13palhano.shopdanimanagement.ui.components.DrawerMenu
+import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
