@@ -18,7 +18,7 @@ data class Product(
     val id: Long,
     val name: String,
     val description: String,
-    val categories: List<Category>,
+    val categories: List<String>,
     val company: String,
     val purchasePrice: Float,
     val salePrice: Float,

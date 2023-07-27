@@ -3,11 +3,10 @@ package com.bruno13palhano.core.data.database.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 
 /**
- * Product as an Entity.
+ * [Product] as an Entity.
  *
  * An entity class to persist products in database.
  * @property id product's id.
@@ -34,7 +33,7 @@ internal data class ProductEntity(
     val description: String,
 
     @ColumnInfo(name = "categories")
-    val categories: List<Category>,
+    val categories: List<String>,
 
     @ColumnInfo(name = "company")
     val company: String,
