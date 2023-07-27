@@ -22,6 +22,7 @@ internal interface ProductDao : DataOperations<ProductEntity> {
     /**
      * Inserts a [ProductEntity] into the database.
      * @param model the new [ProductEntity].
+     * @return the id of the new [ProductEntity].
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     override suspend fun insert(model: ProductEntity): Long
@@ -35,7 +36,7 @@ internal interface ProductDao : DataOperations<ProductEntity> {
 
     /**
      * Deletes the [ProductEntity] in the database.
-     * @param model the [ProductEntity] to be updated.
+     * @param model the [ProductEntity] to be deleted.
      */
     @Delete
     override suspend fun delete(model: ProductEntity)
