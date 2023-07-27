@@ -7,6 +7,7 @@
     <string name="stock_categories_label">Stock Categories</string>
     <string name="drawer_menu_label">Drawer Menu</string>
     <string name="add_label">Add</string>
+    <string name="done_label">Done</string>
     <string name="up_button_label">Up button</string>
     <string name="product_image_label">Product image</string>
     <string name="category_image_label">Category image</string>
@@ -24,4 +25,5 @@
     <string name="skin_label">Skin</string>
     <string name="hair_label">Hair</string>
     <string name="stock_product_list">Products</string>
+    <string name="new_product_label">New Product</string>
 </resources>
