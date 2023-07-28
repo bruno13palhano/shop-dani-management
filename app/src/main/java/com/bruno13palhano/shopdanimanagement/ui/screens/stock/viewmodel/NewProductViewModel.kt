@@ -6,16 +6,21 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
+import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NewProductViewModel @Inject constructor(
-    @DefaultProductRepository private val productRepository: DataOperations<Product>
+    @DefaultProductRepository private val productRepository: DataOperations<Product>,
+    @DefaultCategoryRepository private val categoryRepository: DataOperations<Category>
 ): ViewModel() {
     var name by mutableStateOf("")
         private set
@@ -35,6 +40,13 @@ class NewProductViewModel @Inject constructor(
         private set
     var categories by mutableStateOf(listOf(""))
         private set
+
+    val allCategories = categoryRepository.getAll()
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
 
     fun updateName(name: String) {
         this.name = name
@@ -64,8 +76,8 @@ class NewProductViewModel @Inject constructor(
         this.salePrice = salePrice
     }
 
-    fun updateCategories(categories: List<String>) {
-        this.categories = categories
+    fun updateIsPaid(isPaid: Boolean) {
+        this.isPaid = isPaid
     }
 
     fun insertProduct() {
