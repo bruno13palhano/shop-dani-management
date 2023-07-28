@@ -3,6 +3,7 @@ package com.bruno13palhano.core.data.di
 import android.content.Context
 import androidx.room.Room
 import com.bruno13palhano.core.data.database.AppDatabase
+import com.bruno13palhano.core.data.database.CategoryConverter
 import com.bruno13palhano.core.data.database.dao.CategoryDao
 import com.bruno13palhano.core.data.database.dao.ProductDao
 import dagger.Module
@@ -34,6 +35,7 @@ internal object DatabaseModule {
             AppDatabase::class.java,
             "shop_dani_management_database"
         )
+            .addTypeConverter(CategoryConverter())
             .fallbackToDestructiveMigration()
             .build()
     }
