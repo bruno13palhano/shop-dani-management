@@ -1,7 +1,9 @@
 package com.bruno13palhano.core.data.di
 
 import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.repository.CategoryRepository
 import com.bruno13palhano.core.data.repository.ProductRepository
+import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import dagger.Binds
 import dagger.Module
@@ -18,6 +20,9 @@ import javax.inject.Singleton
 @Qualifier
 annotation class DefaultProductRepository
 
+@Qualifier
+annotation class DefaultCategoryRepository
+
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class RepositoryModule {
@@ -26,4 +31,9 @@ internal abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindProductRepository(repository: ProductRepository): DataOperations<Product>
+
+    @DefaultCategoryRepository
+    @Singleton
+    @Binds
+    abstract fun bindCategoryRepository(repository: CategoryRepository): DataOperations<Category>
 }
