@@ -20,6 +20,11 @@ import javax.inject.Singleton
 @Qualifier
 annotation class DefaultProductRepository
 
+/**
+ * Annotation to inject [CategoryRepository]
+ *
+ * Injects the default [CategoryRepository] implementation.
+ */
 @Qualifier
 annotation class DefaultCategoryRepository
 
