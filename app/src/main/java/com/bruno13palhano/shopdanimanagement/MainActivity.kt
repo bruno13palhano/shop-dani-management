@@ -17,8 +17,10 @@ import androidx.navigation.compose.rememberNavController
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.bruno13palhano.shopdanimanagement.ui.components.DrawerMenu
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
