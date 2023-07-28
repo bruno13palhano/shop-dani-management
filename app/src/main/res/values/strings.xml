@@ -26,4 +26,16 @@
     <string name="hair_label">Hair</string>
     <string name="stock_product_list">Products</string>
     <string name="new_product_label">New Product</string>
+    <string name="name_label">Name</string>
+    <string name="description_label">Description</string>
+    <string name="company_label">Company</string>
+    <string name="purchase_price_label">Purchase price</string>
+    <string name="sale_price_label">sale price</string>
+    <string name="is_paid_label">Is product paid</string>
+    <string name="enter_name_label">Enter name</string>
+    <string name="enter_description_label">Enter description</string>
+    <string name="enter_company_label">Enter company</string>
+    <string name="enter_categories_label">Enter categories</string>
+    <string name="enter_purchase_price_label">Enter purchase price</string>
+    <string name="enter_sale_price_label">Enter sale price</string>
 </resources>
