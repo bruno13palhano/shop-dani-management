@@ -14,6 +14,8 @@ import androidx.compose.material.icons.filled.PointOfSale
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
@@ -131,4 +133,27 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
     object Shopping: Screen(MainDestinations.SHOPPING_ROUTE, Icons.Filled.ShoppingCart, R.string.shopping_label)
     object Sales: Screen(MainDestinations.SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
     object Requests: Screen(MainDestinations.REQUESTS_ROUTE, Icons.Filled.Checklist, R.string.requests_label)
+}
+
+@Composable
+fun MoreOptionsMenu(
+    items: Array<String>,
+    expanded: Boolean,
+    onDismissRequest: (expanded: Boolean) -> Unit,
+    onClick: (index: Int) -> Unit
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { onDismissRequest(false) }
+    ) {
+        items.forEachIndexed { index, item ->
+            DropdownMenuItem(
+                text = { Text(text = item) },
+                onClick = {
+                    onClick(index)
+                    onDismissRequest(false)
+                }
+            )
+        }
+    }
 }
