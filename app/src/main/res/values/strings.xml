@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">ShopDaniManagement</string>
+    <string name="home_label">Home</string>
     <string name="stock_label">Stock</string>
     <string name="shopping_label">Shopping</string>
     <string name="sales_label">Sales</string>
@@ -38,4 +39,9 @@
     <string name="enter_categories_label">Enter categories</string>
     <string name="enter_purchase_price_label">Enter purchase price</string>
     <string name="enter_sale_price_label">Enter sale price</string>
+    <string name="ok_label">OK</string>
+    <string name="cancel_label">Cancel</string>
+    <string name="new_category_label">New category</string>
+    <string name="more_options_label">More options</string>
+    <string name="edit_label">Edit</string>
 </resources>
