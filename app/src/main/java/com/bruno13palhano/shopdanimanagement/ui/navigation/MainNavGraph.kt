@@ -2,6 +2,7 @@ package com.bruno13palhano.shopdanimanagement.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,8 +23,13 @@ fun MainNavGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
+        val bottomNavActions = BottomMenuNavActions(navController)
         composable(route = MainDestinations.HOME_ROUTE) {
             HomeScreen(
+                destinationsHierarchy = it.destination.hierarchy,
+                onBottomMenuItemClick = { route ->
+                    bottomNavActions.navigateFromBottomMenu(route)
+                },
                 onMenuClick = onMenuClick
             )
         }
@@ -43,6 +49,8 @@ fun MainNavGraph(
         }
         composable(route = MainDestinations.REQUESTS_ROUTE) {
             RequestsScreen(
+                destinationsHierarchy = it.destination.hierarchy,
+                onBottomMenuItemClick = bottomNavActions.navigateFromBottomMenu,
                 onMenuClick = onMenuClick
             )
         }
