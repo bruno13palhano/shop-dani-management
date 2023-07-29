@@ -20,6 +20,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
@@ -37,7 +39,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -127,8 +131,31 @@ private fun DrawerPreview() {
     )
 }
 
+
+@Composable
+fun BottomMenu(
+    route: String,
+    onItemClick: (route: String) -> Unit,
+) {
+    val items = listOf(
+        Screen.Home,
+        Screen.Stock
+    )
+
+    NavigationBar {
+        items.forEach { screen ->
+            NavigationBarItem(
+                icon = { Icon(imageVector = screen.icon, contentDescription = null)},
+                label = { Text(text = stringResource(id = screen.resourceId)) },
+                selected = route == screen.route,
+                onClick = { onItemClick(screen.route) }
+            )
+        }
+    }
+}
+
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    object Home: Screen(MainDestinations.HOME_ROUTE, Icons.Filled.Home, R.string.app_name)
+    object Home: Screen(MainDestinations.HOME_ROUTE, Icons.Filled.Home, R.string.home_label)
     object Stock: Screen(MainDestinations.STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
     object Shopping: Screen(MainDestinations.SHOPPING_ROUTE, Icons.Filled.ShoppingCart, R.string.shopping_label)
     object Sales: Screen(MainDestinations.SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
