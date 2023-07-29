@@ -14,7 +14,7 @@ import com.bruno13palhano.core.model.Category
  */
 @Entity(tableName = "category_table")
 internal data class CategoryEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Long,
 
     @ColumnInfo(name = "name")
