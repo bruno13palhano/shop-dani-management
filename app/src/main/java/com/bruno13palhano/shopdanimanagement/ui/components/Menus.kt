@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -134,7 +135,7 @@ private fun DrawerPreview() {
 
 @Composable
 fun BottomMenu(
-    route: String,
+    destinationsHierarchy: Sequence<NavDestination>,
     onItemClick: (route: String) -> Unit,
 ) {
     val items = listOf(
@@ -147,7 +148,7 @@ fun BottomMenu(
             NavigationBarItem(
                 icon = { Icon(imageVector = screen.icon, contentDescription = null)},
                 label = { Text(text = stringResource(id = screen.resourceId)) },
-                selected = route == screen.route,
+                selected = destinationsHierarchy.any{ it.route == screen.route},
                 onClick = { onItemClick(screen.route) }
             )
         }
