@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -94,12 +96,11 @@ fun ProductItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductItem2(
+fun StockItem(
     modifier: Modifier,
     name: String,
     price: String,
     quantity: Int,
-    isSold: Boolean,
     onClick: () -> Unit
 ) {
     ElevatedCard(
@@ -116,15 +117,6 @@ fun ProductItem2(
                 imageVector = Icons.Filled.Image,
                 contentDescription = stringResource(id = R.string.product_image_label),
             )
-            if (isSold) {
-                Text(
-                    modifier = Modifier
-                        .rotate(-45F),
-                    text = "Product Sold",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
         }
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -169,17 +161,17 @@ fun StockItem(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                modifier = Modifier.size(64.dp),
-                imageVector = Icons.Filled.Image,
-                contentDescription = stringResource(id = R.string.category_image_label)
-            )
             Text(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1F, true)
                     .padding(8.dp),
                 text = category,
                 style = MaterialTheme.typography.titleMedium
+            )
+            Icon(
+                modifier = Modifier.padding(8.dp),
+                imageVector = Icons.Filled.ArrowForward,
+                contentDescription = null
             )
         }
     }
@@ -212,13 +204,12 @@ private fun ProductItemPreview2() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            ProductItem2(
+            StockItem(
                 modifier = Modifier
                     .fillMaxSize(),
                 name = "Essencial",
                 price = "178.99R$",
                 quantity = 10,
-                isSold = true,
                 onClick = {}
             )
         }
