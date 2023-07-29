@@ -27,16 +27,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.BottomMenu
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.bruno13palhano.shopdanimanagement.ui.navigation.StockDestinations
 
 @Composable
 fun StockScreen(
+    destinationHierarchy: Sequence<NavDestination>,
+    onBottomMenuItemClick: (route: String) -> Unit,
     onClick: (route:String) -> Unit,
     onMenuClick: () -> Unit
 ) {
     StockContent(
+        destinationHierarchy = destinationHierarchy,
+        onBottomMenuItemClick = onBottomMenuItemClick,
         onClick = onClick,
         onMenuClick = onMenuClick
     )
@@ -45,6 +51,8 @@ fun StockScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockContent(
+    destinationHierarchy: Sequence<NavDestination>,
+    onBottomMenuItemClick: (route: String) -> Unit,
     onClick: (route: String) -> Unit,
     onMenuClick: () -> Unit
 ) {
@@ -60,6 +68,12 @@ fun StockContent(
                         )
                     }
                 }
+            )
+        },
+        bottomBar = {
+            BottomMenu(
+                destinationsHierarchy = destinationHierarchy,
+                onItemClick = onBottomMenuItemClick
             )
         }
     ) {
@@ -101,6 +115,8 @@ private fun StockPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockContent(
+                destinationHierarchy = sequenceOf(),
+                onBottomMenuItemClick = {},
                 onClick = {},
                 onMenuClick = {}
             )

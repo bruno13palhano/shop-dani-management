@@ -18,14 +18,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavDestination
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.BottomMenu
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun HomeScreen(
+    destinationsHierarchy: Sequence<NavDestination>,
+    onBottomMenuItemClick: (route: String) -> Unit,
     onMenuClick: () -> Unit
 ) {
     HomeContent(
+        destinationsHierarchy = destinationsHierarchy,
+        onBottomMenuItemClick = onBottomMenuItemClick,
         onMenuClick = onMenuClick
     )
 }
@@ -33,6 +39,8 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
+    destinationsHierarchy: Sequence<NavDestination>,
+    onBottomMenuItemClick: (route: String) -> Unit,
     onMenuClick: () -> Unit
 ) {
     Scaffold(
@@ -47,6 +55,12 @@ fun HomeContent(
                         )
                     }
                 }
+            )
+        },
+        bottomBar = {
+            BottomMenu(
+                destinationsHierarchy = destinationsHierarchy,
+                onItemClick = onBottomMenuItemClick
             )
         }
     ) {
@@ -68,6 +82,8 @@ fun HomePreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeScreen(
+                destinationsHierarchy = sequenceOf(),
+                onBottomMenuItemClick = {},
                 onMenuClick = {}
             )
         }
