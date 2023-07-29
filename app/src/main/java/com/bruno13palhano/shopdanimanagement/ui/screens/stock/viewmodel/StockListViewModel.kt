@@ -9,6 +9,7 @@ import com.bruno13palhano.core.data.DataOperations
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.model.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,10 +24,18 @@ class StockListViewModel @Inject constructor(
         this.name = name
     }
 
-    fun insertCategory() {
-        val category = Category(0L, name)
+    fun updateCategory(id: Long) {
+        val category = Category(id, name)
         viewModelScope.launch {
-            categoryRepository.insert(category)
+            categoryRepository.update(category)
+        }
+    }
+
+    fun getCategory(id: Long) {
+        viewModelScope.launch {
+            categoryRepository.getById(id).collect {
+                name = it.name
+            }
         }
     }
 }
