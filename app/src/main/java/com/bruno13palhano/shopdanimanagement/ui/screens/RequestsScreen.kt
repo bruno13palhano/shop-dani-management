@@ -18,20 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavDestination
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.BottomMenu
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun RequestsScreen(
-    destinationsHierarchy : Sequence<NavDestination>,
-    onBottomMenuItemClick: (route: String) -> Unit,
     onMenuClick: () -> Unit
 ) {
     RequestsContent(
-        destinationsHierarchy  = destinationsHierarchy,
-        onBottomMenuItemClick = onBottomMenuItemClick,
         onMenuClick = onMenuClick
     )
 }
@@ -39,8 +33,6 @@ fun RequestsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RequestsContent(
-    destinationsHierarchy : Sequence<NavDestination>,
-    onBottomMenuItemClick: (route: String) -> Unit,
     onMenuClick: () -> Unit
 ) {
     Scaffold(
@@ -55,12 +47,6 @@ fun RequestsContent(
                         )
                     }
                 }
-            )
-        },
-        bottomBar = {
-            BottomMenu(
-                destinationsHierarchy = destinationsHierarchy,
-                onItemClick = onBottomMenuItemClick
             )
         }
     ) {
@@ -80,8 +66,6 @@ fun RequestsDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             RequestsContent(
-                destinationsHierarchy = sequenceOf(),
-                onBottomMenuItemClick = {},
                 onMenuClick = {}
             )
         }
@@ -100,8 +84,6 @@ fun RequestsPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             RequestsContent(
-                destinationsHierarchy = sequenceOf(),
-                onBottomMenuItemClick = {},
                 onMenuClick = {}
             )
         }

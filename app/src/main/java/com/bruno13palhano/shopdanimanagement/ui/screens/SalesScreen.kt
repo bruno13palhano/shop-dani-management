@@ -18,20 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavDestination
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.BottomMenu
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun SalesScreen(
-    destinationsHierarchy: Sequence<NavDestination>,
-    onBottomMenuItemClick: (route: String) -> Unit,
     onMenuClick: () -> Unit
 ) {
     SalesContent(
-        destinationsHierarchy = destinationsHierarchy,
-        onBottomMenuItemClick = onBottomMenuItemClick,
         onMenuClick = onMenuClick
     )
 }
@@ -39,8 +33,6 @@ fun SalesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SalesContent(
-    destinationsHierarchy: Sequence<NavDestination>,
-    onBottomMenuItemClick: (route: String) -> Unit,
     onMenuClick: () -> Unit
 ) {
     Scaffold(
@@ -55,12 +47,6 @@ fun SalesContent(
                         )
                     }
                 }
-            )
-        },
-        bottomBar = {
-            BottomMenu(
-                destinationsHierarchy = destinationsHierarchy,
-                onItemClick = onBottomMenuItemClick
             )
         }
     ) {
@@ -80,8 +66,6 @@ fun SalesDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             SalesScreen(
-                destinationsHierarchy = sequenceOf(),
-                onBottomMenuItemClick = {},
                 onMenuClick = {}
             )
         }
@@ -100,8 +84,6 @@ fun SalesPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             SalesScreen(
-                destinationsHierarchy = sequenceOf(),
-                onBottomMenuItemClick = {},
                 onMenuClick = {}
             )
         }

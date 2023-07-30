@@ -1,7 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
@@ -20,13 +19,8 @@ fun NavGraphBuilder.stockNavGraph(
         startDestination = StockDestinations.MAIN_STOCK_ROUTE,
         route = MainDestinations.STOCK_ROUTE
     ) {
-        val bottomMenuNavActions = BottomMenuNavActions(navController)
         composable(route = StockDestinations.MAIN_STOCK_ROUTE) {
             StockScreen(
-                destinationHierarchy = it.destination.hierarchy,
-                onBottomMenuItemClick = { route ->
-                    bottomMenuNavActions.navigateFromBottomMenu(route)
-                },
                 onClick = { route ->
                     navController.navigate(route)
                 },
