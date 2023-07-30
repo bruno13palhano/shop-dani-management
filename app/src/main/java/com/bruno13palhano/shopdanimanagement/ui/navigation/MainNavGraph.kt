@@ -39,11 +39,19 @@ fun MainNavGraph(
         )
         composable(route = MainDestinations.SHOPPING_ROUTE) {
             ShoppingScreen(
+                destinationsHierarchy = it.destination.hierarchy,
+                onBottomMenuItemClick = { route ->
+                    bottomNavActions.navigateFromBottomMenu(route)
+                },
                 onMenuClick = onMenuClick
             )
         }
         composable(route = MainDestinations.SALES_ROUTE) {
             SalesScreen(
+                destinationsHierarchy = it.destination.hierarchy,
+                onBottomMenuItemClick = { route ->
+                    bottomNavActions.navigateFromBottomMenu(route)
+                },
                 onMenuClick = onMenuClick
             )
         }
