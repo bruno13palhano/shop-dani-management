@@ -99,12 +99,84 @@ fun MainDynamicPreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
+fun MainDynamicOpenPreview() {
+    ShopDaniManagementTheme {
+        val navController = rememberNavController()
+        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            DrawerMenu(
+                navController = navController,
+                drawerState = drawerState
+            ) {
+                val coroutineScope = rememberCoroutineScope()
+
+                Scaffold(
+                    bottomBar = { BottomMenu(navController = navController) }
+                ) {
+                    MainNavGraph(
+                        modifier = Modifier.padding(it),
+                        navController = navController
+                    ) {
+                        coroutineScope.launch {
+                            drawerState.open()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
 fun MainPreview() {
     ShopDaniManagementTheme(
         dynamicColor = false
     ) {
         val navController = rememberNavController()
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
+
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            DrawerMenu(
+                navController = navController,
+                drawerState = drawerState
+            ) {
+                val coroutineScope = rememberCoroutineScope()
+
+                Scaffold(
+                    bottomBar = { BottomMenu(navController = navController) }
+                ) {
+                    MainNavGraph(
+                        modifier = Modifier.padding(it),
+                        navController = navController
+                    ) {
+                        coroutineScope.launch {
+                            drawerState.open()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+fun MainOpenPreview() {
+    ShopDaniManagementTheme(
+        dynamicColor = false
+    ) {
+        val navController = rememberNavController()
+        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
         Surface(
             modifier = Modifier.fillMaxSize(),
