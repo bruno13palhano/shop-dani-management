@@ -52,11 +52,42 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+fun MainDynamicPreview() {
+    ShopDaniManagementTheme {
+        val navController = rememberNavController()
+        val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
+
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            DrawerMenu(
+                navController = navController,
+                drawerState = drawerState
+            ) {
+                val coroutineScope = rememberCoroutineScope()
+                MainNavGraph(
+                    navController = navController
+                ) {
+                    coroutineScope.launch {
+                        drawerState.open()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun MainPreview() {
-    ShopDaniManagementTheme {
+    ShopDaniManagementTheme(
+        dynamicColor = false
+    ) {
         val navController = rememberNavController()
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
 
