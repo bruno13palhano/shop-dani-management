@@ -1,6 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -8,12 +7,11 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColorScheme(
@@ -46,9 +44,6 @@ private val DarkColorScheme = darkColorScheme(
     surfaceTint = md_theme_dark_surfaceTint,
     outlineVariant = md_theme_dark_outlineVariant,
     scrim = md_theme_dark_scrim,
-//    primary = Purple80,
-//    secondary = PurpleGrey80,
-//    tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -81,19 +76,6 @@ private val LightColorScheme = lightColorScheme(
     surfaceTint = md_theme_light_surfaceTint,
     outlineVariant = md_theme_light_outlineVariant,
     scrim = md_theme_light_scrim,
-//    primary = Purple40,
-//    secondary = PurpleGrey40,
-//    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
 
 @Composable
@@ -120,7 +102,7 @@ fun ShopDaniManagementTheme(
             darkIcons = !darkTheme
         )
         systemUiController.setNavigationBarColor(
-            color = colorScheme.secondaryContainer,
+            color = colorScheme.surfaceColorAtElevation(3.dp),
             darkIcons = !darkTheme
         )
     }
