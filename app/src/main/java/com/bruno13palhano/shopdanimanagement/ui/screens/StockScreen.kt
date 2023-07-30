@@ -105,11 +105,32 @@ fun StockContent(
     }
 }
 
-@Preview(showBackground = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+private fun StockDynamicPreview() {
+    ShopDaniManagementTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            StockContent(
+                destinationHierarchy = sequenceOf(),
+                onBottomMenuItemClick = {},
+                onClick = {},
+                onMenuClick = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 private fun StockPreview() {
-    ShopDaniManagementTheme {
+    ShopDaniManagementTheme(
+        dynamicColor = false
+    ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background

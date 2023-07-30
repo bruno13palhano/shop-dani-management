@@ -46,7 +46,7 @@ fun HomeContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.app_name)) },
+                title = { Text(text = "") },
                 navigationIcon = {
                     IconButton(onClick = onMenuClick) {
                         Icon(
@@ -72,11 +72,31 @@ fun HomeContent(
     }
 }
 
-@Preview(showBackground = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+fun HomeDynamicPreview() {
+    ShopDaniManagementTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            HomeScreen(
+                destinationsHierarchy = sequenceOf(),
+                onBottomMenuItemClick = {},
+                onMenuClick = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun HomePreview() {
-    ShopDaniManagementTheme {
+    ShopDaniManagementTheme(
+        dynamicColor = false
+    ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
