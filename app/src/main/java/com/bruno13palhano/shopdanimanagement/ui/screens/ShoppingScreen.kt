@@ -18,14 +18,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavDestination
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.BottomMenu
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun ShoppingScreen(
+    destinationsHierarchy: Sequence<NavDestination>,
+    onBottomMenuItemClick: (route: String) -> Unit,
     onMenuClick: () -> Unit
 ) {
     ShoppingContent(
+        destinationsHierarchy = destinationsHierarchy,
+        onBottomMenuItemClick = onBottomMenuItemClick,
         onMenuClick = onMenuClick
     )
 }
@@ -33,6 +39,8 @@ fun ShoppingScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingContent(
+    destinationsHierarchy: Sequence<NavDestination>,
+    onBottomMenuItemClick: (route: String) -> Unit,
     onMenuClick: () -> Unit
 ) {
     Scaffold(
@@ -48,6 +56,12 @@ fun ShoppingContent(
                     }
                 }
             )
+        },
+        bottomBar = {
+            BottomMenu(
+                destinationsHierarchy = destinationsHierarchy,
+                onItemClick = onBottomMenuItemClick
+            )
         }
     ) {
         Column(modifier = Modifier.padding(it)) {
@@ -56,16 +70,38 @@ fun ShoppingContent(
     }
 }
 
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
-fun ShoppingPreview() {
+fun ShoppingDynamicPreview() {
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
             ShoppingScreen(
+                destinationsHierarchy = sequenceOf(),
+                onBottomMenuItemClick = {},
+                onMenuClick = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+fun ShoppingPreview() {
+    ShopDaniManagementTheme(
+        dynamicColor = false
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            ShoppingScreen(
+                destinationsHierarchy = sequenceOf(),
+                onBottomMenuItemClick = {},
                 onMenuClick = {}
             )
         }
