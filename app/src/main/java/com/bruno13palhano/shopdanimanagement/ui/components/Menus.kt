@@ -40,7 +40,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -132,24 +131,31 @@ private fun DrawerPreview() {
     )
 }
 
-
 @Composable
-fun BottomMenu(
-    destinationsHierarchy: Sequence<NavDestination>,
-    onItemClick: (route: String) -> Unit,
-) {
+fun BottomMenu(navController: NavController) {
     val items = listOf(
         Screen.Home,
         Screen.Stock
     )
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
 
     NavigationBar {
         items.forEach { screen ->
             NavigationBarItem(
                 icon = { Icon(imageVector = screen.icon, contentDescription = null)},
                 label = { Text(text = stringResource(id = screen.resourceId)) },
-                selected = destinationsHierarchy.any{ it.route == screen.route},
-                onClick = { onItemClick(screen.route) }
+                selected = currentDestination?.hierarchy?.any{ it.route == screen.route} == true,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             )
         }
     }
