@@ -1,6 +1,9 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.stock
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.icu.text.DecimalFormat
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +49,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -53,49 +57,55 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.NewProductViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @Composable
 fun NewProductScreen(
     categoryId: String,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    viewModel: NewProductViewModel = hiltViewModel()
 ) {
-    val categories = listOf(
-        Category(1L, "Gifts"),
-        Category(2L, "Infant"),
-        Category(3L, "Perfumes"),
-        Category(4L, "Soaps"),
-        Category(5L, "Antiperspirant Deodorants"),
-        Category(6L, "Deodorants Cologne"),
-        Category(7L, "Sunscreens"),
-        Category(8L, "Makeup"),
-        Category(9L, "Face"),
-        Category(10L, "Skin"),
-        Category(11L, "Hair"),
-        Category(12L, "Moisturizers")
-    )
-
+    val allCategories by viewModel.allCategories.collectAsStateWithLifecycle()
+    val galleryLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            viewModel.updatePhoto(it.toString())
+        }
+    }
     NewProductContent(
-        categories = categories,
-        name = "",
-        description = "",
-        category = "",
-        company = "",
-        purchasePrice = "",
-        salePrice = "",
-        onNameChange = {},
-        onDescriptionChange = {},
-        onCategoryChange = {},
-        onCompanyChange = {},
-        onPurchasePriceChange = {},
-        onSalePriceChange = {},
-        onImageClick = {},
-        onDoneButtonClick = {},
+        categories = allCategories,
+        name = viewModel.name,
+        description = viewModel.description,
+        photo = viewModel.photo,
+        category = viewModel.category,
+        company = viewModel.company,
+        purchasePrice = viewModel.purchasePrice,
+        salePrice = viewModel.salePrice,
+        isPaid = viewModel.isPaid,
+        onNameChange = viewModel::updateName,
+        onDescriptionChange = viewModel::updateDescription,
+        onCategoryChange = viewModel::updateCategory,
+        onCompanyChange = viewModel::updateCompany,
+        onPurchasePriceChange = viewModel::updatePurchasePrice,
+        onSalePriceChange = viewModel::updateSalePrice,
+        onIsPaidChange = viewModel::updateIsPaid,
+        onImageClick = {
+            galleryLauncher.launch("image/*")
+        },
+        onDoneButtonClick = {
+            navigateUp()
+        },
         navigateUp = navigateUp
     )
 }
@@ -106,16 +116,19 @@ fun NewProductContent(
     categories: List<Category>,
     name: String,
     description: String,
+    photo: String,
     category: String,
     company: String,
     purchasePrice: String,
     salePrice: String,
+    isPaid: Boolean,
     onNameChange: (name: String) -> Unit,
     onDescriptionChange: (description: String) -> Unit,
     onCategoryChange: (category: String) -> Unit,
     onCompanyChange: (company: String) -> Unit,
     onPurchasePriceChange: (purchasePrice: String) -> Unit,
     onSalePriceChange: (salePrice: String) -> Unit,
+    onIsPaidChange: (isPaid: Boolean) -> Unit,
     onImageClick: () -> Unit,
     onDoneButtonClick: () -> Unit,
     navigateUp: () -> Unit
@@ -145,6 +158,10 @@ fun NewProductContent(
             }
         }
     ) {
+        val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
+        val decimalSeparator = decimalFormat.decimalFormatSymbols.decimalSeparator
+        val pattern = remember { Regex("^\\d*\\$decimalSeparator?\\d*\$") }
+
         Column(modifier = Modifier
             .padding(it)
             .verticalScroll(rememberScrollState())
@@ -161,17 +178,27 @@ fun NewProductContent(
                     .fillMaxWidth(),
                 onClick = onImageClick
             ) {
-                Image(
-                    modifier = Modifier
-                        .size(168.dp)
-                        .align(Alignment.CenterHorizontally),
-                    imageVector = Icons.Filled.Image,
-                    contentDescription = null
-                )
+                if (photo.isEmpty()) {
+                    Image(
+                        modifier = Modifier
+                            .size(168.dp)
+                            .align(Alignment.CenterHorizontally),
+                        imageVector = Icons.Filled.Image,
+                        contentDescription = stringResource(id = R.string.product_image_label)
+                    )
+                } else {
+                    Image(
+                        modifier = Modifier
+                            .size(168.dp)
+                            .align(Alignment.CenterHorizontally),
+                        painter = rememberAsyncImagePainter(model = photo),
+                        contentDescription = stringResource(id = R.string.product_image_label)
+                    )
+                }
             }
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                    .padding(horizontal = 16.dp, vertical = 2.dp)
                     .fillMaxWidth(),
                 value = name,
                 onValueChange = onNameChange,
@@ -191,7 +218,7 @@ fun NewProductContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                    .padding(horizontal = 16.dp, vertical = 2.dp)
                     .fillMaxWidth(),
                 value = description,
                 onValueChange = onDescriptionChange,
@@ -211,7 +238,7 @@ fun NewProductContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                    .padding(horizontal = 16.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .clickable {
                         openSheet = true
@@ -234,7 +261,7 @@ fun NewProductContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                    .padding(horizontal = 16.dp, vertical = 2.dp)
                     .fillMaxWidth(),
                 value = company,
                 onValueChange = onCompanyChange,
@@ -254,17 +281,24 @@ fun NewProductContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                    .padding(horizontal = 16.dp, vertical = 2.dp)
                     .fillMaxWidth(),
                 value = purchasePrice,
-                onValueChange = onPurchasePriceChange,
+                onValueChange = { purchasePriceValue ->
+                    if (purchasePriceValue.isEmpty() || purchasePriceValue.matches(pattern)) {
+                        onPurchasePriceChange(purchasePriceValue)
+                    }
+                },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Paid,
                         contentDescription = stringResource(id = R.string.purchase_price_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Decimal
+                ),
                 keyboardActions = KeyboardActions(onDone = {
                     defaultKeyboardAction(ImeAction.Done)
                 }),
@@ -274,17 +308,24 @@ fun NewProductContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                    .padding(horizontal = 16.dp, vertical = 2.dp)
                     .fillMaxWidth(),
                 value = salePrice,
-                onValueChange = onSalePriceChange,
+                onValueChange = { salePriceValue ->
+                    if (salePriceValue.isEmpty() || salePriceValue.matches(pattern)) {
+                        onSalePriceChange(salePriceValue)
+                    }
+                },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.PriceCheck,
                         contentDescription = stringResource(id = R.string.sale_price_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Decimal
+                ),
                 keyboardActions = KeyboardActions(onDone = {
                     defaultKeyboardAction(ImeAction.Done)
                 }),
@@ -293,13 +334,14 @@ fun NewProductContent(
                 placeholder = { Text(text = stringResource(id = R.string.enter_sale_price_label)) },
             )
             Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = stringResource(id = R.string.is_paid_label))
-                Checkbox(checked = true, onCheckedChange = {
-
-                })
+                Checkbox(
+                    checked = isPaid,
+                    onCheckedChange = onIsPaidChange
+                )
             }
         }
     }
@@ -332,10 +374,12 @@ fun NewProductPreview() {
                 categories = categories,
                 name = "",
                 description = "",
+                photo = "",
                 category = "",
                 company = "",
                 purchasePrice = "",
                 salePrice = "",
+                isPaid = true,
                 onNameChange = {},
                 onDescriptionChange = {},
                 onCategoryChange = {},
@@ -343,6 +387,7 @@ fun NewProductPreview() {
                 onPurchasePriceChange = {},
                 onSalePriceChange = {},
                 onImageClick = {},
+                onIsPaidChange = {},
                 onDoneButtonClick = { /*TODO*/ },
                 navigateUp = {}
             )
