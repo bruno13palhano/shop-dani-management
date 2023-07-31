@@ -135,7 +135,10 @@ private fun DrawerPreview() {
 fun BottomMenu(navController: NavController) {
     val items = listOf(
         Screen.Home,
-        Screen.Stock
+        Screen.Stock,
+        Screen.Shopping,
+        Screen.Sales,
+        Screen.Requests,
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
