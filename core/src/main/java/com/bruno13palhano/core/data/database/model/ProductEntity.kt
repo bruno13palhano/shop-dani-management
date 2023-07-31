@@ -11,7 +11,11 @@ import com.bruno13palhano.core.model.Product
  * An entity class to persist products in database.
  * @property id product's id.
  * @property name product's name.
+ * @property code product's code.
  * @property description product's description.
+ * @property quantity the quantity of this product.
+ * @property date the day that the product was registered.
+ * @property validity the validity of the product.
  * @property photo product's photo Uri.
  * @property categories a list of categories related with this product.
  * @property company the company that produces the product.
@@ -30,11 +34,23 @@ internal data class ProductEntity(
     @ColumnInfo(name = "name")
     val name: String,
 
+    @ColumnInfo(name = "code")
+    val code: Int,
+
     @ColumnInfo(name = "description")
     val description: String,
 
     @ColumnInfo(name = "photo")
     val photo: String,
+
+    @ColumnInfo(name = "quantity")
+    val quantity: Int,
+
+    @ColumnInfo(name = "date")
+    val date: Long,
+
+    @ColumnInfo(name = "validity")
+    val validity: Long,
 
     @ColumnInfo(name = "categories")
     val categories: List<String>,
@@ -62,8 +78,12 @@ internal data class ProductEntity(
 internal fun ProductEntity.asExternalModel() = Product(
     id = id,
     name = name,
+    code = code,
     description = description,
     photo = photo,
+    quantity = quantity,
+    date = date,
+    validity = validity,
     categories = categories,
     company = company,
     purchasePrice = purchasePrice,
@@ -79,8 +99,12 @@ internal fun ProductEntity.asExternalModel() = Product(
 internal fun Product.asInternalModel() = ProductEntity(
     id = id,
     name = name,
+    code = code,
     description = description,
     photo = photo,
+    quantity = quantity,
+    date = date,
+    validity = validity,
     categories = categories,
     company = company,
     purchasePrice = purchasePrice,
