@@ -1,6 +1,9 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stock
+package com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel
 
+import android.icu.text.SimpleDateFormat
+import android.icu.util.TimeZone
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -15,6 +18,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,9 +29,19 @@ class NewProductViewModel @Inject constructor(
 ): ViewModel() {
     var name by mutableStateOf("")
         private set
+    var code by mutableStateOf("")
+        private set
     var description by mutableStateOf("")
         private set
     var photo by mutableStateOf("")
+        private set
+    var quantity by mutableStateOf("")
+        private set
+    var dateInMillis by mutableLongStateOf(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
+    var date: String by mutableStateOf(SimpleDateFormat.getDateInstance().format(dateInMillis))
+        private set
+    var validityInMillis by mutableLongStateOf(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
+    var validity: String by mutableStateOf(SimpleDateFormat.getDateInstance().format(validityInMillis))
         private set
     var category by mutableStateOf("")
         private set
@@ -52,6 +67,10 @@ class NewProductViewModel @Inject constructor(
         this.name = name
     }
 
+    fun updateCode(code: String) {
+        this.code = code
+    }
+
     fun updateDescription(description: String) {
         this.description = description
     }
@@ -62,6 +81,24 @@ class NewProductViewModel @Inject constructor(
 
     fun updateCategory(category: String) {
         this.category = category
+    }
+
+    fun updateQuantity(quantity: String) {
+        this.quantity = quantity
+    }
+
+    fun updateDate(date: Long) {
+        val dateFormat = SimpleDateFormat.getDateInstance()
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+        dateInMillis = date
+        this.date = dateFormat.format(dateInMillis)
+    }
+
+    fun updateValidity(validity: Long) {
+        val dateFormat = SimpleDateFormat.getDateInstance()
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+        validityInMillis = validity
+        this.validity = dateFormat.format(validityInMillis)
     }
 
     fun updateCompany(company: String) {
