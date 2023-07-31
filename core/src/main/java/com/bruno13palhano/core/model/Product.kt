@@ -22,7 +22,7 @@ package com.bruno13palhano.core.model
 data class Product(
     val id: Long,
     val name: String,
-    val code: Int,
+    val code: String,
     val description: String,
     val photo: String,
     val quantity: Int,

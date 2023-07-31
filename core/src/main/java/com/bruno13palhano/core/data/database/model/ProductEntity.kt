@@ -35,7 +35,7 @@ internal data class ProductEntity(
     val name: String,
 
     @ColumnInfo(name = "code")
-    val code: Int,
+    val code: String,
 
     @ColumnInfo(name = "description")
     val description: String,
