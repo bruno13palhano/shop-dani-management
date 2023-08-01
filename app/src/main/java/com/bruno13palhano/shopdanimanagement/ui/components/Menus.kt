@@ -250,26 +250,32 @@ fun CompanyBottomSheet(
     companies: List<CompanyCheck>,
     openBottomSheet: Boolean,
     onBottomSheetChange: (close: Boolean) -> Unit,
-    onDismissCategory: () -> Unit
+    onDismissCompany: () -> Unit,
+    onSelectedItem: (selected: String) -> Unit
 ) {
     val bottomSheetState = rememberModalBottomSheetState()
+    val (selected, onOptionSelected) = rememberSaveable { mutableStateOf(companies[0].name.company) }
+
     if (openBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = {
                 onBottomSheetChange(false)
-                onDismissCategory()
+                onDismissCompany()
             },
             sheetState = bottomSheetState
         ) {
-            val (optionSelected, onOptionSelected) = rememberSaveable { mutableStateOf(companies[0].name) }
+
             Column(modifier = Modifier.padding(bottom = 32.dp)) {
                 companies.forEach { companyItem ->
                     ListItem(
                         headlineContent = { Text(text = companyItem.name.company) },
                         leadingContent = {
                             RadioButton(
-                                selected = companyItem.name == optionSelected,
-                                onClick = { onOptionSelected(companyItem.name) }
+                                selected = companyItem.name.company == selected,
+                                onClick = {
+                                    onOptionSelected(companyItem.name.company)
+                                    onSelectedItem(companyItem.name.company)
+                                }
                             )
                         }
                     )
