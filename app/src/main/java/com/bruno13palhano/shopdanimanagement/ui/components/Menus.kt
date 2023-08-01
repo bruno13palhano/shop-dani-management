@@ -2,6 +2,8 @@ package com.bruno13palhano.shopdanimanagement.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,25 +14,32 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PointOfSale
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -45,6 +54,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainDestinations
 import kotlinx.coroutines.launch
@@ -194,3 +204,89 @@ fun MoreOptionsMenu(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CategoryBottomSheet(
+    categories: List<CategoryCheck>,
+    openBottomSheet: Boolean,
+    onBottomSheetChange: (close: Boolean) -> Unit,
+    onDismissCategory: () -> Unit
+) {
+    val bottomSheetState = rememberModalBottomSheetState()
+    if (openBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                onBottomSheetChange(false)
+                onDismissCategory()
+            },
+            sheetState = bottomSheetState,
+        ) {
+            LazyColumn(contentPadding = PaddingValues(bottom = 32.dp)) {
+                items(categories) { categoryItem ->
+                    ListItem(
+                        headlineContent = { Text(text = categoryItem.category) },
+                        leadingContent = {
+                            var checked by rememberSaveable { mutableStateOf(categoryItem.isChecked) }
+
+                            Checkbox(
+                                checked = checked,
+                                onCheckedChange = {
+                                    categoryItem.isChecked = it
+                                    checked = it
+                                }
+                            )
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CompanyBottomSheet(
+    companies: List<CompanyCheck>,
+    openBottomSheet: Boolean,
+    onBottomSheetChange: (close: Boolean) -> Unit,
+    onDismissCategory: () -> Unit
+) {
+    val bottomSheetState = rememberModalBottomSheetState()
+    if (openBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                onBottomSheetChange(false)
+                onDismissCategory()
+            },
+            sheetState = bottomSheetState
+        ) {
+            val (optionSelected, onOptionSelected) = rememberSaveable { mutableStateOf(companies[0].name) }
+            Column(modifier = Modifier.padding(bottom = 32.dp)) {
+                companies.forEach { companyItem ->
+                    ListItem(
+                        headlineContent = { Text(text = companyItem.name.company) },
+                        leadingContent = {
+                            RadioButton(
+                                selected = companyItem.name == optionSelected,
+                                onClick = { onOptionSelected(companyItem.name) }
+                            )
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+data class CategoryCheck(
+    var id: Long,
+    var category: String,
+    var isChecked: Boolean
+)
+
+data class CompanyCheck(
+    var name: Company,
+    var isChecked: Boolean
+)
