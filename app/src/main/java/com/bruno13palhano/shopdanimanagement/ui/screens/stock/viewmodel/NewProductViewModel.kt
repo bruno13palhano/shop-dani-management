@@ -12,11 +12,13 @@ import com.bruno13palhano.core.data.DataOperations
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
+import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
+import com.bruno13palhano.shopdanimanagement.ui.components.CompanyCheck
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -27,6 +29,11 @@ class NewProductViewModel @Inject constructor(
     @DefaultProductRepository private val productRepository: DataOperations<Product>,
     @DefaultCategoryRepository private val categoryRepository: DataOperations<Category>
 ): ViewModel() {
+    private val companiesCheck = listOf(
+        CompanyCheck(Company.AVON, true),
+        CompanyCheck(Company.NATURA, false)
+    )
+
     var name by mutableStateOf("")
         private set
     var code by mutableStateOf("")
@@ -45,7 +52,7 @@ class NewProductViewModel @Inject constructor(
         private set
     var category by mutableStateOf("")
         private set
-    var company by mutableStateOf("")
+    var company by mutableStateOf(companiesCheck[0].name.company)
         private set
     var purchasePrice by mutableStateOf("")
         private set
@@ -56,12 +63,11 @@ class NewProductViewModel @Inject constructor(
     var categories by mutableStateOf(listOf(""))
         private set
 
-    val allCategories = categoryRepository.getAll()
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )
+    var allCategories by mutableStateOf((listOf<CategoryCheck>()))
+        private set
+
+    var allCompanies by mutableStateOf(companiesCheck)
+        private set
 
     fun updateName(name: String) {
         this.name = name
@@ -77,10 +83,6 @@ class NewProductViewModel @Inject constructor(
 
     fun updatePhoto(photo: String) {
         this.photo = photo
-    }
-
-    fun updateCategory(category: String) {
-        this.category = category
     }
 
     fun updateQuantity(quantity: String) {
@@ -101,10 +103,6 @@ class NewProductViewModel @Inject constructor(
         this.validity = dateFormat.format(validityInMillis)
     }
 
-    fun updateCompany(company: String) {
-        this.company = company
-    }
-
     fun updatePurchasePrice(purchasePrice: String) {
         this.purchasePrice = purchasePrice
     }
@@ -117,12 +115,50 @@ class NewProductViewModel @Inject constructor(
         this.isPaid = isPaid
     }
 
+    fun updateCategories(categories: List<CategoryCheck>) {
+        val catList = mutableListOf<Category>()
+        categories
+            .filter { it.isChecked }
+            .map { catList.add(Category(it.id, it.category)) }
+        this.categories = catList.map { it.name }
+        category = this.categories.toString().replace("[", "").replace("]", "")
+    }
+
+    fun updateCompany(company: String) {
+        this.company = company
+        allCompanies
+            .map {
+                it.isChecked = false
+                it
+            }
+            .filter { it.name.company == company }
+            .map {
+                it.isChecked = true
+                it
+            }
+    }
+
+    init {
+        viewModelScope.launch {
+            categoryRepository.getAll()
+                .map {
+                    it.map { category -> CategoryCheck(category.id, category.name, false) }
+                }.collect {
+                    allCategories = it
+                }
+        }
+    }
+
     fun insertProduct() {
         val product = Product(
             id = 0L,
             name = name,
+            code = code,
             description = description,
             photo = photo,
+            quantity = quantity.toInt(), //catch exception
+            date = dateInMillis,
+            validity = validityInMillis,
             categories = categories,
             company = company,
             purchasePrice = stringToFloat(purchasePrice),
