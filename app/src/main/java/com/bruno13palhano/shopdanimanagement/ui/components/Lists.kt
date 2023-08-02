@@ -1,5 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Image
@@ -25,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -99,7 +102,8 @@ fun ProductItem(
 fun StockItem(
     modifier: Modifier,
     name: String,
-    price: String,
+    photo: String,
+    price: Float,
     quantity: Int,
     onClick: () -> Unit
 ) {
@@ -107,19 +111,37 @@ fun StockItem(
         modifier = modifier,
         onClick = onClick
     ) {
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
+        Surface(
+            color = MaterialTheme.colorScheme.secondaryContainer
         ) {
-            Image(
-                modifier = Modifier
-                    .size(128.dp),
-                imageVector = Icons.Filled.Image,
-                contentDescription = stringResource(id = R.string.product_image_label),
-            )
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                if (photo.isEmpty()) {
+                    Image(
+                        modifier = Modifier
+                            .size(200.dp)
+                            .padding(16.dp),
+                        imageVector = Icons.Filled.Image,
+                        contentDescription = stringResource(id = R.string.product_image_label),
+                    )
+                } else {
+                    Image(
+                        modifier = Modifier
+                            .size(200.dp)
+                            .padding(16.dp),
+                        painter = rememberAsyncImagePainter(model = Uri.parse(photo)),
+                        contentDescription = stringResource(id = R.string.product_image_label)
+                    )
+                }
+            }
         }
+
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -131,15 +153,16 @@ fun StockItem(
             Text(
                 modifier = Modifier
                     .padding(horizontal = 8.dp),
-                text = price,
+                text = stringResource(id = R.string.price_tag, price),
                 style = MaterialTheme.typography.bodyLarge,
                 fontStyle = FontStyle.Italic
             )
             Text(
                 modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-                text = quantity.toString(),
-                style = MaterialTheme.typography.bodyMedium
+                    .padding(horizontal = 8.dp),
+                text = stringResource(id = R.string.quantity_tag, quantity),
+                style = MaterialTheme.typography.bodyLarge,
+                fontStyle = FontStyle.Italic
             )
         }
     }
@@ -158,13 +181,15 @@ fun StockItem(
         onClick = onClick
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .sizeIn(minHeight = 68.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier
                     .weight(1F, true)
-                    .padding(8.dp),
+                    .padding(16.dp),
                 text = category,
                 style = MaterialTheme.typography.titleMedium
             )
@@ -208,7 +233,8 @@ private fun ProductItemPreview2() {
                 modifier = Modifier
                     .fillMaxSize(),
                 name = "Essencial",
-                price = "178.99R$",
+                photo = "",
+                price = 178.99f,
                 quantity = 10,
                 onClick = {}
             )
