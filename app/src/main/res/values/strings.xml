@@ -53,6 +53,6 @@
     <string name="more_options_label">More options</string>
     <string name="edit_label">Edit</string>
     <string name="save_categories_label">Save categories</string>
-    <string name="price_tag">%sR$</string>
-    <string name="quantity_tag">Qty: %s</string>
+    <string name="price_tag">%.2fR$</string>
+    <string name="quantity_tag">Qty: %d</string>
 </resources>
