@@ -38,7 +38,7 @@ fun ShoppingContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {},
+                title = { Text(text = stringResource(id = R.string.shopping_label)) },
                 navigationIcon = {
                     IconButton(onClick = onMenuClick) {
                         Icon(

@@ -38,7 +38,7 @@ fun RequestsContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {},
+                title = { Text(text = stringResource(id = R.string.requests_label)) },
                 navigationIcon = {
                     IconButton(onClick = onMenuClick) {
                         Icon(
