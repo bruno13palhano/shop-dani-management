@@ -117,7 +117,20 @@ class NewProductViewModel @Inject constructor(
             .filter { it.isChecked }
             .map { catList.add(Category(it.id, it.category)) }
         this.categories = catList.map { it.name }
-        category = this.categories.toString().replace("[", "").replace("]", "")
+        category = this.categories.toString().replace("[", "")
+            .replace("]", "")
+    }
+
+    fun setCategoryChecked(category: Long) {
+        allCategories.forEach { categoryCheck ->
+            if (categoryCheck.id == category) {
+                categoryCheck.isChecked = true
+            }
+        }
+        this.category = allCategories
+            .filter { it.isChecked }
+            .map { it.category }.toString()
+            .replace("[","").replace("]", "")
     }
 
     fun updateCompany(company: String) {

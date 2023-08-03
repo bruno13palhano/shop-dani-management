@@ -16,6 +16,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,10 +38,12 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun NewProductScreen(
-    categoryId: String,
+    categoryId: Long,
     navigateUp: () -> Unit,
     viewModel: NewProductViewModel = hiltViewModel()
 ) {
+    viewModel.setCategoryChecked(categoryId)
+
     val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
             Intent.FLAG_GRANT_WRITE_URI_PERMISSION
     val contentResolver = LocalContext.current.contentResolver
