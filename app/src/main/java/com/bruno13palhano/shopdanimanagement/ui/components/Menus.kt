@@ -253,8 +253,10 @@ fun CompanyBottomSheet(
     onDismissCompany: () -> Unit,
     onSelectedItem: (selected: String) -> Unit
 ) {
+    val initialCompany = companies
+        .filter { it.isChecked }
+        .findLast { it.isChecked }?.name?.company
     val bottomSheetState = rememberModalBottomSheetState()
-    val (selected, onOptionSelected) = rememberSaveable { mutableStateOf(companies[0].name.company) }
 
     if (openBottomSheet) {
         ModalBottomSheet(
@@ -264,6 +266,7 @@ fun CompanyBottomSheet(
             },
             sheetState = bottomSheetState
         ) {
+            val (selected, onOptionSelected) = rememberSaveable { mutableStateOf(initialCompany)}
 
             Column(modifier = Modifier.padding(bottom = 32.dp)) {
                 companies.forEach { companyItem ->
