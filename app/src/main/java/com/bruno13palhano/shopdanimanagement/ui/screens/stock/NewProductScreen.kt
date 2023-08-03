@@ -2,18 +2,14 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.stock
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
@@ -23,19 +19,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.NewProductViewModel
-import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -194,98 +187,4 @@ fun NewProductScreen(
         },
         navigateUp = navigateUp
     )
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
-@Composable
-fun NewProductDynamicPreview() {
-    ShopDaniManagementTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            ProductContent(
-                snackbarHostState = remember { SnackbarHostState() },
-                categories = listOf(),
-                companies = listOf(),
-                name = "",
-                code = "",
-                description = "",
-                date = "",
-                quantity = "",
-                validity = "",
-                photo = "",
-                category = "",
-                company = "",
-                purchasePrice = "",
-                salePrice = "",
-                isPaid = true,
-                onNameChange = {},
-                onCodeChange = {},
-                onDescriptionChange = {},
-                onQuantityChange = {},
-                onPurchasePriceChange = {},
-                onSalePriceChange = {},
-                onIsPaidChange = {},
-                onDismissCategory = {},
-                onCompanySelected = {},
-                onDismissCompany = {},
-                onImageClick = {},
-                onDateClick = {},
-                onValidityClick = {},
-                onOutsideClick = {},
-                onActionButtonClick = {},
-                navigateUp = {}
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
-@Composable
-fun NewProductPreview() {
-    ShopDaniManagementTheme(
-        dynamicColor = false
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            ProductContent(
-                snackbarHostState = remember { SnackbarHostState() },
-                categories = listOf(),
-                companies = listOf(),
-                name = "",
-                code = "",
-                description = "",
-                date = "",
-                quantity = "",
-                validity = "",
-                photo = "",
-                category = "",
-                company = "",
-                purchasePrice = "",
-                salePrice = "",
-                isPaid = true,
-                onNameChange = {},
-                onCodeChange = {},
-                onDescriptionChange = {},
-                onQuantityChange = {},
-                onPurchasePriceChange = {},
-                onSalePriceChange = {},
-                onIsPaidChange = {},
-                onDismissCategory = {},
-                onCompanySelected = {},
-                onDismissCompany = {},
-                onImageClick = {},
-                onDateClick = {},
-                onValidityClick = {},
-                onOutsideClick = {},
-                onActionButtonClick = {},
-                navigateUp = {}
-            )
-        }
-    }
 }
