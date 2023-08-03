@@ -33,7 +33,6 @@ class NewProductViewModel @Inject constructor(
         CompanyCheck(Company.AVON, true),
         CompanyCheck(Company.NATURA, false)
     )
-
     var name by mutableStateOf("")
         private set
     var code by mutableStateOf("")
@@ -60,12 +59,9 @@ class NewProductViewModel @Inject constructor(
         private set
     var isPaid by mutableStateOf(false)
         private set
-    var categories by mutableStateOf(listOf(""))
-        private set
-
+    private var categories by mutableStateOf(listOf(""))
     var allCategories by mutableStateOf((listOf<CategoryCheck>()))
         private set
-
     var allCompanies by mutableStateOf(companiesCheck)
         private set
 
