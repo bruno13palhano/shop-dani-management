@@ -55,4 +55,5 @@
     <string name="save_categories_label">Save categories</string>
     <string name="price_tag">%.2fR$</string>
     <string name="quantity_tag">Qty: %d</string>
+    <string name="empty_fields_error">Fill in the missing fields</string>
 </resources>
