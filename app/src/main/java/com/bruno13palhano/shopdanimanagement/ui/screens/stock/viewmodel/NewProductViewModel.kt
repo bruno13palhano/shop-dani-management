@@ -1,7 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel
 
-import android.icu.text.SimpleDateFormat
-import android.icu.util.TimeZone
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -16,12 +14,12 @@ import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
 import com.bruno13palhano.shopdanimanagement.ui.components.CompanyCheck
+import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,11 +41,11 @@ class NewProductViewModel @Inject constructor(
         private set
     var quantity by mutableStateOf("")
         private set
-    var dateInMillis by mutableLongStateOf(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-    var date: String by mutableStateOf(SimpleDateFormat.getDateInstance().format(dateInMillis))
+    var dateInMillis by mutableLongStateOf(currentDate)
+    var date: String by mutableStateOf(dateFormat.format(dateInMillis))
         private set
-    var validityInMillis by mutableLongStateOf(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-    var validity: String by mutableStateOf(SimpleDateFormat.getDateInstance().format(validityInMillis))
+    var validityInMillis by mutableLongStateOf(currentDate)
+    var validity: String by mutableStateOf(dateFormat.format(validityInMillis))
         private set
     var category by mutableStateOf("")
         private set
@@ -86,15 +84,11 @@ class NewProductViewModel @Inject constructor(
     }
 
     fun updateDate(date: Long) {
-        val dateFormat = SimpleDateFormat.getDateInstance()
-        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
         dateInMillis = date
         this.date = dateFormat.format(dateInMillis)
     }
 
     fun updateValidity(validity: Long) {
-        val dateFormat = SimpleDateFormat.getDateInstance()
-        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
         validityInMillis = validity
         this.validity = dateFormat.format(validityInMillis)
     }
