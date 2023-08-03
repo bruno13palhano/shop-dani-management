@@ -1,7 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel
 
-import android.icu.text.SimpleDateFormat
-import android.icu.util.TimeZone
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -16,12 +14,12 @@ import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
 import com.bruno13palhano.shopdanimanagement.ui.components.CompanyCheck
+import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,7 +31,6 @@ class EditProductViewModel @Inject constructor(
         CompanyCheck(Company.AVON, true),
         CompanyCheck(Company.NATURA, false)
     )
-
     var name by mutableStateOf("")
         private set
     var code by mutableStateOf("")
@@ -44,11 +41,11 @@ class EditProductViewModel @Inject constructor(
         private set
     var quantity by mutableStateOf("")
         private set
-    var dateInMillis by mutableLongStateOf(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-    var date: String by mutableStateOf(SimpleDateFormat.getDateInstance().format(dateInMillis))
+    var dateInMillis by mutableLongStateOf(currentDate)
+    var date: String by mutableStateOf(dateFormat.format(dateInMillis))
         private set
-    var validityInMillis by mutableLongStateOf(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-    var validity: String by mutableStateOf(SimpleDateFormat.getDateInstance().format(validityInMillis))
+    var validityInMillis by mutableLongStateOf(currentDate)
+    var validity: String by mutableStateOf(dateFormat.format(validityInMillis))
         private set
     var category by mutableStateOf("")
         private set
@@ -60,13 +57,10 @@ class EditProductViewModel @Inject constructor(
         private set
     var isPaid by mutableStateOf(false)
         private set
-    var categories by mutableStateOf(listOf(""))
-        private set
-
+    private var categories by mutableStateOf(listOf(""))
     var allCategories by mutableStateOf((listOf<CategoryCheck>()))
         private set
-
-    var allCompanies by mutableStateOf(companiesCheck)
+    var allCompanies by mutableStateOf(listOf<CompanyCheck>())
         private set
 
     init {
@@ -101,15 +95,11 @@ class EditProductViewModel @Inject constructor(
     }
 
     fun updateDate(date: Long) {
-        val dateFormat = SimpleDateFormat.getDateInstance()
-        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
         dateInMillis = date
         this.date = dateFormat.format(dateInMillis)
     }
 
     fun updateValidity(validity: Long) {
-        val dateFormat = SimpleDateFormat.getDateInstance()
-        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
         validityInMillis = validity
         this.validity = dateFormat.format(validityInMillis)
     }
@@ -157,20 +147,61 @@ class EditProductViewModel @Inject constructor(
                 description = it.description
                 photo = it.photo
                 quantity = it.quantity.toString()
-                dateInMillis = it.date
-                validityInMillis = it.validity
+                updateDate(it.date)
+                updateValidity(it.validity)
                 categories = it.categories
                 company = it.company
                 purchasePrice = it.purchasePrice.toString()
                 salePrice = it.salePrice.toString()
                 isPaid = it.isPaid
+                setCategoriesChecked(categories)
+                setCompanyChecked(it.company)
             }
         }
     }
 
-    fun updateProduct() {
-        viewModelScope.launch {
+    //Sets all current categories
+    private fun setCategoriesChecked(allCategories: List<String>) {
+        this.allCategories.forEach { categoryCheck ->
+            allCategories.forEach {
+                if (categoryCheck.category == it.replace("[","" ).replace("]", "")) {
+                    categoryCheck.isChecked = true
+                }
+            }
+        }
+        updateCategories(this.allCategories)
+    }
 
+    //Sets the current company
+    private fun setCompanyChecked(company: String) {
+        companiesCheck.forEach { companyCheck ->
+            if (companyCheck.name.company == company) {
+                companyCheck.isChecked = true
+            }
+        }
+        allCompanies = companiesCheck
+    }
+
+    fun updateProduct(id: Long) {
+        val product = Product(
+            id = id,
+            name = name,
+            code = code,
+            description = description,
+            photo = photo,
+            quantity = quantity.toInt(),
+            date = dateInMillis,
+            validity = validityInMillis,
+            categories = categories,
+            company = company,
+            purchasePrice = stringToFloat(purchasePrice),
+            salePrice = stringToFloat(salePrice),
+            isPaid = isPaid,
+            isSold = false
+        )
+
+        viewModelScope.launch {
+            productRepository.update(product)
         }
     }
 }
