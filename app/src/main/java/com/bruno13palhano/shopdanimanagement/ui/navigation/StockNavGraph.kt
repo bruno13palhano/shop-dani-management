@@ -41,7 +41,7 @@ fun NavGraphBuilder.stockNavGraph(
         composable(route = StockDestinations.STOCK_LIST_WITH_ID_ROUTE) { backStackEntry ->
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
                 StockListScreen(
-                    categoryId = categoryId,
+                    categoryId = categoryId.toLong(),
                     onItemClick = { productId ->
                         navController.navigate(route = "${StockDestinations.STOCK_EDIT_PRODUCT_ROUTE}$productId")
                     },
@@ -57,7 +57,7 @@ fun NavGraphBuilder.stockNavGraph(
         composable(route = StockDestinations.STOCK_NEW_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
                 NewProductScreen(
-                    categoryId = categoryId,
+                    categoryId = categoryId.toLong(),
                     navigateUp = {
                         navController.navigateUp()
                     }

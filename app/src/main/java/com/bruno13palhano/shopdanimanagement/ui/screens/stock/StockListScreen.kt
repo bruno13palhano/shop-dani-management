@@ -45,7 +45,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockLis
 
 @Composable
 fun StockListScreen(
-    categoryId: String,
+    categoryId: Long,
+    onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit,
     viewModel: StockListViewModel = hiltViewModel()
@@ -53,7 +54,7 @@ fun StockListScreen(
     val stockList by viewModel.stock.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.getCategory(categoryId.toLong())
+        viewModel.getCategory(categoryId)
     }
     var showCategoryDialog by remember { mutableStateOf(false) }
 
@@ -64,6 +65,7 @@ fun StockListScreen(
         onCategoryChange = viewModel::updateName,
         onOkClick = { viewModel.updateCategory(categoryId.toLong()) },
         onDismissRequest = { showCategoryDialog = false },
+        onItemClick = onItemClick,
         onEditItemClick = {
             showCategoryDialog = true
         },
@@ -81,6 +83,7 @@ fun StockListContent(
     onCategoryChange: (category: String) -> Unit,
     onOkClick: () -> Unit,
     onDismissRequest: () -> Unit,
+    onItemClick: (id: Long) -> Unit,
     onEditItemClick: () -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit
@@ -157,7 +160,7 @@ fun StockListContent(
                     name = stock.name,
                     price = stock.purchasePrice,
                     quantity = stock.quantity,
-                    onClick = {}
+                    onClick = { onItemClick(stock.id) }
                 )
             }
         }
@@ -197,6 +200,7 @@ private fun ProductListDynamicPreview() {
                 onCategoryChange = {},
                 onOkClick = {},
                 onDismissRequest = {},
+                onItemClick = {},
                 onEditItemClick = {},
                 onAddButtonClick = {},
                 navigateUp = {}
@@ -232,6 +236,7 @@ private fun ProductListPreview() {
                 onCategoryChange = {},
                 onOkClick = {},
                 onDismissRequest = {},
+                onItemClick = {},
                 onEditItemClick = {},
                 onAddButtonClick = {},
                 navigateUp = {}
