@@ -9,6 +9,7 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalConfiguration
@@ -24,9 +26,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.EditProductViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -38,6 +42,7 @@ fun EditProductScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.getProduct(productId)
     }
+    val isProductValid by viewModel.isProductValid.collectAsStateWithLifecycle()
 
     val takeFlags: Int = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
             Intent.FLAG_GRANT_WRITE_URI_PERMISSION
@@ -123,7 +128,12 @@ fun EditProductScreen(
         }
     }
 
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val errorMessage = stringResource(id = R.string.empty_fields_error)
+
     ProductContent(
+        snackbarHostState = snackbarHostState,
         categories = viewModel.allCategories,
         companies = viewModel.allCompanies,
         name = viewModel.name,
@@ -169,8 +179,14 @@ fun EditProductScreen(
             focusManager.clearFocus(force = true)
         },
         onActionButtonClick = {
-            viewModel.updateProduct(productId)
-            navigateUp()
+            if (isProductValid) {
+                viewModel.updateProduct(productId)
+                navigateUp()
+            } else {
+                scope.launch {
+                    snackbarHostState.showSnackbar(errorMessage)
+                }
+            }
         },
         navigateUp = navigateUp
     )
