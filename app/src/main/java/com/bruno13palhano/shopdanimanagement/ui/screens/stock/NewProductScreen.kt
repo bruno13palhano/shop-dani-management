@@ -12,14 +12,15 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -30,10 +31,12 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.NewProductViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -43,6 +46,7 @@ fun NewProductScreen(
     viewModel: NewProductViewModel = hiltViewModel()
 ) {
     viewModel.setCategoryChecked(categoryId)
+    val isProductValid by viewModel.isProductValid.collectAsStateWithLifecycle()
 
     val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
             Intent.FLAG_GRANT_WRITE_URI_PERMISSION
@@ -128,7 +132,12 @@ fun NewProductScreen(
         }
     }
 
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val errorMessage = stringResource(id = R.string.empty_fields_error)
+
     ProductContent(
+        snackbarHostState = snackbarHostState,
         categories = viewModel.allCategories,
         companies = viewModel.allCompanies,
         name = viewModel.name,
@@ -174,8 +183,14 @@ fun NewProductScreen(
             focusManager.clearFocus(force = true)
         },
         onActionButtonClick = {
-            viewModel.insertProduct()
-            navigateUp()
+            if (isProductValid) {
+                viewModel.insertProduct()
+                navigateUp()
+            } else {
+                scope.launch {
+                    snackbarHostState.showSnackbar(errorMessage)
+                }
+            }
         },
         navigateUp = navigateUp
     )
@@ -191,6 +206,7 @@ fun NewProductDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductContent(
+                snackbarHostState = remember { SnackbarHostState() },
                 categories = listOf(),
                 companies = listOf(),
                 name = "",
@@ -238,6 +254,7 @@ fun NewProductPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductContent(
+                snackbarHostState = remember { SnackbarHostState() },
                 categories = listOf(),
                 companies = listOf(),
                 name = "",
