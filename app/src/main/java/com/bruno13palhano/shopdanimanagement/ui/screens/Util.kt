@@ -1,7 +1,12 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens
 
 
+import android.icu.text.DateFormat
 import android.icu.text.DecimalFormat
+import android.icu.text.SimpleDateFormat
+import android.icu.util.TimeZone
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.Locale
 
 /**
@@ -24,4 +29,10 @@ fun stringToFloat(value: String): Float {
     return try {
         value.replace(",", ".").toFloat()
     } catch (ignored: Exception) { 0F }
+}
+
+val currentDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
+
+val dateFormat: DateFormat = SimpleDateFormat.getDateInstance().apply {
+    timeZone = TimeZone.getTimeZone("UTC")
 }
