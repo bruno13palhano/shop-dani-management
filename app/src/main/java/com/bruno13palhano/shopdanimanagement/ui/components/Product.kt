@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -49,6 +50,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -64,6 +66,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductContent(
+    screenTitle: String,
     snackbarHostState: SnackbarHostState,
     categories: List<CategoryCheck>,
     companies: List<CompanyCheck>,
@@ -106,7 +109,7 @@ fun ProductContent(
             },
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.new_product_label)) },
+                title = { Text(text = screenTitle) },
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(
@@ -151,99 +154,107 @@ fun ProductContent(
                 onDismissCompany = onDismissCompany,
                 onSelectedItem = onCompanySelected
             )
-            ElevatedCard(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 4.dp)
-                    .fillMaxWidth(),
-                onClick = onImageClick
+            Row(
+                verticalAlignment = Alignment.Bottom
             ) {
-                if (photo.isEmpty()) {
-                    Image(
+                ElevatedCard(
+                    modifier = Modifier
+                        .padding(start = 16.dp),
+                    onClick = onImageClick
+                ) {
+                    if (photo.isEmpty()) {
+                        Image(
+                            modifier = Modifier
+                                .size(128.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            imageVector = Icons.Filled.Image,
+                            contentDescription = stringResource(id = R.string.product_image_label)
+                        )
+                    } else {
+                        Image(
+                            modifier = Modifier
+                                .size(128.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            painter = rememberAsyncImagePainter(model = photo),
+                            contentDescription = stringResource(id = R.string.product_image_label)
+                        )
+                    }
+                }
+
+                Column() {
+                    OutlinedTextField(
                         modifier = Modifier
-                            .size(168.dp)
-                            .align(Alignment.CenterHorizontally),
-                        imageVector = Icons.Filled.Image,
-                        contentDescription = stringResource(id = R.string.product_image_label)
+                            .padding(horizontal = 16.dp, vertical = 2.dp)
+                            .fillMaxWidth()
+                            .clearFocusOnKeyboardDismiss(),
+                        value = name,
+                        onValueChange = onNameChange,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Title,
+                                contentDescription = stringResource(id = R.string.name_label)
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }),
+                        singleLine = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.name_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.enter_name_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
                     )
-                } else {
-                    Image(
+                    OutlinedTextField(
                         modifier = Modifier
-                            .size(168.dp)
-                            .align(Alignment.CenterHorizontally),
-                        painter = rememberAsyncImagePainter(model = photo),
-                        contentDescription = stringResource(id = R.string.product_image_label)
+                            .padding(horizontal = 16.dp, vertical = 2.dp)
+                            .fillMaxWidth()
+                            .clearFocusOnKeyboardDismiss(),
+                        value = code,
+                        onValueChange = { codeValue ->
+                            if (codeValue.isEmpty() || codeValue.matches(patternInt)) {
+                                onCodeChange(codeValue)
+                            }
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.QrCode,
+                                contentDescription = stringResource(id = R.string.code_label)
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Number
+                        ),
+                        keyboardActions = KeyboardActions(onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }),
+                        singleLine = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.code_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.enter_code_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
                     )
                 }
             }
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = name,
-                onValueChange = onNameChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Title,
-                        contentDescription = stringResource(id = R.string.name_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.name_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_name_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = code,
-                onValueChange = { codeValue ->
-                    if (codeValue.isEmpty() || codeValue.matches(patternInt)) {
-                        onCodeChange(codeValue)
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.QrCode,
-                        contentDescription = stringResource(id = R.string.code_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Number
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.code_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_code_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
-            )
             OutlinedTextField(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 2.dp)
@@ -539,6 +550,7 @@ fun ProductDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductContent(
+                screenTitle = "Edit Product",
                 snackbarHostState = remember { SnackbarHostState() },
                 categories = listOf(),
                 companies = listOf(),
@@ -587,6 +599,7 @@ fun ProductPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductContent(
+                screenTitle = "New Product",
                 snackbarHostState = remember { SnackbarHostState() },
                 categories = listOf(),
                 companies = listOf(),
