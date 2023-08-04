@@ -53,6 +53,8 @@
     <string name="new_category_label">New category</string>
     <string name="more_options_label">More options</string>
     <string name="edit_label">Edit</string>
+    <string name="delete_label">Delete</string>
+    <string name="add_to_catalog_label">Add to catalog</string>
     <string name="save_categories_label">Save categories</string>
     <string name="price_tag">%.2fR$</string>
     <string name="quantity_tag">Qty: %d</string>
