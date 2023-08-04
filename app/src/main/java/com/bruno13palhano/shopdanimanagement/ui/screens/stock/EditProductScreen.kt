@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductContent
+import com.bruno13palhano.shopdanimanagement.ui.components.ProductMenuItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.EditProductViewModel
 import kotlinx.coroutines.launch
 
@@ -150,6 +151,7 @@ fun EditProductScreen(
         purchasePrice = viewModel.purchasePrice,
         salePrice = viewModel.salePrice,
         isPaid = viewModel.isPaid,
+        enableMoreOptionsMenu = true,
         onNameChange = viewModel::updateName,
         onCodeChange = viewModel::updateCode,
         onDescriptionChange = viewModel::updateDescription,
@@ -175,6 +177,17 @@ fun EditProductScreen(
         },
         onValidityClick = {
             showValidityPickerDialog = true
+        },
+        onMoreOptionsItemClick = { index ->
+            when (index) {
+                ProductMenuItem.addTCatalog -> {
+
+                }
+                ProductMenuItem.delete -> {
+                    navigateUp()
+                    viewModel.deleteProduct(productId)
+                }
+            }
         },
         onOutsideClick = {
             keyboardController?.hide()
