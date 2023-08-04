@@ -84,7 +84,7 @@ fun DrawerMenu(
             ModalDrawerSheet(
                 drawerShape = RectangleShape
             ) {
-                LazyColumn() {
+                LazyColumn {
                     stickyHeader {
                         Text(
                             modifier = Modifier
