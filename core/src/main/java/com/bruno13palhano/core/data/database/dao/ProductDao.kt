@@ -69,4 +69,12 @@ internal interface ProductDao : ProductData<ProductEntity> {
      */
     @Query("SELECT * FROM product_table WHERE id = (SELECT max(id) FROM product_table)")
     override fun getLast(): Flow<ProductEntity>
+
+    @Query(
+        "SELECT * FROM product_table WHERE name LIKE '%'||:value||'%' " +
+                "OR description LIKE '%'||:value||'%' " +
+                "OR company LIKE '%'||:value||'%' " +
+                "OR categories LIKE '%'||:value||'%'"
+    )
+    override fun search(value: String): Flow<List<ProductEntity>>
 }

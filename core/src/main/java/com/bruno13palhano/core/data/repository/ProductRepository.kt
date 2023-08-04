@@ -47,4 +47,11 @@ internal class ProductRepository @Inject constructor(
             .map { it.asExternalModel() }
             .catch { it.printStackTrace() }
     }
+
+    override fun search(value: String): Flow<List<Product>> {
+        return productDao.search(value)
+            .map {
+                it.map { entity ->  entity.asExternalModel()}
+            }
+    }
 }

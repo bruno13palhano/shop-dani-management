@@ -46,4 +46,11 @@ internal class CategoryRepository @Inject constructor(
             .map { it.asExternalModel() }
             .catch { it.printStackTrace() }
     }
+
+    override fun search(value: String): Flow<List<Category>> {
+        return categoryDao.search(value)
+            .map {
+                it.map { entity -> entity.asExternalModel() }
+            }
+    }
 }
