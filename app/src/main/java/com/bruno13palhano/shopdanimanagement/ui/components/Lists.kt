@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -148,21 +149,27 @@ fun StockItem(
                 modifier = Modifier
                     .padding(horizontal = 8.dp),
                 text = name,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
             Text(
                 modifier = Modifier
                     .padding(horizontal = 8.dp),
                 text = stringResource(id = R.string.price_tag, price),
                 style = MaterialTheme.typography.bodyLarge,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
             Text(
                 modifier = Modifier
                     .padding(horizontal = 8.dp),
                 text = stringResource(id = R.string.quantity_tag, quantity),
                 style = MaterialTheme.typography.bodyLarge,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
         }
     }
