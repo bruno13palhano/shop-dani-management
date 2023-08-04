@@ -147,6 +147,7 @@ fun NewProductScreen(
         purchasePrice = viewModel.purchasePrice,
         salePrice = viewModel.salePrice,
         isPaid = viewModel.isPaid,
+        enableMoreOptionsMenu = false,
         onNameChange = viewModel::updateName,
         onCodeChange = viewModel::updateCode,
         onDescriptionChange = viewModel::updateDescription,
@@ -173,6 +174,7 @@ fun NewProductScreen(
         onValidityClick = {
             showValidityPickerDialog = true
         },
+        onMoreOptionsItemClick = {},
         onOutsideClick = {
             keyboardController?.hide()
             focusManager.clearFocus(force = true)
