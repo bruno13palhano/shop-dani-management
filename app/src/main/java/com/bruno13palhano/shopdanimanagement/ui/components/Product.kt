@@ -3,6 +3,8 @@ package com.bruno13palhano.shopdanimanagement.ui.components
 import android.content.res.Configuration
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +25,7 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Paid
 import androidx.compose.material.icons.filled.PriceCheck
 import androidx.compose.material.icons.filled.QrCode
@@ -82,6 +85,7 @@ fun ProductContent(
     purchasePrice: String,
     salePrice: String,
     isPaid: Boolean,
+    enableMoreOptionsMenu: Boolean,
     onNameChange: (name: String) -> Unit,
     onCodeChange: (code: String) -> Unit,
     onDescriptionChange: (description: String) -> Unit,
@@ -95,12 +99,18 @@ fun ProductContent(
     onImageClick: () -> Unit,
     onDateClick: () -> Unit,
     onValidityClick: () -> Unit,
+    onMoreOptionsItemClick: (index: Int) -> Unit,
     onOutsideClick: () -> Unit,
     onActionButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
     var openCategorySheet by rememberSaveable { mutableStateOf(false) }
     var openCompanySheet by rememberSaveable { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
+    val items = arrayOf(
+        stringResource(id = R.string.add_to_catalog_label),
+        stringResource(id = R.string.delete_label),
+    )
 
     Scaffold(
         modifier = Modifier
@@ -116,6 +126,32 @@ fun ProductContent(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.up_button_label)
                         )
+                    }
+                },
+                actions = {
+                    if (enableMoreOptionsMenu) {
+                        IconButton(onClick = { expanded = true }) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Filled.MoreVert,
+                                    contentDescription = stringResource(id = R.string.more_options_label)
+                                )
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    MoreOptionsMenu(
+                                        items = items,
+                                        expanded = expanded,
+                                        onDismissRequest = { expandedValue ->
+                                            expanded = expandedValue
+                                        },
+                                        onClick = onMoreOptionsItemClick
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             )
@@ -183,7 +219,7 @@ fun ProductContent(
                     }
                 }
 
-                Column() {
+                Column {
                     OutlinedTextField(
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 2.dp)
@@ -566,6 +602,7 @@ fun ProductDynamicPreview() {
                 purchasePrice = "",
                 salePrice = "",
                 isPaid = true,
+                enableMoreOptionsMenu = true,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
@@ -579,6 +616,7 @@ fun ProductDynamicPreview() {
                 onImageClick = {},
                 onDateClick = {},
                 onValidityClick = {},
+                onMoreOptionsItemClick = {},
                 onOutsideClick = {},
                 onActionButtonClick = {},
                 navigateUp = {}
@@ -615,6 +653,7 @@ fun ProductPreview() {
                 purchasePrice = "",
                 salePrice = "",
                 isPaid = true,
+                enableMoreOptionsMenu = false,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
@@ -628,10 +667,16 @@ fun ProductPreview() {
                 onImageClick = {},
                 onDateClick = {},
                 onValidityClick = {},
+                onMoreOptionsItemClick = {},
                 onOutsideClick = {},
                 onActionButtonClick = {},
                 navigateUp = {}
             )
         }
     }
+}
+
+object ProductMenuItem {
+    const val addTCatalog = 0
+    const val delete = 1
 }
