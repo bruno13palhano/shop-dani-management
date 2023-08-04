@@ -5,14 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.CategoryData
+import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Stock
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -21,8 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StockListViewModel @Inject constructor(
-    @DefaultCategoryRepository private val categoryRepository: DataOperations<Category>,
-    @DefaultProductRepository private val productRepository: DataOperations<Product>
+    @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
+    @DefaultProductRepository private val productRepository: ProductData<Product>
 ): ViewModel() {
     val stock = productRepository.getAll()
         .map {

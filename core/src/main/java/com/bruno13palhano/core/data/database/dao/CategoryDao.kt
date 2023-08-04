@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.database.model.CategoryEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
  * This interface is responsible for handling [CategoryEntity] access to Room database.
  */
 @Dao
-internal interface CategoryDao : DataOperations<CategoryEntity> {
+internal interface CategoryDao : CategoryData<CategoryEntity> {
 
     /**
      * Inserts a [CategoryEntity] into the database.

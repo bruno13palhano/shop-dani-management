@@ -1,6 +1,7 @@
 package com.bruno13palhano.core.data.di
 
-import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.CategoryData
+import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.repository.CategoryRepository
 import com.bruno13palhano.core.data.repository.ProductRepository
 import com.bruno13palhano.core.model.Category
@@ -35,10 +36,10 @@ internal abstract class RepositoryModule {
     @DefaultProductRepository
     @Singleton
     @Binds
-    abstract fun bindProductRepository(repository: ProductRepository): DataOperations<Product>
+    abstract fun bindProductRepository(repository: ProductRepository): ProductData<Product>
 
     @DefaultCategoryRepository
     @Singleton
     @Binds
-    abstract fun bindCategoryRepository(repository: CategoryRepository): DataOperations<Category>
+    abstract fun bindCategoryRepository(repository: CategoryRepository): CategoryData<Category>
 }

@@ -7,7 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.CategoryData
+import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.model.Category
@@ -27,8 +28,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewProductViewModel @Inject constructor(
-    @DefaultProductRepository private val productRepository: DataOperations<Product>,
-    @DefaultCategoryRepository private val categoryRepository: DataOperations<Category>
+    @DefaultProductRepository private val productRepository: ProductData<Product>,
+    @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>
 ): ViewModel() {
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),

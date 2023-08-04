@@ -1,6 +1,6 @@
 package com.bruno13palhano.core.data.repository
 
-import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.database.dao.ProductDao
 import com.bruno13palhano.core.data.database.model.asExternalModel
 import com.bruno13palhano.core.data.database.model.asInternalModel
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 internal class ProductRepository @Inject constructor(
     private val productDao: ProductDao
-) : DataOperations<Product> {
+) : ProductData<Product> {
     override suspend fun insert(model: Product): Long {
         return productDao.insert(model.asInternalModel())
     }

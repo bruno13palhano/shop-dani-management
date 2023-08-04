@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.model.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StockCategoriesViewModel @Inject constructor(
-    @DefaultCategoryRepository private val categoryRepository: DataOperations<Category>
+    @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>
 ): ViewModel() {
     var categories = categoryRepository.getAll()
         .stateIn(

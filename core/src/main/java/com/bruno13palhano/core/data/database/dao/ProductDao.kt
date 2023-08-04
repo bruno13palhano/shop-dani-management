@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.database.model.ProductEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
  * This interface is responsible for handling [ProductEntity] access to the Room database.
  */
 @Dao
-internal interface ProductDao : DataOperations<ProductEntity> {
+internal interface ProductDao : ProductData<ProductEntity> {
 
     /**
      * Inserts a [ProductEntity] into the database.
