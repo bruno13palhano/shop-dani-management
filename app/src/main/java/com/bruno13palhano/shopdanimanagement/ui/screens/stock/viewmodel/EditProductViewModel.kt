@@ -217,4 +217,10 @@ class EditProductViewModel @Inject constructor(
             productRepository.update(product)
         }
     }
+
+    fun deleteProduct(id: Long) {
+        viewModelScope.launch {
+            productRepository.deleteById(id)
+        }
+    }
 }
