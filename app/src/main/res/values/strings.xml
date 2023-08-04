@@ -27,6 +27,7 @@
     <string name="hair_label">Hair</string>
     <string name="stock_product_list">Products</string>
     <string name="new_product_label">New Product</string>
+    <string name="edit_product_label">Edit Product</string>
     <string name="name_label">Name</string>
     <string name="code_label">Code</string>
     <string name="description_label">Description</string>
