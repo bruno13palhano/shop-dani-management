@@ -128,8 +128,10 @@ fun NewProductScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val errorMessage = stringResource(id = R.string.empty_fields_error)
+    val screenTitle = stringResource(id = R.string.new_product_label)
 
     ProductContent(
+        screenTitle = screenTitle,
         snackbarHostState = snackbarHostState,
         categories = viewModel.allCategories,
         companies = viewModel.allCompanies,
