@@ -63,7 +63,9 @@ fun StockListScreen(
     var showCategoryDialog by remember { mutableStateOf(false) }
 
     StockListContent(
-        categoryId = viewModel.name,
+        categoryId = viewModel.name.ifEmpty {
+            stringResource(id = R.string.all_products_label)
+        },
         showCategoryDialog = showCategoryDialog,
         stockList = stockList,
         onCategoryChange = viewModel::updateName,

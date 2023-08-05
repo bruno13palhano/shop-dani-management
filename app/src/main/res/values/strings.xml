@@ -54,6 +54,7 @@
     <string name="more_options_label">More options</string>
     <string name="edit_label">Edit</string>
     <string name="delete_label">Delete</string>
+    <string name="all_products_label">All the products</string>
     <string name="add_to_catalog_label">Add to catalog</string>
     <string name="save_categories_label">Save categories</string>
     <string name="price_tag">%.2fR$</string>
