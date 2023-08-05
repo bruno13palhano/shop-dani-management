@@ -138,6 +138,7 @@ class NewProductViewModel @Inject constructor(
             .filter { it.isChecked }
             .map { it.category }.toString()
             .replace("[","").replace("]", "")
+        categories = listOf(this.category)
     }
 
     fun updateCompany(company: String) {
