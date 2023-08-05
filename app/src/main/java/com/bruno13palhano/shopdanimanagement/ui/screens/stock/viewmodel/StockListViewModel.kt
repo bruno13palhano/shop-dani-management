@@ -13,8 +13,9 @@ import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Stock
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,18 +25,8 @@ class StockListViewModel @Inject constructor(
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
     @DefaultProductRepository private val productRepository: ProductData<Product>
 ): ViewModel() {
-    val stock = productRepository.getAll()
-        .map {
-            it.map { product ->
-                Stock(
-                    id = product.id,
-                    name = product.name,
-                    photo = product.photo,
-                    purchasePrice = product.purchasePrice,
-                    quantity = product.quantity
-                )
-            }
-        }
+    private val _stock = MutableStateFlow<List<Stock>>(emptyList())
+    val stock = _stock.asStateFlow()
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
@@ -60,6 +51,22 @@ class StockListViewModel @Inject constructor(
         viewModelScope.launch {
             categoryRepository.getById(id).collect {
                 name = it.name
+            }
+        }
+    }
+
+    fun getProductsByCategory(category: String) {
+        viewModelScope.launch {
+            productRepository.search(category).collect {
+                _stock.value = it.map { product ->
+                    Stock(
+                        id = product.id,
+                        name = product.name,
+                        photo = product.photo,
+                        purchasePrice = product.purchasePrice,
+                        quantity = product.quantity
+                    )
+                }
             }
         }
     }

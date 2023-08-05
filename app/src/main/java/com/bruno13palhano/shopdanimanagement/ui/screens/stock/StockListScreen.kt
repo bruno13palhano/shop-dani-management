@@ -56,6 +56,10 @@ fun StockListScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.getCategory(categoryId)
     }
+    LaunchedEffect(key1 = viewModel.name) {
+        viewModel.getProductsByCategory(viewModel.name)
+    }
+
     var showCategoryDialog by remember { mutableStateOf(false) }
 
     StockListContent(
@@ -63,7 +67,7 @@ fun StockListScreen(
         showCategoryDialog = showCategoryDialog,
         stockList = stockList,
         onCategoryChange = viewModel::updateName,
-        onOkClick = { viewModel.updateCategory(categoryId.toLong()) },
+        onOkClick = { viewModel.updateCategory(categoryId) },
         onDismissRequest = { showCategoryDialog = false },
         onItemClick = onItemClick,
         onEditItemClick = {
