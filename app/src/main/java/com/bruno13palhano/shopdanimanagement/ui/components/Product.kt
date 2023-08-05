@@ -677,6 +677,6 @@ fun ProductPreview() {
 }
 
 object ProductMenuItem {
-    const val addTCatalog = 0
+    const val addToCatalog = 0
     const val delete = 1
 }

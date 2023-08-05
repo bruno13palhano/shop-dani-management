@@ -180,7 +180,7 @@ fun EditProductScreen(
         },
         onMoreOptionsItemClick = { index ->
             when (index) {
-                ProductMenuItem.addTCatalog -> {
+                ProductMenuItem.addToCatalog -> {
 
                 }
                 ProductMenuItem.delete -> {
