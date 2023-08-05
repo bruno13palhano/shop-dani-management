@@ -1,6 +1,8 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.stock
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.bruno13palhano.shopdanimanagement.ui.components.StockItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockCategoriesViewModel
@@ -70,6 +74,13 @@ fun StockCategoriesScreen(
             showCategoryDialog = false
         },
         onItemClick = onItemClick,
+        onMoreOptionsItemClick = { index ->
+            when (index) {
+                StockCategoriesItems.allProducts -> {
+                    onItemClick(index.toString())
+                }
+            }
+        },
         navigateBack = navigateBack,
     )
 }
@@ -85,8 +96,14 @@ private fun StockCategoriesContent(
     onDismissRequest: () -> Unit,
     onOkClick: () -> Unit,
     onItemClick: (categoryId: String) -> Unit,
+    onMoreOptionsItemClick: (index: Int) -> Unit,
     navigateBack: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+    val items = arrayOf(
+        stringResource(id = R.string.all_products_label)
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -97,6 +114,28 @@ private fun StockCategoriesContent(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.up_button_label)
                         )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { expanded = true }) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = stringResource(id = R.string.more_options_label)
+                            )
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                MoreOptionsMenu(
+                                    items = items,
+                                    expanded = expanded,
+                                    onDismissRequest = { expandedValue -> expanded = expandedValue},
+                                    onClick = onMoreOptionsItemClick
+                                )
+                            }
+                        }
                     }
                 }
             )
@@ -164,6 +203,7 @@ private fun StockCategoriesListPreview() {
                 onDismissRequest = {},
                 onOkClick = {},
                 onItemClick = {},
+                onMoreOptionsItemClick = {},
                 navigateBack = {},
             )
         }
@@ -228,4 +268,8 @@ fun CategoryDialog(
             }
         }
     }
+}
+
+object StockCategoriesItems {
+    const val allProducts = 0
 }
