@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -45,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
+import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.bruno13palhano.shopdanimanagement.ui.components.StockItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockCategoriesViewModel
@@ -154,7 +156,7 @@ private fun StockCategoriesContent(
             contentPadding = PaddingValues(8.dp),
         ) {
             items(categories) { category ->
-                StockItem(category = category.name) {
+                SimpleItemList(itemName = category.name, imageVector = Icons.Filled.ArrowForward) {
                     onItemClick(category.id.toString())
                 }
             }

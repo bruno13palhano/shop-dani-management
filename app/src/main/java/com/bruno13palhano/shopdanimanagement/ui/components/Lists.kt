@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -197,8 +198,9 @@ fun StockItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StockItem(
-    category: String,
+fun SimpleItemList(
+    itemName: String,
+    imageVector: ImageVector,
     onClick: () -> Unit
 ) {
     ElevatedCard(
@@ -217,12 +219,12 @@ fun StockItem(
                 modifier = Modifier
                     .weight(1F, true)
                     .padding(16.dp),
-                text = category,
+                text = itemName,
                 style = MaterialTheme.typography.titleMedium
             )
             Icon(
                 modifier = Modifier.padding(8.dp),
-                imageVector = Icons.Filled.ArrowForward,
+                imageVector = imageVector,
                 contentDescription = null
             )
         }
@@ -278,8 +280,9 @@ private fun StockListPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            StockItem(
-                category = "Perfumes",
+            SimpleItemList(
+                itemName = "Perfumes",
+                imageVector = Icons.Filled.ArrowForward,
                 onClick = {}
             )
         }
