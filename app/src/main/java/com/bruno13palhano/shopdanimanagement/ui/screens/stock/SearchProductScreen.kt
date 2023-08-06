@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,9 +31,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalStockItem
+import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.SearchProductsViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -43,10 +46,15 @@ fun SearchProductScreen(
     viewModel: SearchProductsViewModel = hiltViewModel()
 ) {
     val stockProducts by viewModel.stockProducts.collectAsStateWithLifecycle()
+    val searchCacheList by viewModel.searchCache.collectAsStateWithLifecycle()
 
     SearchProductContent(
         stockProducts = stockProducts,
-        onSearchClick = viewModel::search,
+        searchCacheList = searchCacheList,
+        onSearchClick = { search ->
+            viewModel.search(search)
+            viewModel.insertSearch(search)
+        },
         onItemClick = onItemClick,
         navigateUp = navigateUp
     )
@@ -56,6 +64,7 @@ fun SearchProductScreen(
 @Composable
 fun SearchProductContent(
     stockProducts: List<Stock>,
+    searchCacheList: List<SearchCache>,
     onSearchClick: (search: String) -> Unit,
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit
@@ -95,8 +104,19 @@ fun SearchProductContent(
             },
             placeholder = { Text(text = stringResource(id = R.string.search_products_label)) }
         ) {
-            for (i in 0..30) {
-                Text(text = "item $i")
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                items(items = searchCacheList, key = { searchCache -> searchCache.search }) { searchCache ->
+                    SimpleItemList(
+                        itemName = searchCache.search,
+                        imageVector = Icons.Filled.Close,
+                        onClick = {
+                            active = false
+                            onSearchClick(searchCache.search)
+                        }
+                    )
+                }
             }
         }
         LazyColumn(
@@ -121,14 +141,6 @@ fun SearchProductContent(
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun SearchProductDynamicPreview() {
-    val items = listOf(
-        Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
-        Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
-        Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
-        Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
-        Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
-        Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
-    )
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -136,6 +148,7 @@ fun SearchProductDynamicPreview() {
         ) {
             SearchProductContent(
                 stockProducts = items,
+                searchCacheList = searchCacheList,
                 onSearchClick = {},
                 onItemClick = {},
                 navigateUp = {}
@@ -148,14 +161,6 @@ fun SearchProductDynamicPreview() {
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun SearchProductPreview() {
-    val items = listOf(
-        Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
-        Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
-        Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
-        Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
-        Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
-        Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
-    )
     ShopDaniManagementTheme(
         dynamicColor = false
     ) {
@@ -165,6 +170,7 @@ fun SearchProductPreview() {
         ) {
             SearchProductContent(
                 stockProducts = items,
+                searchCacheList = searchCacheList,
                 onSearchClick = {},
                 onItemClick = {},
                 navigateUp = {}
@@ -172,3 +178,20 @@ fun SearchProductPreview() {
         }
     }
 }
+
+val items = listOf(
+    Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
+    Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
+    Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
+    Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
+    Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
+    Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
+)
+val searchCacheList = listOf(
+    SearchCache(search = "perfume"),
+    SearchCache(search = "essencial"),
+    SearchCache(search = "gits"),
+    SearchCache(search = "soaps"),
+    SearchCache(search = "avon"),
+    SearchCache(search = "homem"),
+)
