@@ -18,8 +18,8 @@ import javax.inject.Inject
 class SearchProductsViewModel @Inject constructor(
     @DefaultProductRepository private val productRepository: ProductData<Product>
 ) : ViewModel() {
-    private val _stock = MutableStateFlow(emptyList<Stock>())
-    val stock = _stock.asStateFlow()
+    private val _stockProducts = MutableStateFlow(emptyList<Stock>())
+    val stockProducts = _stockProducts.asStateFlow()
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(),
@@ -28,8 +28,8 @@ class SearchProductsViewModel @Inject constructor(
 
     fun search(search: String) {
         viewModelScope.launch {
-            productRepository.search(search).collect {
-                _stock.value = it.map { product ->
+            productRepository.search(search.trim()).collect {
+                _stockProducts.value = it.map { product ->
                     Stock(
                         id = product.id,
                         name = product.name,
