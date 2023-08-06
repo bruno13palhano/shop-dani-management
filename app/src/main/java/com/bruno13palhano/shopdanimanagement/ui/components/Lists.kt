@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Image
@@ -22,6 +23,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,16 +57,22 @@ fun HorizontalStockItem(
                 if(photo.isEmpty()) {
                     Image(
                         modifier = Modifier
-                            .size(128.dp),
+                            .size(128.dp)
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(5)),
                         imageVector = Icons.Filled.Image,
-                        contentDescription = stringResource(id = R.string.product_image_label)
+                        contentDescription = stringResource(id = R.string.product_image_label),
+                        contentScale = ContentScale.Crop
                     )
                 } else {
                     Image(
                         modifier = Modifier
-                            .size(128.dp),
+                            .size(128.dp)
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(5)),
                         painter = rememberAsyncImagePainter(model = Uri.parse(photo)),
-                        contentDescription = stringResource(id = R.string.product_image_label)
+                        contentDescription = stringResource(id = R.string.product_image_label),
+                        contentScale = ContentScale.Crop
                     )
                 }
             }
@@ -130,17 +139,21 @@ fun StockItem(
                     Image(
                         modifier = Modifier
                             .size(200.dp)
-                            .padding(16.dp),
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(5)),
                         imageVector = Icons.Filled.Image,
                         contentDescription = stringResource(id = R.string.product_image_label),
+                        contentScale = ContentScale.Crop
                     )
                 } else {
                     Image(
                         modifier = Modifier
                             .size(200.dp)
-                            .padding(16.dp),
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(5)),
                         painter = rememberAsyncImagePainter(model = Uri.parse(photo)),
-                        contentDescription = stringResource(id = R.string.product_image_label)
+                        contentDescription = stringResource(id = R.string.product_image_label),
+                        contentScale = ContentScale.Crop
                     )
                 }
             }
