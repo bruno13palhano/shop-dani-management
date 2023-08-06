@@ -6,19 +6,23 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,10 +38,12 @@ import com.bruno13palhano.shopdanimanagement.ui.navigation.StockDestinations
 @Composable
 fun StockScreen(
     onClick: (route:String) -> Unit,
+    onSearchClick: () -> Unit,
     onMenuClick: () -> Unit
 ) {
     StockContent(
         onClick = onClick,
+        onSearchClick = onSearchClick,
         onMenuClick = onMenuClick
     )
 }
@@ -46,17 +52,26 @@ fun StockScreen(
 @Composable
 fun StockContent(
     onClick: (route: String) -> Unit,
+    onSearchClick: () -> Unit,
     onMenuClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.stock_label))},
+                title = { Text(text = stringResource(id = R.string.stock_label)) },
                 navigationIcon = {
                     IconButton(onClick = onMenuClick) {
                         Icon(
                             imageVector = Icons.Filled.Menu,
                             contentDescription = stringResource(id = R.string.drawer_menu_label)
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onSearchClick) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = stringResource(id = R.string.search_label)
                         )
                     }
                 }
@@ -102,6 +117,7 @@ private fun StockDynamicPreview() {
         ) {
             StockContent(
                 onClick = {},
+                onSearchClick = {},
                 onMenuClick = {}
             )
         }
@@ -121,6 +137,7 @@ private fun StockPreview() {
         ) {
             StockContent(
                 onClick = {},
+                onSearchClick = {},
                 onMenuClick = {}
             )
         }
