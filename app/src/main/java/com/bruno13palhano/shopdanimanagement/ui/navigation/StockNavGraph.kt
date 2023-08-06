@@ -44,6 +44,9 @@ fun NavGraphBuilder.stockNavGraph(
         }
         composable(route = StockDestinations.STOCK_SEARCH_PRODUCT_ROUTE) {
             SearchProductScreen(
+                onItemClick = { productId ->
+                    navController.navigate(route = "${StockDestinations.STOCK_EDIT_PRODUCT_ROUTE}$productId")
+                },
                 navigateUp = { navController.navigateUp() }
             )
         }
