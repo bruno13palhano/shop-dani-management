@@ -7,6 +7,7 @@ import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.StockScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.EditProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.NewProductScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.SearchProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockCategoriesScreen
 
@@ -25,6 +26,9 @@ fun NavGraphBuilder.stockNavGraph(
                 onClick = { route ->
                     navController.navigate(route)
                 },
+                onSearchClick = {
+                    navController.navigate(StockDestinations.STOCK_SEARCH_PRODUCT_ROUTE)
+                },
                 onMenuClick = onMenuClick
             )
         }
@@ -36,6 +40,11 @@ fun NavGraphBuilder.stockNavGraph(
                 navigateBack = {
                     navController.navigateUp()
                 }
+            )
+        }
+        composable(route = StockDestinations.STOCK_SEARCH_PRODUCT_ROUTE) {
+            SearchProductScreen(
+                navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = StockDestinations.STOCK_LIST_WITH_ID_ROUTE) { backStackEntry ->
@@ -78,6 +87,7 @@ fun NavGraphBuilder.stockNavGraph(
 object StockDestinations {
     const val MAIN_STOCK_ROUTE = "main_stock_route"
     const val STOCK_CATEGORIES_ROUTE = "stock_categories_route"
+    const val STOCK_SEARCH_PRODUCT_ROUTE = "stock_search_product"
     const val STOCK_LIST_ROUTE = "stock_list_route/"
     const val STOCK_LIST_WITH_ID_ROUTE = "$STOCK_LIST_ROUTE{$ITEM_ID}"
     const val STOCK_NEW_PRODUCT_ROUTE = "stock_new_product_route"
