@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.model.Product
+import com.bruno13palhano.core.model.Stock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -17,8 +18,8 @@ import javax.inject.Inject
 class SearchProductsViewModel @Inject constructor(
     @DefaultProductRepository private val productRepository: ProductData<Product>
 ) : ViewModel() {
-    private val _products = MutableStateFlow(emptyList<Product>())
-    val products = _products.asStateFlow()
+    private val _stock = MutableStateFlow(emptyList<Stock>())
+    val stock = _stock.asStateFlow()
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(),
@@ -28,7 +29,15 @@ class SearchProductsViewModel @Inject constructor(
     fun search(search: String) {
         viewModelScope.launch {
             productRepository.search(search).collect {
-                _products.value = it
+                _stock.value = it.map { product ->
+                    Stock(
+                        id = product.id,
+                        name = product.name,
+                        photo = product.photo,
+                        purchasePrice = product.purchasePrice,
+                        quantity = product.quantity
+                    )
+                }
             }
         }
     }
