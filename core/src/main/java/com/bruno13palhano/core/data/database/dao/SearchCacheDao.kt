@@ -1,6 +1,7 @@
 package com.bruno13palhano.core.data.database.dao
 
 import androidx.room.Dao
+import com.bruno13palhano.core.data.SearchCacheData
 import com.bruno13palhano.core.data.database.model.SearchCacheEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -11,23 +12,23 @@ import kotlinx.coroutines.flow.Flow
  * This interface is responsible for handling [SearchCacheEntity] access to the Room database.
  */
 @Dao
-internal interface SearchCacheDao {
+internal interface SearchCacheDao : SearchCacheData<SearchCacheEntity> {
     /**
      * Inserts a [SearchCacheEntity] into the database.
-     * @param searchCache the new [SearchCacheEntity].
+     * @param model the new [SearchCacheEntity].
      * @return the id of the new [SearchCacheEntity].
      */
-    suspend fun insert(searchCache: SearchCacheEntity): Long
+    override suspend fun insert(model: SearchCacheEntity): Long
 
     /**
      * Deletes the [SearchCacheEntity] specified by this [id].
      * @param id the [id] for this [SearchCacheEntity].
      */
-    suspend fun deleteById(id: Long)
+    override suspend fun deleteById(id: Long)
 
     /**
      * Gets all [SearchCacheEntity].
      * @return a [Flow] containing a [List] of all [SearchCacheEntity].
      */
-    fun getAll(): Flow<List<SearchCacheEntity>>
+    override fun getAll(): Flow<List<SearchCacheEntity>>
 }
