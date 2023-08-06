@@ -1,97 +1,116 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.stock
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
-import androidx.compose.material3.ShapeDefaults
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalStockItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.SearchProductsViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
-fun SearchProductScreen() {
-    SearchProductContent()
+fun SearchProductScreen(
+    onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit,
+    viewModel: SearchProductsViewModel = hiltViewModel()
+) {
+    val stockProducts by viewModel.stockProducts.collectAsStateWithLifecycle()
+
+    SearchProductContent(
+        stockProducts = stockProducts,
+        onSearchClick = viewModel::search,
+        onItemClick = onItemClick,
+        navigateUp = navigateUp
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchProductContent() {
-    var text by rememberSaveable { mutableStateOf("") }
-    var active by rememberSaveable { mutableStateOf(false) }
+fun SearchProductContent(
+    stockProducts: List<Stock>,
+    onSearchClick: (search: String) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit
+) {
+    var search by rememberSaveable { mutableStateOf("") }
+    var active by rememberSaveable { mutableStateOf(true) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    SearchBar(
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .fillMaxWidth(),
-                        query = text,
-                        onQueryChange = { text = it },
-                        onSearch = { active = false },
-                        active = active,
-                        onActiveChange = {
-                            println(it)
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = stringResource(id = R.string.search_label)
-                            )
-                        }
-                    ) {
-
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.up_button_label)
-                        )
-                    }
+    Scaffold(topBar = { TopAppBar( title = {} ) }) {
+        SearchBar(
+            modifier = Modifier
+                .fillMaxWidth(),
+            query = search,
+            onQueryChange = { searchValue -> search = searchValue },
+            onSearch = { active = false },
+            active = active,
+            onActiveChange = { isActive ->
+                active = isActive
+            },
+            leadingIcon = {
+                IconButton(onClick = { if (active) active = false else navigateUp() }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = stringResource(id = R.string.up_button_label)
+                    )
                 }
-            )
-        }
-    ) {
-        LazyColumn(
-            modifier = Modifier.padding(it)
+            },
+            trailingIcon = {
+                IconButton(onClick = {
+                    active = false
+                    onSearchClick(search)
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = stringResource(id = R.string.search_label)
+                    )
+                }
+            },
+            placeholder = { Text(text = stringResource(id = R.string.search_products_label)) }
         ) {
-            items(20) {
-                ListItem(
-                    headlineContent = { Text(text = "$it item") }
+            for (i in 0..30) {
+                Text(text = "item $i")
+            }
+        }
+        LazyColumn(
+            modifier = Modifier.padding(it),
+            contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
+        ) {
+            items(items = stockProducts, key = { stock -> stock.id } ) { stock ->
+                HorizontalStockItem(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    name = stock.name,
+                    photo = stock.photo,
+                    price = stock.purchasePrice,
+                    quantity = stock.quantity,
+                    onClick = { onItemClick(stock.id) }
                 )
             }
         }
@@ -102,12 +121,25 @@ fun SearchProductContent() {
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun SearchProductDynamicPreview() {
+    val items = listOf(
+        Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
+        Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
+        Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
+        Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
+        Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
+        Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
+    )
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            SearchProductContent()
+            SearchProductContent(
+                stockProducts = items,
+                onSearchClick = {},
+                onItemClick = {},
+                navigateUp = {}
+            )
         }
     }
 }
@@ -116,6 +148,14 @@ fun SearchProductDynamicPreview() {
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun SearchProductPreview() {
+    val items = listOf(
+        Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
+        Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
+        Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
+        Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
+        Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
+        Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
+    )
     ShopDaniManagementTheme(
         dynamicColor = false
     ) {
@@ -123,7 +163,12 @@ fun SearchProductPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            SearchProductContent()
+            SearchProductContent(
+                stockProducts = items,
+                onSearchClick = {},
+                onItemClick = {},
+                navigateUp = {}
+            )
         }
     }
 }
