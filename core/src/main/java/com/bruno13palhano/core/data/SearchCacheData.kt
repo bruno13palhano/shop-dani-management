@@ -17,10 +17,10 @@ interface SearchCacheData<T> {
     suspend fun insert(model: T): Long
 
     /**
-     * Deletes the model of type [T] specified by this [id].
-     * @param id the [id] of the model to be deleted.
+     * Deletes the model of type [T] specified by this [search].
+     * @param search the [search] value of the model to be deleted.
      */
-    suspend fun deleteById(id: Long)
+    suspend fun deleteById(search: String)
 
     /**
      * Gets all models of type [T].

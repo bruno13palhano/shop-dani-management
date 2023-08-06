@@ -16,8 +16,8 @@ internal class SearchCacheRepository @Inject constructor(
         return searchCacheDao.insert(model.asInternalModel())
     }
 
-    override suspend fun deleteById(id: Long) {
-        searchCacheDao.deleteById(id)
+    override suspend fun deleteById(search: String) {
+        searchCacheDao.deleteById(search)
     }
 
     override fun getAll(): Flow<List<SearchCache>> {
