@@ -2,6 +2,7 @@ package com.bruno13palhano.core.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.bruno13palhano.core.data.SearchCacheData
 import com.bruno13palhano.core.data.database.model.SearchCacheEntity
@@ -20,15 +21,15 @@ internal interface SearchCacheDao : SearchCacheData<SearchCacheEntity> {
      * @param model the new [SearchCacheEntity].
      * @return the id of the new [SearchCacheEntity].
      */
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     override suspend fun insert(model: SearchCacheEntity): Long
 
     /**
-     * Deletes the [SearchCacheEntity] specified by this [id].
-     * @param id the [id] for this [SearchCacheEntity].
+     * Deletes the [SearchCacheEntity] specified by this [search].
+     * @param search the [search] for this [SearchCacheEntity].
      */
-    @Query("DELETE FROM search_cache_table WHERE id = :id")
-    override suspend fun deleteById(id: Long)
+    @Query("DELETE FROM search_cache_table WHERE search = :search")
+    override suspend fun deleteById(search: String)
 
     /**
      * Gets all [SearchCacheEntity].
