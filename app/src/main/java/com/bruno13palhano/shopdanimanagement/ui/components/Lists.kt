@@ -22,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -34,15 +33,16 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductItem(
+fun HorizontalStockItem(
+    modifier: Modifier,
     name: String,
-    price: String,
+    photo: String,
+    price: Float,
     quantity: Int,
-    isSold: Boolean,
     onClick: () -> Unit
 ) {
     ElevatedCard(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         onClick = onClick
     ) {
         Row(
@@ -51,19 +51,19 @@ fun ProductItem(
             Box(
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    modifier = Modifier
-                        .size(128.dp),
-                    imageVector = Icons.Filled.Image,
-                    contentDescription = stringResource(id = R.string.product_image_label)
-                )
-                if (isSold) {
-                    Text(
+                if(photo.isEmpty()) {
+                    Image(
                         modifier = Modifier
-                            .rotate(-45F),
-                        text = "Product Sold",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.error
+                            .size(128.dp),
+                        imageVector = Icons.Filled.Image,
+                        contentDescription = stringResource(id = R.string.product_image_label)
+                    )
+                } else {
+                    Image(
+                        modifier = Modifier
+                            .size(128.dp),
+                        painter = rememberAsyncImagePainter(model = Uri.parse(photo)),
+                        contentDescription = stringResource(id = R.string.product_image_label)
                     )
                 }
             }
@@ -74,24 +74,31 @@ fun ProductItem(
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp),
                     text = name,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
                 )
 
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp),
-                    text = price,
+                    text = stringResource(id = R.string.price_tag, price),
                     style = MaterialTheme.typography.bodyLarge,
-                    fontStyle = FontStyle.Italic
+                    fontStyle = FontStyle.Italic,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
                 )
 
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp),
-                    text = quantity.toString(),
-                    style = MaterialTheme.typography.bodyMedium
+                    text = stringResource(id = R.string.quantity_tag, quantity),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontStyle = FontStyle.Italic,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
                 )
             }
         }
@@ -217,11 +224,12 @@ private fun ProductItemPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            ProductItem(
+            HorizontalStockItem(
+                modifier = Modifier.fillMaxSize(),
                 name = "Essencial",
-                price = "178.99R$",
+                price = 178.99F,
+                photo = "",
                 quantity = 10,
-                isSold = true,
                 onClick = {}
             )
         }
