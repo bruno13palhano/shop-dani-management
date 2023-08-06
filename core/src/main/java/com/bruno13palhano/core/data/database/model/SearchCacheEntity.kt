@@ -9,17 +9,12 @@ import com.bruno13palhano.core.model.SearchCache
  * [SearchCache] as an Entity.
  *
  * An entity class to persist search cache in database.
- * @property id the id of this SearchCacheEntity.
  * @property search the value of the search.
  */
 @Entity(tableName = "search_cache_table")
 internal data class SearchCacheEntity(
-
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    val id: Long,
-
-    @ColumnInfo(name = "name")
+    @PrimaryKey
+    @ColumnInfo(name = "search")
     val search: String
 )
 
@@ -28,7 +23,6 @@ internal data class SearchCacheEntity(
  * @return [SearchCache]
  */
 internal fun SearchCacheEntity.asExternalModel() = SearchCache(
-    id = id,
     search = search
 )
 
@@ -37,6 +31,5 @@ internal fun SearchCacheEntity.asExternalModel() = SearchCache(
  * @return [SearchCacheEntity].
  */
 internal fun SearchCache.asInternalModel() = SearchCacheEntity(
-    id = id,
     search = search
 )
