@@ -48,7 +48,6 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
-import com.bruno13palhano.shopdanimanagement.ui.components.StockItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockCategoriesViewModel
 
 @Composable
