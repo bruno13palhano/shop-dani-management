@@ -179,7 +179,7 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
     object Stock: Screen(MainDestinations.STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
     object Shopping: Screen(MainDestinations.SHOPPING_ROUTE, Icons.Filled.ShoppingCart, R.string.shopping_label)
     object Sales: Screen(MainDestinations.SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
-    object Requests: Screen(MainDestinations.REQUESTS_ROUTE, Icons.Filled.Checklist, R.string.requests_label)
+    object Requests: Screen(MainDestinations.ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
 }
 
 @Composable

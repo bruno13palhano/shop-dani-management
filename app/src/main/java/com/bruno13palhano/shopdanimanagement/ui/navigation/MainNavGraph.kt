@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.bruno13palhano.shopdanimanagement.ui.screens.HomeScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.RequestsScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.OrdersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.SalesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.ShoppingScreen
 
@@ -41,8 +41,8 @@ fun MainNavGraph(
                 onMenuClick = onMenuClick
             )
         }
-        composable(route = MainDestinations.REQUESTS_ROUTE) {
-            RequestsScreen(
+        composable(route = MainDestinations.ORDERS_ROUTE) {
+            OrdersScreen(
                 onMenuClick = onMenuClick
             )
         }
@@ -54,5 +54,5 @@ object MainDestinations {
     const val STOCK_ROUTE = "stock_route"
     const val SHOPPING_ROUTE = "shopping_route"
     const val SALES_ROUTE = "sales_route"
-    const val REQUESTS_ROUTE = "requests_route"
+    const val ORDERS_ROUTE = "orders_route"
 }

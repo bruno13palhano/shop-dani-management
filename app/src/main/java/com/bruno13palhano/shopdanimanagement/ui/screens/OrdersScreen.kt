@@ -22,23 +22,23 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
-fun RequestsScreen(
+fun OrdersScreen(
     onMenuClick: () -> Unit
 ) {
-    RequestsContent(
+    OrdersContent(
         onMenuClick = onMenuClick
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RequestsContent(
+fun OrdersContent(
     onMenuClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.requests_label)) },
+                title = { Text(text = stringResource(id = R.string.orders_label)) },
                 navigationIcon = {
                     IconButton(onClick = onMenuClick) {
                         Icon(
@@ -65,7 +65,7 @@ fun RequestsDynamicPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            RequestsContent(
+            OrdersContent(
                 onMenuClick = {}
             )
         }
@@ -75,7 +75,7 @@ fun RequestsDynamicPreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
-fun RequestsPreview() {
+fun OrdersPreview() {
     ShopDaniManagementTheme(
         dynamicColor = false
     ) {
@@ -83,7 +83,7 @@ fun RequestsPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            RequestsContent(
+            OrdersContent(
                 onMenuClick = {}
             )
         }
