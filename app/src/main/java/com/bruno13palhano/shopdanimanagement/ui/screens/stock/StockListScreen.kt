@@ -38,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CategoryDialog
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.bruno13palhano.shopdanimanagement.ui.components.StockItem
