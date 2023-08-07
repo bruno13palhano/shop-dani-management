@@ -78,7 +78,10 @@ fun SearchProductContent(
                 .fillMaxWidth(),
             query = search,
             onQueryChange = { searchValue -> search = searchValue },
-            onSearch = { active = false },
+            onSearch = { searchValue ->
+                active = false
+                onSearchClick(searchValue)
+            },
             active = active,
             onActiveChange = { isActive ->
                 active = isActive
@@ -106,6 +109,7 @@ fun SearchProductContent(
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
+                reverseLayout = true
             ) {
                 items(items = searchCacheList, key = { searchCache -> searchCache.search }) { searchCache ->
                     SimpleItemList(
