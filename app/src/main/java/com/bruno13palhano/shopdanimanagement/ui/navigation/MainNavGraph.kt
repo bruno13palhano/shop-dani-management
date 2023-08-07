@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.bruno13palhano.shopdanimanagement.ui.screens.HomeScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.OrdersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.SalesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.ShoppingScreen
 
@@ -41,11 +40,10 @@ fun MainNavGraph(
                 onMenuClick = onMenuClick
             )
         }
-        composable(route = MainDestinations.ORDERS_ROUTE) {
-            OrdersScreen(
-                onMenuClick = onMenuClick
-            )
-        }
+        ordersBavGraph(
+            navController = navController,
+            onMenuClick = onMenuClick
+        )
     }
 }
 
