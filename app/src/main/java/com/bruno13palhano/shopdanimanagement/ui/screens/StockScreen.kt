@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
@@ -18,11 +18,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -83,7 +81,7 @@ fun StockContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.5F)
-                    .padding(16.dp),
+                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp),
                 onClick = { onClick(StockDestinations.STOCK_CATEGORIES_ROUTE) }
             ) {
                 Column(
@@ -98,6 +96,30 @@ fun StockContent(
                     )
                     Text(
                         text = stringResource(id = R.string.categories_label),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
+            ElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(1F)
+                    .padding( start = 16.dp, top = 8.dp, end = 16.dp, bottom = 16.dp),
+                onClick = {}
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        modifier = Modifier.size(128.dp),
+                        imageVector = Icons.Filled.Analytics,
+                        contentDescription = stringResource(id = R.string.analytics_image_label)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.analytics_label),
                         textAlign = TextAlign.Center
                     )
                 }
