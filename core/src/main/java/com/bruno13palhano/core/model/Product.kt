@@ -18,6 +18,8 @@ package com.bruno13palhano.core.model
 * @property salePrice product sale price.
 * @property isPaid defines if the product is paid.
 * @property isSold defines if the product is sold.
+* @property isPaidByCustomer defines whether the customer has already paid for the product.
+* @property isOrderedByCustomer defines whether the customer ordered the product.
 */
 data class Product(
     val id: Long,
@@ -33,5 +35,7 @@ data class Product(
     val purchasePrice: Float,
     val salePrice: Float,
     val isPaid: Boolean,
-    val isSold: Boolean
+    val isSold: Boolean,
+    val isPaidByCustomer: Boolean,
+    val isOrderedByCustomer: Boolean
 )

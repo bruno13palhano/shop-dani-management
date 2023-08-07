@@ -23,6 +23,8 @@ import com.bruno13palhano.core.model.Product
  * @property salePrice product sale price.
  * @property isPaid defines if the product is paid.
  * @property isSold defines if the product is sold.
+ * @property isPaidByCustomer defines whether the customer has already paid for the product.
+ * @property isOrderedByCustomer defines whether the customer ordered the product.
  */
 @Entity(tableName = "product_table")
 internal data class ProductEntity(
@@ -68,7 +70,13 @@ internal data class ProductEntity(
     val isPaid: Boolean,
 
     @ColumnInfo(name = "is_sold")
-    val isSold: Boolean
+    val isSold: Boolean,
+
+    @ColumnInfo(name = "is_paid_by_customer")
+    val isPaidByCustomer: Boolean,
+
+    @ColumnInfo(name = "is_ordered_by_customer")
+    val isOrderedByCustomer: Boolean
 )
 
 /**
@@ -89,7 +97,9 @@ internal fun ProductEntity.asExternalModel() = Product(
     purchasePrice = purchasePrice,
     salePrice = salePrice,
     isPaid = isPaid,
-    isSold = isSold
+    isSold = isSold,
+    isPaidByCustomer = isPaidByCustomer,
+    isOrderedByCustomer = isOrderedByCustomer
 )
 
 /**
@@ -110,5 +120,7 @@ internal fun Product.asInternalModel() = ProductEntity(
     purchasePrice = purchasePrice,
     salePrice = salePrice,
     isPaid = isPaid,
-    isSold = isSold
+    isSold = isSold,
+    isPaidByCustomer = isPaidByCustomer,
+    isOrderedByCustomer = isOrderedByCustomer
 )

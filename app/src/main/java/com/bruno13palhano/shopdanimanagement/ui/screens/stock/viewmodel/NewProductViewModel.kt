@@ -181,7 +181,9 @@ class NewProductViewModel @Inject constructor(
             purchasePrice = stringToFloat(purchasePrice),
             salePrice = stringToFloat(salePrice),
             isPaid = isPaid,
-            isSold = false
+            isSold = false,
+            isPaidByCustomer = false,
+            isOrderedByCustomer = false
         )
 
         viewModelScope.launch {
