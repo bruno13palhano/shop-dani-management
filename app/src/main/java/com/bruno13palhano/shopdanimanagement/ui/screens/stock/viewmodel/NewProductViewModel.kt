@@ -183,7 +183,8 @@ class NewProductViewModel @Inject constructor(
             isPaid = isPaid,
             isSold = false,
             isPaidByCustomer = false,
-            isOrderedByCustomer = false
+            isOrderedByCustomer = false,
+            dateOfSale = 0L
         )
 
         viewModelScope.launch {
