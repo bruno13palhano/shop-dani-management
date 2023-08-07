@@ -68,7 +68,7 @@ fun CategoriesContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.stock_categories_label)) },
+                title = { Text(text = stringResource(id = R.string.categories_label)) },
                 navigationIcon = {
                     IconButton(onClick = navigateBack) {
                         Icon(
