@@ -37,7 +37,7 @@ fun StockListScreen(
             stringResource(id = R.string.all_products_label)
         },
         showCategoryDialog = showCategoryDialog,
-        stockList = stockList,
+        itemList = stockList,
         onCategoryChange = viewModel::updateName,
         onOkClick = { viewModel.updateCategory(categoryId) },
         onDismissRequest = { showCategoryDialog = false },

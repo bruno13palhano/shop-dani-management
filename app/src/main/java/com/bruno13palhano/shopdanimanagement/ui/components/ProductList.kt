@@ -43,7 +43,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 fun ProductListContent(
     categoryId: String,
     showCategoryDialog: Boolean,
-    stockList: List<Stock>,
+    itemList: List<Stock>,
     onCategoryChange: (category: String) -> Unit,
     onOkClick: () -> Unit,
     onDismissRequest: () -> Unit,
@@ -115,7 +115,7 @@ fun ProductListContent(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(it)
         ) {
-            items(stockList) { stock ->
+            items(itemList) { stock ->
                 StockItem(
                     modifier = Modifier
                         .fillMaxSize()
@@ -160,7 +160,7 @@ private fun ProductListDynamicPreview() {
             ProductListContent(
                 showCategoryDialog = true,
                 categoryId = "Perfume",
-                stockList = items,
+                itemList = items,
                 onCategoryChange = {},
                 onOkClick = {},
                 onDismissRequest = {},
@@ -196,7 +196,7 @@ private fun ProductListPreview() {
             ProductListContent(
                 showCategoryDialog = true,
                 categoryId = "Perfume",
-                stockList = items,
+                itemList = items,
                 onCategoryChange = {},
                 onOkClick = {},
                 onDismissRequest = {},
