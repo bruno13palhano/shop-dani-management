@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.orders
+package com.bruno13palhano.shopdanimanagement.ui.screens.common
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -9,13 +9,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoriesContent
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoriesItems
-import com.bruno13palhano.shopdanimanagement.ui.screens.orders.viewmodel.OrdersCategoriesViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.CategoriesViewModel
 
 @Composable
-fun OrdersCategoriesScreen(
+fun CategoriesScreen(
     onItemClick: (categoryId: String) -> Unit,
     navigateUp: () -> Unit,
-    viewModel: OrdersCategoriesViewModel = hiltViewModel()
+    viewModel: CategoriesViewModel = hiltViewModel()
 ) {
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     var showCategoryDialog by remember { mutableStateOf(false) }

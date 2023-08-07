@@ -5,11 +5,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.StockScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CategoriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.EditProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.NewProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.SearchProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockListScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockCategoriesScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -33,11 +33,11 @@ fun NavGraphBuilder.stockNavGraph(
             )
         }
         composable(route = StockDestinations.STOCK_CATEGORIES_ROUTE) {
-            StockCategoriesScreen(
+            CategoriesScreen(
                 onItemClick = { categoryId ->
                     navController.navigate(route = "${StockDestinations.STOCK_LIST_ROUTE}$categoryId")
                 },
-                navigateBack = {
+                navigateUp = {
                     navController.navigateUp()
                 }
             )

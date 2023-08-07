@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.OrdersScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.orders.OrdersCategoriesScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CategoriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.orders.OrdersListScreen
 
 private const val ITEM_ID = "item_Id"
@@ -27,7 +27,7 @@ fun NavGraphBuilder.ordersBavGraph(
             )
         }
         composable(route = OrdersDestinations.ORDERS_CATEGORIES_ROUTE) {
-            OrdersCategoriesScreen(
+            CategoriesScreen(
                 onItemClick = { categoryId ->
                     navController.navigate(route = "${OrdersDestinations.ORDERS_LIST_ROUTE}$categoryId")
                 },
