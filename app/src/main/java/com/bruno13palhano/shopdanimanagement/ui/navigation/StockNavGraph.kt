@@ -94,7 +94,7 @@ fun NavGraphBuilder.stockNavGraph(
 object StockDestinations {
     const val MAIN_STOCK_ROUTE = "main_stock_route"
     const val STOCK_CATEGORIES_ROUTE = "stock_categories_route"
-    const val STOCK_SEARCH_PRODUCT_ROUTE = "stock_search_product"
+    const val STOCK_SEARCH_PRODUCT_ROUTE = "stock_search_product_route"
     const val STOCK_LIST_ROUTE = "stock_list_route/"
     const val STOCK_LIST_WITH_ID_ROUTE = "$STOCK_LIST_ROUTE{$ITEM_ID}"
     const val STOCK_NEW_PRODUCT_ROUTE = "stock_new_product_route"
