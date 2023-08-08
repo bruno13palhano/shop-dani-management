@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel
+package com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,12 +21,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StockListViewModel @Inject constructor(
+class ProductListViewModel @Inject constructor(
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
     @DefaultProductRepository private val productRepository: ProductData<Product>
-): ViewModel() {
-    private val _stock = MutableStateFlow<List<Stock>>(emptyList())
-    val stock = _stock.asStateFlow()
+) : ViewModel() {
+    private val _orders = MutableStateFlow<List<Stock>>(emptyList())
+    val orders = _orders.asStateFlow()
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
@@ -41,7 +41,7 @@ class StockListViewModel @Inject constructor(
     }
 
     fun updateCategory(id: Long) {
-        val category = Category(id, name)
+        val category = Category(id, name.trim())
         viewModelScope.launch {
             categoryRepository.update(category)
         }
@@ -55,10 +55,10 @@ class StockListViewModel @Inject constructor(
         }
     }
 
-    fun getProductsByCategory(category: String) {
+    fun getProductsByCategory(category: String, isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
-            productRepository.search(category).collect {
-                _stock.value = it.map { product ->
+            productRepository.getProductsByCategory(category, isOrderedByCustomer).collect {
+                _orders.value = it.map { product ->
                     Stock(
                         id = product.id,
                         name = product.name,

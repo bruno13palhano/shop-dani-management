@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.orders
+package com.bruno13palhano.shopdanimanagement.ui.screens.common
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,21 +11,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductListContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.orders.viewmodel.OrdersListViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.ProductListViewModel
 
 @Composable
-fun OrdersListScreen(
+fun ProductListScreen(
     categoryId: Long,
+    isOrderedByCustomer: Boolean,
     onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit,
-    viewModel: OrdersListViewModel = hiltViewModel()
+    viewModel: ProductListViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.getCategory(categoryId)
     }
     LaunchedEffect(key1 = viewModel.name) {
-        viewModel.getProductsByCategory(viewModel.name)
+        viewModel.getProductsByCategory(viewModel.name, isOrderedByCustomer)
     }
 
     val orderList by viewModel.orders.collectAsStateWithLifecycle()

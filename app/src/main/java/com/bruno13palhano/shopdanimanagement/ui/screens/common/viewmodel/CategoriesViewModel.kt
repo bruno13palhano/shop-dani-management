@@ -33,7 +33,7 @@ class CategoriesViewModel @Inject constructor(
     }
 
     fun insertCategory() {
-        val category = Category(0L, newName)
+        val category = Category(0L, newName.trim())
         viewModelScope.launch {
             categoryRepository.insert(category)
         }
