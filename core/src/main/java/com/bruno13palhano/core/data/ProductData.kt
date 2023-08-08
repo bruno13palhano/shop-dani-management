@@ -17,6 +17,8 @@ interface ProductData<T> : DataOperations<T> {
 
     /**
      * Gets all products of type [T] by category.
+     * @param category the category to search.
+     * @param isOrderedByCustomer defines which products to searching, stocked or ordered.
      * @return a [Flow] containing a [List] of all product of type [T] by category.
      */
     fun getProductsByCategory(category: String, isOrderedByCustomer: Boolean): Flow<List<T>>
@@ -24,7 +26,7 @@ interface ProductData<T> : DataOperations<T> {
     /**
      * Searches for products of type [T] with this value.
      * @param search the searching value.
-     * @param isOrderedByCustomer defines witch products to searching, stocked or ordered.
+     * @param isOrderedByCustomer defines which products to searching, stocked or ordered.
      * @return a [Flow] containing a [List] of all products of type [T] referring to the search.
      */
     fun searchProduct(search: String, isOrderedByCustomer: Boolean): Flow<List<T>>

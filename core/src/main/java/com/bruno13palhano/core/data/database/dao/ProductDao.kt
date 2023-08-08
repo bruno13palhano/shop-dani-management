@@ -113,7 +113,7 @@ internal interface ProductDao : ProductData<ProductEntity> {
     /**
      * Searches for [ProductEntity] with this value.
      * @param search the searching value.
-     * @param isOrderedByCustomer defines witch products to searching, stocked or ordered.
+     * @param isOrderedByCustomer defines which products to searching, stocked or ordered.
      * @return a [Flow] containing a [List] of all [ProductEntity] referring to the search.
      */
     @Query(
