@@ -31,16 +31,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
-import com.bruno13palhano.shopdanimanagement.ui.navigation.StockDestinations
 
 @Composable
 fun StockScreen(
-    onClick: (route:String) -> Unit,
     onSearchClick: () -> Unit,
-    onMenuClick: () -> Unit
+    onMenuClick: () -> Unit,
+    onCategoriesClick: () -> Unit,
 ) {
     StockContent(
-        onClick = onClick,
+        onCategoriesClick = onCategoriesClick,
         onSearchClick = onSearchClick,
         onMenuClick = onMenuClick
     )
@@ -49,7 +48,7 @@ fun StockScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockContent(
-    onClick: (route: String) -> Unit,
+    onCategoriesClick: () -> Unit,
     onSearchClick: () -> Unit,
     onMenuClick: () -> Unit
 ) {
@@ -82,7 +81,7 @@ fun StockContent(
                     .fillMaxWidth()
                     .fillMaxHeight(0.5F)
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp),
-                onClick = { onClick(StockDestinations.STOCK_CATEGORIES_ROUTE) }
+                onClick = onCategoriesClick
             ) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -138,7 +137,7 @@ private fun StockDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockContent(
-                onClick = {},
+                onCategoriesClick = {},
                 onSearchClick = {},
                 onMenuClick = {}
             )
@@ -158,7 +157,7 @@ private fun StockPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockContent(
-                onClick = {},
+                onCategoriesClick = {},
                 onSearchClick = {},
                 onMenuClick = {}
             )

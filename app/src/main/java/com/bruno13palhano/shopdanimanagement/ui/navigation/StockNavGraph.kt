@@ -23,8 +23,8 @@ fun NavGraphBuilder.stockNavGraph(
     ) {
         composable(route = StockDestinations.MAIN_STOCK_ROUTE) {
             StockScreen(
-                onClick = { route ->
-                    navController.navigate(route)
+                onCategoriesClick = {
+                    navController.navigate(StockDestinations.STOCK_CATEGORIES_ROUTE)
                 },
                 onSearchClick = {
                     navController.navigate(StockDestinations.STOCK_SEARCH_PRODUCT_ROUTE)
