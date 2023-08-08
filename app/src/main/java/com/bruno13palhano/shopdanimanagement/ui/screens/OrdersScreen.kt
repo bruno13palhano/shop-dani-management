@@ -34,10 +34,12 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun OrdersScreen(
+    onSearchClick: () -> Unit,
     onMenuClick: () -> Unit,
     onCategoriesClick: () -> Unit,
 ) {
     OrdersContent(
+        onSearchClick = onSearchClick,
         onMenuClick = onMenuClick,
         onCategoriesClick = onCategoriesClick
     )
@@ -46,6 +48,7 @@ fun OrdersScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrdersContent(
+    onSearchClick: () -> Unit,
     onMenuClick: () -> Unit,
     onCategoriesClick: () -> Unit
 ) {
@@ -62,7 +65,7 @@ fun OrdersContent(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = onSearchClick) {
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = stringResource(id = R.string.search_label)
@@ -134,6 +137,7 @@ fun RequestsDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             OrdersContent(
+                onSearchClick = {},
                 onMenuClick = {},
                 onCategoriesClick = {}
             )
@@ -153,6 +157,7 @@ fun OrdersPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             OrdersContent(
+                onSearchClick = {},
                 onMenuClick = {},
                 onCategoriesClick = {}
             )
