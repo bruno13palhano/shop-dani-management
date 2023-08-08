@@ -7,8 +7,8 @@ import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.StockScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CategoriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.ProductListScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.EditProductScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.NewProductScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.EditProductScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.NewProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.SearchProductScreen
 
 private const val ITEM_ID = "item_Id"
@@ -72,6 +72,7 @@ fun NavGraphBuilder.stockNavGraph(
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
                 NewProductScreen(
                     categoryId = categoryId.toLong(),
+                    isOrderedByCustomer = false,
                     navigateUp = {
                         navController.navigateUp()
                     }
@@ -82,6 +83,7 @@ fun NavGraphBuilder.stockNavGraph(
             backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
                 EditProductScreen(
                     productId = productId.toLong(),
+                    isOrderedByCustomer = false,
                     navigateUp = { navController.navigateUp() }
                 )
             }

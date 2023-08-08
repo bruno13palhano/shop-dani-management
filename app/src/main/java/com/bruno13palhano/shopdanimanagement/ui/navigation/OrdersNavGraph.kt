@@ -7,6 +7,8 @@ import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.OrdersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CategoriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.ProductListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.EditProductScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.NewProductScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -40,9 +42,31 @@ fun NavGraphBuilder.ordersBavGraph(
                 ProductListScreen(
                     categoryId = categoryId.toLong(),
                     isOrderedByCustomer = true,
-                    onItemClick = {},
-                    onAddButtonClick = { /*TODO*/ },
-                    navigateUp = {}
+                    onItemClick = { productId ->
+                        navController.navigate(route = "${OrdersDestinations.ORDERS_EDIT_PRODUCT_ROUTE}$productId")
+                    },
+                    onAddButtonClick = {
+                        navController.navigate(route = "${OrdersDestinations.ORDERS_NEW_PRODUCT_ROUTE}$categoryId")
+                    },
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
+        }
+        composable(route = OrdersDestinations.ORDERS_NEW_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
+            backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
+                NewProductScreen(
+                    categoryId = categoryId.toLong(),
+                    isOrderedByCustomer = true,
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
+        }
+        composable(route = OrdersDestinations.ORDERS_EDIT_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
+            backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
+                EditProductScreen(
+                    productId = productId.toLong(),
+                    isOrderedByCustomer = true,
+                    navigateUp = { navController.navigateUp() }
                 )
             }
         }
@@ -54,4 +78,8 @@ object OrdersDestinations {
     const val ORDERS_CATEGORIES_ROUTE = "orders_categories_route"
     const val ORDERS_LIST_ROUTE = "orders_list_route/"
     const val ORDERS_LIST_WITH_ID_ROUTE = "$ORDERS_LIST_ROUTE{$ITEM_ID}"
+    const val ORDERS_NEW_PRODUCT_ROUTE = "orders_new_product_route"
+    const val ORDERS_NEW_PRODUCT_WITH_ID_ROUTE = "$ORDERS_NEW_PRODUCT_ROUTE{$ITEM_ID}"
+    const val ORDERS_EDIT_PRODUCT_ROUTE = "orders_edit_product_route"
+    const val ORDERS_EDIT_PRODUCT_WITH_ID_ROUTE = "$ORDERS_EDIT_PRODUCT_ROUTE{$ITEM_ID}"
 }

@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel
+package com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -166,7 +166,7 @@ class NewProductViewModel @Inject constructor(
         }
     }
 
-    fun insertProduct() {
+    fun insertProduct(isOrderedByCustomer: Boolean) {
         val product = Product(
             id = 0L,
             name = name,
@@ -183,7 +183,7 @@ class NewProductViewModel @Inject constructor(
             isPaid = isPaid,
             isSold = false,
             isPaidByCustomer = false,
-            isOrderedByCustomer = false,
+            isOrderedByCustomer = isOrderedByCustomer,
             dateOfSale = 0L
         )
 

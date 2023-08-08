@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel
+package com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -196,7 +196,7 @@ class EditProductViewModel @Inject constructor(
         allCompanies = companiesCheck
     }
 
-    fun updateProduct(id: Long) {
+    fun updateProduct(id: Long, isOrderedByCustomer: Boolean) {
         val product = Product(
             id = id,
             name = name,
@@ -213,7 +213,7 @@ class EditProductViewModel @Inject constructor(
             isPaid = isPaid,
             isSold = false,
             isPaidByCustomer = false,
-            isOrderedByCustomer = false,
+            isOrderedByCustomer = isOrderedByCustomer,
             dateOfSale = 0L
         )
 

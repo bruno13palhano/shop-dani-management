@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stock
+package com.bruno13palhano.shopdanimanagement.ui.screens.common
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -28,13 +28,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.NewProductViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.NewProductViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun NewProductScreen(
     categoryId: Long,
+    isOrderedByCustomer: Boolean,
     navigateUp: () -> Unit,
     viewModel: NewProductViewModel = hiltViewModel()
 ) {
@@ -181,7 +182,7 @@ fun NewProductScreen(
         },
         onActionButtonClick = {
             if (isProductValid) {
-                viewModel.insertProduct()
+                viewModel.insertProduct(isOrderedByCustomer)
                 navigateUp()
             } else {
                 scope.launch {
