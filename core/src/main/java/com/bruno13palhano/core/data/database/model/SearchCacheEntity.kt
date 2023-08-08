@@ -10,12 +10,16 @@ import com.bruno13palhano.core.model.SearchCache
  *
  * An entity class to persist search cache in database.
  * @property search the value of the search.
+ * @property isOrderedByCustomer defines where to perform the search, stocked or ordered.
  */
 @Entity(tableName = "search_cache_table")
 internal data class SearchCacheEntity(
     @PrimaryKey
     @ColumnInfo(name = "search")
-    val search: String
+    val search: String,
+
+    @ColumnInfo(name = "is_ordered_by_customer")
+    val isOrderedByCustomer: Boolean
 )
 
 /**
@@ -23,7 +27,8 @@ internal data class SearchCacheEntity(
  * @return [SearchCache]
  */
 internal fun SearchCacheEntity.asExternalModel() = SearchCache(
-    search = search
+    search = search,
+    isOrderedByCustomer = isOrderedByCustomer
 )
 
 /**
@@ -31,5 +36,6 @@ internal fun SearchCacheEntity.asExternalModel() = SearchCache(
  * @return [SearchCacheEntity].
  */
 internal fun SearchCache.asInternalModel() = SearchCacheEntity(
-    search = search
+    search = search,
+    isOrderedByCustomer = isOrderedByCustomer
 )
