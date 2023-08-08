@@ -9,6 +9,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.CategoriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.EditProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.NewProductScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.SearchProductScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -22,6 +23,9 @@ fun NavGraphBuilder.ordersBavGraph(
     ) {
         composable(route = OrdersDestinations.MAIN_ORDERS_ROUTE) {
             OrdersScreen(
+                onSearchClick = {
+                    navController.navigate(OrdersDestinations.ORDERS_SEARCH_PRODUCT_ROUTE)
+                },
                 onMenuClick = onMenuClick,
                 onCategoriesClick = {
                     navController.navigate(route = OrdersDestinations.ORDERS_CATEGORIES_ROUTE)
@@ -33,6 +37,15 @@ fun NavGraphBuilder.ordersBavGraph(
                 isOrderedByCustomer = true,
                 onItemClick = { categoryId ->
                     navController.navigate(route = "${OrdersDestinations.ORDERS_LIST_ROUTE}$categoryId")
+                },
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+        composable(route = OrdersDestinations.ORDERS_SEARCH_PRODUCT_ROUTE) {
+            SearchProductScreen(
+                isOrderedByCustomer = true,
+                onItemClick = { productId ->
+                    navController.navigate(route = "${OrdersDestinations.ORDERS_SEARCH_PRODUCT_ROUTE}$productId")
                 },
                 navigateUp = { navController.navigateUp() }
             )
@@ -76,6 +89,7 @@ fun NavGraphBuilder.ordersBavGraph(
 object OrdersDestinations {
     const val MAIN_ORDERS_ROUTE = "main_orders_route"
     const val ORDERS_CATEGORIES_ROUTE = "orders_categories_route"
+    const val ORDERS_SEARCH_PRODUCT_ROUTE = "orders_search_product_route"
     const val ORDERS_LIST_ROUTE = "orders_list_route/"
     const val ORDERS_LIST_WITH_ID_ROUTE = "$ORDERS_LIST_ROUTE{$ITEM_ID}"
     const val ORDERS_NEW_PRODUCT_ROUTE = "orders_new_product_route"

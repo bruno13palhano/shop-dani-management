@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stock
+package com.bruno13palhano.shopdanimanagement.ui.screens.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,11 +36,12 @@ import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalStockItem
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.SearchProductsViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.SearchProductsViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun SearchProductScreen(
+    isOrderedByCustomer: Boolean,
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,
     viewModel: SearchProductsViewModel = hiltViewModel()
@@ -52,7 +53,7 @@ fun SearchProductScreen(
         stockProducts = stockProducts,
         searchCacheList = searchCacheList,
         onSearchClick = { search ->
-            viewModel.search(search)
+            viewModel.search(search, isOrderedByCustomer)
             viewModel.insertSearch(search)
         },
         onItemClick = onItemClick,

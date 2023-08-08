@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel
+package com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,10 +37,10 @@ class SearchProductsViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun search(search: String) {
+    fun search(search: String, isOrderedByCostumer: Boolean) {
         if (search.trim().isNotEmpty()) {
             viewModelScope.launch {
-                productRepository.search(search.trim()).collect {
+                productRepository.searchProduct(search.trim(), isOrderedByCostumer).collect {
                     _stockProducts.value = it.map { product ->
                         Stock(
                             id = product.id,
