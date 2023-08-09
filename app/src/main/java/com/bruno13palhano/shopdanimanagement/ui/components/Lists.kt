@@ -199,14 +199,13 @@ fun StockItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleItemList(
+    modifier: Modifier,
     itemName: String,
     imageVector: ImageVector,
     onClick: () -> Unit
 ) {
     ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(2.dp),
+        modifier = modifier,
         onClick = onClick
     ) {
         Row(
@@ -281,6 +280,7 @@ private fun StockListPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             SimpleItemList(
+                modifier = Modifier.fillMaxWidth(),
                 itemName = "Perfumes",
                 imageVector = Icons.Filled.ArrowForward,
                 onClick = {}
