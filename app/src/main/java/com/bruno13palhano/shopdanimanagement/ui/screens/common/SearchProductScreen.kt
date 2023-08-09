@@ -21,6 +21,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,6 +47,9 @@ fun SearchProductScreen(
     navigateUp: () -> Unit,
     viewModel: SearchProductsViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getSearchCache(isOrderedByCustomer)
+    }
     val stockProducts by viewModel.stockProducts.collectAsStateWithLifecycle()
     val searchCacheList by viewModel.searchCache.collectAsStateWithLifecycle()
 
@@ -54,7 +58,7 @@ fun SearchProductScreen(
         searchCacheList = searchCacheList,
         onSearchClick = { search ->
             viewModel.search(search, isOrderedByCustomer)
-            viewModel.insertSearch(search)
+            viewModel.insertSearch(search, isOrderedByCustomer)
         },
         onItemClick = onItemClick,
         navigateUp = navigateUp
@@ -193,10 +197,10 @@ val items = listOf(
     Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
 )
 val searchCacheList = listOf(
-    SearchCache(search = "perfume"),
-    SearchCache(search = "essencial"),
-    SearchCache(search = "gits"),
-    SearchCache(search = "soaps"),
-    SearchCache(search = "avon"),
-    SearchCache(search = "homem"),
+    SearchCache(search = "perfume", isOrderedByCustomer = true),
+    SearchCache(search = "essencial", isOrderedByCustomer = false),
+    SearchCache(search = "gits", isOrderedByCustomer = true),
+    SearchCache(search = "soaps", isOrderedByCustomer = false),
+    SearchCache(search = "avon", isOrderedByCustomer = true),
+    SearchCache(search = "homem", isOrderedByCustomer = false),
 )

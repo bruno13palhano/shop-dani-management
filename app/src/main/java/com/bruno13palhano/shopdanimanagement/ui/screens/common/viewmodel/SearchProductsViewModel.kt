@@ -22,7 +22,8 @@ class SearchProductsViewModel @Inject constructor(
     @DefaultProductRepository private val productRepository: ProductData<Product>,
     @DefaultSearchCacheRepository private val searchCacheRepository: SearchCacheData<SearchCache>
 ) : ViewModel() {
-    val searchCache = searchCacheRepository.getAll()
+    private val _searchCache = MutableStateFlow<List<SearchCache>>(emptyList())
+    val searchCache = _searchCache.asStateFlow()
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
@@ -55,10 +56,18 @@ class SearchProductsViewModel @Inject constructor(
         }
     }
 
-    fun insertSearch(search: String) {
+    fun getSearchCache(isOrderedByCustomer: Boolean) {
+        viewModelScope.launch {
+            searchCacheRepository.getSearchCache(isOrderedByCustomer).collect {
+                _searchCache.value = it
+            }
+        }
+    }
+
+    fun insertSearch(search: String, isOrderedByCustomer: Boolean) {
         if (search.trim().isNotEmpty()) {
             viewModelScope.launch {
-                searchCacheRepository.insert(SearchCache(search.trim()))
+                searchCacheRepository.insert(SearchCache(search.trim(), isOrderedByCustomer))
             }
         }
     }
