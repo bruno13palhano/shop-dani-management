@@ -13,7 +13,6 @@ import com.bruno13palhano.core.model.Product
  * @property name product's name.
  * @property code product's code.
  * @property description product's description.
- * @property quantity the quantity of this product.
  * @property date the day that the product was registered.
  * @property validity the validity of the product.
  * @property photo product's photo Uri.
@@ -21,11 +20,6 @@ import com.bruno13palhano.core.model.Product
  * @property company the company that produces the product.
  * @property purchasePrice product purchase price.
  * @property salePrice product sale price.
- * @property isPaid defines if the product is paid.
- * @property isSold defines if the product is sold.
- * @property isPaidByCustomer defines whether the customer has already paid for the product.
- * @property isOrderedByCustomer defines whether the customer ordered the product.
- * @property dateOfSale the date the product was sold.
  */
 @Entity(tableName = "product_table")
 internal data class ProductEntity(
@@ -46,9 +40,6 @@ internal data class ProductEntity(
     @ColumnInfo(name = "photo")
     val photo: String,
 
-    @ColumnInfo(name = "quantity")
-    val quantity: Int,
-
     @ColumnInfo(name = "date")
     val date: Long,
 
@@ -65,22 +56,7 @@ internal data class ProductEntity(
     val purchasePrice: Float,
 
     @ColumnInfo(name = "sale_price")
-    val salePrice: Float,
-
-    @ColumnInfo(name = "is_paid")
-    val isPaid: Boolean,
-
-    @ColumnInfo(name = "is_sold")
-    val isSold: Boolean,
-
-    @ColumnInfo(name = "is_paid_by_customer")
-    val isPaidByCustomer: Boolean,
-
-    @ColumnInfo(name = "is_ordered_by_customer")
-    val isOrderedByCustomer: Boolean,
-
-    @ColumnInfo(name = "date_of_sale")
-    val dateOfSale: Long
+    val salePrice: Float
 )
 
 /**
@@ -93,18 +69,12 @@ internal fun ProductEntity.asExternalModel() = Product(
     code = code,
     description = description,
     photo = photo,
-    quantity = quantity,
     date = date,
     validity = validity,
     categories = categories,
     company = company,
     purchasePrice = purchasePrice,
-    salePrice = salePrice,
-    isPaid = isPaid,
-    isSold = isSold,
-    isPaidByCustomer = isPaidByCustomer,
-    isOrderedByCustomer = isOrderedByCustomer,
-    dateOfSale = dateOfSale
+    salePrice = salePrice
 )
 
 /**
@@ -117,16 +87,10 @@ internal fun Product.asInternalModel() = ProductEntity(
     code = code,
     description = description,
     photo = photo,
-    quantity = quantity,
     date = date,
     validity = validity,
     categories = categories,
     company = company,
     purchasePrice = purchasePrice,
-    salePrice = salePrice,
-    isPaid = isPaid,
-    isSold = isSold,
-    isPaidByCustomer = isPaidByCustomer,
-    isOrderedByCustomer = isOrderedByCustomer,
-    dateOfSale = dateOfSale
+    salePrice = salePrice
 )
