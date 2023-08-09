@@ -110,7 +110,7 @@ fun ProductListContent(
     ) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(160.dp),
-            contentPadding = PaddingValues(8.dp),
+            contentPadding = PaddingValues(4.dp),
             horizontalArrangement = Arrangement.Center,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(it)
@@ -119,7 +119,7 @@ fun ProductListContent(
                 StockItem(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(8.dp),
+                        .padding(4.dp),
                     photo = stock.photo,
                     name = stock.name,
                     price = stock.purchasePrice,
