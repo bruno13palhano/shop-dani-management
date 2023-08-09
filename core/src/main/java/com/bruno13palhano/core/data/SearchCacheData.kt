@@ -17,14 +17,21 @@ interface SearchCacheData<T> {
     suspend fun insert(model: T): Long
 
     /**
-     * Deletes the model of type [T] specified by this [search].
-     * @param search the [search] value of the model to be deleted.
+     * Deletes the search of type [T] specified by this [search].
+     * @param search the [search] value of the search to be deleted.
      */
     suspend fun deleteById(search: String)
 
     /**
-     * Gets all models of type [T].
-     * @return a [Flow] containing a [List] of all models of type [T].
+     * Gets all search of type [T].
+     * @return a [Flow] containing a [List] of all search of type [T].
      */
     fun getAll(): Flow<List<T>>
+
+    /**
+     * Gets specific search of type [T].
+     * @param isOrderedByCustomer defines where to perform the search, stocked or ordered.
+     * @return a [Flow] containing a [List] of all search of type [T].
+     */
+    fun getSearchCache(isOrderedByCustomer: Boolean): Flow<List<T>>
 }
