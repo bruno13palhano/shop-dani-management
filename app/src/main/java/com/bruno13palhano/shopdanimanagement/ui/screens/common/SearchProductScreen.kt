@@ -118,6 +118,7 @@ fun SearchProductContent(
             ) {
                 items(items = searchCacheList, key = { searchCache -> searchCache.search }) { searchCache ->
                     SimpleItemList(
+                        modifier = Modifier.padding(1.dp),
                         itemName = searchCache.search,
                         imageVector = Icons.Filled.Close,
                         onClick = {
