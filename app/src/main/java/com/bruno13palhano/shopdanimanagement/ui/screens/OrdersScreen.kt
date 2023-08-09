@@ -80,7 +80,7 @@ fun OrdersContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.5F)
-                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp),
+                    .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 4.dp),
                 onClick = onCategoriesClick
             ) {
                 Column(
@@ -104,7 +104,7 @@ fun OrdersContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(1F)
-                    .padding( start = 16.dp, top = 8.dp, end = 16.dp, bottom = 16.dp),
+                    .padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 8.dp),
                 onClick = {}
             ) {
                 Column(
