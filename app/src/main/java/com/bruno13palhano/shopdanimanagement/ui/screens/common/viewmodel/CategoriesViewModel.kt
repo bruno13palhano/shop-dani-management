@@ -6,22 +6,37 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CategoryData
+import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
+import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.Product
+import com.bruno13palhano.core.model.Stock
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
-    @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>
+    @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
+    @DefaultProductRepository private val productRepository: ProductData<Product>
 ): ViewModel() {
+    private val _products = MutableStateFlow<List<Stock>>(emptyList())
+    val products = _products.asStateFlow()
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
+
     var categories = categoryRepository.getAll()
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
+            started = WhileSubscribed(5_000),
             initialValue = emptyList()
         )
 
@@ -38,6 +53,36 @@ class CategoriesViewModel @Inject constructor(
             categoryRepository.insert(category)
         }
         restoreValue()
+    }
+
+    fun getAllProducts(isOrderedByCostumer: Boolean) {
+        viewModelScope.launch {
+            if (isOrderedByCostumer) {
+                productRepository.getAllOrderedProducts().collect {
+                    _products.value = it.map { product ->
+                        Stock(
+                            id = product.id,
+                            name = product.name,
+                            photo = product.photo,
+                            purchasePrice = product.purchasePrice,
+                            quantity = product.quantity
+                        )
+                    }
+                }
+            } else {
+                productRepository.getAllStockProducts().collect {
+                    _products.value = it.map { product ->
+                        Stock(
+                            id = product.id,
+                            name = product.name,
+                            photo = product.photo,
+                            purchasePrice = product.purchasePrice,
+                            quantity = product.quantity
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun restoreValue() {

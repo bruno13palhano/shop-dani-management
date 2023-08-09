@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -49,9 +50,11 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesContent(
+    showAllProducts: Boolean,
     newCategory: String,
     showCategoryDialog: Boolean,
     categories: List<Category>,
+    stockList: List<Stock>,
     onAddButtonClick: () -> Unit,
     onCategoryChange: (newCategory: String) -> Unit,
     onDismissRequest: () -> Unit,
@@ -62,7 +65,8 @@ fun CategoriesContent(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val items = arrayOf(
-        stringResource(id = R.string.all_products_label)
+        stringResource(id = R.string.all_products_label),
+        stringResource(id = R.string.categories_label)
     )
 
     Scaffold(
@@ -110,13 +114,36 @@ fun CategoriesContent(
             }
         }
     ) {
-        LazyColumn(
-            modifier = Modifier.padding(it),
-            contentPadding = PaddingValues(8.dp),
-        ) {
-            items(categories) { category ->
-                SimpleItemList(itemName = category.name, imageVector = Icons.Filled.ArrowForward) {
-                    onItemClick(category.id.toString())
+        if (showAllProducts) {
+            LazyColumn(
+                modifier = Modifier.padding(it),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                items(stockList) { stock ->
+                    HorizontalStockItem(
+                        modifier = Modifier
+                            .padding(vertical = 4.dp),
+                        name = stock.name,
+                        photo = stock.photo,
+                        price = stock.purchasePrice,
+                        quantity = stock.quantity,
+                        onClick = {}
+                    )
+                }
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.padding(it),
+                contentPadding = PaddingValues(8.dp, vertical = 4.dp),
+            ) {
+                items(categories) { category ->
+                    SimpleItemList(
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        itemName = category.name,
+                        imageVector = Icons.Filled.ArrowForward
+                    ) {
+                        onItemClick(category.id.toString())
+                    }
                 }
             }
         }
@@ -140,25 +167,12 @@ private fun CategoriesListDynamicPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            val categories = listOf(
-                Category(1L, "Gifts"),
-                Category(2L, "Infant"),
-                Category(3L, "Perfumes"),
-                Category(4L, "Soaps"),
-                Category(5L, "Antiperspirant Deodorants"),
-                Category(6L, "Deodorants Cologne"),
-                Category(7L, "Sunscreens"),
-                Category(8L, "Makeup"),
-                Category(9L, "Face"),
-                Category(10L, "Skin"),
-                Category(11L, "Hair"),
-                Category(12L, "Moisturizers")
-            )
-
             CategoriesContent(
+                showAllProducts = false,
                 newCategory = "",
                 showCategoryDialog = true,
                 categories = categories,
+                stockList = emptyList(),
                 onAddButtonClick = {},
                 onCategoryChange = {},
                 onDismissRequest = {},
@@ -182,25 +196,12 @@ private fun CategoriesListPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            val categories = listOf(
-                Category(1L, "Gifts"),
-                Category(2L, "Infant"),
-                Category(3L, "Perfumes"),
-                Category(4L, "Soaps"),
-                Category(5L, "Antiperspirant Deodorants"),
-                Category(6L, "Deodorants Cologne"),
-                Category(7L, "Sunscreens"),
-                Category(8L, "Makeup"),
-                Category(9L, "Face"),
-                Category(10L, "Skin"),
-                Category(11L, "Hair"),
-                Category(12L, "Moisturizers")
-            )
-
             CategoriesContent(
+                showAllProducts = true,
                 newCategory = "",
-                showCategoryDialog = true,
+                showCategoryDialog = false,
                 categories = categories,
+                stockList = stock,
                 onAddButtonClick = {},
                 onCategoryChange = {},
                 onDismissRequest = {},
@@ -275,4 +276,29 @@ fun CategoryDialog(
 
 object CategoriesItems {
     const val allProducts = 0
+    const val categories = 1
 }
+
+private val categories = listOf(
+    Category(1L, "Gifts"),
+    Category(2L, "Infant"),
+    Category(3L, "Perfumes"),
+    Category(4L, "Soaps"),
+    Category(5L, "Antiperspirant Deodorants"),
+    Category(6L, "Deodorants Cologne"),
+    Category(7L, "Sunscreens"),
+    Category(8L, "Makeup"),
+    Category(9L, "Face"),
+    Category(10L, "Skin"),
+    Category(11L, "Hair"),
+    Category(12L, "Moisturizers")
+)
+
+private val stock = listOf(
+    Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
+    Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
+    Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
+    Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
+    Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
+    Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
+)
