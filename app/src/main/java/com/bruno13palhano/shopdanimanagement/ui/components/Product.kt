@@ -29,9 +29,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Paid
 import androidx.compose.material.icons.filled.PriceCheck
 import androidx.compose.material.icons.filled.QrCode
-import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Title
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -77,22 +75,18 @@ fun ProductContent(
     code: String,
     description: String,
     photo: String,
-    quantity: String,
     date: String,
     validity: String,
     category: String,
     company: String,
     purchasePrice: String,
     salePrice: String,
-    isPaid: Boolean,
     enableMoreOptionsMenu: Boolean,
     onNameChange: (name: String) -> Unit,
     onCodeChange: (code: String) -> Unit,
     onDescriptionChange: (description: String) -> Unit,
-    onQuantityChange: (quantity: String) -> Unit,
     onPurchasePriceChange: (purchasePrice: String) -> Unit,
     onSalePriceChange: (salePrice: String) -> Unit,
-    onIsPaidChange: (isPaid: Boolean) -> Unit,
     onDismissCategory: () -> Unit,
     onCompanySelected: (selected: String) -> Unit,
     onDismissCompany: () -> Unit,
@@ -326,34 +320,6 @@ fun ProductContent(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 2.dp)
                     .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = quantity,
-                onValueChange = { quantityValue ->
-                    if (quantityValue.isEmpty() || quantityValue.matches(patternInt)) {
-                        onQuantityChange(quantityValue)
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.ShoppingBag,
-                        contentDescription = stringResource(id = R.string.quantity_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Number
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = { Text(text = stringResource(id = R.string.quantity_label)) },
-                placeholder = { Text(text = stringResource(id = R.string.enter_quantity_label)) }
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
-                    .fillMaxWidth()
                     .onFocusChanged { focusState ->
                         if (focusState.hasFocus) {
                             onDateClick()
@@ -562,16 +528,6 @@ fun ProductContent(
                     )
                 },
             )
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(text = stringResource(id = R.string.is_paid_label))
-                Checkbox(
-                    checked = isPaid,
-                    onCheckedChange = onIsPaidChange
-                )
-            }
         }
     }
 }
@@ -594,22 +550,18 @@ fun ProductDynamicPreview() {
                 code = "",
                 description = "",
                 date = "",
-                quantity = "",
                 validity = "",
                 photo = "",
                 category = "",
                 company = "",
                 purchasePrice = "",
                 salePrice = "",
-                isPaid = true,
                 enableMoreOptionsMenu = true,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
-                onQuantityChange = {},
                 onPurchasePriceChange = {},
                 onSalePriceChange = {},
-                onIsPaidChange = {},
                 onDismissCategory = {},
                 onCompanySelected = {},
                 onDismissCompany = {},
@@ -645,22 +597,110 @@ fun ProductPreview() {
                 code = "",
                 description = "",
                 date = "",
-                quantity = "",
                 validity = "",
                 photo = "",
                 category = "",
                 company = "",
                 purchasePrice = "",
                 salePrice = "",
-                isPaid = true,
                 enableMoreOptionsMenu = false,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
-                onQuantityChange = {},
                 onPurchasePriceChange = {},
                 onSalePriceChange = {},
-                onIsPaidChange = {},
+                onDismissCategory = {},
+                onCompanySelected = {},
+                onDismissCompany = {},
+                onImageClick = {},
+                onDateClick = {},
+                onValidityClick = {},
+                onMoreOptionsItemClick = {},
+                onOutsideClick = {},
+                onActionButtonClick = {},
+                navigateUp = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+fun ProductOrderedDynamicPreview() {
+    ShopDaniManagementTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            ProductContent(
+                screenTitle = "Edit Product",
+                snackbarHostState = remember { SnackbarHostState() },
+                categories = listOf(),
+                companies = listOf(),
+                name = "",
+                code = "",
+                description = "",
+                date = "",
+                validity = "",
+                photo = "",
+                category = "",
+                company = "",
+                purchasePrice = "",
+                salePrice = "",
+                enableMoreOptionsMenu = true,
+                onNameChange = {},
+                onCodeChange = {},
+                onDescriptionChange = {},
+                onPurchasePriceChange = {},
+                onSalePriceChange = {},
+                onDismissCategory = {},
+                onCompanySelected = {},
+                onDismissCompany = {},
+                onImageClick = {},
+                onDateClick = {},
+                onValidityClick = {},
+                onMoreOptionsItemClick = {},
+                onOutsideClick = {},
+                onActionButtonClick = {},
+                navigateUp = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+fun ProductOrderedPreview() {
+    ShopDaniManagementTheme(
+        dynamicColor = false
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            ProductContent(
+                screenTitle = "New Product",
+                snackbarHostState = remember { SnackbarHostState() },
+                categories = listOf(),
+                companies = listOf(),
+                name = "",
+                code = "",
+                description = "",
+                date = "",
+                validity = "",
+                photo = "",
+                category = "",
+                company = "",
+                purchasePrice = "",
+                salePrice = "",
+                enableMoreOptionsMenu = false,
+                onNameChange = {},
+                onCodeChange = {},
+                onDescriptionChange = {},
+                onPurchasePriceChange = {},
+                onSalePriceChange = {},
                 onDismissCategory = {},
                 onCompanySelected = {},
                 onDismissCompany = {},
