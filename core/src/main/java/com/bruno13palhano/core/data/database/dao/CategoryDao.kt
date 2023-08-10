@@ -70,6 +70,6 @@ internal interface CategoryDao : CategoryData<CategoryEntity> {
     @Query("SELECT * FROM category_table WHERE id = (SELECT max(id) FROM category_table)")
     override fun getLast(): Flow<CategoryEntity>
 
-    @Query("SELECT * FROM category_table Where name LIKE '%'||:value||'%'")
+    @Query("SELECT * FROM category_table WHERE name LIKE '%'||:value||'%'")
     override fun search(value: String): Flow<List<CategoryEntity>>
 }
