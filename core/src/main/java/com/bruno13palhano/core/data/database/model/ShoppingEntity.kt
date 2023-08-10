@@ -33,7 +33,7 @@ internal fun ShoppingEntity.asExternalModel() = Shopping(
     isPaid = isPaid
 )
 
-internal fun ShoppingEntity.asInternalModel() = ShoppingEntity(
+internal fun Shopping.asInternalModel() = ShoppingEntity(
     id = id,
     productId = productId,
     quantity = quantity,
