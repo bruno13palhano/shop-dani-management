@@ -239,7 +239,7 @@ fun StockOrderDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockOrderContent(
-                screenTitle = stringResource(id = R.string.new_item_label),
+                screenTitle = stringResource(id = R.string.edit_item_label),
                 name = "",
                 quantity = "",
                 isOrderedByCustomer = true,

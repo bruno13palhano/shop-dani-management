@@ -64,6 +64,7 @@
     <string name="search_label">Search</string>
     <string name="search_products_label">Search for products</string>
     <string name="new_sale_label">New Sale</string>
+    <string name="edit_item_label">Edit Item</string>
     <string name="edit_sale_label">Edit Sale</string>
     <string name="date_of_sale_label">Date of sale</string>
     <string name="date_of_payment_label">Date of payment</string>
