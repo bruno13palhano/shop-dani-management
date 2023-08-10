@@ -59,7 +59,6 @@ fun StockOrderContent(
     date: String,
     onQuantityChange: (quantity: String) -> Unit,
     onIsOrderedByCustomerChange: (isOrderedByCustomer: Boolean) -> Unit,
-    onPhotoClick: () -> Unit,
     onDateClick: () -> Unit,
     onOutsideClick: () -> Unit,
     onDoneClick: () -> Unit,
@@ -102,8 +101,7 @@ fun StockOrderContent(
         ) {
             ElevatedCard(
                 modifier = Modifier
-                    .padding(start = 16.dp),
-                onClick = onPhotoClick
+                    .padding(start = 16.dp)
             ) {
                 if (photo.isEmpty()) {
                     Image(
@@ -247,7 +245,6 @@ fun StockOrderDynamicPreview() {
                 date = "",
                 onQuantityChange = {},
                 onIsOrderedByCustomerChange = {},
-                onPhotoClick = {},
                 onDateClick = {},
                 onOutsideClick = {},
                 onDoneClick = {},
@@ -277,7 +274,6 @@ fun StockOrderPreview() {
                 date = "",
                 onQuantityChange = {},
                 onIsOrderedByCustomerChange = {},
-                onPhotoClick = {},
                 onDateClick = {},
                 onOutsideClick = {},
                 onDoneClick = {},

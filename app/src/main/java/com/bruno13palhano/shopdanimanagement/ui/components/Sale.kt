@@ -52,7 +52,6 @@ fun SaleContent(
     dateOfSale: String,
     dateOfPayment: String,
     onIsPaidByCustomerChange: (isPaidByCustomer: Boolean) -> Unit,
-    onPhotoClick: () -> Unit,
     onDateOfSaleClick: () -> Unit,
     onDateOfPaymentClick: () -> Unit,
     onOutsideClick: () -> Unit,
@@ -95,8 +94,7 @@ fun SaleContent(
         ) {
             ElevatedCard(
                 modifier = Modifier
-                    .padding(start = 16.dp),
-                onClick = onPhotoClick
+                    .padding(start = 16.dp)
             ) {
                 if (photo.isEmpty()) {
                     Image(
@@ -243,7 +241,6 @@ fun SaleDynamicPreview() {
                 dateOfSale = "",
                 dateOfPayment = "",
                 onIsPaidByCustomerChange = {},
-                onPhotoClick = {},
                 onDateOfSaleClick = {},
                 onDateOfPaymentClick = {},
                 onOutsideClick = {},
@@ -273,7 +270,6 @@ fun SalePreview() {
                 dateOfSale = "",
                 dateOfPayment = "",
                 onIsPaidByCustomerChange = {},
-                onPhotoClick = {},
                 onDateOfSaleClick = {},
                 onDateOfPaymentClick = {},
                 onOutsideClick = {},
