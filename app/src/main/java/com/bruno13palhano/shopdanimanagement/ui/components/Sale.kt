@@ -58,7 +58,6 @@ fun SaleContent(
     onDoneClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
-
     Scaffold(
         modifier = Modifier
             .clickableNoEffect {
