@@ -36,20 +36,6 @@ internal class ProductRepository @Inject constructor(
             }
     }
 
-    override fun getAllStockProducts(): Flow<List<Product>> {
-        return productDao.getAllStockProducts()
-            .map {
-                it.map { entity -> entity.asExternalModel() }
-            }
-    }
-
-    override fun getAllOrderedProducts(): Flow<List<Product>> {
-        return productDao.getAllOrderedProducts()
-            .map {
-                it.map { entity -> entity.asExternalModel() }
-            }
-    }
-
     override fun getById(id: Long): Flow<Product> {
         return productDao.getById(id)
             .map { it.asExternalModel() }
