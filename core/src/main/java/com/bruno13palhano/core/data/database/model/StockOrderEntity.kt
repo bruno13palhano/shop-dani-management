@@ -15,6 +15,9 @@ data class StockOrderEntity(
     @ColumnInfo(name = "product_id")
     val productId: Long,
 
+    @ColumnInfo(name = "date")
+    val date: Long,
+
     @ColumnInfo(name = "quantity")
     val quantity: Int,
 
@@ -25,6 +28,7 @@ data class StockOrderEntity(
 internal fun StockOrderEntity.asExternalModel() = StockOrder(
     id = id,
     productId = productId,
+    date = date,
     quantity = quantity,
     isOrderedByCustomer = isOrderedByCustomer
 )
@@ -32,6 +36,7 @@ internal fun StockOrderEntity.asExternalModel() = StockOrder(
 internal fun StockOrder.asInternalModel() = StockOrderEntity(
     id = id,
     productId = productId,
+    date = date,
     quantity = quantity,
     isOrderedByCustomer = isOrderedByCustomer
 )
