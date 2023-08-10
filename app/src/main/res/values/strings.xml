@@ -63,6 +63,7 @@
     <string name="empty_fields_error">Fill in the missing fields</string>
     <string name="search_label">Search</string>
     <string name="search_products_label">Search for products</string>
+    <string name="new_item_label">New Item</string>
     <string name="new_sale_label">New Sale</string>
     <string name="edit_item_label">Edit Item</string>
     <string name="edit_sale_label">Edit Sale</string>
