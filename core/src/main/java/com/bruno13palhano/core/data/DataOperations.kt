@@ -51,11 +51,4 @@ interface DataOperations<T> {
      * @return a [Flow] containing a model of type [T].
      */
     fun getLast(): Flow<T>
-
-    /**
-     * Searches for models of type [T] with this value.
-     * @param value the searching value.
-     * @return a [Flow] containing a [List] of all the models referring to the search.
-     */
-    fun search(value: String): Flow<List<T>>
 }

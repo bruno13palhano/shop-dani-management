@@ -30,4 +30,11 @@ interface ProductData<T> : DataOperations<T> {
      * @return a [Flow] containing a [List] of all products of type [T] referring to the search.
      */
     fun searchProduct(search: String, isOrderedByCustomer: Boolean): Flow<List<T>>
+
+    /**
+     * Searches for products of type [T] with this value.
+     * @param value the searching value.
+     * @return a [Flow] containing a [List] of all the products referring to the search.
+     */
+    fun search(value: String): Flow<List<T>>
 }
