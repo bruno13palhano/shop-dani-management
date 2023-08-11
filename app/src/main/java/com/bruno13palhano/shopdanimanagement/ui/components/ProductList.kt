@@ -112,7 +112,7 @@ fun ProductListContent(
             modifier = Modifier.padding(it)
         ) {
             items(itemList) { stock ->
-                HorizontalStockItem(
+                HorizontalProductItem(
                     modifier = Modifier.padding(vertical = 4.dp),
                     name = stock.name,
                     photo = stock.photo,
