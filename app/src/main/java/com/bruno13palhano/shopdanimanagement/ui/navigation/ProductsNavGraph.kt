@@ -5,9 +5,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CategoriesScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.EditProductScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.NewProductScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.ProductListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.EditProductScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.NewProductScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductsScreen
 
 private const val ITEM_ID = "item_Id"
@@ -41,7 +41,6 @@ fun NavGraphBuilder.productsNavGraph(
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
                 ProductListScreen(
                     categoryId = categoryId.toLong(),
-                    isOrderedByCustomer = false,
                     onItemClick = { productId ->
                         navController.navigate(
                             route = "${ProductsDestinations.PRODUCTS_EDIT_PRODUCT_ROUTE}$productId"
@@ -60,7 +59,6 @@ fun NavGraphBuilder.productsNavGraph(
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
                 NewProductScreen(
                     categoryId = categoryId.toLong(),
-                    isOrderedByCustomer = false,
                     navigateUp = { navController.navigateUp() }
                 )
             }
@@ -69,7 +67,6 @@ fun NavGraphBuilder.productsNavGraph(
             backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
                 EditProductScreen(
                     productId = productId.toLong(),
-                    isOrderedByCustomer = false,
                     navigateUp = { navController.navigateUp() }
                 )
             }
@@ -80,10 +77,10 @@ fun NavGraphBuilder.productsNavGraph(
 object ProductsDestinations {
     const val MAIN_PRODUCTS_ROUTE = "main_products_route"
     const val PRODUCTS_CATEGORIES_ROUTE = "products_categories_route"
-    const val PRODUCTS_LIST_ROUTE = "products_list_route"
-    const val PRODUCTS_LIST_WITH_ID_ROUTE = "$PRODUCTS_CATEGORIES_ROUTE{$ITEM_ID}"
+    const val PRODUCTS_LIST_ROUTE = "products_list_route/"
+    const val PRODUCTS_LIST_WITH_ID_ROUTE = "$PRODUCTS_LIST_ROUTE{$ITEM_ID}"
     const val PRODUCTS_NEW_PRODUCT_ROUTE = "products_new_product_route"
-    const val PRODUCTS_NEW_PRODUCT_WITH_ID_ROUTE = "$PRODUCTS_NEW_PRODUCT_ROUTE$ITEM_ID"
+    const val PRODUCTS_NEW_PRODUCT_WITH_ID_ROUTE = "$PRODUCTS_NEW_PRODUCT_ROUTE{$ITEM_ID}"
     const val PRODUCTS_EDIT_PRODUCT_ROUTE = "products_edit_product_route"
-    const val PRODUCTS_EDIT_PRODUCT_WITH_ID_ROUTE = "$PRODUCTS_EDIT_PRODUCT_ROUTE$ITEM_ID"
+    const val PRODUCTS_EDIT_PRODUCT_WITH_ID_ROUTE = "$PRODUCTS_EDIT_PRODUCT_ROUTE{$ITEM_ID}"
 }
