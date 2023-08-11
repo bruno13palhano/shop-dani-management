@@ -30,14 +30,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductContent
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductMenuItem
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.EditProductViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.EditProductViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun EditProductScreen(
     productId: Long,
-    isOrderedByCustomer: Boolean,
     navigateUp: () -> Unit,
     viewModel: EditProductViewModel = hiltViewModel()
 ) {
@@ -192,7 +191,7 @@ fun EditProductScreen(
         },
         onActionButtonClick = {
             if (isProductValid) {
-                viewModel.updateProduct(productId, isOrderedByCustomer)
+                viewModel.updateProduct(productId)
                 navigateUp()
             } else {
                 scope.launch {
