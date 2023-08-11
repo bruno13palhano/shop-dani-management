@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel
+package com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,9 +55,19 @@ class ProductListViewModel @Inject constructor(
         }
     }
 
-    fun getProductsByCategory(category: String, isOrderedByCustomer: Boolean) {
+    fun getProductsByCategory(category: String) {
         viewModelScope.launch {
-
+            productRepository.getByCategory(category).collect {
+                _orders.value = it.map { product ->
+                    Stock(
+                        id = product.id,
+                        name = product.name,
+                        photo = product.photo,
+                        purchasePrice = product.purchasePrice,
+                        quantity = 0
+                    )
+                }
+            }
         }
     }
 }
