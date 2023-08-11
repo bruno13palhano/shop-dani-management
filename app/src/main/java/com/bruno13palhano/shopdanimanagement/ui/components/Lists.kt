@@ -37,7 +37,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HorizontalStockItem(
+fun HorizontalProductItem(
     modifier: Modifier,
     name: String,
     photo: String,
@@ -226,7 +226,7 @@ private fun ProductItemPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            HorizontalStockItem(
+            HorizontalProductItem(
                 modifier = Modifier.fillMaxSize(),
                 name = "Essencial",
                 price = 178.99F,

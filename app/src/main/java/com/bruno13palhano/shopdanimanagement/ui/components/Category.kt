@@ -120,7 +120,7 @@ fun CategoriesContent(
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 items(stockList) { stock ->
-                    HorizontalStockItem(
+                    HorizontalProductItem(
                         modifier = Modifier
                             .padding(vertical = 4.dp),
                         name = stock.name,
