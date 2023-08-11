@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel
+package com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -43,8 +43,6 @@ class NewProductViewModel @Inject constructor(
         private set
     var photo by mutableStateOf("")
         private set
-    var quantity by mutableStateOf("")
-        private set
     var dateInMillis by mutableLongStateOf(currentDate)
     var date: String by mutableStateOf(dateFormat.format(dateInMillis))
         private set
@@ -59,8 +57,6 @@ class NewProductViewModel @Inject constructor(
         private set
     var salePrice by mutableStateOf("")
         private set
-    var isPaid by mutableStateOf(false)
-        private set
     private var categories by mutableStateOf(listOf(""))
     var allCategories by mutableStateOf((listOf<CategoryCheck>()))
         private set
@@ -68,7 +64,7 @@ class NewProductViewModel @Inject constructor(
         private set
 
     val isProductValid = snapshotFlow {
-        name != "" && code != "" && quantity != "" && purchasePrice != "" && salePrice != ""
+        name != "" && code != "" && purchasePrice != "" && salePrice != ""
     }
         .stateIn(
             scope = viewModelScope,
@@ -92,10 +88,6 @@ class NewProductViewModel @Inject constructor(
         this.photo = photo
     }
 
-    fun updateQuantity(quantity: String) {
-        this.quantity = quantity
-    }
-
     fun updateDate(date: Long) {
         dateInMillis = date
         this.date = dateFormat.format(dateInMillis)
@@ -112,10 +104,6 @@ class NewProductViewModel @Inject constructor(
 
     fun updateSalePrice(salePrice: String) {
         this.salePrice = salePrice
-    }
-
-    fun updateIsPaid(isPaid: Boolean) {
-        this.isPaid = isPaid
     }
 
     fun updateCategories(categories: List<CategoryCheck>) {
@@ -166,7 +154,7 @@ class NewProductViewModel @Inject constructor(
         }
     }
 
-    fun insertProduct(isOrderedByCustomer: Boolean) {
+    fun insertProduct() {
         val product = Product(
             id = 0L,
             name = name,
