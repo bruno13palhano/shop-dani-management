@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.bruno13palhano.shopdanimanagement.ui.screens.HomeScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.SalesScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.ShoppingScreen
 
 @Composable
 fun MainNavGraph(
@@ -30,17 +29,20 @@ fun MainNavGraph(
             navController = navController,
             onMenuClick = onMenuClick
         )
-        composable(route = MainDestinations.SHOPPING_ROUTE) {
-            ShoppingScreen(
-                onMenuClick = onMenuClick
-            )
-        }
+        shoppingNavGraph(
+            navController = navController,
+            onMenuClick = onMenuClick
+        )
         composable(route = MainDestinations.SALES_ROUTE) {
             SalesScreen(
                 onMenuClick = onMenuClick
             )
         }
         ordersBavGraph(
+            navController = navController,
+            onMenuClick = onMenuClick
+        )
+        productsNavGraph(
             navController = navController,
             onMenuClick = onMenuClick
         )
@@ -53,4 +55,5 @@ object MainDestinations {
     const val SHOPPING_ROUTE = "shopping_route"
     const val SALES_ROUTE = "sales_route"
     const val ORDERS_ROUTE = "orders_route"
+    const val PRODUCTS_ROUTE = "products_route"
 }
