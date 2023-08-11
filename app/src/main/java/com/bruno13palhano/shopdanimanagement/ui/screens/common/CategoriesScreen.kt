@@ -14,13 +14,12 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.Categor
 
 @Composable
 fun CategoriesScreen(
-    isOrderedByCustomer: Boolean,
     onItemClick: (categoryId: String) -> Unit,
     navigateUp: () -> Unit,
     viewModel: CategoriesViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
-        viewModel.getAllProducts(isOrderedByCustomer)
+        viewModel.getAllProducts()
     }
 
     val categories by viewModel.categories.collectAsStateWithLifecycle()

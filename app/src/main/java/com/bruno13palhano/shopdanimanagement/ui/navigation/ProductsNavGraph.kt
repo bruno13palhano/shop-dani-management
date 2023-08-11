@@ -30,7 +30,6 @@ fun NavGraphBuilder.productsNavGraph(
         }
         composable(route = ProductsDestinations.PRODUCTS_CATEGORIES_ROUTE) {
             CategoriesScreen(
-                isOrderedByCustomer = false,
                 onItemClick = { categoryId ->
                     navController.navigate(route = "${ProductsDestinations.PRODUCTS_LIST_ROUTE}$categoryId")
                 },

@@ -28,7 +28,6 @@ fun NavGraphBuilder.shoppingNavGraph(
         }
         composable(route = ShoppingDestinations.SHOPPING_CATEGORIES_ROUTE) {
             CategoriesScreen(
-                isOrderedByCustomer = false,
                 onItemClick = { categoryId ->
                     navController.navigate(route = "${ShoppingDestinations.SHOPPING_LIST_ROUTE}$categoryId")
                 },

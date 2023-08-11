@@ -34,7 +34,6 @@ fun NavGraphBuilder.ordersBavGraph(
         }
         composable(route = OrdersDestinations.ORDERS_CATEGORIES_ROUTE) {
             CategoriesScreen(
-                isOrderedByCustomer = true,
                 onItemClick = { categoryId ->
                     navController.navigate(route = "${OrdersDestinations.ORDERS_LIST_ROUTE}$categoryId")
                 },

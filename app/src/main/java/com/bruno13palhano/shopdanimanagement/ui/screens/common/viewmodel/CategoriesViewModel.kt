@@ -55,33 +55,9 @@ class CategoriesViewModel @Inject constructor(
         restoreValue()
     }
 
-    fun getAllProducts(isOrderedByCostumer: Boolean) {
+    fun getAllProducts() {
         viewModelScope.launch {
-            if (isOrderedByCostumer) {
-                productRepository.getAllOrderedProducts().collect {
-                    _products.value = it.map { product ->
-                        Stock(
-                            id = product.id,
-                            name = product.name,
-                            photo = product.photo,
-                            purchasePrice = product.purchasePrice,
-                            quantity = product.quantity
-                        )
-                    }
-                }
-            } else {
-                productRepository.getAllStockProducts().collect {
-                    _products.value = it.map { product ->
-                        Stock(
-                            id = product.id,
-                            name = product.name,
-                            photo = product.photo,
-                            purchasePrice = product.purchasePrice,
-                            quantity = product.quantity
-                        )
-                    }
-                }
-            }
+
         }
     }
 
