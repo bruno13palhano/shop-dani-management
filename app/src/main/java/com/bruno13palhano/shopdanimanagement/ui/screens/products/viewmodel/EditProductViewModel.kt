@@ -160,14 +160,12 @@ class EditProductViewModel @Inject constructor(
                 code = it.code
                 description = it.description
                 photo = it.photo
-                quantity = it.quantity.toString()
                 updateDate(it.date)
                 updateValidity(it.validity)
                 categories = it.categories
                 company = it.company
                 purchasePrice = it.purchasePrice.toString()
                 salePrice = it.salePrice.toString()
-                isPaid = it.isPaid
                 setCategoriesChecked(categories)
                 setCompanyChecked(it.company)
             }
@@ -203,18 +201,12 @@ class EditProductViewModel @Inject constructor(
             code = code,
             description = description,
             photo = photo,
-            quantity = quantity.toInt(),
             date = dateInMillis,
             validity = validityInMillis,
             categories = categories,
             company = company,
             purchasePrice = stringToFloat(purchasePrice),
             salePrice = stringToFloat(salePrice),
-            isPaid = isPaid,
-            isSold = false,
-            isPaidByCustomer = false,
-            isOrderedByCustomer = isOrderedByCustomer,
-            dateOfSale = 0L
         )
 
         viewModelScope.launch {

@@ -173,18 +173,12 @@ class NewProductViewModel @Inject constructor(
             code = code,
             description = description,
             photo = photo,
-            quantity = quantity.toInt(), //catch exception
             date = dateInMillis,
             validity = validityInMillis,
             categories = categories,
             company = company,
             purchasePrice = stringToFloat(purchasePrice),
             salePrice = stringToFloat(salePrice),
-            isPaid = isPaid,
-            isSold = false,
-            isPaidByCustomer = false,
-            isOrderedByCustomer = isOrderedByCustomer,
-            dateOfSale = 0L
         )
 
         viewModelScope.launch {

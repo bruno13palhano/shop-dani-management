@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.common
+package com.bruno13palhano.shopdanimanagement.ui.screens.products
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -144,22 +144,18 @@ fun EditProductScreen(
         code = viewModel.code,
         description = viewModel.description,
         photo = viewModel.photo,
-        quantity = viewModel.quantity,
         date = viewModel.date,
         validity = viewModel.validity,
         category = viewModel.category,
         company = viewModel.company,
         purchasePrice = viewModel.purchasePrice,
         salePrice = viewModel.salePrice,
-        isPaid = viewModel.isPaid,
         enableMoreOptionsMenu = true,
         onNameChange = viewModel::updateName,
         onCodeChange = viewModel::updateCode,
         onDescriptionChange = viewModel::updateDescription,
-        onQuantityChange = viewModel::updateQuantity,
         onPurchasePriceChange = viewModel::updatePurchasePrice,
         onSalePriceChange = viewModel::updateSalePrice,
-        onIsPaidChange = viewModel::updateIsPaid,
         onDismissCategory = {
             viewModel.updateCategories(viewModel.allCategories)
             focusManager.clearFocus(force = true)

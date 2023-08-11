@@ -41,17 +41,7 @@ class SearchProductsViewModel @Inject constructor(
     fun search(search: String, isOrderedByCostumer: Boolean) {
         if (search.trim().isNotEmpty()) {
             viewModelScope.launch {
-                productRepository.searchProduct(search.trim(), isOrderedByCostumer).collect {
-                    _stockProducts.value = it.map { product ->
-                        Stock(
-                            id = product.id,
-                            name = product.name,
-                            photo = product.photo,
-                            purchasePrice = product.purchasePrice,
-                            quantity = product.quantity
-                        )
-                    }
-                }
+
             }
         }
     }

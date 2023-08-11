@@ -27,11 +27,4 @@ interface SearchCacheData<T> {
      * @return a [Flow] containing a [List] of all search of type [T].
      */
     fun getAll(): Flow<List<T>>
-
-    /**
-     * Gets specific search of type [T].
-     * @param isOrderedByCustomer defines where to perform the search, stocked or ordered.
-     * @return a [Flow] containing a [List] of all search of type [T].
-     */
-    fun getSearchCache(isOrderedByCustomer: Boolean): Flow<List<T>>
 }

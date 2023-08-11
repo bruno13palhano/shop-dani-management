@@ -57,17 +57,7 @@ class ProductListViewModel @Inject constructor(
 
     fun getProductsByCategory(category: String, isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
-            productRepository.getProductsByCategory(category, isOrderedByCustomer).collect {
-                _orders.value = it.map { product ->
-                    Stock(
-                        id = product.id,
-                        name = product.name,
-                        photo = product.photo,
-                        purchasePrice = product.purchasePrice,
-                        quantity = product.quantity
-                    )
-                }
-            }
+
         }
     }
 }
