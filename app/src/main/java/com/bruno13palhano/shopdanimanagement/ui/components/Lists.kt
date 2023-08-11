@@ -42,7 +42,6 @@ fun HorizontalStockItem(
     name: String,
     photo: String,
     price: Float,
-    quantity: Int,
     onClick: () -> Unit
 ) {
     ElevatedCard(
@@ -95,17 +94,6 @@ fun HorizontalStockItem(
                         .padding(horizontal = 8.dp),
                     text = stringResource(id = R.string.price_tag, price),
                     style = MaterialTheme.typography.bodyLarge,
-                    fontStyle = FontStyle.Italic,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
-
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    text = stringResource(id = R.string.quantity_tag, quantity),
-                    style = MaterialTheme.typography.bodyMedium,
                     fontStyle = FontStyle.Italic,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
@@ -243,7 +231,6 @@ private fun ProductItemPreview() {
                 name = "Essencial",
                 price = 178.99F,
                 photo = "",
-                quantity = 10,
                 onClick = {}
             )
         }

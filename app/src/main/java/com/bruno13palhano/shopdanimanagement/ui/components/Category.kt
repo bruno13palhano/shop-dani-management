@@ -126,7 +126,6 @@ fun CategoriesContent(
                         name = stock.name,
                         photo = stock.photo,
                         price = stock.purchasePrice,
-                        quantity = stock.quantity,
                         onClick = {}
                     )
                 }
