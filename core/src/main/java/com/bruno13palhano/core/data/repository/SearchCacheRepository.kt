@@ -26,11 +26,4 @@ internal class SearchCacheRepository @Inject constructor(
                 it.map { entity -> entity.asExternalModel() }
             }
     }
-
-    override fun getSearchCache(isOrderedByCustomer: Boolean): Flow<List<SearchCache>> {
-        return searchCacheDao.getSearchCache(isOrderedByCustomer)
-            .map {
-                it.map { entity -> entity.asExternalModel() }
-            }
-    }
 }

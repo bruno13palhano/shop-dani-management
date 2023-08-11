@@ -37,12 +37,4 @@ internal interface SearchCacheDao : SearchCacheData<SearchCacheEntity> {
      */
     @Query("SELECT * FROM search_cache_table")
     override fun getAll(): Flow<List<SearchCacheEntity>>
-
-    /**
-     * Gets specific [SearchCacheEntity].
-     * @param isOrderedByCustomer defines where to perform the search, stocked or ordered.
-     * @return a [Flow] containing a [List] of all [SearchCacheEntity].
-     */
-    @Query("SELECT * FROM search_cache_table WHERE is_ordered_by_customer = :isOrderedByCustomer")
-    override fun getSearchCache(isOrderedByCustomer: Boolean): Flow<List<SearchCacheEntity>>
 }
