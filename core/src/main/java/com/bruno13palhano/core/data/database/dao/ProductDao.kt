@@ -82,4 +82,12 @@ internal interface ProductDao : ProductData<ProductEntity> {
                 "OR categories LIKE '%'||:value||'%'"
     )
     override fun search(value: String): Flow<List<ProductEntity>>
+
+    /**
+     * Gets products by category.
+     * @param category the category name.
+     * @return a [Flow] containing a [List] of all the [ProductEntity] referring to the category.
+     */
+    @Query("SELECT * FROM product_table WHERE categories LIKE '%'||:category||'%'")
+    override fun getByCategory(category: String): Flow<List<ProductEntity>>
 }

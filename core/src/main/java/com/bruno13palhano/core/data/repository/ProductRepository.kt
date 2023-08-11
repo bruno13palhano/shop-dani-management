@@ -54,4 +54,11 @@ internal class ProductRepository @Inject constructor(
                 it.map { entity ->  entity.asExternalModel()}
             }
     }
+
+    override fun getByCategory(category: String): Flow<List<Product>> {
+        return productDao.getByCategory(category)
+            .map {
+                it.map { entity -> entity.asExternalModel() }
+            }
+    }
 }
