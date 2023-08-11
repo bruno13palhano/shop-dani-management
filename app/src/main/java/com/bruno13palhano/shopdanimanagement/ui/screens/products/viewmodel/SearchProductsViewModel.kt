@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel
+package com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -38,26 +38,36 @@ class SearchProductsViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun search(search: String, isOrderedByCostumer: Boolean) {
+    fun search(search: String) {
         if (search.trim().isNotEmpty()) {
             viewModelScope.launch {
-
+                productRepository.search(search).collect {
+                    _stockProducts.value = it.map { product ->
+                        Stock(
+                            id = product.id,
+                            name = product.name,
+                            photo = product.photo,
+                            purchasePrice = product.purchasePrice,
+                            quantity = 0
+                        )
+                    }
+                }
             }
         }
     }
 
-    fun getSearchCache(isOrderedByCustomer: Boolean) {
+    fun getSearchCache() {
         viewModelScope.launch {
-            searchCacheRepository.getSearchCache(isOrderedByCustomer).collect {
+            searchCacheRepository.getAll().collect {
                 _searchCache.value = it
             }
         }
     }
 
-    fun insertSearch(search: String, isOrderedByCustomer: Boolean) {
+    fun insertSearch(search: String) {
         if (search.trim().isNotEmpty()) {
             viewModelScope.launch {
-                searchCacheRepository.insert(SearchCache(search.trim(), isOrderedByCustomer))
+                searchCacheRepository.insert(SearchCache(search.trim()))
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.common
+package com.bruno13palhano.shopdanimanagement.ui.screens.products
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,18 +37,17 @@ import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalStockItem
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.SearchProductsViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.SearchProductsViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun SearchProductScreen(
-    isOrderedByCustomer: Boolean,
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,
     viewModel: SearchProductsViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
-        viewModel.getSearchCache(isOrderedByCustomer)
+        viewModel.getSearchCache()
     }
     val stockProducts by viewModel.stockProducts.collectAsStateWithLifecycle()
     val searchCacheList by viewModel.searchCache.collectAsStateWithLifecycle()
@@ -57,8 +56,8 @@ fun SearchProductScreen(
         stockProducts = stockProducts,
         searchCacheList = searchCacheList,
         onSearchClick = { search ->
-            viewModel.search(search, isOrderedByCustomer)
-            viewModel.insertSearch(search, isOrderedByCustomer)
+            viewModel.search(search)
+            viewModel.insertSearch(search)
         },
         onItemClick = onItemClick,
         navigateUp = navigateUp
@@ -139,7 +138,6 @@ fun SearchProductContent(
                     name = stock.name,
                     photo = stock.photo,
                     price = stock.purchasePrice,
-                    quantity = stock.quantity,
                     onClick = { onItemClick(stock.id) }
                 )
             }
@@ -198,10 +196,10 @@ val items = listOf(
     Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
 )
 val searchCacheList = listOf(
-    SearchCache(search = "perfume", isOrderedByCustomer = true),
-    SearchCache(search = "essencial", isOrderedByCustomer = false),
-    SearchCache(search = "gits", isOrderedByCustomer = true),
-    SearchCache(search = "soaps", isOrderedByCustomer = false),
-    SearchCache(search = "avon", isOrderedByCustomer = true),
-    SearchCache(search = "homem", isOrderedByCustomer = false),
+    SearchCache(search = "perfume"),
+    SearchCache(search = "essencial"),
+    SearchCache(search = "gits"),
+    SearchCache(search = "soaps"),
+    SearchCache(search = "avon"),
+    SearchCache(search = "homem")
 )
