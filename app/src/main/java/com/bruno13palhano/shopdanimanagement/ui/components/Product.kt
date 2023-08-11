@@ -189,7 +189,7 @@ fun ProductContent(
             ) {
                 ElevatedCard(
                     modifier = Modifier
-                        .padding(start = 16.dp),
+                        .padding(start = 8.dp),
                     onClick = onImageClick
                 ) {
                     if (photo.isEmpty()) {
@@ -216,7 +216,7 @@ fun ProductContent(
                 Column {
                     OutlinedTextField(
                         modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 2.dp)
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
                             .fillMaxWidth()
                             .clearFocusOnKeyboardDismiss(),
                         value = name,
@@ -247,7 +247,7 @@ fun ProductContent(
                     )
                     OutlinedTextField(
                         modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 2.dp)
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
                             .fillMaxWidth()
                             .clearFocusOnKeyboardDismiss(),
                         value = code,
@@ -287,7 +287,7 @@ fun ProductContent(
             }
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .clearFocusOnKeyboardDismiss(),
                 value = description,
@@ -318,7 +318,7 @@ fun ProductContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .onFocusChanged { focusState ->
                         if (focusState.hasFocus) {
@@ -350,7 +350,7 @@ fun ProductContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .onFocusChanged { focusState ->
                         if (focusState.hasFocus) {
@@ -382,7 +382,7 @@ fun ProductContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .clearFocusOnKeyboardDismiss(),
                 value = purchasePrice,
@@ -420,7 +420,7 @@ fun ProductContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .clearFocusOnKeyboardDismiss(),
                 value = salePrice,
@@ -458,7 +458,7 @@ fun ProductContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .onFocusChanged { focusState ->
                         if (focusState.hasFocus) {
@@ -494,7 +494,7 @@ fun ProductContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .onFocusChanged { focusState ->
                         if (focusState.hasFocus) {
