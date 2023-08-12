@@ -24,14 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.bruno13palhano.core.model.Stock
+import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockListContent(
-    itemList: List<Stock>,
+    itemList: List<StockOrder>,
     onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit
@@ -69,14 +69,14 @@ fun StockListContent(
             contentPadding = PaddingValues(4.dp),
             columns = GridCells.Adaptive(152.dp)
         ) {
-            items(itemList) { stock ->
+            items(itemList) { stockOrder ->
                 StockItem(
                     modifier = Modifier.padding(4.dp),
-                    name = stock.name,
-                    photo = stock.photo,
-                    price = stock.purchasePrice,
-                    quantity = stock.quantity,
-                    onClick = { onItemClick(stock.id) }
+                    name = stockOrder.name,
+                    photo = stockOrder.photo,
+                    price = stockOrder.purchasePrice,
+                    quantity = stockOrder.quantity,
+                    onClick = { onItemClick(stockOrder.id) }
                 )
             }
         }
@@ -124,10 +124,10 @@ fun StockListItemPreview() {
 }
 
 private val items = listOf(
-    Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
-    Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
-    Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
-    Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
-    Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
-    Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
+    StockOrder(id= 1L, productId = 1, name = "Product 1", photo = "", purchasePrice = 120.45F, date = 0L, quantity = 12, isOrderedByCustomer = false),
+    StockOrder(id= 2L, productId = 2, name = "Product 2", photo = "", purchasePrice = 40.33F, date = 0L, quantity = 2, isOrderedByCustomer = false),
+    StockOrder(id= 3L, productId = 3, name = "Product 3", photo = "", purchasePrice = 99.99F, date = 0L, quantity = 7, isOrderedByCustomer = false),
+    StockOrder(id= 4L, productId = 4, name = "Product 4", photo = "", purchasePrice = 12.39F, date = 0L, quantity = 2, isOrderedByCustomer = false),
+    StockOrder(id= 5L, productId = 5, name = "Product 5", photo = "", purchasePrice = 56.78F, date = 0L, quantity = 1, isOrderedByCustomer = false),
+    StockOrder(id= 6L, productId = 6, name = "Product 6", photo = "", purchasePrice = 12.12F, date = 0L, quantity = 2, isOrderedByCustomer = false),
 )
