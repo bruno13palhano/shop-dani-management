@@ -1,9 +1,9 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,9 +18,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Paid
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Title
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -29,6 +29,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -47,18 +49,20 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockOrderContent(
     screenTitle: String,
+    snackbarHostState: SnackbarHostState,
     name: String,
+    purchasePrice: String,
     quantity: String,
-    isOrderedByCustomer: Boolean,
     photo: String,
     date: String,
+    onPurchasePriceChange: (purchasePrice: String) -> Unit,
     onQuantityChange: (quantity: String) -> Unit,
-    onIsOrderedByCustomerChange: (isOrderedByCustomer: Boolean) -> Unit,
     onDateClick: () -> Unit,
     onOutsideClick: () -> Unit,
     onDoneClick: () -> Unit,
@@ -82,6 +86,9 @@ fun StockOrderContent(
                 }
             )
         },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = onDoneClick) {
                 Icon(
@@ -91,7 +98,10 @@ fun StockOrderContent(
             }
         }
     ) {
-        val pattern = remember { Regex("^\\d*") }
+        val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
+        val decimalSeparator = decimalFormat.decimalFormatSymbols.decimalSeparator
+        val pattern = remember { Regex("^\\d*\\$decimalSeparator?\\d*\$") }
+        val patternInt = remember { Regex("^\\d*") }
 
         Column(
             modifier = Modifier
@@ -155,6 +165,44 @@ fun StockOrderContent(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 2.dp)
                     .fillMaxWidth()
+                    .clearFocusOnKeyboardDismiss(),
+                value = purchasePrice,
+                onValueChange = { purchasePriceValue ->
+                    if (purchasePriceValue.isEmpty() || purchasePriceValue.matches(pattern)) {
+                        onPurchasePriceChange(purchasePriceValue)
+                    }
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Paid,
+                        contentDescription = stringResource(id = R.string.purchase_price_label)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Decimal
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.purchase_price_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.purchase_price_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .fillMaxWidth()
                     .onFocusChanged { focusState ->
                         if (focusState.hasFocus) {
                             onDateClick()
@@ -190,7 +238,7 @@ fun StockOrderContent(
                     .clearFocusOnKeyboardDismiss(),
                 value = quantity,
                 onValueChange = { quantityValue ->
-                    if (quantityValue.isEmpty() || quantityValue.matches(pattern)) {
+                    if (quantityValue.isEmpty() || quantityValue.matches(patternInt)) {
                         onQuantityChange(quantityValue)
                     }
                 },
@@ -211,18 +259,6 @@ fun StockOrderContent(
                 label = { Text(text = stringResource(id = R.string.quantity_label)) },
                 placeholder = { Text(text = stringResource(id = R.string.enter_quantity_label)) }
             )
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
-                    .align(Alignment.Start),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(text = stringResource(id = R.string.is_ordered_by_customer_label))
-                Checkbox(
-                    checked = isOrderedByCustomer,
-                    onCheckedChange = onIsOrderedByCustomerChange
-                )
-            }
         }
     }
 }
@@ -238,13 +274,14 @@ fun StockOrderDynamicPreview() {
         ) {
             StockOrderContent(
                 screenTitle = stringResource(id = R.string.edit_item_label),
+                snackbarHostState = remember { SnackbarHostState() },
                 name = "",
+                purchasePrice = "",
                 quantity = "",
-                isOrderedByCustomer = true,
                 photo = "",
                 date = "",
+                onPurchasePriceChange = {},
                 onQuantityChange = {},
-                onIsOrderedByCustomerChange = {},
                 onDateClick = {},
                 onOutsideClick = {},
                 onDoneClick = {},
@@ -267,13 +304,14 @@ fun StockOrderPreview() {
         ) {
             StockOrderContent(
                 screenTitle = stringResource(id = R.string.edit_item_label),
+                snackbarHostState = remember { SnackbarHostState() },
                 name = "",
+                purchasePrice = "",
                 quantity = "",
-                isOrderedByCustomer = true,
                 photo = "",
                 date = "",
+                onPurchasePriceChange = {},
                 onQuantityChange = {},
-                onIsOrderedByCustomerChange = {},
                 onDateClick = {},
                 onOutsideClick = {},
                 onDoneClick = {},
