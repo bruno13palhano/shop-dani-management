@@ -6,8 +6,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.StockScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CategoriesScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.EditStockItemScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.NewStockItemScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.ProductStockListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockListScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -33,7 +36,9 @@ fun NavGraphBuilder.stockNavGraph(
         composable(route = StockDestinations.STOCK_CATEGORIES_ROUTE) {
             CategoriesScreen(
                 onItemClick = { categoryId ->
-                    navController.navigate(route = "${StockDestinations.STOCK_LIST_ROUTE}$categoryId")
+                    navController.navigate(
+                        route = "${StockDestinations.STOCK_LIST_ROUTE}$categoryId"
+                    )
                 },
                 navigateUp = {
                     navController.navigateUp()
@@ -43,35 +48,57 @@ fun NavGraphBuilder.stockNavGraph(
         composable(route = StockDestinations.STOCK_SEARCH_PRODUCT_ROUTE) {
             SearchProductScreen(
                 onItemClick = { productId ->
-                    navController.navigate(route = "${StockDestinations.STOCK_EDIT_PRODUCT_ROUTE}$productId")
+                    navController.navigate(
+                        route = "${StockDestinations.STOCK_EDIT_PRODUCT_ROUTE}$productId"
+                    )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = StockDestinations.STOCK_LIST_WITH_ID_ROUTE) { backStackEntry ->
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
-                ProductListScreen(
-                    categoryId = categoryId.toLong(),
+                StockListScreen(
                     onItemClick = { productId ->
-                        navController.navigate(route = "${StockDestinations.STOCK_EDIT_PRODUCT_ROUTE}$productId")
+                        navController.navigate(
+                            route = "${StockDestinations.STOCK_EDIT_PRODUCT_ROUTE}$productId"
+                        )
                     },
                     onAddButtonClick = {
-                        navController.navigate(route = "${StockDestinations.STOCK_NEW_PRODUCT_ROUTE}$categoryId")
+                        navController.navigate(
+                            route = "${StockDestinations.STOCK_PRODUCTS_STOCK_LIST_ROUTE}$categoryId"
+                        )
                     },
-                    navigateUp = {
-                        navController.navigateUp()
-                    }
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
+        }
+        composable(route = StockDestinations.STOCK_PRODUCTS_STOCK_LIST_ROUTE_WITH_ID) { backStackEntry ->
+            backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
+                ProductStockListScreen(
+                    categoryId = categoryId.toLong(),
+                    onItemClick = { productId ->
+                        navController.navigate(
+                            route = "${StockDestinations.STOCK_NEW_PRODUCT_ROUTE}$productId"
+                        )
+                    },
+                    navigateUp = { navController.navigateUp() }
                 )
             }
         }
         composable(route = StockDestinations.STOCK_NEW_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
-
+            backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
+                NewStockItemScreen(
+                    productId = productId.toLong(),
+                    navigateUp = { navController.navigateUp() }
+                )
             }
         }
         composable(route = StockDestinations.STOCK_EDIT_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
-
+            backStackEntry.arguments?.getString(ITEM_ID)?.let { stockItemId ->
+                EditStockItemScreen(
+                    stockItemId = stockItemId.toLong(),
+                    navigateUp = { navController.navigateUp() }
+                )
             }
         }
     }
@@ -83,6 +110,8 @@ object StockDestinations {
     const val STOCK_SEARCH_PRODUCT_ROUTE = "stock_search_product_route"
     const val STOCK_LIST_ROUTE = "stock_list_route/"
     const val STOCK_LIST_WITH_ID_ROUTE = "$STOCK_LIST_ROUTE{$ITEM_ID}"
+    const val STOCK_PRODUCTS_STOCK_LIST_ROUTE = "stock_products_stock_list_route"
+    const val STOCK_PRODUCTS_STOCK_LIST_ROUTE_WITH_ID = "$STOCK_PRODUCTS_STOCK_LIST_ROUTE{$ITEM_ID}"
     const val STOCK_NEW_PRODUCT_ROUTE = "stock_new_product_route"
     const val STOCK_NEW_PRODUCT_WITH_ID_ROUTE = "$STOCK_NEW_PRODUCT_ROUTE{$ITEM_ID}"
     const val STOCK_EDIT_PRODUCT_ROUTE = "stock_edit_product_route"
