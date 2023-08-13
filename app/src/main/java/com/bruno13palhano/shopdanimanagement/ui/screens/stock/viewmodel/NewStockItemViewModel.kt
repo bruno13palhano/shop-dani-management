@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.ProductData
@@ -16,6 +17,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,6 +41,15 @@ class NewStockItemViewModel @Inject constructor(
     var quantity by mutableStateOf("")
         private set
 
+    val isStockItemNotEmpty = snapshotFlow {
+        purchasePrice != "" && quantity != ""
+    }
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5_000),
+            initialValue = false
+        )
+
     fun updatePurchasePrice(purchasePrice: String) {
         this.purchasePrice = purchasePrice
     }
@@ -55,6 +67,7 @@ class NewStockItemViewModel @Inject constructor(
         viewModelScope.launch {
             productRepository.getById(id).collect {
                 productId = it.id
+                purchasePrice = it.purchasePrice.toString()
                 name = it.name
                 photo = it.photo
                 dateInMillis = it.date
