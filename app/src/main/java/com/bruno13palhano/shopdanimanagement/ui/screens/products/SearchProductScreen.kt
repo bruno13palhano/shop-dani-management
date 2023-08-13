@@ -35,7 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalStockItem
+import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalProductItem
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.SearchProductsViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
@@ -133,7 +133,7 @@ fun SearchProductContent(
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
             items(items = stockProducts, key = { stock -> stock.id } ) { stock ->
-                HorizontalStockItem(
+                HorizontalProductItem(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     name = stock.name,
                     photo = stock.photo,
