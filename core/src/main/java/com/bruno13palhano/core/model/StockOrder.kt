@@ -5,8 +5,12 @@ data class StockOrder(
     val productId: Long,
     val name: String,
     val photo: String,
-    val purchasePrice: Float,
     val date: Long,
+    val validity: Long,
     val quantity: Int,
+    val categories: List<String>,
+    val company: String,
+    val purchasePrice: Float,
+    val salePrice: Float,
     val isOrderedByCustomer: Boolean
 )

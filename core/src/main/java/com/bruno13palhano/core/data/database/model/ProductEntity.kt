@@ -43,20 +43,11 @@ internal data class ProductEntity(
     @ColumnInfo(name = "date")
     val date: Long,
 
-    @ColumnInfo(name = "validity")
-    val validity: Long,
-
     @ColumnInfo(name = "categories")
     val categories: List<String>,
 
     @ColumnInfo(name = "company")
-    val company: String,
-
-    @ColumnInfo(name = "purchase_price")
-    val purchasePrice: Float,
-
-    @ColumnInfo(name = "sale_price")
-    val salePrice: Float
+    val company: String
 )
 
 /**
@@ -70,11 +61,8 @@ internal fun ProductEntity.asExternalModel() = Product(
     description = description,
     photo = photo,
     date = date,
-    validity = validity,
     categories = categories,
-    company = company,
-    purchasePrice = purchasePrice,
-    salePrice = salePrice
+    company = company
 )
 
 /**
@@ -88,9 +76,6 @@ internal fun Product.asInternalModel() = ProductEntity(
     description = description,
     photo = photo,
     date = date,
-    validity = validity,
     categories = categories,
-    company = company,
-    purchasePrice = purchasePrice,
-    salePrice = salePrice
+    company = company
 )
