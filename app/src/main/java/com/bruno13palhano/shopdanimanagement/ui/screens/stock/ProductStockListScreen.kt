@@ -17,24 +17,39 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalProductItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.ProductStockListViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun ProductStockListScreen(
     categoryId: Long,
     onItemClick: (id: Long) -> Unit,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    viewModel: ProductStockListViewModel = hiltViewModel()
 ) {
+    val productList by viewModel.productList.collectAsStateWithLifecycle()
+    val categoryName by viewModel.categoryName.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getCategoryName(categoryId)
+    }
+    LaunchedEffect(key1 = viewModel.categoryName) {
+        viewModel.getProductsByCategory(categoryName)
+    }
+
     ProductStockListContent(
-        productList = emptyList(),
-        categoryId = categoryId,
+        productList = productList,
         onItemClick = onItemClick,
         navigateUp = navigateUp
     )
@@ -44,7 +59,6 @@ fun ProductStockListScreen(
 @Composable
 fun ProductStockListContent(
     productList: List<Stock>,
-    categoryId: Long,
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit
 ) {
@@ -73,7 +87,7 @@ fun ProductStockListContent(
                     name = stock.name,
                     photo = stock.photo,
                     price = stock.purchasePrice,
-                    onClick = { stock.id }
+                    onClick = { onItemClick(stock.id) }
                 )
             }
         }
@@ -91,7 +105,6 @@ fun ProductStockListDynamicPreview() {
         ) {
             ProductStockListContent(
                 productList = productList,
-                categoryId = 1L,
                 onItemClick = {},
                 navigateUp = {}
             )
@@ -112,7 +125,6 @@ fun ProductStockListPreview() {
         ) {
             ProductStockListContent(
                 productList = productList,
-                categoryId = 1L,
                 onItemClick = {},
                 navigateUp = {}
             )
