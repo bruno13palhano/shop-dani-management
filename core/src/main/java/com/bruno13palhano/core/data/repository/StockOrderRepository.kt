@@ -47,4 +47,18 @@ internal class StockOrderRepository @Inject constructor(
             .map { it.asExternalModel() }
             .catch { it.printStackTrace() }
     }
+
+    override fun search(value: String): Flow<List<StockOrder>> {
+        return stockOrderDao.search(value)
+            .map {
+                it.map { entity -> entity.asExternalModel() }
+            }
+    }
+
+    override fun getByCategory(category: String): Flow<List<StockOrder>> {
+        return stockOrderDao.getByCategory(category)
+            .map {
+                it.map { entity -> entity.asExternalModel() }
+            }
+    }
 }

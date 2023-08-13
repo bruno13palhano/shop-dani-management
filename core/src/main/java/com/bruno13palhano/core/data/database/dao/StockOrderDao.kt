@@ -33,4 +33,14 @@ internal interface StockOrderDao : StockOrderData<StockOrderEntity> {
 
     @Query("SELECT * FROM stock_order_table WHERE id = (SELECT max(id) FROM stock_order_table)")
     override fun getLast(): Flow<StockOrderEntity>
+
+    @Query(
+        "SELECT * FROM stock_order_table WHERE name LIKE '%'||:value||'%' " +
+                "OR company LIKE '%'||:value||'%' " +
+                "OR categories LIKE '%'||:value||'%'"
+    )
+    override fun search(value: String): Flow<List<StockOrderEntity>>
+
+    @Query("SELECT * FROM stock_order_table WHERE categories LIKE '%'||:category||'%'")
+    override fun getByCategory(category: String): Flow<List<StockOrderEntity>>
 }
