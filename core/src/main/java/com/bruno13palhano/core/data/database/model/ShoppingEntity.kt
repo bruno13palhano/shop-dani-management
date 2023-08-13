@@ -15,6 +15,9 @@ data class ShoppingEntity(
     @ColumnInfo(name = "product_id")
     val productId: Long,
 
+    @ColumnInfo(name = "name")
+    val name: String,
+
     @ColumnInfo(name = "quantity")
     val quantity: Int,
 
@@ -28,6 +31,7 @@ data class ShoppingEntity(
 internal fun ShoppingEntity.asExternalModel() = Shopping(
     id = id,
     productId = productId,
+    name = name,
     quantity = quantity,
     date = date,
     isPaid = isPaid
@@ -36,6 +40,7 @@ internal fun ShoppingEntity.asExternalModel() = Shopping(
 internal fun Shopping.asInternalModel() = ShoppingEntity(
     id = id,
     productId = productId,
+    name = name,
     quantity = quantity,
     date = date,
     isPaid = isPaid
