@@ -37,8 +37,6 @@ class NewStockItemViewModel @Inject constructor(
         private set
     var quantity by mutableStateOf("")
         private set
-    var isOrderedByCustomer by mutableStateOf(false)
-        private set
 
     fun updatePurchasePrice(purchasePrice: String) {
         this.purchasePrice = purchasePrice
@@ -51,10 +49,6 @@ class NewStockItemViewModel @Inject constructor(
 
     fun updateQuantity(quantity: String) {
         this.quantity = quantity
-    }
-
-    fun updateIsOrderedByCustomer(isOrderedByCustomer: Boolean) {
-        this.isOrderedByCustomer = isOrderedByCustomer
     }
 
     fun getProduct(id: Long) {
@@ -77,7 +71,7 @@ class NewStockItemViewModel @Inject constructor(
             purchasePrice = stringToFloat(purchasePrice),
             date = dateInMillis,
             quantity = quantity.toInt(),
-            isOrderedByCustomer = isOrderedByCustomer
+            isOrderedByCustomer = false
         )
         viewModelScope.launch {
             stockRepository.insert(stockItem)
