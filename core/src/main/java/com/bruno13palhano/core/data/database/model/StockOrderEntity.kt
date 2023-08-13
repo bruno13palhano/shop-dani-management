@@ -15,6 +15,15 @@ data class StockOrderEntity(
     @ColumnInfo(name = "product_id")
     val productId: Long,
 
+    @ColumnInfo(name = "name")
+    val name: String,
+
+    @ColumnInfo(name = "photo")
+    val photo: String,
+
+    @ColumnInfo(name = "purchase_price")
+    val purchasePrice: Float,
+
     @ColumnInfo(name = "date")
     val date: Long,
 
@@ -28,6 +37,9 @@ data class StockOrderEntity(
 internal fun StockOrderEntity.asExternalModel() = StockOrder(
     id = id,
     productId = productId,
+    name = name,
+    photo = photo,
+    purchasePrice = purchasePrice,
     date = date,
     quantity = quantity,
     isOrderedByCustomer = isOrderedByCustomer
@@ -36,6 +48,9 @@ internal fun StockOrderEntity.asExternalModel() = StockOrder(
 internal fun StockOrder.asInternalModel() = StockOrderEntity(
     id = id,
     productId = productId,
+    name = name,
+    photo = photo,
+    purchasePrice = purchasePrice,
     date = date,
     quantity = quantity,
     isOrderedByCustomer = isOrderedByCustomer
