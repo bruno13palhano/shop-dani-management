@@ -14,12 +14,9 @@ import com.bruno13palhano.core.model.Product
  * @property code product's code.
  * @property description product's description.
  * @property date the day that the product was registered.
- * @property validity the validity of the product.
  * @property photo product's photo Uri.
  * @property categories a list of categories related with this product.
  * @property company the company that produces the product.
- * @property purchasePrice product purchase price.
- * @property salePrice product sale price.
  */
 @Entity(tableName = "product_table")
 internal data class ProductEntity(
