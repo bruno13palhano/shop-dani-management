@@ -30,7 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.ShoppingViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel.ShoppingViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
