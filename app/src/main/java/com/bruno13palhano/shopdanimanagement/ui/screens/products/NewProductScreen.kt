@@ -56,8 +56,6 @@ fun NewProductScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     var datePickerState = rememberDatePickerState()
     var showDatePickerDialog by remember { mutableStateOf(false) }
-    var validityPickerState = rememberDatePickerState()
-    var showValidityPickerDialog by remember { mutableStateOf(false) }
 
     if (showDatePickerDialog) {
         DatePickerDialog(
@@ -92,39 +90,6 @@ fun NewProductScreen(
         }
     }
 
-    if (showValidityPickerDialog) {
-        DatePickerDialog(
-            onDismissRequest = {
-                showValidityPickerDialog = false
-                focusManager.clearFocus(force = true)
-            },
-            confirmButton = {
-                Button(onClick = {
-                    validityPickerState.selectedDateMillis?.let {
-                        viewModel.updateValidity(it)
-                    }
-                    showValidityPickerDialog = false
-                    focusManager.clearFocus(force = true)
-                }) {
-                    Text(text = stringResource(id = R.string.validity_label))
-                }
-            }
-        ) {
-            validityPickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.validityInMillis,
-                initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    DisplayMode.Picker
-                } else {
-                    DisplayMode.Input
-                }
-            )
-            DatePicker(
-                state = validityPickerState,
-                showModeToggle = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-            )
-        }
-    }
-
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val errorMessage = stringResource(id = R.string.empty_fields_error)
@@ -140,17 +105,12 @@ fun NewProductScreen(
         description = viewModel.description,
         photo = viewModel.photo,
         date = viewModel.date,
-        validity = viewModel.validity,
         category = viewModel.category,
         company = viewModel.company,
-        purchasePrice = viewModel.purchasePrice,
-        salePrice = viewModel.salePrice,
         enableMoreOptionsMenu = false,
         onNameChange = viewModel::updateName,
         onCodeChange = viewModel::updateCode,
         onDescriptionChange = viewModel::updateDescription,
-        onPurchasePriceChange = viewModel::updatePurchasePrice,
-        onSalePriceChange = viewModel::updateSalePrice,
         onDismissCategory = {
             viewModel.updateCategories(viewModel.allCategories)
             focusManager.clearFocus(force = true)
@@ -164,12 +124,7 @@ fun NewProductScreen(
         onImageClick = {
             galleryLauncher.launch(arrayOf("image/*"))
         },
-        onDateClick = {
-            showDatePickerDialog = true
-        },
-        onValidityClick = {
-            showValidityPickerDialog = true
-        },
+        onDateClick = { showDatePickerDialog = true },
         onMoreOptionsItemClick = {},
         onOutsideClick = {
             keyboardController?.hide()

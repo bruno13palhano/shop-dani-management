@@ -63,7 +63,7 @@ class ProductListViewModel @Inject constructor(
                         id = product.id,
                         name = product.name,
                         photo = product.photo,
-                        purchasePrice = product.purchasePrice,
+                        purchasePrice = 0F,
                         quantity = 0
                     )
                 }

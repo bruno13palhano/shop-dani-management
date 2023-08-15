@@ -18,7 +18,6 @@ import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
 import com.bruno13palhano.shopdanimanagement.ui.components.CompanyCheck
 import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
-import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
@@ -46,16 +45,9 @@ class NewProductViewModel @Inject constructor(
     var dateInMillis by mutableLongStateOf(currentDate)
     var date: String by mutableStateOf(dateFormat.format(dateInMillis))
         private set
-    var validityInMillis by mutableLongStateOf(currentDate)
-    var validity: String by mutableStateOf(dateFormat.format(validityInMillis))
-        private set
     var category by mutableStateOf("")
         private set
     var company by mutableStateOf(companiesCheck[0].name.company)
-        private set
-    var purchasePrice by mutableStateOf("")
-        private set
-    var salePrice by mutableStateOf("")
         private set
     private var categories by mutableStateOf(listOf(""))
     var allCategories by mutableStateOf((listOf<CategoryCheck>()))
@@ -63,9 +55,7 @@ class NewProductViewModel @Inject constructor(
     var allCompanies by mutableStateOf(companiesCheck)
         private set
 
-    val isProductValid = snapshotFlow {
-        name != "" && code != "" && purchasePrice != "" && salePrice != ""
-    }
+    val isProductValid = snapshotFlow { name != "" && code != "" }
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
@@ -91,19 +81,6 @@ class NewProductViewModel @Inject constructor(
     fun updateDate(date: Long) {
         dateInMillis = date
         this.date = dateFormat.format(dateInMillis)
-    }
-
-    fun updateValidity(validity: Long) {
-        validityInMillis = validity
-        this.validity = dateFormat.format(validityInMillis)
-    }
-
-    fun updatePurchasePrice(purchasePrice: String) {
-        this.purchasePrice = purchasePrice
-    }
-
-    fun updateSalePrice(salePrice: String) {
-        this.salePrice = salePrice
     }
 
     fun updateCategories(categories: List<CategoryCheck>) {
@@ -162,11 +139,8 @@ class NewProductViewModel @Inject constructor(
             description = description,
             photo = photo,
             date = dateInMillis,
-            validity = validityInMillis,
             categories = categories,
             company = company,
-            purchasePrice = stringToFloat(purchasePrice),
-            salePrice = stringToFloat(salePrice),
         )
 
         viewModelScope.launch {
