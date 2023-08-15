@@ -1,6 +1,9 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,10 +11,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +22,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,10 +39,13 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 @Composable
 fun StockListContent(
     itemList: List<StockOrder>,
+    menuOptions: Array<String>,
     onItemClick: (id: Long) -> Unit,
-    onAddButtonClick: () -> Unit,
+    onMenuItemClick: (index: Int) -> Unit,
     navigateUp: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -49,19 +59,28 @@ fun StockListContent(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {  }) {
-
+                    IconButton(onClick = { expanded = true }) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = stringResource(id = R.string.more_options_label)
+                            )
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                MoreOptionsMenu(
+                                    items = menuOptions,
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = it },
+                                    onClick = onMenuItemClick
+                                )
+                            }
+                        }
                     }
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = onAddButtonClick) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(id = R.string.add_label)
-                )
-            }
         }
     ) {
         LazyVerticalGrid(
@@ -94,8 +113,9 @@ fun StockListDynamicPreview() {
         ) {
             StockListContent(
                 itemList = items,
+                menuOptions = arrayOf(),
                 onItemClick = {},
-                onAddButtonClick = {},
+                onMenuItemClick = {},
                 navigateUp = {}
             )
         }
@@ -115,8 +135,9 @@ fun StockListItemPreview() {
         ) {
             StockListContent(
                 itemList = items,
+                menuOptions = arrayOf(),
                 onItemClick = {},
-                onAddButtonClick = {},
+                onMenuItemClick = {},
                 navigateUp = {}
             )
         }
@@ -124,10 +145,16 @@ fun StockListItemPreview() {
 }
 
 private val items = listOf(
-    StockOrder(id= 1L, productId = 1, name = "Product 1", photo = "", purchasePrice = 120.45F, date = 0L, quantity = 12, isOrderedByCustomer = false),
-    StockOrder(id= 2L, productId = 2, name = "Product 2", photo = "", purchasePrice = 40.33F, date = 0L, quantity = 2, isOrderedByCustomer = false),
-    StockOrder(id= 3L, productId = 3, name = "Product 3", photo = "", purchasePrice = 99.99F, date = 0L, quantity = 7, isOrderedByCustomer = false),
-    StockOrder(id= 4L, productId = 4, name = "Product 4", photo = "", purchasePrice = 12.39F, date = 0L, quantity = 2, isOrderedByCustomer = false),
-    StockOrder(id= 5L, productId = 5, name = "Product 5", photo = "", purchasePrice = 56.78F, date = 0L, quantity = 1, isOrderedByCustomer = false),
-    StockOrder(id= 6L, productId = 6, name = "Product 6", photo = "", purchasePrice = 12.12F, date = 0L, quantity = 2, isOrderedByCustomer = false),
+    StockOrder(id= 1L, productId = 1, name = "Product 1", photo = "", purchasePrice = 120.45F, date = 0L,
+        validity = 0L, categories = listOf(), company = "", salePrice = 0F, quantity = 12, isOrderedByCustomer = false),
+    StockOrder(id= 2L, productId = 2, name = "Product 2", photo = "", purchasePrice = 40.33F, date = 0L,
+        validity = 0L, categories = listOf(), company = "", salePrice = 0F, quantity = 2, isOrderedByCustomer = false),
+    StockOrder(id= 3L, productId = 3, name = "Product 3", photo = "", purchasePrice = 99.99F, date = 0L,
+        validity = 0L, categories = listOf(), company = "", salePrice = 0F, quantity = 7, isOrderedByCustomer = false),
+    StockOrder(id= 4L, productId = 4, name = "Product 4", photo = "", purchasePrice = 12.39F, date = 0L,
+        validity = 0L, categories = listOf(), company = "", salePrice = 0F, quantity = 2, isOrderedByCustomer = false),
+    StockOrder(id= 5L, productId = 5, name = "Product 5", photo = "", purchasePrice = 56.78F, date = 0L,
+        validity = 0L, categories = listOf(), company = "", salePrice = 0F, quantity = 1, isOrderedByCustomer = false),
+    StockOrder(id= 6L, productId = 6, name = "Product 6", photo = "", purchasePrice = 12.12F, date = 0L,
+        validity = 0L, categories = listOf(), company = "", salePrice = 0F, quantity = 2, isOrderedByCustomer = false),
 )
