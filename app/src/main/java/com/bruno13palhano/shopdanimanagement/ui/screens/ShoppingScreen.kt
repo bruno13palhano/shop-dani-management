@@ -1,19 +1,17 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Analytics
-import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,31 +20,43 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.ShoppingViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun ShoppingScreen(
+    onItemClick: (id: Long) -> Unit,
     onMenuClick: () -> Unit,
-    onCategoriesClick: () -> Unit
+    onAddButtonClick: () -> Unit,
+    viewModel: ShoppingViewModel = hiltViewModel()
 ) {
+    val shoppingList by viewModel.shoppingList.collectAsStateWithLifecycle()
+
     ShoppingContent(
-        onMenuClick = onMenuClick,
-        onCategoriesClick = onCategoriesClick
+        itemList = shoppingList,
+        onItemClick = onItemClick,
+        onAddButtonClick = onAddButtonClick,
+        onMenuClick = onMenuClick
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingContent(
+    itemList: List<Shopping>,
+    onItemClick: (id: Long) -> Unit,
+    onAddButtonClick: () -> Unit,
     onMenuClick: () -> Unit,
-    onCategoriesClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -61,55 +71,27 @@ fun ShoppingContent(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onAddButtonClick) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = stringResource(id = R.string.add_label)
+                )
+            }
         }
     ) {
-        Column(modifier = Modifier.padding(it)) {
-            ElevatedCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.5F)
-                    .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 4.dp),
-                onClick = onCategoriesClick
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        modifier = Modifier.size(128.dp),
-                        imageVector = Icons.Filled.Category,
-                        contentDescription = stringResource(id = R.string.category_image_label)
-                    )
-                    Text(
-                        text = stringResource(id = R.string.categories_label),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-
-            ElevatedCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(1F)
-                    .padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 8.dp),
-                onClick = {}
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        modifier = Modifier.size(128.dp),
-                        imageVector = Icons.Filled.Analytics,
-                        contentDescription = stringResource(id = R.string.analytics_image_label)
-                    )
-                    Text(
-                        text = stringResource(id = R.string.analytics_label),
-                        textAlign = TextAlign.Center
-                    )
-                }
+        LazyColumn(
+            modifier = Modifier.padding(it),
+            contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
+        ) {
+            items(itemList) { shoppingItem ->
+                SimpleItemList(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    itemName = shoppingItem.name,
+                    imageVector = Icons.Filled.ArrowForward,
+                    onClick = { onItemClick(shoppingItem.id) }
+                )
             }
         }
     }
@@ -125,8 +107,10 @@ fun ShoppingDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ShoppingContent(
+                itemList = shoppingList,
+                onItemClick = {},
+                onAddButtonClick = {},
                 onMenuClick = {},
-                onCategoriesClick = {}
             )
         }
     }
@@ -144,9 +128,23 @@ fun ShoppingPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ShoppingContent(
+                itemList = shoppingList,
+                onItemClick = {},
+                onAddButtonClick = {},
                 onMenuClick = {},
-                onCategoriesClick = {}
             )
         }
     }
 }
+
+private val shoppingList = listOf(
+    Shopping(id = 1L, productId = 1L, name = "Essencial", purchasePrice = 123.50F, quantity = 10, date = 0L, isPaid = false),
+    Shopping(id = 1L, productId = 1L, name = "Homem", purchasePrice = 123.50F, quantity = 10, date = 0L, isPaid = false),
+    Shopping(id = 1L, productId = 1L, name = "Luna", purchasePrice = 200.90F, quantity = 10, date = 0L, isPaid = true),
+    Shopping(id = 1L, productId = 1L, name = "Una", purchasePrice = 67.90F, quantity = 10, date = 0L, isPaid = true),
+    Shopping(id = 1L, productId = 1L, name = "Kaiak", purchasePrice = 88.99F, quantity = 10, date = 0L, isPaid = false),
+    Shopping(id = 1L, productId = 1L, name = "Essencial", purchasePrice = 123.50F, quantity = 10, date = 0L, isPaid = true),
+    Shopping(id = 1L, productId = 1L, name = "Homem", purchasePrice = 88.99F, quantity = 10, date = 0L, isPaid = true),
+    Shopping(id = 1L, productId = 1L, name = "Kaiak", purchasePrice = 113.90F, quantity = 10, date = 0L, isPaid = false),
+    Shopping(id = 1L, productId = 1L, name = "Essencial", purchasePrice = 163.50F, quantity = 10, date = 0L, isPaid = false),
+)
