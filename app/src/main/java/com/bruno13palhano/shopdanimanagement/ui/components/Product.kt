@@ -1,16 +1,17 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
 import android.content.res.Configuration
-import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,15 +20,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.BusinessCenter
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Paid
-import androidx.compose.material.icons.filled.PriceCheck
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.ElevatedCard
@@ -53,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -62,7 +61,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,28 +74,23 @@ fun ProductContent(
     description: String,
     photo: String,
     date: String,
-    validity: String,
     category: String,
     company: String,
-    purchasePrice: String,
-    salePrice: String,
     enableMoreOptionsMenu: Boolean,
     onNameChange: (name: String) -> Unit,
     onCodeChange: (code: String) -> Unit,
     onDescriptionChange: (description: String) -> Unit,
-    onPurchasePriceChange: (purchasePrice: String) -> Unit,
-    onSalePriceChange: (salePrice: String) -> Unit,
     onDismissCategory: () -> Unit,
     onCompanySelected: (selected: String) -> Unit,
     onDismissCompany: () -> Unit,
     onImageClick: () -> Unit,
     onDateClick: () -> Unit,
-    onValidityClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
     onOutsideClick: () -> Unit,
     onActionButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
+    val configuration = LocalConfiguration.current
     var openCategorySheet by rememberSaveable { mutableStateOf(false) }
     var openCompanySheet by rememberSaveable { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
@@ -162,13 +155,11 @@ fun ProductContent(
             }
         }
     ) {
-        val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
-        val decimalSeparator = decimalFormat.decimalFormatSymbols.decimalSeparator
-        val pattern = remember { Regex("^\\d*\\$decimalSeparator?\\d*\$") }
         val patternInt = remember { Regex("^\\d*") }
 
         Column(modifier = Modifier
             .padding(it)
+            .fillMaxHeight()
             .verticalScroll(rememberScrollState())
         ) {
             CategoryBottomSheet(
@@ -289,37 +280,6 @@ fun ProductContent(
                 modifier = Modifier
                     .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = description,
-                onValueChange = onDescriptionChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Description,
-                        contentDescription = stringResource(id = R.string.description_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.description_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_description_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
                     .onFocusChanged { focusState ->
                         if (focusState.hasFocus) {
                             onDateClick()
@@ -347,114 +307,6 @@ fun ProductContent(
                         fontStyle = FontStyle.Italic
                     )
                 }
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (focusState.hasFocus) {
-                            onValidityClick()
-                        }
-                    },
-                value = validity,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.CalendarMonth,
-                        contentDescription = stringResource(id = R.string.validity_label)
-                    )
-                },
-                onValueChange = {},
-                singleLine = true,
-                readOnly = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.validity_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_validity_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = purchasePrice,
-                onValueChange = { purchasePriceValue ->
-                    if (purchasePriceValue.isEmpty() || purchasePriceValue.matches(pattern)) {
-                        onPurchasePriceChange(purchasePriceValue)
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Paid,
-                        contentDescription = stringResource(id = R.string.purchase_price_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Decimal
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.purchase_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_purchase_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = salePrice,
-                onValueChange = { salePriceValue ->
-                    if (salePriceValue.isEmpty() || salePriceValue.matches(pattern)) {
-                        onSalePriceChange(salePriceValue)
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.PriceCheck,
-                        contentDescription = stringResource(id = R.string.sale_price_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Decimal
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.sale_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_sale_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -528,6 +380,84 @@ fun ProductContent(
                     )
                 },
             )
+            if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 8.dp)
+                        .fillMaxWidth()
+                        .weight(1F, true)
+                        .clearFocusOnKeyboardDismiss(),
+                    value = description,
+                    onValueChange = onDescriptionChange,
+                    leadingIcon = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .padding(top = 16.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Description,
+                                contentDescription = stringResource(id = R.string.description_label)
+                            )
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        defaultKeyboardAction(ImeAction.Done)
+                    }),
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.description_label),
+                            fontStyle = FontStyle.Italic
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.enter_description_label),
+                            fontStyle = FontStyle.Italic
+                        )
+                    },
+                )
+            } else {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 8.dp)                        .sizeIn(minHeight = 200.dp)
+                        .fillMaxWidth()
+                        .sizeIn(minHeight = 200.dp)
+                        .clearFocusOnKeyboardDismiss(),
+                    value = description,
+                    onValueChange = onDescriptionChange,
+                    leadingIcon = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .sizeIn(minHeight = 200.dp)
+                                .padding(top = 16.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Description,
+                                contentDescription = stringResource(id = R.string.description_label)
+                            )
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        defaultKeyboardAction(ImeAction.Done)
+                    }),
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.description_label),
+                            fontStyle = FontStyle.Italic
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.enter_description_label),
+                            fontStyle = FontStyle.Italic
+                        )
+                    },
+                )
+            }
         }
     }
 }
@@ -549,25 +479,19 @@ fun ProductDynamicPreview() {
                 name = "",
                 code = "",
                 description = "",
-                date = "",
-                validity = "",
                 photo = "",
+                date = "",
                 category = "",
                 company = "",
-                purchasePrice = "",
-                salePrice = "",
                 enableMoreOptionsMenu = true,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
-                onPurchasePriceChange = {},
-                onSalePriceChange = {},
                 onDismissCategory = {},
                 onCompanySelected = {},
                 onDismissCompany = {},
                 onImageClick = {},
                 onDateClick = {},
-                onValidityClick = {},
                 onMoreOptionsItemClick = {},
                 onOutsideClick = {},
                 onActionButtonClick = {},
@@ -596,25 +520,19 @@ fun ProductPreview() {
                 name = "",
                 code = "",
                 description = "",
-                date = "",
-                validity = "",
                 photo = "",
+                date = "",
                 category = "",
                 company = "",
-                purchasePrice = "",
-                salePrice = "",
                 enableMoreOptionsMenu = false,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
-                onPurchasePriceChange = {},
-                onSalePriceChange = {},
                 onDismissCategory = {},
                 onCompanySelected = {},
                 onDismissCompany = {},
                 onImageClick = {},
                 onDateClick = {},
-                onValidityClick = {},
                 onMoreOptionsItemClick = {},
                 onOutsideClick = {},
                 onActionButtonClick = {},
@@ -641,25 +559,19 @@ fun ProductOrderedDynamicPreview() {
                 name = "",
                 code = "",
                 description = "",
-                date = "",
-                validity = "",
                 photo = "",
+                date = "",
                 category = "",
                 company = "",
-                purchasePrice = "",
-                salePrice = "",
                 enableMoreOptionsMenu = true,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
-                onPurchasePriceChange = {},
-                onSalePriceChange = {},
                 onDismissCategory = {},
                 onCompanySelected = {},
                 onDismissCompany = {},
                 onImageClick = {},
                 onDateClick = {},
-                onValidityClick = {},
                 onMoreOptionsItemClick = {},
                 onOutsideClick = {},
                 onActionButtonClick = {},
@@ -688,25 +600,19 @@ fun ProductOrderedPreview() {
                 name = "",
                 code = "",
                 description = "",
-                date = "",
-                validity = "",
                 photo = "",
+                date = "",
                 category = "",
                 company = "",
-                purchasePrice = "",
-                salePrice = "",
                 enableMoreOptionsMenu = false,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
-                onPurchasePriceChange = {},
-                onSalePriceChange = {},
                 onDismissCategory = {},
                 onCompanySelected = {},
                 onDismissCompany = {},
                 onImageClick = {},
                 onDateClick = {},
-                onValidityClick = {},
                 onMoreOptionsItemClick = {},
                 onOutsideClick = {},
                 onActionButtonClick = {},
