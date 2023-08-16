@@ -25,12 +25,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ItemContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel.NewItemViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.NewItemViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun NewShoppingItemScreen(
+fun NewItemScreen(
+    screenTitle: String,
     productId: Long,
     navigateUp: () -> Unit,
     viewModel: NewItemViewModel = hiltViewModel()
@@ -124,6 +125,7 @@ fun NewShoppingItemScreen(
     val errorMessage = stringResource(id = R.string.empty_fields_error)
 
     ItemContent(
+        screenTitle = screenTitle,
         snackbarHostState = snackbarHostState,
         name = viewModel.name,
         photo = viewModel.photo,

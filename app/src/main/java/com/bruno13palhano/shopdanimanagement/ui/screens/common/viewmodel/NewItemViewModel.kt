@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel
+package com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
