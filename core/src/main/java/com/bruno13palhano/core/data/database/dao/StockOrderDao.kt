@@ -34,6 +34,9 @@ internal interface StockOrderDao : StockOrderData<StockOrderEntity> {
     @Query("SELECT * FROM stock_order_table WHERE id = (SELECT max(id) FROM stock_order_table)")
     override fun getLast(): Flow<StockOrderEntity>
 
+    @Query("SELECT * FROM stock_order_table WHERE is_ordered_by_customer = :isOrderedByCustomer")
+    override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrderEntity>>
+
     @Query(
         "SELECT * FROM stock_order_table WHERE name LIKE '%'||:value||'%' " +
                 "OR company LIKE '%'||:value||'%' " +

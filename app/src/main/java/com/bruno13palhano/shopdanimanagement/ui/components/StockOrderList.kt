@@ -11,9 +11,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,10 +40,12 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockListContent(
+    screenTitle: String,
     itemList: List<StockOrder>,
     menuOptions: Array<String>,
     onItemClick: (id: Long) -> Unit,
     onMenuItemClick: (index: Int) -> Unit,
+    onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -49,7 +53,7 @@ fun StockListContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Stock List") },
+                title = { Text(text = screenTitle) },
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(
@@ -81,6 +85,14 @@ fun StockListContent(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onAddButtonClick) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = stringResource(id = R.string.add_label)
+                )
+            }
         }
     ) {
         LazyVerticalGrid(
@@ -112,10 +124,12 @@ fun StockListDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockListContent(
+                screenTitle = "Stock List",
                 itemList = items,
                 menuOptions = arrayOf(),
                 onItemClick = {},
                 onMenuItemClick = {},
+                onAddButtonClick = {},
                 navigateUp = {}
             )
         }
@@ -134,10 +148,12 @@ fun StockListItemPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockListContent(
+                screenTitle = "Orders List",
                 itemList = items,
                 menuOptions = arrayOf(),
                 onItemClick = {},
                 onMenuItemClick = {},
+                onAddButtonClick = {},
                 navigateUp = {}
             )
         }

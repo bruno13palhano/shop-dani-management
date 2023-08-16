@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stock
+package com.bruno13palhano.shopdanimanagement.ui.screens.common
 
 import android.content.res.Configuration
 import androidx.compose.material3.Button
@@ -24,26 +24,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.StockOrderContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.NewStockItemViewModel
+import com.bruno13palhano.shopdanimanagement.ui.components.ItemContent
+import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel.NewItemViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun NewStockItemScreen(
+fun NewShoppingItemScreen(
     productId: Long,
     navigateUp: () -> Unit,
-    viewModel: NewStockItemViewModel = hiltViewModel()
+    viewModel: NewItemViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getProduct(productId)
-    }
-    val isStockItemNotEmpty by viewModel.isStockItemNotEmpty.collectAsStateWithLifecycle()
+   LaunchedEffect(key1 = Unit) {
+       viewModel.getProduct(productId)
+   }
+
+    val isItemNotEmpty by viewModel.isItemNotEmpty.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
+    val orientation = configuration.orientation
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     var datePickerState = rememberDatePickerState()
     var showDatePickerDialog by remember { mutableStateOf(false) }
+    var validityPickerState = rememberDatePickerState()
+    var showValidityPickerDialog by remember { mutableStateOf(false) }
 
     if (showDatePickerDialog) {
         DatePickerDialog(
@@ -67,7 +71,7 @@ fun NewStockItemScreen(
         ) {
             datePickerState = rememberDatePickerState(
                 initialSelectedDateMillis = viewModel.dateInMillis,
-                initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                initialDisplayMode = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                     DisplayMode.Picker
                 } else {
                     DisplayMode.Input
@@ -75,7 +79,42 @@ fun NewStockItemScreen(
             )
             DatePicker(
                 state = datePickerState,
-                showModeToggle = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+                showModeToggle = orientation == Configuration.ORIENTATION_PORTRAIT
+            )
+        }
+    }
+
+    if (showValidityPickerDialog) {
+        DatePickerDialog(
+            onDismissRequest = {
+                showValidityPickerDialog = false
+                focusManager.clearFocus(force = true)
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        validityPickerState.selectedDateMillis?.let {
+                            viewModel.updateValidity(it)
+                        }
+                        showValidityPickerDialog = false
+                        focusManager.clearFocus(force = true)
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.validity_label))
+                }
+            }
+        ) {
+            validityPickerState = rememberDatePickerState(
+                initialSelectedDateMillis = viewModel.validityInMillis,
+                initialDisplayMode = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    DisplayMode.Picker
+                } else {
+                    DisplayMode.Input
+                }
+            )
+            DatePicker(
+                state = validityPickerState,
+                showModeToggle = orientation == Configuration.ORIENTATION_PORTRAIT
             )
         }
     }
@@ -84,24 +123,40 @@ fun NewStockItemScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errorMessage = stringResource(id = R.string.empty_fields_error)
 
-    StockOrderContent(
-        screenTitle = stringResource(id = R.string.new_item_label),
+    ItemContent(
         snackbarHostState = snackbarHostState,
         name = viewModel.name,
-        purchasePrice = viewModel.purchasePrice,
-        quantity = viewModel.quantity,
         photo = viewModel.photo,
+        quantity = viewModel.quantity,
         date = viewModel.date,
-        onPurchasePriceChange = viewModel::updatePurchasePrice,
+        purchasePrice = viewModel.purchasePrice,
+        salePrice = viewModel.salePrice,
+        validity = viewModel.validity,
+        category = viewModel.category,
+        company = viewModel.company,
+        isPaid = viewModel.isPaid,
+        onNameChange = viewModel::updateName,
         onQuantityChange = viewModel::updateQuantity,
+        onPurchasePriceChange = viewModel::updatePurchasePrice,
+        onSalePriceChange = viewModel::updateSalePrice,
+        onIsPaidChange = viewModel::updateIsPaid,
         onDateClick = { showDatePickerDialog = true },
+        onValidityClick = { showValidityPickerDialog = true},
+        categories = viewModel.allCategories,
+        companies = viewModel.allCompanies,
+        onDismissCategory = {
+            viewModel.updateCategories(viewModel.allCategories)
+            focusManager.clearFocus(force = true)
+        },
+        onDismissCompany = { focusManager.clearFocus(force = true) },
+        onCompanySelected = viewModel::updateCompany,
         onOutsideClick = {
             keyboardController?.hide()
             focusManager.clearFocus(force = true)
         },
-        onDoneClick = {
-            if (isStockItemNotEmpty) {
-                viewModel.insertStock()
+        onDoneButtonClick = {
+            if (isItemNotEmpty) {
+                viewModel.insertItems(productId)
                 navigateUp()
             } else {
                 scope.launch {

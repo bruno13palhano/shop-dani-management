@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NewShoppingItemViewModel @Inject constructor(
+class NewItemViewModel @Inject constructor(
     @DefaultProductRepository private val productRepository: ProductData<Product>,
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
     @DefaultShoppingRepository private val shoppingRepository: ShoppingData<Shopping>,

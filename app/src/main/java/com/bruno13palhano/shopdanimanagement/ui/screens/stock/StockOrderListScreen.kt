@@ -9,16 +9,23 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockLis
 
 @Composable
 fun StockListScreen(
+    screenTitle: String,
     onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit,
     viewModel: StockListViewModel = hiltViewModel()
 ) {
+    val menuOptions = mutableListOf("All products")
     val stockList by viewModel.stockList.collectAsStateWithLifecycle()
+    val categories by viewModel.categories.collectAsStateWithLifecycle()
+    menuOptions.addAll(categories)
 
     StockListContent(
+        screenTitle = screenTitle,
         itemList = stockList,
+        menuOptions = menuOptions.toTypedArray(),
         onItemClick = onItemClick,
+        onMenuItemClick = {},
         onAddButtonClick = onAddButtonClick,
         navigateUp = navigateUp
     )

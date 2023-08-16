@@ -48,6 +48,13 @@ internal class StockOrderRepository @Inject constructor(
             .catch { it.printStackTrace() }
     }
 
+    override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
+        return stockOrderDao.getItems(isOrderedByCustomer)
+            .map {
+                it.map { entity -> entity.asExternalModel() }
+            }
+    }
+
     override fun search(value: String): Flow<List<StockOrder>> {
         return stockOrderDao.search(value)
             .map {
