@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NewItemViewModel @Inject constructor(
+class ItemViewModel @Inject constructor(
     @DefaultProductRepository private val productRepository: ProductData<Product>,
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
     @DefaultShoppingRepository private val shoppingRepository: ShoppingData<Shopping>,
@@ -43,6 +43,7 @@ class NewItemViewModel @Inject constructor(
         CompanyCheck(Company.AVON, true),
         CompanyCheck(Company.NATURA, false)
     )
+    private var productId by mutableLongStateOf(0L)
     var name by mutableStateOf("")
         private set
     var photo by mutableStateOf("")
@@ -213,6 +214,44 @@ class NewItemViewModel @Inject constructor(
         }
         viewModelScope.launch {
             stockRepository.insert(stockItem)
+        }
+    }
+
+    fun getStockOrder(stockOrderItemId: Long) {
+        viewModelScope.launch {
+            stockRepository.getById(stockOrderItemId).collect {
+                productId = it.productId
+                name = it.name
+                photo = it.photo
+                quantity = it.quantity.toString()
+                company = it.company
+                updateDate(it.date)
+                updateValidity(it.validity)
+                setCategoriesChecked(it.categories)
+                setCompanyChecked(it.company)
+                purchasePrice = it.purchasePrice.toString()
+                salePrice = it.salePrice.toString()
+            }
+        }
+    }
+
+    fun updateStockOrderItem(stockOrderItemId: Long, isOrderedByCustomer: Boolean) {
+        val stockItem = StockOrder(
+            id = stockOrderItemId,
+            productId = productId,
+            name = name,
+            photo = photo,
+            quantity = quantity.toInt(),
+            date = dateInMillis,
+            validity = validityInMillis,
+            categories = categories,
+            company = company,
+            purchasePrice = stringToFloat(purchasePrice),
+            salePrice = stringToFloat(salePrice),
+            isOrderedByCustomer = isOrderedByCustomer
+        )
+        viewModelScope.launch {
+            stockRepository.update(stockItem)
         }
     }
 }
