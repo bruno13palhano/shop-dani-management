@@ -39,7 +39,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StockListContent(
+fun StockOrderListContent(
     screenTitle: String,
     itemList: List<StockOrder>,
     menuOptions: Array<String>,
@@ -117,13 +117,13 @@ fun StockListContent(
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
-fun StockListDynamicPreview() {
+fun StockOrderListDynamicPreview() {
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            StockListContent(
+            StockOrderListContent(
                 screenTitle = "Stock List",
                 itemList = items,
                 menuOptions = arrayOf(),
@@ -139,7 +139,7 @@ fun StockListDynamicPreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
-fun StockListItemPreview() {
+fun StockOrderListItemPreview() {
     ShopDaniManagementTheme(
         dynamicColor = false
     ) {
@@ -147,7 +147,7 @@ fun StockListItemPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            StockListContent(
+            StockOrderListContent(
                 screenTitle = "Orders List",
                 itemList = items,
                 menuOptions = arrayOf(),

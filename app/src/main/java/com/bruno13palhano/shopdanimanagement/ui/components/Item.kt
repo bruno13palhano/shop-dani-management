@@ -65,6 +65,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemContent(
+    screenTitle: String,
     snackbarHostState: SnackbarHostState,
     name: String,
     photo: String,
@@ -102,7 +103,7 @@ fun ItemContent(
         },
         topBar = {
             TopAppBar(
-                title = { Text(text = "New Shopping Item") },
+                title = { Text(text = screenTitle) },
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(
@@ -479,6 +480,7 @@ fun ItemDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ItemContent(
+                screenTitle = "New Stock Item",
                 snackbarHostState = remember { SnackbarHostState() },
                 name = "",
                 photo = "",
@@ -522,6 +524,7 @@ fun ItemPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ItemContent(
+                screenTitle = "New Order Item",
                 snackbarHostState = remember { SnackbarHostState() },
                 name = "",
                 photo = "",
