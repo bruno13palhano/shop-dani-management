@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
-import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,10 +36,10 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 fun StockScreen(
     onSearchClick: () -> Unit,
     onMenuClick: () -> Unit,
-    onCategoriesClick: () -> Unit,
+    onProductsClick: () -> Unit,
 ) {
     StockContent(
-        onCategoriesClick = onCategoriesClick,
+        onProductsClick = onProductsClick,
         onSearchClick = onSearchClick,
         onMenuClick = onMenuClick
     )
@@ -48,7 +48,7 @@ fun StockScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockContent(
-    onCategoriesClick: () -> Unit,
+    onProductsClick: () -> Unit,
     onSearchClick: () -> Unit,
     onMenuClick: () -> Unit
 ) {
@@ -81,7 +81,7 @@ fun StockContent(
                     .fillMaxWidth()
                     .fillMaxHeight(0.5F)
                     .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 4.dp),
-                onClick = onCategoriesClick
+                onClick = onProductsClick
             ) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -90,11 +90,11 @@ fun StockContent(
                 ) {
                     Icon(
                         modifier = Modifier.size(128.dp),
-                        imageVector = Icons.Filled.Category,
+                        imageVector = Icons.Filled.PlaylistAdd,
                         contentDescription = stringResource(id = R.string.category_image_label)
                     )
                     Text(
-                        text = stringResource(id = R.string.categories_label),
+                        text = stringResource(id = R.string.stock_product_list),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -137,7 +137,7 @@ private fun StockDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockContent(
-                onCategoriesClick = {},
+                onProductsClick = {},
                 onSearchClick = {},
                 onMenuClick = {}
             )
@@ -157,7 +157,7 @@ private fun StockPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockContent(
-                onCategoriesClick = {},
+                onProductsClick = {},
                 onSearchClick = {},
                 onMenuClick = {}
             )

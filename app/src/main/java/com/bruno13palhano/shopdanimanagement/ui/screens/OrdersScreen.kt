@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
-import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ElevatedCard
@@ -36,12 +36,12 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 fun OrdersScreen(
     onSearchClick: () -> Unit,
     onMenuClick: () -> Unit,
-    onCategoriesClick: () -> Unit,
+    onProductsClick: () -> Unit,
 ) {
     OrdersContent(
         onSearchClick = onSearchClick,
         onMenuClick = onMenuClick,
-        onCategoriesClick = onCategoriesClick
+        onCategoriesClick = onProductsClick
     )
 }
 
@@ -90,11 +90,11 @@ fun OrdersContent(
                 ) {
                     Icon(
                         modifier = Modifier.size(128.dp),
-                        imageVector = Icons.Filled.Category,
+                        imageVector = Icons.Filled.Checklist,
                         contentDescription = stringResource(id = R.string.category_image_label)
                     )
                     Text(
-                        text = stringResource(id = R.string.categories_label),
+                        text = stringResource(id = R.string.orders_label),
                         textAlign = TextAlign.Center
                     )
                 }
