@@ -9,8 +9,8 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.StockScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.NewItemScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.ProductItemListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.EditStockItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.ProductStockListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.StockOrderListScreen
 
 private const val ITEM_ID = "item_Id"
@@ -47,7 +47,7 @@ fun NavGraphBuilder.stockNavGraph(
         composable(route = StockDestinations.STOCK_LIST_ROUTE) {
             StockOrderListScreen(
                 isOrderedByCustomer = false,
-                screenTitle = "Stock List",
+                screenTitle = stringResource(id = R.string.stock_list_label),
                 onItemClick = { productId ->
                     navController.navigate(
                         route = "${StockDestinations.STOCK_EDIT_PRODUCT_ROUTE}$productId"
@@ -62,7 +62,7 @@ fun NavGraphBuilder.stockNavGraph(
             )
         }
         composable(route = StockDestinations.STOCK_PRODUCTS_STOCK_LIST_ROUTE) {
-            ProductStockListScreen(
+            ProductItemListScreen(
                 onItemClick = { productId ->
                     navController.navigate(
                         route = "${StockDestinations.STOCK_NEW_PRODUCT_ROUTE}$productId"
