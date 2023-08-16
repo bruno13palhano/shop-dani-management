@@ -31,6 +31,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -55,6 +57,7 @@ import java.util.Locale
 @Composable
 fun ShoppingContent(
     screenTitle: String,
+    snackbarHostState: SnackbarHostState,
     name: String,
     purchasePrice: String,
     quantity: String,
@@ -71,10 +74,8 @@ fun ShoppingContent(
     navigateUp: () -> Unit
 ) {
     Scaffold(
-        modifier = Modifier
-            .clickableNoEffect {
-                onOutsideClick()
-            },
+        modifier = Modifier.clickableNoEffect { onOutsideClick() },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(text = screenTitle) },
@@ -288,6 +289,7 @@ fun ShoppingDynamicPreview() {
         ) {
             ShoppingContent(
                 screenTitle = stringResource(id = R.string.new_item_label),
+                snackbarHostState = remember { SnackbarHostState() },
                 name = "",
                 purchasePrice = "",
                 quantity = "",
@@ -320,6 +322,7 @@ fun ShoppingPreview() {
         ) {
             ShoppingContent(
                 screenTitle = stringResource(id = R.string.new_item_label),
+                snackbarHostState = remember { SnackbarHostState() },
                 name = "",
                 purchasePrice = "",
                 quantity = "",
