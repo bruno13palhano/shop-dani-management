@@ -1,6 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Paid
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.Checkbox
@@ -47,16 +49,20 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingContent(
     screenTitle: String,
     name: String,
+    purchasePrice: String,
     quantity: String,
     isPaid: Boolean,
     photo: String,
     date: String,
+    onNameChange: (name: String) -> Unit,
+    onPurchasePriceChange: (purchasePrice: String) -> Unit,
     onQuantityChange: (quantity: String) -> Unit,
     onIsPaidChange: (isPaid: Boolean) -> Unit,
     onDateClick: () -> Unit,
@@ -91,7 +97,10 @@ fun ShoppingContent(
             }
         }
     ) {
-        val pattern = remember { Regex("^\\d*") }
+        val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
+        val decimalSeparator = decimalFormat.decimalFormatSymbols.decimalSeparator
+        val pattern = remember { Regex("^\\d*\\$decimalSeparator?\\d*\$") }
+        val patternInt = remember { Regex("^\\d*") }
 
         Column(
             modifier = Modifier
@@ -125,19 +134,22 @@ fun ShoppingContent(
             }
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .clearFocusOnKeyboardDismiss(),
                 value = name,
-                onValueChange = {},
+                onValueChange = onNameChange,
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Title,
                         contentDescription = stringResource(id = R.string.name_label)
                     )
                 },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
                 singleLine = true,
-                enabled = false,
                 label = {
                     Text(
                         text = stringResource(id = R.string.name_label),
@@ -153,7 +165,45 @@ fun ShoppingContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .fillMaxWidth()
+                    .clearFocusOnKeyboardDismiss(),
+                value = purchasePrice,
+                onValueChange = { purchasePriceValue ->
+                    if (purchasePriceValue.isEmpty() || purchasePriceValue.matches(pattern)) {
+                        onPurchasePriceChange(purchasePriceValue)
+                    }
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Paid,
+                        contentDescription = stringResource(id = R.string.purchase_price_label)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Decimal
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.purchase_price_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.purchase_price_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .onFocusChanged { focusState ->
                         if (focusState.hasFocus) {
@@ -185,12 +235,12 @@ fun ShoppingContent(
             )
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .clearFocusOnKeyboardDismiss(),
                 value = quantity,
                 onValueChange = { quantityValue ->
-                    if (quantityValue.isEmpty() || quantityValue.matches(pattern)) {
+                    if (quantityValue.isEmpty() || quantityValue.matches(patternInt)) {
                         onQuantityChange(quantityValue)
                     }
                 },
@@ -213,7 +263,7 @@ fun ShoppingContent(
             )
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
                     .align(Alignment.Start),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -239,10 +289,13 @@ fun ShoppingDynamicPreview() {
             ShoppingContent(
                 screenTitle = stringResource(id = R.string.new_item_label),
                 name = "",
+                purchasePrice = "",
                 quantity = "",
                 isPaid = true,
                 photo = "",
                 date = "",
+                onNameChange = {},
+                onPurchasePriceChange = {},
                 onQuantityChange = {},
                 onIsPaidChange = {},
                 onDateClick = {},
@@ -268,10 +321,13 @@ fun ShoppingPreview() {
             ShoppingContent(
                 screenTitle = stringResource(id = R.string.new_item_label),
                 name = "",
+                purchasePrice = "",
                 quantity = "",
                 isPaid = true,
                 photo = "",
                 date = "",
+                onNameChange = {},
+                onPurchasePriceChange = {},
                 onQuantityChange = {},
                 onIsPaidChange = {},
                 onDateClick = {},
