@@ -7,10 +7,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.StockScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.EditItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.NewItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.ProductItemListScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.EditStockItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.StockOrderListScreen
 
 private const val ITEM_ID = "item_Id"
@@ -83,8 +83,10 @@ fun NavGraphBuilder.stockNavGraph(
         }
         composable(route = StockDestinations.STOCK_EDIT_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
             backStackEntry.arguments?.getString(ITEM_ID)?.let { stockItemId ->
-                EditStockItemScreen(
-                    stockItemId = stockItemId.toLong(),
+                EditItemScreen(
+                    stockOrderItemId = stockItemId.toLong(),
+                    isOrderedByCustomer = false,
+                    screenTitle = stringResource(id = R.string.edit_stock_item_label),
                     navigateUp = { navController.navigateUp() }
                 )
             }
