@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stock
+package com.bruno13palhano.shopdanimanagement.ui.screens.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,7 +17,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,27 +27,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalProductItem
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.ProductStockListViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.ProductItemListViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
-fun ProductStockListScreen(
-    categoryId: Long,
+fun ProductItemListScreen(
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,
-    viewModel: ProductStockListViewModel = hiltViewModel()
+    viewModel: ProductItemListViewModel = hiltViewModel()
 ) {
     val productList by viewModel.productList.collectAsStateWithLifecycle()
-    val categoryName by viewModel.categoryName.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getCategoryName(categoryId)
-    }
-    LaunchedEffect(key1 = viewModel.categoryName) {
-        viewModel.getProductsByCategory(categoryName)
-    }
-
-    ProductStockListContent(
+    ProductItemListContent(
         productList = productList,
         onItemClick = onItemClick,
         navigateUp = navigateUp
@@ -57,7 +47,7 @@ fun ProductStockListScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductStockListContent(
+fun ProductItemListContent(
     productList: List<Stock>,
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit
@@ -97,13 +87,13 @@ fun ProductStockListContent(
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
-fun ProductStockListDynamicPreview() {
+fun ProductItemListDynamicPreview() {
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            ProductStockListContent(
+            ProductItemListContent(
                 productList = productList,
                 onItemClick = {},
                 navigateUp = {}
@@ -115,7 +105,7 @@ fun ProductStockListDynamicPreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
-fun ProductStockListPreview() {
+fun ProductItemListPreview() {
     ShopDaniManagementTheme(
         dynamicColor = false
     ) {
@@ -123,7 +113,7 @@ fun ProductStockListPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            ProductStockListContent(
+            ProductItemListContent(
                 productList = productList,
                 onItemClick = {},
                 navigateUp = {}
