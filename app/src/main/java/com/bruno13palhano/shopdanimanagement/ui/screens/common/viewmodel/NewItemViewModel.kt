@@ -181,7 +181,7 @@ class NewItemViewModel @Inject constructor(
         }
     }
 
-    fun insertItems(productId: Long) {
+    fun insertItems(productId: Long, isOrderedByCustomer: Boolean) {
         val shoppingItem = Shopping(
             id = 0L,
             productId = productId,
@@ -203,11 +203,13 @@ class NewItemViewModel @Inject constructor(
             company = company,
             purchasePrice = stringToFloat(purchasePrice),
             salePrice = stringToFloat(salePrice),
-            isOrderedByCustomer = false
+            isOrderedByCustomer = isOrderedByCustomer
 
         )
-        viewModelScope.launch {
-            shoppingRepository.insert(shoppingItem)
+        if (!isOrderedByCustomer) {
+            viewModelScope.launch {
+                shoppingRepository.insert(shoppingItem)
+            }
         }
         viewModelScope.launch {
             stockRepository.insert(stockItem)

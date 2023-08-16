@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun NewItemScreen(
+    isOrderedByCustomer: Boolean,
     screenTitle: String,
     productId: Long,
     navigateUp: () -> Unit,
@@ -158,7 +159,7 @@ fun NewItemScreen(
         },
         onDoneButtonClick = {
             if (isItemNotEmpty) {
-                viewModel.insertItems(productId)
+                viewModel.insertItems(productId, isOrderedByCustomer)
                 navigateUp()
             } else {
                 scope.launch {
