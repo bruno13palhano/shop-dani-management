@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.OrdersScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.EditItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.NewItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.ProductItemListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
@@ -75,8 +76,13 @@ fun NavGraphBuilder.ordersBavGraph(
             }
         }
         composable(route = OrdersDestinations.ORDERS_EDIT_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
-
+            backStackEntry.arguments?.getString(ITEM_ID)?.let { orderItemId ->
+                EditItemScreen(
+                    stockOrderItemId = orderItemId.toLong(),
+                    isOrderedByCustomer = true,
+                    screenTitle = stringResource(id = R.string.edit_order_item_label),
+                    navigateUp = { navController.navigateUp() }
+                )
             }
         }
     }
