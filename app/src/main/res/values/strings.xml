@@ -72,4 +72,7 @@
     <string name="date_of_payment_label">Date of payment</string>
     <string name="is_paid_by_customer_label">Is paid by customer</string>
     <string name="is_ordered_by_customer_label">Is ordered by customer</string>
+    <string name="new_stock_item_label">New Stock Item</string>
+    <string name="new_order_item_label">New Order Item</string>
+    <string name="new_shopping_item_label">New Shopping Item</string>
 </resources>
