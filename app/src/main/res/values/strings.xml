@@ -75,4 +75,7 @@
     <string name="new_stock_item_label">New Stock Item</string>
     <string name="new_order_item_label">New Order Item</string>
     <string name="new_shopping_item_label">New Shopping Item</string>
+    <string name="edit_shopping_item_label">Edit Shopping Item</string>
+    <string name="edit_stock_item_label">Edit Stock Item</string>
+    <string name="edit_order_item_label">Edit Order Item</string>
 </resources>
