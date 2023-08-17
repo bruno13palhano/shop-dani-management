@@ -11,5 +11,5 @@ data class Sale(
     val company: String,
     val dateOfSale: Long,
     val dateOfPayment: Long,
-    val isPaidByClient: Boolean
+    val isPaidByCustomer: Boolean
 )

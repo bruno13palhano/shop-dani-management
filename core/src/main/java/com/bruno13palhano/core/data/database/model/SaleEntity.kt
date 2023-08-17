@@ -40,7 +40,7 @@ internal data class SaleEntity(
     val dateOfPayment: Long,
 
     @ColumnInfo(name = "is_paid_by_client")
-    val isPaidByClient: Boolean
+    val isPaidByCustomer: Boolean
 )
 
 internal fun SaleEntity.asExternalModel() = Sale(
@@ -54,7 +54,7 @@ internal fun SaleEntity.asExternalModel() = Sale(
     company = company,
     dateOfSale = dateOfSale,
     dateOfPayment = dateOfPayment,
-    isPaidByClient = isPaidByClient
+    isPaidByCustomer = isPaidByCustomer
 )
 
 internal fun Sale.asInternalModel() = SaleEntity(
@@ -68,5 +68,5 @@ internal fun Sale.asInternalModel() = SaleEntity(
     company = company,
     dateOfSale = dateOfSale,
     dateOfPayment = dateOfPayment,
-    isPaidByClient = isPaidByClient
+    isPaidByCustomer = isPaidByCustomer
 )
