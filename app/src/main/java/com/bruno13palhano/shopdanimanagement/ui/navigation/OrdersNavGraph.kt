@@ -15,7 +15,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.StockOrderListScr
 
 private const val ITEM_ID = "item_Id"
 
-fun NavGraphBuilder.ordersBavGraph(
+fun NavGraphBuilder.ordersNavGraph(
     navController: NavController,
     onMenuClick: () -> Unit
 ) {
