@@ -31,6 +31,12 @@ fun stringToFloat(value: String): Float {
     } catch (ignored: Exception) { 0F }
 }
 
+fun stringToInt(value: String): Int {
+    return try {
+        value.toInt()
+    } catch (ignored: Exception) { 0 }
+}
+
 val currentDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
 
 val dateFormat: DateFormat = SimpleDateFormat.getDateInstance().apply {
