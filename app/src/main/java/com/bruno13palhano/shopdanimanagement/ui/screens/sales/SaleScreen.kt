@@ -31,12 +31,17 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SaleScreen(
+    isOrderedByCustomer: Boolean,
     productId: Long,
     navigateUp: () -> Unit,
     viewModel: SaleViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
-        viewModel.getProduct(productId)
+        if (isOrderedByCustomer) {
+            viewModel.getProduct(productId)
+        } else {
+            viewModel.getStockItem(productId)
+        }
     }
     val isSaleNotEmpty by viewModel.isSaleNotEmpty.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
@@ -107,7 +112,7 @@ fun SaleScreen(
                 initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     DisplayMode.Picker
                 } else {
-                    DisplayMode.Picker
+                    DisplayMode.Input
                 }
             )
             DatePicker(
@@ -120,6 +125,7 @@ fun SaleScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val errorMessage = stringResource(id = R.string.empty_fields_error)
+    val stockQuantityMessage = stringResource(id = R.string.only_x_items_error_label, viewModel.stockQuantity)
 
     SaleContent(
         screenTitle = "Sale",
@@ -159,7 +165,18 @@ fun SaleScreen(
         },
         onDoneButtonClick = {
             if (isSaleNotEmpty) {
-                navigateUp()
+                viewModel.insertSale(
+                    productId = productId,
+                    isOrderedByCustomer = isOrderedByCustomer,
+                    onSuccess = navigateUp,
+                    onError = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = stockQuantityMessage
+                            )
+                        }
+                    }
+                )
             } else {
                 scope.launch {
                     snackbarHostState.showSnackbar(errorMessage)
