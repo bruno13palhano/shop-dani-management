@@ -46,4 +46,7 @@ internal interface StockOrderDao : StockOrderData<StockOrderEntity> {
 
     @Query("SELECT * FROM stock_order_table WHERE categories LIKE '%'||:category||'%'")
     override fun getByCategory(category: String): Flow<List<StockOrderEntity>>
+
+    @Query("UPDATE stock_order_table SET quantity = :quantity WHERE id = :id")
+    override suspend fun updateStockOrderQuantity(id: Long, quantity: Int)
 }

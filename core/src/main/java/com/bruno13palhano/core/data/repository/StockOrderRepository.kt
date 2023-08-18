@@ -68,4 +68,8 @@ internal class StockOrderRepository @Inject constructor(
                 it.map { entity -> entity.asExternalModel() }
             }
     }
+
+    override suspend fun updateStockOrderQuantity(id: Long, quantity: Int) {
+        return stockOrderDao.updateStockOrderQuantity(id, quantity)
+    }
 }
