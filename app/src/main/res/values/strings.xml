@@ -62,6 +62,7 @@
     <string name="price_tag">%.2fR$</string>
     <string name="quantity_tag">Qty: %d</string>
     <string name="empty_fields_error">Fill in the missing fields</string>
+    <string name="only_x_items_error_label">There\'s only %d items on stock</string>
     <string name="search_label">Search</string>
     <string name="search_products_label">Search for products</string>
     <string name="new_item_label">New Item</string>
