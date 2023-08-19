@@ -271,6 +271,7 @@ class SaleViewModel @Inject constructor(
                 salePrice = it.salePrice.toString()
                 categories = it.categories
                 company = it.company
+                isPaidByCustomer = it.isPaidByCustomer
                 updateDateOfSale(it.dateOfSale)
                 updateDateOfPayment(it.dateOfPayment)
                 setCategoriesChecked(it.categories)
