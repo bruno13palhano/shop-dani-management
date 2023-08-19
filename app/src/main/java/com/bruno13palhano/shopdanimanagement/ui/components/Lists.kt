@@ -218,6 +218,55 @@ fun SimpleItemList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SaleItemList(
+    modifier: Modifier = Modifier,
+    customerName: String,
+    productName: String,
+    dateOfSale: String,
+    onClick: () -> Unit
+) {
+    ElevatedCard(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1F, true)
+            ) {
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                    text = customerName,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                    text = productName,
+                    fontStyle = FontStyle.Italic,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    text = dateOfSale,
+                    fontStyle = FontStyle.Italic,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            Icon(
+                modifier = Modifier.padding(8.dp),
+                imageVector = Icons.Filled.ArrowForward,
+                contentDescription = null
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun ProductItemPreview() {
@@ -270,6 +319,23 @@ private fun StockListPreview() {
                 modifier = Modifier.fillMaxWidth(),
                 itemName = "Perfumes",
                 imageVector = Icons.Filled.ArrowForward,
+                onClick = {}
+            )
+        }
+    }
+}
+@Preview(showBackground = true)
+@Composable
+private fun SaleItemListPreview() {
+    ShopDaniManagementTheme() {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            SaleItemList(
+                customerName = "Bruno",
+                productName = "Essencial",
+                dateOfSale = "Feb 19, 2003",
                 onClick = {}
             )
         }
