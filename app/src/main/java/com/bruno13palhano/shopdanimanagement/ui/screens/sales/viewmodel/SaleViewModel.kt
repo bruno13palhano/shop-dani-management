@@ -39,7 +39,7 @@ class SaleViewModel @Inject constructor(
     @DefaultProductRepository private val productRepository: ProductData<Product>,
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
     @DefaultSaleRepository private val saleRepository: SaleData<Sale>,
-    @DefaultStockOrderRepository private val stockRepository: StockOrderData<StockOrder>
+    @DefaultStockOrderRepository private val stockOrderRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),
@@ -166,7 +166,7 @@ class SaleViewModel @Inject constructor(
 
     fun getStockItem(stockId: Long) {
         viewModelScope.launch {
-            stockRepository.getById(stockId).collect {
+            stockOrderRepository.getById(stockId).collect {
                 stockItemId = stockId
                 name = it.name
                 photo = it.photo
@@ -225,15 +225,32 @@ class SaleViewModel @Inject constructor(
             isPaidByCustomer = isPaidByCustomer
         )
         if (isOrderedByCustomer) {
+            val order = StockOrder(
+                id = 0L,
+                productId = productId,
+                name = name,
+                photo = photo,
+                date = currentDate,
+                validity = currentDate,
+                quantity = stringToInt(quantity),
+                categories = categories,
+                company = company,
+                purchasePrice = stringToFloat(purchasePrice),
+                salePrice = stringToFloat(salePrice),
+                isOrderedByCustomer = true
+            )
             viewModelScope.launch {
                 saleRepository.insert(sale)
-                onSuccess()
             }
+            viewModelScope.launch {
+                stockOrderRepository.insert(order)
+            }
+            onSuccess()
         } else {
             val finalQuantity = (stockQuantity - stringToInt(quantity))
             if (finalQuantity >= 0) {
                 viewModelScope.launch {
-                    stockRepository.updateStockOrderQuantity(stockItemId, finalQuantity)
+                    stockOrderRepository.updateStockOrderQuantity(stockItemId, finalQuantity)
                 }
                 viewModelScope.launch {
                     saleRepository.insert(sale)
