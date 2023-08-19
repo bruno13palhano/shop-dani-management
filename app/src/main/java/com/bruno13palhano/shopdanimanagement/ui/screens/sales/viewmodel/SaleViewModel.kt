@@ -46,6 +46,7 @@ class SaleViewModel @Inject constructor(
         CompanyCheck(Company.NATURA, false)
     )
     private var stockItemId by mutableLongStateOf(0L)
+    private var productId by mutableLongStateOf(0L)
     var name by mutableStateOf("")
         private set
     var photo by mutableStateOf("")
@@ -212,6 +213,7 @@ class SaleViewModel @Inject constructor(
             id = 0L,
             productId = productId,
             name = name,
+            photo = photo,
             quantity = stringToInt(quantity),
             purchasePrice = stringToFloat(purchasePrice),
             salePrice = stringToFloat(salePrice),
@@ -219,6 +221,7 @@ class SaleViewModel @Inject constructor(
             company = company,
             dateOfSale = dateOfSaleInMillis,
             dateOfPayment = dateOfPaymentInMillis,
+            isOrderedByCustomer = isOrderedByCustomer,
             isPaidByCustomer = isPaidByCustomer
         )
         if (isOrderedByCustomer) {
@@ -236,6 +239,53 @@ class SaleViewModel @Inject constructor(
                 }
                 onSuccess()
             } else { onError() }
+        }
+    }
+
+    fun getSale(saleId: Long) {
+        viewModelScope.launch {
+            saleRepository.getById(saleId).collect {
+                productId = it.productId
+                name = it.name
+                photo = it.photo
+                quantity = it.quantity.toString()
+                purchasePrice = it.purchasePrice.toString()
+                salePrice = it.salePrice.toString()
+                categories = it.categories
+                company = it.company
+                updateDateOfSale(it.dateOfSale)
+                updateDateOfPayment(it.dateOfPayment)
+                setCategoriesChecked(it.categories)
+                setCompanyChecked(it.company)
+            }
+        }
+    }
+
+    fun updateSale(saleId: Long, isOrderedByCustomer: Boolean) {
+        val sale = Sale(
+            id = saleId,
+            productId = productId,
+            name = name,
+            photo = photo,
+            quantity = stringToInt(quantity),
+            purchasePrice = stringToFloat(purchasePrice),
+            salePrice = stringToFloat(salePrice),
+            categories = categories,
+            company = company,
+            dateOfSale = dateOfSaleInMillis,
+            dateOfPayment = dateOfPaymentInMillis,
+            isOrderedByCustomer = isOrderedByCustomer,
+            isPaidByCustomer = isPaidByCustomer
+
+        )
+        viewModelScope.launch {
+            saleRepository.update(sale)
+        }
+    }
+
+    fun deleteSale(saleId: Long) {
+        viewModelScope.launch {
+            saleRepository.deleteById(saleId)
         }
     }
 }
