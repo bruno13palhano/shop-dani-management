@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.SalesScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.sales.EditSaleScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleProductsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesOptionsScreen
@@ -80,7 +81,11 @@ fun NavGraphBuilder.salesNavGraph(
         }
         composable(route = SalesDestinations.SALES_EDIT_SALE_WITH_ID_ROUTE) { backStackEntry ->
             backStackEntry.arguments?.getString(ITEM_ID)?.let { saleItemId ->
-
+                EditSaleScreen(
+                    isOrderedByCustomer = true,
+                    saleId = saleItemId.toLong(),
+                    navigateUp = { navController.navigateUp() }
+                )
             }
         }
     }
