@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.bruno13palhano.core.model.StockOrder
 
 @Entity(tableName = "stock_order_table")
-data class StockOrderEntity(
+internal data class StockOrderEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

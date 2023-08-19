@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.bruno13palhano.core.model.Shopping
 
 @Entity(tableName = "shopping_table")
-data class ShoppingEntity(
+internal data class ShoppingEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
