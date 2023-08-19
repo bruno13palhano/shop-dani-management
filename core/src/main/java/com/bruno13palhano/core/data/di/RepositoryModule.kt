@@ -1,18 +1,21 @@
 package com.bruno13palhano.core.data.di
 
 import com.bruno13palhano.core.data.CategoryData
+import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.SearchCacheData
 import com.bruno13palhano.core.data.ShoppingData
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.repository.CategoryRepository
+import com.bruno13palhano.core.data.repository.CustomerRepository
 import com.bruno13palhano.core.data.repository.ProductRepository
 import com.bruno13palhano.core.data.repository.SaleRepository
 import com.bruno13palhano.core.data.repository.SearchCacheRepository
 import com.bruno13palhano.core.data.repository.ShoppingCacheRepository
 import com.bruno13palhano.core.data.repository.StockOrderRepository
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.SearchCache
@@ -58,6 +61,9 @@ annotation class DefaultShoppingRepository
 @Qualifier
 annotation class DefaultStockOrderRepository
 
+@Qualifier
+annotation class DefaultCustomerRepository
+
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class RepositoryModule {
@@ -91,4 +97,9 @@ internal abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindStockOrderRepository(repository: StockOrderRepository): StockOrderData<StockOrder>
+
+    @DefaultCustomerRepository
+    @Singleton
+    @Binds
+    abstract fun bindCustomerRepository(repository: CustomerRepository): CustomerData<Customer>
 }
