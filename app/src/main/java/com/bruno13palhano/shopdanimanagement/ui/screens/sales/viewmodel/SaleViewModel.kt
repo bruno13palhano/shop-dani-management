@@ -227,6 +227,7 @@ class SaleViewModel @Inject constructor(
         if (isOrderedByCustomer) {
             viewModelScope.launch {
                 saleRepository.insert(sale)
+                onSuccess()
             }
         } else {
             val finalQuantity = (stockQuantity - stringToInt(quantity))
