@@ -27,6 +27,7 @@ fun StockOrderListScreen(
     menuOptions.addAll(categories)
 
     StockOrderListContent(
+        isOrderedByCustomer = isOrderedByCustomer,
         screenTitle = screenTitle,
         itemList = stockList,
         menuOptions = menuOptions.toTypedArray(),

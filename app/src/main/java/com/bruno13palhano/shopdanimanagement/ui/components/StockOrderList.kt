@@ -40,6 +40,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockOrderListContent(
+    isOrderedByCustomer: Boolean,
     screenTitle: String,
     itemList: List<StockOrder>,
     menuOptions: Array<String>,
@@ -87,11 +88,13 @@ fun StockOrderListContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddButtonClick) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(id = R.string.add_label)
-                )
+            if (!isOrderedByCustomer) {
+                FloatingActionButton(onClick = onAddButtonClick) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = stringResource(id = R.string.add_label)
+                    )
+                }
             }
         }
     ) {
@@ -124,6 +127,7 @@ fun StockOrderListDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockOrderListContent(
+                isOrderedByCustomer = false,
                 screenTitle = "Stock List",
                 itemList = items,
                 menuOptions = arrayOf(),
@@ -148,6 +152,7 @@ fun StockOrderListItemPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockOrderListContent(
+                isOrderedByCustomer = true,
                 screenTitle = "Orders List",
                 itemList = items,
                 menuOptions = arrayOf(),
