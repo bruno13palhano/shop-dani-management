@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.bruno13palhano.core.data.database.AppDatabase
 import com.bruno13palhano.core.data.database.CategoryConverter
 import com.bruno13palhano.core.data.database.dao.CategoryDao
+import com.bruno13palhano.core.data.database.dao.CustomerDao
 import com.bruno13palhano.core.data.database.dao.ProductDao
 import com.bruno13palhano.core.data.database.dao.SaleDao
 import com.bruno13palhano.core.data.database.dao.SearchCacheDao
@@ -47,8 +48,13 @@ internal object DatabaseModule {
     }
 
     @Provides
-    fun providesStockOrder(database: AppDatabase): StockOrderDao {
+    fun providesStockOrderDao(database: AppDatabase): StockOrderDao {
         return database.stockOrderDao
+    }
+
+    @Provides
+    fun providesCustomerDao(database: AppDatabase): CustomerDao {
+        return database.customerDao
     }
 
     @Provides
