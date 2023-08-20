@@ -47,4 +47,11 @@ internal class SaleRepository @Inject constructor(
             .map { it.asExternalModel() }
             .catch { it.printStackTrace() }
     }
+
+    override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
+        return saleDao.getByCustomerId(customerId)
+            .map {
+                it.map { entity -> entity.asExternalModel()}
+            }
+    }
 }
