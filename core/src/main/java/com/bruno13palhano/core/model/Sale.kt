@@ -3,7 +3,9 @@ package com.bruno13palhano.core.model
 data class Sale(
     val id: Long,
     val productId: Long,
+    val customerId: Long,
     val name: String,
+    val customerName: String,
     val photo: String,
     val quantity: Int,
     val purchasePrice: Float,

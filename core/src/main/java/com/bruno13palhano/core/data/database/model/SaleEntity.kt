@@ -15,8 +15,14 @@ internal data class SaleEntity(
     @ColumnInfo(name = "product_id")
     val productId: Long,
 
+    @ColumnInfo(name = "customer_id")
+    val customerId: Long,
+
     @ColumnInfo(name = "name")
     val name: String,
+
+    @ColumnInfo(name = "customer_name")
+    val customerName: String,
 
     @ColumnInfo(name = "photo")
     val photo: String,
@@ -52,7 +58,9 @@ internal data class SaleEntity(
 internal fun SaleEntity.asExternalModel() = Sale(
     id = id,
     productId = productId,
+    customerId = customerId,
     name = name,
+    customerName = customerName,
     photo = photo,
     quantity = quantity,
     purchasePrice = purchasePrice,
@@ -68,7 +76,9 @@ internal fun SaleEntity.asExternalModel() = Sale(
 internal fun Sale.asInternalModel() = SaleEntity(
     id = id,
     productId = productId,
+    customerId = customerId,
     name = name,
+    customerName = customerName,
     photo = photo,
     quantity = quantity,
     purchasePrice = purchasePrice,
