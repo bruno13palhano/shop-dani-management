@@ -1,5 +1,6 @@
 package com.bruno13palhano.core.data.database.dao
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -9,6 +10,7 @@ import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.database.model.CustomerEntity
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 internal interface CustomerDao : CustomerData<CustomerEntity> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
