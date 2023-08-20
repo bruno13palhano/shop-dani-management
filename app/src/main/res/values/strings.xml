@@ -81,4 +81,8 @@
     <string name="edit_order_item_label">Edit Order Item</string>
     <string name="stock_list_label">Stock List</string>
     <string name="orders_list_label">Orders List</string>
+    <string name="address_label">Address</string>
+    <string name="phone_number_label">Phone number</string>
+    <string name="enter_address_label">Enter address label</string>
+    <string name="enter_phone_number_label">Enter phone number</string>
 </resources>
