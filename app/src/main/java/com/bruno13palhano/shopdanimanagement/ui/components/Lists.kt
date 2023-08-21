@@ -267,6 +267,60 @@ fun SaleItemList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PhotoItem(
+    title: String,
+    subtitle: String,
+    photo: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    ElevatedCard(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (photo.isEmpty()) {
+                Image(
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .size(64.dp),
+                    imageVector = Icons.Filled.Image,
+                    contentDescription = stringResource(id = R.string.item_image)
+                )
+            } else {
+                Image(
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .size(64.dp),
+                    painter = rememberAsyncImagePainter(model = photo),
+                    contentDescription = stringResource(id = R.string.item_image)
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1F, true)
+            ) {
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun ProductItemPreview() {
@@ -327,7 +381,7 @@ private fun StockListPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun SaleItemListPreview() {
-    ShopDaniManagementTheme() {
+    ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
@@ -336,6 +390,24 @@ private fun SaleItemListPreview() {
                 customerName = "Bruno",
                 productName = "Essencial",
                 dateOfSale = "Feb 19, 2003",
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PhotoItemPreview() {
+    ShopDaniManagementTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            PhotoItem(
+                title = "Bruno",
+                subtitle = "Rua 15 de novembro",
+                photo = "",
                 onClick = {}
             )
         }
