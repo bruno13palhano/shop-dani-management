@@ -15,6 +15,12 @@ internal data class CustomerEntity(
     @ColumnInfo(name = "name")
     val name: String,
 
+    @ColumnInfo(name = "photo")
+    val photo: String,
+
+    @ColumnInfo(name = "email")
+    val email: String,
+
     @ColumnInfo(name = "address")
     val address: String,
 
@@ -25,6 +31,8 @@ internal data class CustomerEntity(
 internal fun CustomerEntity.asExternalModel() = Customer(
     id = id,
     name = name,
+    photo = photo,
+    email = email,
     address = address,
     phoneNumber = phoneNumber
 )
@@ -32,6 +40,8 @@ internal fun CustomerEntity.asExternalModel() = Customer(
 internal fun Customer.asInternalModel() = CustomerEntity(
     id = id,
     name = name,
+    photo = photo,
+    email = email,
     address = address,
     phoneNumber = phoneNumber
 )
