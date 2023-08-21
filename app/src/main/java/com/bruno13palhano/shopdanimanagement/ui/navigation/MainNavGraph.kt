@@ -44,6 +44,10 @@ fun MainNavGraph(
             navController = navController,
             onMenuClick = onMenuClick
         )
+        customersNavGraph(
+            navController = navController,
+            onMenuClick = onMenuClick
+        )
     }
 }
 
@@ -54,4 +58,5 @@ object MainDestinations {
     const val SALES_ROUTE = "sales_route"
     const val ORDERS_ROUTE = "orders_route"
     const val PRODUCTS_ROUTE = "products_route"
+    const val CUSTOMERS_ROUTE = "customers_route"
 }
