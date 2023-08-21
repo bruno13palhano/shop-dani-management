@@ -40,6 +40,8 @@
     <string name="purchase_price_label">Purchase price</string>
     <string name="sale_price_label">Sale price</string>
     <string name="is_paid_label">Is product paid</string>
+    <string name="product_name_label">Product name</string>
+    <string name="customer_name_label">Customer name</string>
     <string name="enter_name_label">Enter name</string>
     <string name="enter_code_label">Enter code</string>
     <string name="enter_description_label">Enter description</string>
@@ -50,6 +52,8 @@
     <string name="enter_categories_label">Enter categories</string>
     <string name="enter_purchase_price_label">Enter purchase price</string>
     <string name="enter_sale_price_label">Enter sale price</string>
+    <string name="enter_product_name_label">Enter product name</string>
+    <string name="enter_customer_name_label">Enter customer name</string>
     <string name="ok_label">OK</string>
     <string name="cancel_label">Cancel</string>
     <string name="new_category_label">New category</string>
