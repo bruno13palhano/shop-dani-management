@@ -287,18 +287,22 @@ fun PhotoItem(
             if (photo.isEmpty()) {
                 Image(
                     modifier = Modifier
-                        .padding(start = 16.dp)
-                        .size(64.dp),
+                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(5)),
                     imageVector = Icons.Filled.Image,
-                    contentDescription = stringResource(id = R.string.item_image)
+                    contentDescription = stringResource(id = R.string.item_image),
+                    contentScale = ContentScale.Crop
                 )
             } else {
                 Image(
                     modifier = Modifier
-                        .padding(start = 16.dp)
-                        .size(64.dp),
+                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(5)),
                     painter = rememberAsyncImagePainter(model = photo),
-                    contentDescription = stringResource(id = R.string.item_image)
+                    contentDescription = stringResource(id = R.string.item_image),
+                    contentScale = ContentScale.Crop
                 )
             }
             Column(
