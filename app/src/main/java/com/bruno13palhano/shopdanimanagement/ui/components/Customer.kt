@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -103,8 +104,9 @@ fun CustomerContent(
         ) {
             ElevatedCard(
                 modifier = Modifier
-                    .padding(top = 16.dp),
-                onClick = onPhotoClick
+                    .padding(16.dp),
+                onClick = onPhotoClick,
+                shape = RoundedCornerShape(5)
             ) {
                 if (photo.isEmpty()) {
                     Image(
@@ -113,7 +115,8 @@ fun CustomerContent(
                             .padding(8.dp)
                             .clip(RoundedCornerShape(5)),
                         imageVector = Icons.Filled.Image,
-                        contentDescription = stringResource(id = R.string.customer_photo_label)
+                        contentDescription = stringResource(id = R.string.customer_photo_label),
+                        contentScale = ContentScale.Crop
                     )
                 } else {
                     Image(
@@ -122,7 +125,8 @@ fun CustomerContent(
                             .padding(8.dp)
                             .clip(RoundedCornerShape(5)),
                         painter = rememberAsyncImagePainter(model = photo),
-                        contentDescription = stringResource(id = R.string.customer_photo_label)
+                        contentDescription = stringResource(id = R.string.customer_photo_label),
+                        contentScale = ContentScale.Crop
                     )
                 }
             }
