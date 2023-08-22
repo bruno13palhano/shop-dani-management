@@ -47,7 +47,7 @@ fun ProductItemListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductItemListContent(
-    productList: List<CommonItem>,
+    productList: List<CommonPhotoItem>,
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit
 ) {
@@ -122,14 +122,14 @@ fun ProductItemListPreview() {
 }
 
 private val productList = listOf(
-    CommonItem(id = 1L, title = "Essencial", photo = "", subtitle = "Natura"),
-    CommonItem(id = 2L, title = "Homem", photo = "", subtitle = "Natura"),
-    CommonItem(id = 3L, title = "Una", photo = "", subtitle = "Natura"),
-    CommonItem(id = 4L, title = "Kaiak", photo = "", subtitle = "Natura"),
-    CommonItem(id = 5L, title = "Luna", photo = "", subtitle = "Natura"),
-    CommonItem(id = 6L, title = "Essencial", photo = "", subtitle = "Natura"),
-    CommonItem(id = 7L, title = "Homem", photo = "", subtitle = "Natura"),
-    CommonItem(id = 8L, title = "Una", photo = "", subtitle = "Natura"),
-    CommonItem(id = 9L, title = "Kaiak", photo = "", subtitle = "Natura"),
-    CommonItem(id = 10L, title = "Luna", photo = "", subtitle = "Natura")
+    CommonPhotoItem(id = 1L, title = "Essencial", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id = 2L, title = "Homem", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id = 3L, title = "Una", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id = 4L, title = "Kaiak", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id = 5L, title = "Luna", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id = 6L, title = "Essencial", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id = 7L, title = "Homem", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id = 8L, title = "Una", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id = 9L, title = "Kaiak", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id = 10L, title = "Luna", photo = "", subtitle = "Natura")
 )

@@ -25,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItem
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SaleProductsViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -47,7 +47,7 @@ fun SaleProductsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SaleProductContent(
-    productList: List<CommonItem>,
+    productList: List<CommonPhotoItem>,
     onItemClick: (productId: Long) -> Unit,
     navigateUp: () -> Unit
 ) {

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
@@ -19,7 +19,7 @@ class SaleProductsViewModel @Inject constructor(
     val products = productRepository.getAll()
         .map {
             it.map { product ->
-                CommonItem(
+                CommonPhotoItem(
                     id = product.id,
                     photo = product.photo,
                     title = product.name,
