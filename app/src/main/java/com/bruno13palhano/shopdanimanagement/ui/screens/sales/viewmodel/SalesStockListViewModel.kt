@@ -16,7 +16,7 @@ import javax.inject.Inject
 class SalesStockListViewModel @Inject constructor(
     @DefaultStockOrderRepository private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
-    val stockList = stockRepository.getAll()
+    val stockList = stockRepository.getItems(true)
         .map {
             it.map { stock ->
                 Stock(
