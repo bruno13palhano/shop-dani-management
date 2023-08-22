@@ -1,36 +1,29 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens
 
-import android.content.res.Configuration
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.SaleItemList
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
-import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun SalesScreen(
@@ -82,51 +75,14 @@ fun SalesContent(
     ) {
         LazyColumn(modifier = Modifier.padding(it)) {
             items(items = saleList, key = { sale -> sale.id }) { sale ->
-                SimpleItemList(
+                SaleItemList(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    itemName = sale.name,
-                    imageVector = Icons.Filled.ArrowForward,
+                    customerName = sale.customerName,
+                    productName = sale.name,
+                    dateOfSale = dateFormat.format(sale.dateOfSale),
                     onClick = { onItemClick(sale.id) }
                 )
             }
-        }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
-@Composable
-fun SalesDynamicPreview() {
-    ShopDaniManagementTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            SalesScreen(
-                onItemClick = {},
-                onMenuClick = {},
-                onAddButtonClick = {}
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
-@Composable
-fun SalesPreview() {
-    ShopDaniManagementTheme(
-        dynamicColor = false
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            SalesScreen(
-                onItemClick = {},
-                onMenuClick = {},
-                onAddButtonClick = {}
-            )
         }
     }
 }
