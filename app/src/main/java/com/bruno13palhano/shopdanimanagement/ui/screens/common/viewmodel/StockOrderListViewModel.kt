@@ -46,4 +46,12 @@ class StockOrderListViewModel @Inject constructor(
             }
         }
     }
+
+    fun getItemsByCategories(category: String, isOrderedByCustomer: Boolean) {
+        viewModelScope.launch {
+            stockRepository.getByCategory(category, isOrderedByCustomer).collect {
+                _stockList.value = it
+            }
+        }
+    }
 }
