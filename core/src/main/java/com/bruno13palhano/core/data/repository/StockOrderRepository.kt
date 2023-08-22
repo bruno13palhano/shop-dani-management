@@ -62,8 +62,8 @@ internal class StockOrderRepository @Inject constructor(
             }
     }
 
-    override fun getByCategory(category: String): Flow<List<StockOrder>> {
-        return stockOrderDao.getByCategory(category)
+    override fun getByCategory(category: String, isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
+        return stockOrderDao.getByCategory(category, isOrderedByCustomer)
             .map {
                 it.map { entity -> entity.asExternalModel() }
             }
