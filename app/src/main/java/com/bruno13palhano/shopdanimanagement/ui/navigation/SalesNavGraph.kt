@@ -1,11 +1,12 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.SalesScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.sales.EditSaleScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleProductsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesOptionsScreen
@@ -64,8 +65,11 @@ fun NavGraphBuilder.salesNavGraph(
         composable(route = SalesDestinations.SALES_NEW_SALE_ORDERS_WITH_ID_ROUTE) { backStackEntry ->
             backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
                 SaleScreen(
+                    isEdit = false,
+                    screenTitle = stringResource(id = R.string.new_sale_label),
                     isOrderedByCustomer = true,
                     productId = productId.toLong(),
+                    saleId = 0L,
                     navigateUp = { navController.navigateUp() }
                 )
             }
@@ -73,16 +77,22 @@ fun NavGraphBuilder.salesNavGraph(
         composable(route = SalesDestinations.SALES_NEW_SALE_STOCK_WITH_ID_ROUTE) { backStackEntry ->
             backStackEntry.arguments?.getString(ITEM_ID)?.let { stockItemId ->
                 SaleScreen(
+                    isEdit = false,
+                    screenTitle = stringResource(id = R.string.new_sale_label),
                     isOrderedByCustomer = false,
                     productId = stockItemId.toLong(),
+                    saleId = 0L,
                     navigateUp = { navController.navigateUp() }
                 )
             }
         }
         composable(route = SalesDestinations.SALES_EDIT_SALE_WITH_ID_ROUTE) { backStackEntry ->
             backStackEntry.arguments?.getString(ITEM_ID)?.let { saleItemId ->
-                EditSaleScreen(
+                SaleScreen(
+                    isEdit = true,
+                    screenTitle = stringResource(id = R.string.edit_sale_label),
                     isOrderedByCustomer = true,
+                    productId = 0L,
                     saleId = saleItemId.toLong(),
                     navigateUp = { navController.navigateUp() }
                 )

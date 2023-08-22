@@ -31,16 +31,23 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SaleScreen(
+    isEdit: Boolean,
+    screenTitle: String,
     isOrderedByCustomer: Boolean,
     productId: Long,
+    saleId: Long,
     navigateUp: () -> Unit,
     viewModel: SaleViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
-        if (isOrderedByCustomer) {
-            viewModel.getProduct(productId)
+        if (isEdit) {
+            viewModel.getSale(saleId)
         } else {
-            viewModel.getStockItem(productId)
+            if (isOrderedByCustomer) {
+                viewModel.getProduct(productId)
+            } else {
+                viewModel.getStockItem(productId)
+            }
         }
     }
     val isSaleNotEmpty by viewModel.isSaleNotEmpty.collectAsStateWithLifecycle()
@@ -127,10 +134,17 @@ fun SaleScreen(
     val errorMessage = stringResource(id = R.string.empty_fields_error)
     val stockQuantityMessage = stringResource(id = R.string.only_x_items_error_label, viewModel.stockQuantity)
 
+    val menuItems = arrayOf(
+        stringResource(id = R.string.delete_label)
+    )
+
     SaleContent(
-        screenTitle = "Sale",
+        isEdit = isEdit,
+        screenTitle = screenTitle,
         snackbarHostState = snackbarHostState,
-        name = viewModel.name,
+        menuItems = menuItems,
+        productName = viewModel.productName,
+        customerName = viewModel.customerName,
         photo = viewModel.photo,
         quantity = viewModel.quantity,
         dateOfSale = viewModel.dateOfSale,
@@ -140,7 +154,7 @@ fun SaleScreen(
         category = viewModel.category,
         company = viewModel.company,
         isPaidByCustomer = viewModel.isPaidByCustomer,
-        onNameChange = viewModel::updateName,
+        onProductNameChange = viewModel::updateProductName,
         onQuantityChange = viewModel::updateQuantity,
         onPurchasePriceChange = viewModel::updatePurchasePrice,
         onSalePriceChange = viewModel::updateSalePrice,
@@ -149,34 +163,46 @@ fun SaleScreen(
         onDateOfPaymentClick = { showDateOfPaymentPickerDialog = true },
         categories = viewModel.allCategories,
         companies = viewModel.allCompanies,
+        customers = viewModel.allCustomers,
         onDismissCategory = {
             viewModel.updateCategories(viewModel.allCategories)
             focusManager.clearFocus(force = true)
         },
-        onDismissCompany = {
-            focusManager.clearFocus(force = true)
-        },
-        onCompanySelected = {
-            viewModel.updateCompany(it)
-        },
+        onDismissCompany = { focusManager.clearFocus(force = true) },
+        onDismissCustomer = { focusManager.clearFocus(force = true) },
+        onCompanySelected = viewModel::updateCompany,
+        onCustomerSelected = viewModel::updateCustomerName,
         onOutsideClick = {
             keyboardController?.hide()
             focusManager.clearFocus(force = true)
         },
+        onMoreOptionsItemClick = { index ->
+            when (index) {
+                SaleItemMenu.delete -> {
+                    viewModel.deleteSale(saleId)
+                    navigateUp()
+                }
+            }
+        },
         onDoneButtonClick = {
             if (isSaleNotEmpty) {
-                viewModel.insertSale(
-                    productId = productId,
-                    isOrderedByCustomer = isOrderedByCustomer,
-                    onSuccess = navigateUp,
-                    onError = {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = stockQuantityMessage
-                            )
+                if (isEdit) {
+                    viewModel.updateSale(saleId)
+                    navigateUp()
+                } else {
+                    viewModel.insertSale(
+                        productId = productId,
+                        isOrderedByCustomer = isOrderedByCustomer,
+                        onSuccess = navigateUp,
+                        onError = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = stockQuantityMessage
+                                )
+                            }
                         }
-                    }
-                )
+                    )
+                }
             } else {
                 scope.launch {
                     snackbarHostState.showSnackbar(errorMessage)
@@ -185,4 +211,8 @@ fun SaleScreen(
         },
         navigateUp = navigateUp
     )
+}
+
+private object SaleItemMenu {
+    const val delete = 0
 }
