@@ -64,7 +64,7 @@
     <string name="add_to_catalog_label">Add to catalog</string>
     <string name="save_categories_label">Save categories</string>
     <string name="price_tag">%.2fR$</string>
-    <string name="quantity_tag">Qty: %d</string>
+    <string name="quantity_tag">%s, units.</string>
     <string name="empty_fields_error">Fill in the missing fields</string>
     <string name="only_x_items_error_label">There\'s only %d items on stock</string>
     <string name="search_label">Search</string>
@@ -94,4 +94,7 @@
     <string name="enter_email_label">Enter email</string>
     <string name="enter_address_label">Enter address label</string>
     <string name="enter_phone_number_label">Enter phone number</string>
+    <string name="customer_tag">Customer: %s</string>
+    <string name="date_of_shopping_tag">Date of shopping, %s.</string>
+    <string name="date_of_sale_tag">Date of sale, %s.</string>
 </resources>
