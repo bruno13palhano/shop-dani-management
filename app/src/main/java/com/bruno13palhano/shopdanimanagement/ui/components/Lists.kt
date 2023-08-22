@@ -242,12 +242,12 @@ fun CommonItemList(
             ) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                    text = subtitle,
+                    text = title,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                    text = title,
+                    text = subtitle,
                     fontStyle = FontStyle.Italic,
                     style = MaterialTheme.typography.bodyMedium
                 )
