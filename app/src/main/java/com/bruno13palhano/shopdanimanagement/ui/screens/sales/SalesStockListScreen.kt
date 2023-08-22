@@ -1,9 +1,13 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.sales
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -27,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.StockItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesStockListViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -67,14 +72,18 @@ fun SalesStockListContent(
             )
         }
     ) {
-        LazyColumn(
-            modifier = Modifier.padding(it)
+        LazyVerticalGrid(
+            modifier = Modifier.padding(it),
+            contentPadding = PaddingValues(4.dp),
+            columns = GridCells.Adaptive(152.dp)
         ) {
             items(items = stockList, key = { item -> item.id }) { stock ->
-                SimpleItemList(
+                StockItem(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    itemName = stock.name,
-                    imageVector = Icons.Filled.ArrowForward,
+                    name = stock.name,
+                    photo = stock.photo,
+                    price = stock.purchasePrice,
+                    quantity = stock.quantity,
                     onClick = { onItemClick(stock.id) }
                 )
             }
