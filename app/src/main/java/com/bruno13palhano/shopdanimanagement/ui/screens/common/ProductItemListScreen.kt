@@ -24,9 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalProductItem
+import com.bruno13palhano.shopdanimanagement.ui.components.PhotoItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.ProductItemListViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -48,7 +47,7 @@ fun ProductItemListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductItemListContent(
-    productList: List<Stock>,
+    productList: List<CommonItem>,
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit
 ) {
@@ -71,13 +70,13 @@ fun ProductItemListContent(
             modifier = Modifier.padding(it),
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
-            items(productList) { stock ->
-                HorizontalProductItem(
+            items(productList) { item ->
+                PhotoItem(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    name = stock.name,
-                    photo = stock.photo,
-                    price = stock.purchasePrice,
-                    onClick = { onItemClick(stock.id) }
+                    title = item.title,
+                    subtitle = item.subtitle,
+                    photo = item.photo,
+                    onClick = { onItemClick(item.id) }
                 )
             }
         }
@@ -123,14 +122,14 @@ fun ProductItemListPreview() {
 }
 
 private val productList = listOf(
-    Stock(id = 1L, name = "Essencial", photo = "", purchasePrice = 123.45F, quantity = 2),
-    Stock(id = 1L, name = "Homem", photo = "", purchasePrice = 63.45F, quantity = 3),
-    Stock(id = 1L, name = "Una", photo = "", purchasePrice = 58.90F, quantity = 5),
-    Stock(id = 1L, name = "Kaiak", photo = "", purchasePrice = 66.50F, quantity = 3),
-    Stock(id = 1L, name = "Luna", photo = "", purchasePrice = 88.99F, quantity = 6),
-    Stock(id = 1L, name = "Essencial", photo = "", purchasePrice = 123.45F, quantity = 2),
-    Stock(id = 1L, name = "Homem", photo = "", purchasePrice = 63.45F, quantity = 3),
-    Stock(id = 1L, name = "Una", photo = "", purchasePrice = 58.90F, quantity = 5),
-    Stock(id = 1L, name = "Kaiak", photo = "", purchasePrice = 66.50F, quantity = 3),
-    Stock(id = 1L, name = "Luna", photo = "", purchasePrice = 88.99F, quantity = 6)
+    CommonItem(id = 1L, title = "Essencial", photo = "", subtitle = "Natura"),
+    CommonItem(id = 2L, title = "Homem", photo = "", subtitle = "Natura"),
+    CommonItem(id = 3L, title = "Una", photo = "", subtitle = "Natura"),
+    CommonItem(id = 4L, title = "Kaiak", photo = "", subtitle = "Natura"),
+    CommonItem(id = 5L, title = "Luna", photo = "", subtitle = "Natura"),
+    CommonItem(id = 6L, title = "Essencial", photo = "", subtitle = "Natura"),
+    CommonItem(id = 7L, title = "Homem", photo = "", subtitle = "Natura"),
+    CommonItem(id = 8L, title = "Una", photo = "", subtitle = "Natura"),
+    CommonItem(id = 9L, title = "Kaiak", photo = "", subtitle = "Natura"),
+    CommonItem(id = 10L, title = "Luna", photo = "", subtitle = "Natura")
 )
