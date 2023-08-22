@@ -9,20 +9,24 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CategoryData
+import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
+import com.bruno13palhano.core.data.di.DefaultCustomerRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.data.di.DefaultSaleRepository
 import com.bruno13palhano.core.data.di.DefaultStockOrderRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
+import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
 import com.bruno13palhano.shopdanimanagement.ui.components.CompanyCheck
+import com.bruno13palhano.shopdanimanagement.ui.components.CustomerCheck
 import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
@@ -39,7 +43,8 @@ class SaleViewModel @Inject constructor(
     @DefaultProductRepository private val productRepository: ProductData<Product>,
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
     @DefaultSaleRepository private val saleRepository: SaleData<Sale>,
-    @DefaultStockOrderRepository private val stockOrderRepository: StockOrderData<StockOrder>
+    @DefaultStockOrderRepository private val stockOrderRepository: StockOrderData<StockOrder>,
+    @DefaultCustomerRepository private val customerRepository: CustomerData<Customer>
 ) : ViewModel() {
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),
@@ -47,7 +52,11 @@ class SaleViewModel @Inject constructor(
     )
     private var stockItemId by mutableLongStateOf(0L)
     private var productId by mutableLongStateOf(0L)
-    var name by mutableStateOf("")
+    private var customerId by mutableLongStateOf(0L)
+    private var isOrderedByCustomer by mutableStateOf(false)
+    var productName by mutableStateOf("")
+        private set
+    var customerName by mutableStateOf("")
         private set
     var photo by mutableStateOf("")
         private set
@@ -76,11 +85,13 @@ class SaleViewModel @Inject constructor(
         private set
     var allCompanies by mutableStateOf(listOf<CompanyCheck>())
         private set
+    var allCustomers by mutableStateOf(listOf<CustomerCheck>())
+        private set
     var isPaidByCustomer by mutableStateOf(false)
         private set
 
     val isSaleNotEmpty = snapshotFlow {
-        name.isNotEmpty() && quantity.isNotEmpty() && purchasePrice.isNotEmpty() && salePrice.isNotEmpty()
+        productName.isNotEmpty() && quantity.isNotEmpty() && purchasePrice.isNotEmpty() && salePrice.isNotEmpty()
     }
         .stateIn(
             scope = viewModelScope,
@@ -92,14 +103,17 @@ class SaleViewModel @Inject constructor(
         viewModelScope.launch {
             categoryRepository.getAll().map {
                 it.map { category -> CategoryCheck(category.id, category.name, false) }
-            }.collect {
-                allCategories = it
-            }
+            }.collect { allCategories = it }
+        }
+        viewModelScope.launch {
+            customerRepository.getAll().map {
+                it.map { customer -> CustomerCheck(customer.id, customer.name, false) }
+            }.collect { allCustomers = it }
         }
     }
 
-    fun updateName(name: String) {
-        this.name = name
+    fun updateProductName(productName: String) {
+        this.productName = productName
     }
 
     fun updateQuantity(quantity: String) {
@@ -151,10 +165,25 @@ class SaleViewModel @Inject constructor(
             }
     }
 
+    fun updateCustomerName(customerName: String) {
+        this.customerName = customerName
+        allCustomers
+            .map {
+                it.isChecked = false
+                it
+            }
+            .filter { it.name == customerName }
+            .map {
+                customerId = it.id
+                it.isChecked = true
+                it
+            }
+    }
+
     fun getProduct(id: Long) {
         viewModelScope.launch {
             productRepository.getById(id).collect {
-                name = it.name
+                productName = it.name
                 photo = it.photo
                 categories = it.categories
                 company = it.company
@@ -168,7 +197,7 @@ class SaleViewModel @Inject constructor(
         viewModelScope.launch {
             stockOrderRepository.getById(stockId).collect {
                 stockItemId = stockId
-                name = it.name
+                productName = it.name
                 photo = it.photo
                 purchasePrice = it.purchasePrice.toString()
                 salePrice = it.salePrice.toString()
@@ -203,6 +232,15 @@ class SaleViewModel @Inject constructor(
         allCompanies = companiesCheck
     }
 
+    //Sets the current customer
+    private fun setCustomerChecked(customerId: Long) {
+        allCustomers.forEach {
+            if (customerId == it.id) {
+                it.isChecked = true
+            }
+        }
+    }
+
     fun insertSale(
         productId: Long,
         isOrderedByCustomer: Boolean,
@@ -212,7 +250,9 @@ class SaleViewModel @Inject constructor(
         val sale = Sale(
             id = 0L,
             productId = productId,
-            name = name,
+            customerId = customerId,
+            name = productName,
+            customerName = customerName,
             photo = photo,
             quantity = stringToInt(quantity),
             purchasePrice = stringToFloat(purchasePrice),
@@ -228,7 +268,7 @@ class SaleViewModel @Inject constructor(
             val order = StockOrder(
                 id = 0L,
                 productId = productId,
-                name = name,
+                name = productName,
                 photo = photo,
                 date = currentDate,
                 validity = currentDate,
@@ -264,7 +304,9 @@ class SaleViewModel @Inject constructor(
         viewModelScope.launch {
             saleRepository.getById(saleId).collect {
                 productId = it.productId
-                name = it.name
+                customerId = it.customerId
+                productName = it.name
+                customerName = it.customerName
                 photo = it.photo
                 quantity = it.quantity.toString()
                 purchasePrice = it.purchasePrice.toString()
@@ -272,19 +314,23 @@ class SaleViewModel @Inject constructor(
                 categories = it.categories
                 company = it.company
                 isPaidByCustomer = it.isPaidByCustomer
+                isOrderedByCustomer = it.isOrderedByCustomer
                 updateDateOfSale(it.dateOfSale)
                 updateDateOfPayment(it.dateOfPayment)
                 setCategoriesChecked(it.categories)
                 setCompanyChecked(it.company)
+                setCustomerChecked(it.customerId)
             }
         }
     }
 
-    fun updateSale(saleId: Long, isOrderedByCustomer: Boolean) {
+    fun updateSale(saleId: Long) {
         val sale = Sale(
             id = saleId,
             productId = productId,
-            name = name,
+            customerId = customerId,
+            name = productName,
+            customerName = customerName,
             photo = photo,
             quantity = stringToInt(quantity),
             purchasePrice = stringToFloat(purchasePrice),
@@ -295,7 +341,6 @@ class SaleViewModel @Inject constructor(
             dateOfPayment = dateOfPaymentInMillis,
             isOrderedByCustomer = isOrderedByCustomer,
             isPaidByCustomer = isPaidByCustomer
-
         )
         viewModelScope.launch {
             saleRepository.update(sale)
