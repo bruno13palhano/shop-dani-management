@@ -26,9 +26,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CommonItemList
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel.ShoppingViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -52,7 +52,7 @@ fun ShoppingScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingContent(
-    itemList: List<Shopping>,
+    itemList: List<CommonItem>,
     onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit,
     onMenuClick: () -> Unit,
@@ -84,13 +84,13 @@ fun ShoppingContent(
             modifier = Modifier.padding(it),
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
-            items(itemList) { shoppingItem ->
+            items(itemList) { item ->
                 CommonItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    title = shoppingItem.name,
-                    subtitle = shoppingItem.quantity.toString(),
-                    description = dateFormat.format(shoppingItem.date),
-                    onClick = { onItemClick(shoppingItem.id) }
+                    title = item.title,
+                    subtitle = stringResource(id = R.string.quantity_tag, item.subtitle),
+                    description = stringResource(id = R.string.date_of_shopping_tag, item.description),
+                    onClick = { onItemClick(item.id) }
                 )
             }
         }
@@ -138,13 +138,13 @@ fun ShoppingPreview() {
 }
 
 private val shoppingList = listOf(
-    Shopping(id = 1L, productId = 1L, name = "Essencial", purchasePrice = 123.50F, quantity = 10, date = 0L, isPaid = false),
-    Shopping(id = 1L, productId = 1L, name = "Homem", purchasePrice = 123.50F, quantity = 10, date = 0L, isPaid = false),
-    Shopping(id = 1L, productId = 1L, name = "Luna", purchasePrice = 200.90F, quantity = 10, date = 0L, isPaid = true),
-    Shopping(id = 1L, productId = 1L, name = "Una", purchasePrice = 67.90F, quantity = 10, date = 0L, isPaid = true),
-    Shopping(id = 1L, productId = 1L, name = "Kaiak", purchasePrice = 88.99F, quantity = 10, date = 0L, isPaid = false),
-    Shopping(id = 1L, productId = 1L, name = "Essencial", purchasePrice = 123.50F, quantity = 10, date = 0L, isPaid = true),
-    Shopping(id = 1L, productId = 1L, name = "Homem", purchasePrice = 88.99F, quantity = 10, date = 0L, isPaid = true),
-    Shopping(id = 1L, productId = 1L, name = "Kaiak", purchasePrice = 113.90F, quantity = 10, date = 0L, isPaid = false),
-    Shopping(id = 1L, productId = 1L, name = "Essencial", purchasePrice = 163.50F, quantity = 10, date = 0L, isPaid = false),
+    CommonItem(id = 1L, title = "Essencial", subtitle = "10", description = "Feb 4, 2023"),
+    CommonItem(id = 2L, title = "Homem", subtitle = "10", description = "Feb 7, 2023"),
+    CommonItem(id = 3L, title = "Luna", subtitle = "10", description = "Feb 9, 2023"),
+    CommonItem(id = 4L, title = "Una", subtitle = "10", description = "Feb 9, 2023"),
+    CommonItem(id = 5L, title = "Kaiak", subtitle = "10", description = "Feb 10, 2023"),
+    CommonItem(id = 6L, title = "Essencial", subtitle = "10", description = "Feb 12, 2023"),
+    CommonItem(id = 7L, title = "Homem", subtitle = "10", description = "Feb 12, 2023"),
+    CommonItem(id = 8L, title = "Kaiak", subtitle = "10", description = "Feb 14, 2023"),
+    CommonItem(id = 10L, title = "Essencial", subtitle = "10", description = "Feb 12, 2023"),
 )
