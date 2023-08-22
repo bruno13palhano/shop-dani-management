@@ -294,6 +294,49 @@ fun CompanyBottomSheet(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomerBottomSheet(
+    customers: List<CustomerCheck>,
+    openBottomSheet: Boolean,
+    onBottomSheetChange: (close: Boolean) -> Unit,
+    onDismissCustomer: () -> Unit,
+    onSelectedItem: (selected: String) -> Unit
+) {
+    val initialCustomer = customers
+        .filter { it.isChecked }
+        .findLast { it.isChecked }?.name
+    val bottomSheetState = rememberModalBottomSheetState()
+
+    if (openBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                onBottomSheetChange(false)
+                onDismissCustomer()
+            },
+            sheetState = bottomSheetState
+        ) {
+            val (selected, onOptionSelected) = rememberSaveable { mutableStateOf(initialCustomer) }
+
+            Column(modifier = Modifier.padding(bottom = 32.dp)) {
+                customers.forEach { customerItem ->
+                    ListItem(
+                        headlineContent = { Text(text = customerItem.name) },
+                        leadingContent = {
+                            RadioButton(
+                                selected = customerItem.name == selected,
+                                onClick = {
+                                    onOptionSelected(customerItem.name)
+                                    onSelectedItem(customerItem.name)
+                                }
+                            )
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
 
 data class CategoryCheck(
     var id: Long,
@@ -303,5 +346,11 @@ data class CategoryCheck(
 
 data class CompanyCheck(
     var name: Company,
+    var isChecked: Boolean
+)
+
+data class CustomerCheck(
+    var id: Long,
+    var name: String,
     var isChecked: Boolean
 )
