@@ -103,7 +103,7 @@ fun StockOrderListContent(
             contentPadding = PaddingValues(4.dp),
             columns = GridCells.Adaptive(152.dp)
         ) {
-            items(itemList) { stockOrder ->
+            items(items = itemList, key = { item -> item.id }) { stockOrder ->
                 StockItem(
                     modifier = Modifier.padding(4.dp),
                     name = stockOrder.name,
