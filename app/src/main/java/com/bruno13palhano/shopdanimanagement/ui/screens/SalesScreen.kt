@@ -22,7 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.SaleItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.CommonItemList
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
 
 @Composable
@@ -75,11 +75,11 @@ fun SalesContent(
     ) {
         LazyColumn(modifier = Modifier.padding(it)) {
             items(items = saleList, key = { sale -> sale.id }) { sale ->
-                SaleItemList(
+                CommonItemList(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    customerName = sale.customerName,
-                    productName = sale.name,
-                    dateOfSale = dateFormat.format(sale.dateOfSale),
+                    title = sale.customerName,
+                    subtitle = sale.name,
+                    description = dateFormat.format(sale.dateOfSale),
                     onClick = { onItemClick(sale.id) }
                 )
             }

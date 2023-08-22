@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.PhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.ProductItemListViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -71,7 +71,7 @@ fun ProductItemListContent(
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
             items(productList) { item ->
-                PhotoItem(
+                CommonPhotoItem(
                     modifier = Modifier.padding(vertical = 4.dp),
                     title = item.title,
                     subtitle = item.subtitle,

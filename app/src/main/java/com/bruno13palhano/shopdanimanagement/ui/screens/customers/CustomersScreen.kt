@@ -28,7 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.PhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItem
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
@@ -84,7 +84,7 @@ fun CustomersContent(
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
             items(items = customerList, key = { customer -> customer.id }) { customer ->
-                PhotoItem(
+                CommonPhotoItem(
                     modifier = Modifier.padding(vertical = 4.dp),
                     title = customer.name,
                     subtitle = customer.address,

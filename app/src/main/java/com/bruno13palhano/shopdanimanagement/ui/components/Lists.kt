@@ -220,11 +220,11 @@ fun SimpleItemList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SaleItemList(
+fun CommonItemList(
     modifier: Modifier = Modifier,
-    customerName: String,
-    productName: String,
-    dateOfSale: String,
+    title: String,
+    subtitle: String,
+    description: String,
     onClick: () -> Unit
 ) {
     ElevatedCard(
@@ -242,18 +242,18 @@ fun SaleItemList(
             ) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                    text = productName,
+                    text = subtitle,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                    text = customerName,
+                    text = title,
                     fontStyle = FontStyle.Italic,
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                    text = dateOfSale,
+                    text = description,
                     fontStyle = FontStyle.Italic,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -269,7 +269,7 @@ fun SaleItemList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PhotoItem(
+fun CommonPhotoItem(
     title: String,
     subtitle: String,
     photo: String,
@@ -390,10 +390,10 @@ private fun SaleItemListPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            SaleItemList(
-                customerName = "Bruno",
-                productName = "Essencial",
-                dateOfSale = "Feb 19, 2003",
+            CommonItemList(
+                title = "Bruno",
+                subtitle = "Essencial",
+                description = "Feb 19, 2003",
                 onClick = {}
             )
         }
@@ -408,7 +408,7 @@ private fun PhotoItemPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            PhotoItem(
+            CommonPhotoItem(
                 title = "Bruno",
                 subtitle = "Rua 15 de novembro",
                 photo = "",
