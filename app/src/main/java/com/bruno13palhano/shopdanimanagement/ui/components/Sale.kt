@@ -3,6 +3,8 @@ package com.bruno13palhano.shopdanimanagement.ui.components
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -22,7 +24,9 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Paid
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PriceCheck
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Title
@@ -64,9 +68,12 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SaleContent(
+    isEdit: Boolean,
     screenTitle: String,
     snackbarHostState: SnackbarHostState,
-    name: String,
+    menuItems: Array<String>,
+    productName: String,
+    customerName: String,
     photo: String,
     quantity: String,
     dateOfSale: String,
@@ -76,7 +83,7 @@ fun SaleContent(
     category: String,
     company: String,
     isPaidByCustomer: Boolean,
-    onNameChange: (name: String) -> Unit,
+    onProductNameChange: (productName: String) -> Unit,
     onQuantityChange: (quantity: String) -> Unit,
     onPurchasePriceChange: (purchasePrice: String) -> Unit,
     onSalePriceChange: (salePrice: String) -> Unit,
@@ -85,21 +92,25 @@ fun SaleContent(
     onDateOfPaymentClick: () -> Unit,
     categories: List<CategoryCheck>,
     companies: List<CompanyCheck>,
+    customers: List<CustomerCheck>,
     onDismissCategory: () -> Unit,
     onDismissCompany: () -> Unit,
+    onDismissCustomer: () -> Unit,
     onCompanySelected: (selected: String) -> Unit,
+    onCustomerSelected: (selected: String) -> Unit,
     onOutsideClick: () -> Unit,
+    onMoreOptionsItemClick: (index: Int) -> Unit,
     onDoneButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
     var openCategorySheet by rememberSaveable { mutableStateOf(false) }
     var openCompanySheet by rememberSaveable { mutableStateOf(false) }
+    var openCustomerSheet by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.clickableNoEffect { onOutsideClick() },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(text = screenTitle) },
@@ -110,7 +121,31 @@ fun SaleContent(
                             contentDescription = stringResource(id = R.string.up_button_label)
                         )
                     }
-                }
+                },
+                actions = {
+                    if (isEdit) {
+                        IconButton(onClick = { expanded = true } ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Filled.MoreVert,
+                                    contentDescription = stringResource(id = R.string.more_options_label)
+                                )
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    MoreOptionsMenu(
+                                        items = menuItems,
+                                        expanded = expanded,
+                                        onDismissRequest = { expandedValue -> expanded = expandedValue },
+                                        onClick = onMoreOptionsItemClick
+                                    )
+                                }
+                            }
+                        }
+                    }
+                },
             )
         },
         floatingActionButton = {
@@ -145,6 +180,14 @@ fun SaleContent(
                 onDismissCompany = onDismissCompany,
                 onSelectedItem = onCompanySelected
             )
+            CustomerBottomSheet(
+                customers = customers,
+                openBottomSheet = openCustomerSheet,
+                onBottomSheetChange = { show -> openCustomerSheet = show },
+                onDismissCustomer = onDismissCustomer,
+                onSelectedItem = onCustomerSelected
+            )
+
             Row(
                 verticalAlignment = Alignment.Bottom
             ) {
@@ -178,8 +221,8 @@ fun SaleContent(
                             .padding(horizontal = 8.dp, vertical = 2.dp)
                             .fillMaxWidth()
                             .clearFocusOnKeyboardDismiss(),
-                        value = name,
-                        onValueChange = onNameChange,
+                        value = productName,
+                        onValueChange = onProductNameChange,
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Filled.Title,
@@ -244,6 +287,42 @@ fun SaleContent(
                     )
                 }
             }
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .fillMaxWidth()
+                    .onFocusChanged { focusState ->
+                        if (focusState.hasFocus) {
+                            openCustomerSheet = true
+                        }
+                },
+                value = customerName,
+                onValueChange = {},
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Person,
+                        contentDescription = stringResource(id = R.string.customer_name_label)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                singleLine = true,
+                readOnly = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.customer_name_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.enter_customer_name_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+            )
             OutlinedTextField(
                 modifier = Modifier
                     .padding(horizontal = 8.dp, vertical = 2.dp)
@@ -479,9 +558,12 @@ fun SaleDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             SaleContent(
+                isEdit = false,
                 screenTitle = stringResource(id = R.string.new_sale_label),
                 snackbarHostState = remember { SnackbarHostState() },
-                name = "",
+                menuItems = emptyArray(),
+                productName = "",
+                customerName = "",
                 photo = "",
                 quantity = "",
                 dateOfSale = "",
@@ -491,7 +573,7 @@ fun SaleDynamicPreview() {
                 category = "",
                 company = "",
                 isPaidByCustomer = true,
-                onNameChange = {},
+                onProductNameChange = {},
                 onQuantityChange = {},
                 onPurchasePriceChange = {},
                 onSalePriceChange = {},
@@ -500,10 +582,14 @@ fun SaleDynamicPreview() {
                 onDateOfPaymentClick = {},
                 categories = emptyList(),
                 companies = emptyList(),
+                customers = emptyList(),
                 onDismissCategory = {},
                 onDismissCompany = {},
+                onDismissCustomer = {},
                 onCompanySelected = {},
+                onCustomerSelected = {},
                 onOutsideClick = {},
+                onMoreOptionsItemClick = {},
                 onDoneButtonClick = {},
                 navigateUp = {}
             )
@@ -523,9 +609,12 @@ fun SalePreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             SaleContent(
+                isEdit = true,
                 screenTitle = stringResource(id = R.string.edit_sale_label),
                 snackbarHostState = remember { SnackbarHostState() },
-                name = "",
+                menuItems = emptyArray(),
+                productName = "",
+                customerName = "",
                 photo = "",
                 quantity = "",
                 dateOfSale = "",
@@ -535,7 +624,7 @@ fun SalePreview() {
                 category = "",
                 company = "",
                 isPaidByCustomer = true,
-                onNameChange = {},
+                onProductNameChange = {},
                 onQuantityChange = {},
                 onPurchasePriceChange = {},
                 onSalePriceChange = {},
@@ -544,10 +633,14 @@ fun SalePreview() {
                 onDateOfPaymentClick = {},
                 categories = emptyList(),
                 companies = emptyList(),
+                customers = emptyList(),
                 onDismissCategory = {},
                 onDismissCompany = {},
+                onDismissCustomer = {},
                 onCompanySelected = {},
+                onCustomerSelected = {},
                 onOutsideClick = {},
+                onMoreOptionsItemClick = {},
                 onDoneButtonClick = {},
                 navigateUp = {}
             )
