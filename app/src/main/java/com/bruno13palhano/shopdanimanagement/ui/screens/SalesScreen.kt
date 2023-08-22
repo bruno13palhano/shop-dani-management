@@ -1,5 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -73,12 +74,15 @@ fun SalesContent(
             }
         }
     ) {
-        LazyColumn(modifier = Modifier.padding(it)) {
+        LazyColumn(
+            modifier = Modifier.padding(it),
+            contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
+        ) {
             items(items = saleList, key = { sale -> sale.id }) { sale ->
                 CommonItemList(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    title = sale.customerName,
-                    subtitle = sale.name,
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    title = sale.name,
+                    subtitle = sale.customerName,
                     description = dateFormat.format(sale.dateOfSale),
                     onClick = { onItemClick(sale.id) }
                 )
