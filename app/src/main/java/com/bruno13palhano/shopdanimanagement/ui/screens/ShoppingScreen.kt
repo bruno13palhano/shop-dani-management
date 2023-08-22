@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -29,7 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.CommonItemList
 import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel.ShoppingViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -86,10 +85,11 @@ fun ShoppingContent(
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
             items(itemList) { shoppingItem ->
-                SimpleItemList(
+                CommonItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    itemName = shoppingItem.name,
-                    imageVector = Icons.Filled.ArrowForward,
+                    title = shoppingItem.name,
+                    subtitle = shoppingItem.quantity.toString(),
+                    description = dateFormat.format(shoppingItem.date),
                     onClick = { onItemClick(shoppingItem.id) }
                 )
             }
