@@ -242,12 +242,12 @@ fun SaleItemList(
             ) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                    text = customerName,
+                    text = productName,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                    text = productName,
+                    text = customerName,
                     fontStyle = FontStyle.Italic,
                     style = MaterialTheme.typography.bodyMedium
                 )
