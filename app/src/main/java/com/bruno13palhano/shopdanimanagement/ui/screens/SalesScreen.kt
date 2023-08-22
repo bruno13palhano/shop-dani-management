@@ -21,9 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CommonItemList
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
 
 @Composable
@@ -46,7 +46,7 @@ fun SalesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SalesContent(
-    saleList: List<Sale>,
+    saleList: List<CommonItem>,
     onItemClick: (id: Long) -> Unit,
     onMenuClick: () -> Unit,
     onAddButtonClick: () -> Unit
@@ -78,13 +78,13 @@ fun SalesContent(
             modifier = Modifier.padding(it),
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
-            items(items = saleList, key = { sale -> sale.id }) { sale ->
+            items(items = saleList, key = { item -> item.id }) { item ->
                 CommonItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    title = sale.name,
-                    subtitle = sale.customerName,
-                    description = dateFormat.format(sale.dateOfSale),
-                    onClick = { onItemClick(sale.id) }
+                    title = item.title,
+                    subtitle = item.subtitle,
+                    description = stringResource(id = R.string.date_of_sale_tag, item.description),
+                    onClick = { onItemClick(item.id) }
                 )
             }
         }
