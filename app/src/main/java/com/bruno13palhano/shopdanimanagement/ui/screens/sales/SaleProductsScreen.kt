@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,9 +23,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.PhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SaleProductsViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -48,7 +47,7 @@ fun SaleProductsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SaleProductContent(
-    productList: List<Product>,
+    productList: List<CommonItem>,
     onItemClick: (productId: Long) -> Unit,
     navigateUp: () -> Unit
 ) {
@@ -70,12 +69,13 @@ fun SaleProductContent(
         LazyColumn(
             modifier = Modifier.padding(it)
         ) {
-            items(items = productList, key = { product -> product.id }) { product ->
-                SimpleItemList(
+            items(items = productList, key = { product -> product.id }) { item ->
+                PhotoItem(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    itemName = product.name,
-                    imageVector = Icons.Filled.ArrowForward,
-                    onClick = { onItemClick(product.id) }
+                    photo = item.photo,
+                    title = item.title,
+                    subtitle = item.subtitle,
+                    onClick = { onItemClick(item.id) }
                 )
             }
         }
