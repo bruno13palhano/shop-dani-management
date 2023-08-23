@@ -41,8 +41,8 @@ fun EditCustomerScreen(
                     Intent.FLAG_GRANT_READ_URI_PERMISSION or
                             Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 )
+                viewModel.updatePhoto(uri.toString())
             }
-            viewModel.updatePhoto(uri.toString())
         }
     val focusManger = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
