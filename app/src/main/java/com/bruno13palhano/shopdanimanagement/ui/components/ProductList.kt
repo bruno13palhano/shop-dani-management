@@ -32,8 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 
@@ -42,7 +42,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 fun ProductListContent(
     categoryId: String,
     showCategoryDialog: Boolean,
-    itemList: List<Stock>,
+    itemList: List<CommonPhotoItem>,
     onCategoryChange: (category: String) -> Unit,
     onOkClick: () -> Unit,
     onDismissRequest: () -> Unit,
@@ -111,13 +111,13 @@ fun ProductListContent(
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
             modifier = Modifier.padding(it)
         ) {
-            items(itemList) { stock ->
-                HorizontalProductItem(
+            items(itemList) { item ->
+                CommonPhotoItem(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    name = stock.name,
-                    photo = stock.photo,
-                    price = stock.purchasePrice,
-                    onClick = { onItemClick(stock.id) }
+                    photo = item.photo,
+                    title = item.title,
+                    subtitle = item.subtitle,
+                    onClick = { onItemClick(item.id) }
                 )
             }
         }
@@ -136,15 +136,6 @@ fun ProductListContent(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 private fun ProductListDynamicPreview() {
-    val items = listOf(
-        Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
-        Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
-        Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
-        Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
-        Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
-        Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
-    )
-
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -170,15 +161,6 @@ private fun ProductListDynamicPreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 private fun ProductListPreview() {
-    val items = listOf(
-        Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
-        Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
-        Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
-        Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
-        Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
-        Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
-    )
-
     ShopDaniManagementTheme(
         dynamicColor = false
     ) {
@@ -201,3 +183,14 @@ private fun ProductListPreview() {
         }
     }
 }
+
+private val items = listOf(
+    CommonPhotoItem(id= 1L, title = "Essencial", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id= 2L, title = "Kaiak", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id= 3L, title = "Homem", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id= 4L, title = "Florata", photo = "", subtitle = "Avon"),
+    CommonPhotoItem(id= 5L, title = "Essential", photo = "", subtitle = "Avon"),
+    CommonPhotoItem(id= 6L, title = "Luna", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id= 7L, title = "Homem", photo = "", subtitle = "Natura"),
+    CommonPhotoItem(id= 8L, title = "Florata", photo = "", subtitle = "Avon")
+)
