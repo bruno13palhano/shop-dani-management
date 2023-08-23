@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,10 +32,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItem
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
-import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel.ShoppingProductListViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -62,7 +61,7 @@ fun ShoppingProductListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingProductListContent(
-    itemList: List<Stock>,
+    itemList: List<CommonPhotoItem>,
     itemsMenu: Array<String>,
     onItemClick: (id: Long) -> Unit,
     onItemMenuClick: (index: Int) -> Unit,
@@ -113,12 +112,13 @@ fun ShoppingProductListContent(
             modifier = Modifier.padding(it),
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
-            items(items = itemList, key = { shopping -> shopping.id }) { shopping ->
-                SimpleItemList(
+            items(items = itemList, key = { item -> item.id }) { item ->
+                CommonPhotoItem(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    itemName = shopping.name,
-                    imageVector = Icons.Filled.ArrowForward,
-                    onClick = { onItemClick(shopping.id) }
+                    photo = item.photo,
+                    title = item.title,
+                    subtitle = item.subtitle,
+                    onClick = { onItemClick(item.id) }
                 )
             }
         }
@@ -149,7 +149,9 @@ fun ShoppingProductListDynamicPreview() {
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun ShoppingProductListPreview() {
-    ShopDaniManagementTheme {
+    ShopDaniManagementTheme(
+        dynamicColor = false
+    ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
@@ -166,10 +168,12 @@ fun ShoppingProductListPreview() {
 }
 
 private val productList = listOf(
-    Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
-    Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
-    Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
-    Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
-    Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
-    Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2)
+    CommonPhotoItem(id= 1L, photo = "", title = "Kaiak", subtitle = "Natura"),
+    CommonPhotoItem(id= 2L, photo = "", title = "Essencial", subtitle = "Natura"),
+    CommonPhotoItem(id= 3L, photo = "", title = "Essential", subtitle = "Avon"),
+    CommonPhotoItem(id= 4L, photo = "", title = "Florata", subtitle = "Avon"),
+    CommonPhotoItem(id= 5L, photo = "", title = "Homem", subtitle = "Natura"),
+    CommonPhotoItem(id= 6L, photo = "", title = "Luna", subtitle = "Natura"),
+    CommonPhotoItem(id= 7L, photo = "", title = "Florata", subtitle = "Avon"),
+    CommonPhotoItem(id= 8L, photo = "", title = "Homem", subtitle = "Natura"),
 )
