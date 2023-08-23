@@ -63,7 +63,7 @@
     <string name="all_products_label">All the products</string>
     <string name="add_to_catalog_label">Add to catalog</string>
     <string name="save_categories_label">Save categories</string>
-    <string name="price_tag">%.2fR$</string>
+    <string name="price_tag">%.2fR$.</string>
     <string name="quantity_tag">%s, units.</string>
     <string name="empty_fields_error">Fill in the missing fields</string>
     <string name="only_x_items_error_label">There\'s only %d items on stock</string>
