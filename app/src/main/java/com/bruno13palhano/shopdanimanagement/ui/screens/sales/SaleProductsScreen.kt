@@ -92,7 +92,7 @@ fun SaleProductsDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             SaleProductContent(
-                productList = emptyList(),
+                productList = itemList,
                 onItemClick = {},
                 navigateUp = {}
             )
@@ -112,10 +112,21 @@ fun SaleProductsPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             SaleProductContent(
-                productList = emptyList(),
+                productList = itemList,
                 onItemClick = {},
                 navigateUp = {}
             )
         }
     }
 }
+
+private val itemList = listOf(
+    CommonPhotoItem(id= 1L, photo = "", title = "Kaiak", subtitle = "Natura"),
+    CommonPhotoItem(id= 2L, photo = "", title = "Essencial", subtitle = "Natura"),
+    CommonPhotoItem(id= 3L, photo = "", title = "Essential", subtitle = "Avon"),
+    CommonPhotoItem(id= 4L, photo = "", title = "Florata", subtitle = "Avon"),
+    CommonPhotoItem(id= 5L, photo = "", title = "Homem", subtitle = "Natura"),
+    CommonPhotoItem(id= 6L, photo = "", title = "Luna", subtitle = "Natura"),
+    CommonPhotoItem(id= 7L, photo = "", title = "Florata", subtitle = "Avon"),
+    CommonPhotoItem(id= 8L, photo = "", title = "Homem", subtitle = "Natura"),
+)
