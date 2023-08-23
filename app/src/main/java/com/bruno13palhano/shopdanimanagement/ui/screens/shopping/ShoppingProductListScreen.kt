@@ -21,6 +21,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,14 +46,25 @@ fun ShoppingProductListScreen(
     navigateUp: () -> Unit,
     viewModel: ShoppingProductListViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getAllProducts()
+    }
+
+    val menuOptions = mutableListOf(stringResource(id = R.string.all_products_label))
     val productList by viewModel.productList.collectAsStateWithLifecycle()
+    val categories by viewModel.categories.collectAsStateWithLifecycle()
+    menuOptions.addAll(categories)
 
     ShoppingProductListContent(
         itemList = productList,
-        itemsMenu = emptyArray(),
+        itemsMenu = menuOptions.toTypedArray(),
         onItemClick = onItemClick,
         onItemMenuClick = { index ->
-
+            if (index == 0) {
+                viewModel.getAllProducts()
+            } else {
+                viewModel.getProductByCategory(menuOptions[index])
+            }
         },
         navigateUp = navigateUp
     )
