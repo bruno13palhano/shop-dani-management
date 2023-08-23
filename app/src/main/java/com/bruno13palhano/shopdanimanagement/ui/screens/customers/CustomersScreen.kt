@@ -26,9 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.CustomersViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
@@ -51,7 +52,7 @@ fun CustomersScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomersContent(
-    customerList: List<Customer>,
+    customerList: List<CommonPhotoItem>,
     onMenuClick: () -> Unit,
     onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit
@@ -83,13 +84,13 @@ fun CustomersContent(
             modifier = Modifier.padding(it),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
-            items(items = customerList, key = { customer -> customer.id }) { customer ->
+            items(items = customerList, key = { item -> item.id }) { item ->
                 CommonPhotoItem(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    title = customer.name,
-                    subtitle = customer.address,
-                    photo = customer.photo,
-                    onClick = { onItemClick(customer.id) }
+                    title = item.title,
+                    subtitle = item.subtitle,
+                    photo = item.photo,
+                    onClick = { onItemClick(item.id) }
                 )
             }
         }
@@ -137,20 +138,13 @@ fun CustomerPreview() {
 }
 
 private val customerList = listOf(
-    Customer(1L, "Bruno", "", "", "Rua 15 de novembro", ""),
-    Customer(2L, "Brenda", "", "", "13 de maio", ""),
-    Customer(3L, "Daniela", "", "", "Rua do serrote", ""),
-    Customer(4L, "Josué", "", "", "Rua 15 de novembro", ""),
-    Customer(5L, "Helena", "", "", "Rua 13 de maio", ""),
-    Customer(6L, "Socorro", "", "", "Rua do serrote", ""),
-    Customer(7L, "Fernando", "", "", "Rua do serrote", ""),
-    Customer(8L, "Henrique", "", "", "Carão", ""),
-    Customer(9L, "Bruno", "", "", "Rua 15 de novembro", ""),
-    Customer(10L, "Brenda", "", "", "13 de maio", ""),
-    Customer(11L, "Daniela", "", "", "Rua do serrote", ""),
-    Customer(12L, "Josué", "", "", "Rua 15 de novembro", ""),
-    Customer(13L, "Helena", "", "", "Rua 13 de maio", ""),
-    Customer(14L, "Socorro", "", "", "Rua do serrote", ""),
-    Customer(15L, "Fernando", "", "", "Rua do serrote", ""),
-    Customer(16L, "Henrique", "", "", "Carão", "")
+    CommonPhotoItem(1L, "", "Bruno", "Rua 15 de novembro"),
+    CommonPhotoItem(2L, "", "Brenda",  "13 de maio", ),
+    CommonPhotoItem(3L, "", "Daniela", "Rua do serrote",),
+    CommonPhotoItem(4L, "", "Josué", "Rua 15 de novembro",),
+    CommonPhotoItem(5L, "", "Helena", "Rua 13 de maio"),
+    CommonPhotoItem(6L, "","Socorro","Rua do serrote"),
+    CommonPhotoItem(7L, "","Fernando","Rua do serrote"),
+    CommonPhotoItem(8L, "","Henrique","Carão"),
+    CommonPhotoItem(9L, "", "Bruno","Rua 15 de novembro"),
 )
