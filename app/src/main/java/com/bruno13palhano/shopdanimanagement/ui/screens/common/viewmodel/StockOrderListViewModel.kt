@@ -7,6 +7,7 @@ import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultStockOrderRepository
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.core.model.StockOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +32,7 @@ class StockOrderListViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    private var _stockList = MutableStateFlow(emptyList<StockOrder>())
+    private var _stockList = MutableStateFlow(emptyList<Stock>())
     val stockList = _stockList
         .stateIn(
             scope = viewModelScope,
@@ -42,7 +43,15 @@ class StockOrderListViewModel @Inject constructor(
     fun getItems(isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
             stockRepository.getItems(isOrderedByCustomer).collect {
-                _stockList.value = it
+                _stockList.value = it.map { stockOrder ->
+                    Stock(
+                        id = stockOrder.id,
+                        name = stockOrder.name,
+                        photo = stockOrder.photo,
+                        purchasePrice = stockOrder.purchasePrice,
+                        quantity = stockOrder.quantity
+                    )
+                }
             }
         }
     }
@@ -50,7 +59,15 @@ class StockOrderListViewModel @Inject constructor(
     fun getItemsByCategories(category: String, isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
             stockRepository.getByCategory(category, isOrderedByCustomer).collect {
-                _stockList.value = it
+                _stockList.value = it.map { stockOrder ->
+                    Stock(
+                        id = stockOrder.id,
+                        name = stockOrder.name,
+                        photo = stockOrder.photo,
+                        purchasePrice = stockOrder.purchasePrice,
+                        quantity = stockOrder.quantity
+                    )
+                }
             }
         }
     }
