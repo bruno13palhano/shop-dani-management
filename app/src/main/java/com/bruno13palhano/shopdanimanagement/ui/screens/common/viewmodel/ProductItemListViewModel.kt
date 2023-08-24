@@ -2,35 +2,71 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.ProductData
+import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
+import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProductItemListViewModel @Inject constructor(
     @DefaultProductRepository private val productRepository: ProductData<Product>,
+    @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>
 ) : ViewModel() {
-    private val _productList = productRepository.getAll()
-    val productList = _productList
+    val categories = categoryRepository.getAll()
         .map {
-            it.map { product ->
-                CommonPhotoItem(
-                    id = product.id,
-                    photo = product.photo,
-                    title = product.name,
-                    subtitle = product.company,
-                )
-            }
+            it.map { category -> category.name }
         }
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
             initialValue = emptyList()
         )
+
+    private val _productList = MutableStateFlow(emptyList<CommonPhotoItem>())
+    val productList = _productList
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
+
+    fun getAllProducts() {
+        viewModelScope.launch {
+            productRepository.getAll().collect {
+                _productList.value = it.map { product ->
+                    CommonPhotoItem(
+                        id = product.id,
+                        photo = product.photo,
+                        title = product.name,
+                        subtitle = product.company
+                    )
+                }
+            }
+        }
+    }
+
+    fun getProductByCategory(category: String) {
+        viewModelScope.launch {
+            productRepository.getByCategory(category).collect {
+                _productList.value = it.map { product ->
+                    CommonPhotoItem(
+                        id = product.id,
+                        photo = product.photo,
+                        title = product.name,
+                        subtitle = product.company
+                    )
+                }
+            }
+        }
+    }
 }
