@@ -1,8 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,10 +27,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,33 +35,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesContent(
-    showAllProducts: Boolean,
     newCategory: String,
     showCategoryDialog: Boolean,
     categories: List<Category>,
-    stockList: List<Stock>,
     onAddButtonClick: () -> Unit,
     onCategoryChange: (newCategory: String) -> Unit,
     onDismissRequest: () -> Unit,
     onOkClick: () -> Unit,
     onItemClick: (categoryId: String) -> Unit,
-    onMoreOptionsItemClick: (index: Int) -> Unit,
     navigateBack: () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    val items = arrayOf(
-        stringResource(id = R.string.all_products_label),
-        stringResource(id = R.string.categories_label)
-    )
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -79,28 +61,6 @@ fun CategoriesContent(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.up_button_label)
                         )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { expanded = true }) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                imageVector = Icons.Filled.MoreVert,
-                                contentDescription = stringResource(id = R.string.more_options_label)
-                            )
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                MoreOptionsMenu(
-                                    items = items,
-                                    expanded = expanded,
-                                    onDismissRequest = { expandedValue -> expanded = expandedValue},
-                                    onClick = onMoreOptionsItemClick
-                                )
-                            }
-                        }
                     }
                 }
             )
@@ -114,35 +74,17 @@ fun CategoriesContent(
             }
         }
     ) {
-        if (showAllProducts) {
-            LazyColumn(
-                modifier = Modifier.padding(it),
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                items(stockList) { stock ->
-                    HorizontalProductItem(
-                        modifier = Modifier
-                            .padding(vertical = 4.dp),
-                        name = stock.name,
-                        photo = stock.photo,
-                        price = stock.purchasePrice,
-                        onClick = {}
-                    )
-                }
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.padding(it),
-                contentPadding = PaddingValues(8.dp, vertical = 4.dp),
-            ) {
-                items(categories) { category ->
-                    SimpleItemList(
-                        modifier = Modifier.padding(vertical = 4.dp),
-                        itemName = category.name,
-                        imageVector = Icons.Filled.ArrowForward
-                    ) {
-                        onItemClick(category.id.toString())
-                    }
+        LazyColumn(
+            modifier = Modifier.padding(it),
+            contentPadding = PaddingValues(8.dp, vertical = 4.dp),
+        ) {
+            items(categories) { category ->
+                SimpleItemList(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    itemName = category.name,
+                    imageVector = Icons.Filled.ArrowForward
+                ) {
+                    onItemClick(category.id.toString())
                 }
             }
         }
@@ -167,17 +109,14 @@ private fun CategoriesListDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             CategoriesContent(
-                showAllProducts = false,
                 newCategory = "",
                 showCategoryDialog = true,
                 categories = categories,
-                stockList = emptyList(),
                 onAddButtonClick = {},
                 onCategoryChange = {},
                 onDismissRequest = {},
                 onOkClick = {},
                 onItemClick = {},
-                onMoreOptionsItemClick = {},
                 navigateBack = {},
             )
         }
@@ -196,17 +135,14 @@ private fun CategoriesListPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             CategoriesContent(
-                showAllProducts = true,
                 newCategory = "",
                 showCategoryDialog = false,
                 categories = categories,
-                stockList = stock,
                 onAddButtonClick = {},
                 onCategoryChange = {},
                 onDismissRequest = {},
                 onOkClick = {},
                 onItemClick = {},
-                onMoreOptionsItemClick = {},
                 navigateBack = {},
             )
         }
@@ -273,11 +209,6 @@ fun CategoryDialog(
     }
 }
 
-object CategoriesItems {
-    const val allProducts = 0
-    const val categories = 1
-}
-
 private val categories = listOf(
     Category(1L, "Gifts"),
     Category(2L, "Infant"),
@@ -291,13 +222,4 @@ private val categories = listOf(
     Category(10L, "Skin"),
     Category(11L, "Hair"),
     Category(12L, "Moisturizers")
-)
-
-private val stock = listOf(
-    Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
-    Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
-    Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
-    Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
-    Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
-    Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
 )
