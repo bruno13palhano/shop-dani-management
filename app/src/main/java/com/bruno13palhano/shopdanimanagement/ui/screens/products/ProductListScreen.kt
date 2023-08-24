@@ -6,10 +6,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductListContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.ProductListViewModel
 
@@ -32,9 +30,7 @@ fun ProductListScreen(
     var showCategoryDialog by remember { mutableStateOf(false) }
 
     ProductListContent(
-        categoryId = viewModel.name.ifEmpty {
-            stringResource(id = R.string.all_products_label)
-        },
+        categoryId = viewModel.name,
         showCategoryDialog = showCategoryDialog,
         itemList = orderList,
         onCategoryChange = viewModel::updateName,
