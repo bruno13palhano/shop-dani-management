@@ -1,6 +1,9 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,7 +21,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.ProductItemListViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -35,11 +45,26 @@ fun ProductItemListScreen(
     navigateUp: () -> Unit,
     viewModel: ProductItemListViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getAllProducts()
+    }
+
+    val menuOptions = mutableListOf(stringResource(id = R.string.all_products_label))
     val productList by viewModel.productList.collectAsStateWithLifecycle()
+    val categories by viewModel.categories.collectAsStateWithLifecycle()
+    menuOptions.addAll(categories)
 
     ProductItemListContent(
         productList = productList,
+        menuOptions = menuOptions.toTypedArray(),
         onItemClick = onItemClick,
+        onMenuItemClick = { index ->
+            if (index == 0) {
+                viewModel.getAllProducts()
+            } else {
+                viewModel.getProductByCategory(menuOptions[index])
+            }
+        },
         navigateUp = navigateUp
     )
 }
@@ -48,9 +73,13 @@ fun ProductItemListScreen(
 @Composable
 fun ProductItemListContent(
     productList: List<CommonPhotoItem>,
+    menuOptions: Array<String>,
     onItemClick: (id: Long) -> Unit,
+    onMenuItemClick: (index: Int) -> Unit,
     navigateUp: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -61,6 +90,28 @@ fun ProductItemListContent(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.up_button_label)
                         )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { expanded = true }) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = stringResource(id = R.string.more_options_label)
+                            )
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                MoreOptionsMenu(
+                                    items = menuOptions,
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = it },
+                                    onClick = onMenuItemClick
+                                )
+                            }
+                        }
                     }
                 }
             )
@@ -94,7 +145,9 @@ fun ProductItemListDynamicPreview() {
         ) {
             ProductItemListContent(
                 productList = productList,
+                menuOptions = emptyArray(),
                 onItemClick = {},
+                onMenuItemClick = {},
                 navigateUp = {}
             )
         }
@@ -114,7 +167,9 @@ fun ProductItemListPreview() {
         ) {
             ProductItemListContent(
                 productList = productList,
+                menuOptions = emptyArray(),
                 onItemClick = {},
+                onMenuItemClick = {},
                 navigateUp = {}
             )
         }
