@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlaylistAdd
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -34,13 +33,11 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun StockScreen(
-    onSearchClick: () -> Unit,
     onMenuClick: () -> Unit,
     onProductsClick: () -> Unit,
 ) {
     StockContent(
         onProductsClick = onProductsClick,
-        onSearchClick = onSearchClick,
         onMenuClick = onMenuClick
     )
 }
@@ -49,7 +46,6 @@ fun StockScreen(
 @Composable
 fun StockContent(
     onProductsClick: () -> Unit,
-    onSearchClick: () -> Unit,
     onMenuClick: () -> Unit
 ) {
     Scaffold(
@@ -61,14 +57,6 @@ fun StockContent(
                         Icon(
                             imageVector = Icons.Filled.Menu,
                             contentDescription = stringResource(id = R.string.drawer_menu_label)
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = onSearchClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = stringResource(id = R.string.search_label)
                         )
                     }
                 }
@@ -138,7 +126,6 @@ private fun StockDynamicPreview() {
         ) {
             StockContent(
                 onProductsClick = {},
-                onSearchClick = {},
                 onMenuClick = {}
             )
         }
@@ -158,7 +145,6 @@ private fun StockPreview() {
         ) {
             StockContent(
                 onProductsClick = {},
-                onSearchClick = {},
                 onMenuClick = {}
             )
         }
