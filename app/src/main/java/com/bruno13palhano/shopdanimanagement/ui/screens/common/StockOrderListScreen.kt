@@ -15,6 +15,7 @@ fun StockOrderListScreen(
     isOrderedByCustomer: Boolean,
     screenTitle: String,
     onItemClick: (id: Long) -> Unit,
+    onSearchClick: () -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit,
     viewModel: StockOrderListViewModel = hiltViewModel()
@@ -34,6 +35,7 @@ fun StockOrderListScreen(
         itemList = stockList,
         menuOptions = menuOptions.toTypedArray(),
         onItemClick = onItemClick,
+        onSearchClick = onSearchClick,
         onMenuItemClick = { index ->
             if (index == 0) {
                 viewModel.getItems(isOrderedByCustomer)
