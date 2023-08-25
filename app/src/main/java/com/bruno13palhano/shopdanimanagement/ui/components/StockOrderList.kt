@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -45,6 +46,7 @@ fun StockOrderListContent(
     itemList: List<Stock>,
     menuOptions: Array<String>,
     onItemClick: (id: Long) -> Unit,
+    onSearchClick: () -> Unit,
     onMenuItemClick: (index: Int) -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit
@@ -64,6 +66,12 @@ fun StockOrderListContent(
                     }
                 },
                 actions = {
+                    IconButton(onClick = onSearchClick) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = stringResource(id = R.string.search_label)
+                        )
+                    }
                     IconButton(onClick = { expanded = true }) {
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
@@ -132,6 +140,7 @@ fun StockOrderListDynamicPreview() {
                 itemList = items,
                 menuOptions = arrayOf(),
                 onItemClick = {},
+                onSearchClick = {},
                 onMenuItemClick = {},
                 onAddButtonClick = {},
                 navigateUp = {}
@@ -157,6 +166,7 @@ fun StockOrderListItemPreview() {
                 itemList = items,
                 menuOptions = arrayOf(),
                 onItemClick = {},
+                onSearchClick = {},
                 onMenuItemClick = {},
                 onAddButtonClick = {},
                 navigateUp = {}
