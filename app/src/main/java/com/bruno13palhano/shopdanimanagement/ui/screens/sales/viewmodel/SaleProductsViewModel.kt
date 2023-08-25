@@ -6,6 +6,7 @@ import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
@@ -23,7 +24,7 @@ class SaleProductsViewModel @Inject constructor(
                     id = product.id,
                     photo = product.photo,
                     title = product.name,
-                    description = product.photo,
+                    description = dateFormat.format(product.date),
                     subtitle = product.company
                 )
             }
