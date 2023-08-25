@@ -40,9 +40,10 @@ internal interface StockOrderDao : StockOrderData<StockOrderEntity> {
     @Query(
         "SELECT * FROM stock_order_table WHERE name LIKE '%'||:value||'%' " +
                 "OR company LIKE '%'||:value||'%' " +
-                "OR categories LIKE '%'||:value||'%'"
+                "OR categories LIKE '%'||:value||'%' " +
+                "AND is_ordered_by_customer = :isOrderedByCustomer"
     )
-    override fun search(value: String): Flow<List<StockOrderEntity>>
+    override fun search(value: String, isOrderedByCustomer: Boolean): Flow<List<StockOrderEntity>>
 
     @Query("SELECT * FROM stock_order_table WHERE categories LIKE '%'||:category||'%' " +
             "AND is_ordered_by_customer = :isOrderedByCustomer")

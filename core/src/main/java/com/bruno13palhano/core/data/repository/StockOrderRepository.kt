@@ -55,8 +55,8 @@ internal class StockOrderRepository @Inject constructor(
             }
     }
 
-    override fun search(value: String): Flow<List<StockOrder>> {
-        return stockOrderDao.search(value)
+    override fun search(value: String, isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
+        return stockOrderDao.search(value, isOrderedByCustomer)
             .map {
                 it.map { entity -> entity.asExternalModel() }
             }
