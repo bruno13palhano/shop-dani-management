@@ -38,9 +38,9 @@ internal interface StockOrderDao : StockOrderData<StockOrderEntity> {
     override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrderEntity>>
 
     @Query(
-        "SELECT * FROM stock_order_table WHERE name LIKE '%'||:value||'%' " +
+        "SELECT * FROM stock_order_table WHERE (name LIKE '%'||:value||'%' " +
                 "OR company LIKE '%'||:value||'%' " +
-                "OR categories LIKE '%'||:value||'%' " +
+                "OR categories LIKE '%'||:value||'%' )" +
                 "AND is_ordered_by_customer = :isOrderedByCustomer"
     )
     override fun search(value: String, isOrderedByCustomer: Boolean): Flow<List<StockOrderEntity>>
