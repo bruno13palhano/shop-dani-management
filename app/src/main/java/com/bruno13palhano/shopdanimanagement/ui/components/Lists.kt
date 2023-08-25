@@ -37,74 +37,6 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HorizontalProductItem(
-    modifier: Modifier,
-    name: String,
-    photo: String,
-    price: Float,
-    onClick: () -> Unit
-) {
-    ElevatedCard(
-        modifier = modifier,
-        onClick = onClick
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                contentAlignment = Alignment.Center
-            ) {
-                if(photo.isEmpty()) {
-                    Image(
-                        modifier = Modifier
-                            .size(128.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(5)),
-                        imageVector = Icons.Filled.Image,
-                        contentDescription = stringResource(id = R.string.product_image_label),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    Image(
-                        modifier = Modifier
-                            .size(128.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(5)),
-                        painter = rememberAsyncImagePainter(model = Uri.parse(photo)),
-                        contentDescription = stringResource(id = R.string.product_image_label),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-
-            Column {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    text = name,
-                    style = MaterialTheme.typography.titleLarge,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
-
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    text = stringResource(id = R.string.price_tag, price),
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontStyle = FontStyle.Italic,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
 fun StockItem(
     modifier: Modifier,
     name: String,
@@ -269,7 +201,7 @@ fun CommonItemList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommonPhotoItem(
+fun CommonPhotoItemList(
     title: String,
     subtitle: String,
     photo: String,
@@ -391,26 +323,7 @@ fun HorizontalItemList(
 
 @Preview(showBackground = true)
 @Composable
-private fun ProductItemPreview() {
-    ShopDaniManagementTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            HorizontalProductItem(
-                modifier = Modifier.fillMaxSize(),
-                name = "Essencial",
-                price = 178.99F,
-                photo = "",
-                onClick = {}
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ProductItemPreview2() {
+private fun StockItemPreview() {
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -472,7 +385,7 @@ private fun PhotoItemPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            CommonPhotoItem(
+            CommonPhotoItemList(
                 title = "Bruno",
                 subtitle = "Rua 15 de novembro",
                 photo = "",

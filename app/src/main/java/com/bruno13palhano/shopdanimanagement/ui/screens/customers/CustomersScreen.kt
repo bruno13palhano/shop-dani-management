@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItem
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItemList
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.CustomersViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -52,7 +52,7 @@ fun CustomersScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomersContent(
-    customerList: List<CommonPhotoItem>,
+    customerList: List<CommonItem>,
     onMenuClick: () -> Unit,
     onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit
@@ -85,7 +85,7 @@ fun CustomersContent(
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
             items(items = customerList, key = { item -> item.id }) { item ->
-                CommonPhotoItem(
+                CommonPhotoItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
                     title = item.title,
                     subtitle = item.subtitle,
@@ -138,13 +138,13 @@ fun CustomerPreview() {
 }
 
 private val customerList = listOf(
-    CommonPhotoItem(1L, "", "Bruno", "Rua 15 de novembro"),
-    CommonPhotoItem(2L, "", "Brenda",  "13 de maio", ),
-    CommonPhotoItem(3L, "", "Daniela", "Rua do serrote",),
-    CommonPhotoItem(4L, "", "Josué", "Rua 15 de novembro",),
-    CommonPhotoItem(5L, "", "Helena", "Rua 13 de maio"),
-    CommonPhotoItem(6L, "","Socorro","Rua do serrote"),
-    CommonPhotoItem(7L, "","Fernando","Rua do serrote"),
-    CommonPhotoItem(8L, "","Henrique","Carão"),
-    CommonPhotoItem(9L, "", "Bruno","Rua 15 de novembro"),
+    CommonItem(1L, "", "Bruno", "Rua 15 de novembro", description = ""),
+    CommonItem(2L, "", "Brenda",  "13 de maio", description = ""),
+    CommonItem(3L, "", "Daniela", "Rua do serrote", description = ""),
+    CommonItem(4L, "", "Josué", "Rua 15 de novembro", description = ""),
+    CommonItem(5L, "", "Helena", "Rua 13 de maio", description = ""),
+    CommonItem(6L, "","Socorro","Rua do serrote", description = ""),
+    CommonItem(7L, "","Fernando","Rua do serrote", description = ""),
+    CommonItem(8L, "","Henrique","Carão", description = ""),
+    CommonItem(9L, "", "Bruno","Rua 15 de novembro", description = ""),
 )

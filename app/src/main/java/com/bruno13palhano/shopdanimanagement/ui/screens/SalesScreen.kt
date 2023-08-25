@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.CommonItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalItemList
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
 
@@ -79,8 +79,9 @@ fun SalesContent(
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
             items(items = saleList, key = { item -> item.id }) { item ->
-                CommonItemList(
+                HorizontalItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
+                    photo = item.photo,
                     title = item.title,
                     subtitle = item.subtitle,
                     description = stringResource(id = R.string.date_of_sale_tag, item.description),

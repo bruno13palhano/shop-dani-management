@@ -22,6 +22,7 @@ class ShoppingViewModel @Inject constructor(
             it.map { shopping ->
                 CommonItem(
                     id = shopping.id,
+                    photo = "",
                     title = shopping.name,
                     subtitle = shopping.quantity.toString(),
                     description = dateFormat.format(shopping.date)

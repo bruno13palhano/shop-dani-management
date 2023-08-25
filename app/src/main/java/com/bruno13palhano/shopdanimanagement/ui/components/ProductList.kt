@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 
@@ -34,7 +34,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 fun ProductListContent(
     categoryId: String,
     showCategoryDialog: Boolean,
-    itemList: List<CommonPhotoItem>,
+    itemList: List<CommonItem>,
     onCategoryChange: (category: String) -> Unit,
     onOkClick: () -> Unit,
     onDismissRequest: () -> Unit,
@@ -79,7 +79,7 @@ fun ProductListContent(
             modifier = Modifier.padding(it)
         ) {
             items(itemList) { item ->
-                CommonPhotoItem(
+                CommonPhotoItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
                     photo = item.photo,
                     title = item.title,
@@ -152,12 +152,12 @@ private fun ProductListPreview() {
 }
 
 private val items = listOf(
-    CommonPhotoItem(id= 1L, title = "Essencial", photo = "", subtitle = "Natura"),
-    CommonPhotoItem(id= 2L, title = "Kaiak", photo = "", subtitle = "Natura"),
-    CommonPhotoItem(id= 3L, title = "Homem", photo = "", subtitle = "Natura"),
-    CommonPhotoItem(id= 4L, title = "Florata", photo = "", subtitle = "Avon"),
-    CommonPhotoItem(id= 5L, title = "Essential", photo = "", subtitle = "Avon"),
-    CommonPhotoItem(id= 6L, title = "Luna", photo = "", subtitle = "Natura"),
-    CommonPhotoItem(id= 7L, title = "Homem", photo = "", subtitle = "Natura"),
-    CommonPhotoItem(id= 8L, title = "Florata", photo = "", subtitle = "Avon")
+    CommonItem(id= 1L, title = "Essencial", photo = "", subtitle = "Natura", description = ""),
+    CommonItem(id= 2L, title = "Kaiak", photo = "", subtitle = "Natura", description = ""),
+    CommonItem(id= 3L, title = "Homem", photo = "", subtitle = "Natura", description = ""),
+    CommonItem(id= 4L, title = "Florata", photo = "", subtitle = "Avon", description = ""),
+    CommonItem(id= 5L, title = "Essential", photo = "", subtitle = "Avon", description = ""),
+    CommonItem(id= 6L, title = "Luna", photo = "", subtitle = "Natura", description = ""),
+    CommonItem(id= 7L, title = "Homem", photo = "", subtitle = "Natura", description = ""),
+    CommonItem(id= 8L, title = "Florata", photo = "", subtitle = "Avon", description = "")
 )

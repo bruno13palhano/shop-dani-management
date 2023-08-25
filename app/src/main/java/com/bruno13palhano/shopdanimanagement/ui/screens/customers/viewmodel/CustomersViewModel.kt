@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.di.DefaultCustomerRepository
 import com.bruno13palhano.core.model.Customer
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
@@ -19,11 +19,12 @@ class CustomersViewModel @Inject constructor(
     val customerList = customersRepository.getAll()
         .map {
             it.map { customer ->
-                CommonPhotoItem(
+                CommonItem(
                     id = customer.id,
                     photo = customer.photo,
                     title = customer.name,
-                    subtitle = customer.address
+                    subtitle = customer.address,
+                    description = customer.email
                 )
             }
         }

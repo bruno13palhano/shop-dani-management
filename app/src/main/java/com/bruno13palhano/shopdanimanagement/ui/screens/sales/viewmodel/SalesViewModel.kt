@@ -22,6 +22,7 @@ class SalesViewModel @Inject constructor(
             it.map { sale ->
                 CommonItem(
                     id = sale.id,
+                    photo = sale.photo,
                     title = sale.name,
                     subtitle = sale.company,
                     description = dateFormat.format(sale.dateOfSale)

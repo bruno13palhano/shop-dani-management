@@ -34,9 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel.ShoppingProductListViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -73,7 +73,7 @@ fun ShoppingProductListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingProductListContent(
-    itemList: List<CommonPhotoItem>,
+    itemList: List<CommonItem>,
     itemsMenu: Array<String>,
     onItemClick: (id: Long) -> Unit,
     onItemMenuClick: (index: Int) -> Unit,
@@ -125,7 +125,7 @@ fun ShoppingProductListContent(
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
             items(items = itemList, key = { item -> item.id }) { item ->
-                CommonPhotoItem(
+                CommonPhotoItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
                     photo = item.photo,
                     title = item.title,
@@ -180,12 +180,12 @@ fun ShoppingProductListPreview() {
 }
 
 private val productList = listOf(
-    CommonPhotoItem(id= 1L, photo = "", title = "Kaiak", subtitle = "Natura"),
-    CommonPhotoItem(id= 2L, photo = "", title = "Essencial", subtitle = "Natura"),
-    CommonPhotoItem(id= 3L, photo = "", title = "Essential", subtitle = "Avon"),
-    CommonPhotoItem(id= 4L, photo = "", title = "Florata", subtitle = "Avon"),
-    CommonPhotoItem(id= 5L, photo = "", title = "Homem", subtitle = "Natura"),
-    CommonPhotoItem(id= 6L, photo = "", title = "Luna", subtitle = "Natura"),
-    CommonPhotoItem(id= 7L, photo = "", title = "Florata", subtitle = "Avon"),
-    CommonPhotoItem(id= 8L, photo = "", title = "Homem", subtitle = "Natura"),
+    CommonItem(id= 1L, photo = "", title = "Kaiak", subtitle = "Natura", description = ""),
+    CommonItem(id= 2L, photo = "", title = "Essencial", subtitle = "Natura", description = ""),
+    CommonItem(id= 3L, photo = "", title = "Essential", subtitle = "Avon", description = ""),
+    CommonItem(id= 4L, photo = "", title = "Florata", subtitle = "Avon", description = ""),
+    CommonItem(id= 5L, photo = "", title = "Homem", subtitle = "Natura", description = ""),
+    CommonItem(id= 6L, photo = "", title = "Luna", subtitle = "Natura", description = ""),
+    CommonItem(id= 7L, photo = "", title = "Florata", subtitle = "Avon", description = ""),
+    CommonItem(id= 8L, photo = "", title = "Homem", subtitle = "Natura", description = ""),
 )

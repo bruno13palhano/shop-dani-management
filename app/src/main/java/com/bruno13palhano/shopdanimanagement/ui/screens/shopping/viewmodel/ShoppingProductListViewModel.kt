@@ -8,7 +8,8 @@ import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -31,7 +32,7 @@ class ShoppingProductListViewModel @Inject constructor(
             started = WhileSubscribed(5_000),
             initialValue = emptyList()
         )
-    private val _productList = MutableStateFlow(emptyList<CommonPhotoItem>())
+    private val _productList = MutableStateFlow(emptyList<CommonItem>())
     val productList = _productList
         .stateIn(
             scope = viewModelScope,
@@ -43,11 +44,12 @@ class ShoppingProductListViewModel @Inject constructor(
         viewModelScope.launch {
             productRepository.getAll().collect {
                 _productList.value = it.map { product ->
-                    CommonPhotoItem(
+                    CommonItem(
                         id = product.id,
                         photo = product.photo,
                         title = product.name,
-                        subtitle = product.company
+                        subtitle = product.company,
+                        description = dateFormat.format(product.date)
                     )
                 }
             }
@@ -58,11 +60,12 @@ class ShoppingProductListViewModel @Inject constructor(
         viewModelScope.launch {
             productRepository.getByCategory(category).collect {
                 _productList.value = it.map { product ->
-                     CommonPhotoItem(
+                     CommonItem(
                          id = product.id,
                          photo = product.photo,
                          title = product.name,
-                         subtitle = product.company
+                         subtitle = product.company,
+                         description = dateFormat.format(product.date)
                      )
                 }
             }

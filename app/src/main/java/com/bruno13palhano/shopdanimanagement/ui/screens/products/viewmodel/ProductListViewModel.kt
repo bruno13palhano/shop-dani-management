@@ -11,7 +11,8 @@ import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonPhotoItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -25,7 +26,7 @@ class ProductListViewModel @Inject constructor(
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
     @DefaultProductRepository private val productRepository: ProductData<Product>
 ) : ViewModel() {
-    private val _orders = MutableStateFlow<List<CommonPhotoItem>>(emptyList())
+    private val _orders = MutableStateFlow<List<CommonItem>>(emptyList())
     val orders = _orders.asStateFlow()
         .stateIn(
             scope = viewModelScope,
@@ -59,11 +60,12 @@ class ProductListViewModel @Inject constructor(
         viewModelScope.launch {
             productRepository.getByCategory(category).collect {
                 _orders.value = it.map { product ->
-                    CommonPhotoItem(
+                    CommonItem(
                         id = product.id,
                         photo = product.photo,
                         title = product.name,
-                        subtitle = product.company
+                        subtitle = product.company,
+                        description = dateFormat.format(product.date)
                     )
                 }
             }
