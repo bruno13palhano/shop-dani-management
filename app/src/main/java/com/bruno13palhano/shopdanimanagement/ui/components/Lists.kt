@@ -325,6 +325,70 @@ fun CommonPhotoItem(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HorizontalItemList(
+    title: String,
+    subtitle: String,
+    description: String,
+    photo: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    ElevatedCard(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (photo.isEmpty()) {
+                Image(
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(5)),
+                    imageVector = Icons.Filled.Image,
+                    contentDescription = stringResource(id = R.string.item_image),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Image(
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(5)),
+                    painter = rememberAsyncImagePainter(model = photo),
+                    contentDescription = stringResource(id = R.string.item_image),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1F, true)
+            ) {
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    text = description,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun ProductItemPreview() {
@@ -411,6 +475,25 @@ private fun PhotoItemPreview() {
             CommonPhotoItem(
                 title = "Bruno",
                 subtitle = "Rua 15 de novembro",
+                photo = "",
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HorizontalItemListPreview() {
+    ShopDaniManagementTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            HorizontalItemList(
+                title = "Bruno",
+                subtitle = "Rua 15 de novembro",
+                description = "Test",
                 photo = "",
                 onClick = {}
             )
