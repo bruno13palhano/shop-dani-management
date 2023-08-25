@@ -122,12 +122,12 @@ fun SaleProductsPreview() {
 }
 
 private val itemList = listOf(
-    CommonItem(id= 1L, photo = "", title = "Kaiak", subtitle = "Natura", description = ""),
-    CommonItem(id= 2L, photo = "", title = "Essencial", subtitle = "Natura", description = ""),
-    CommonItem(id= 3L, photo = "", title = "Essential", subtitle = "Avon", description = ""),
-    CommonItem(id= 4L, photo = "", title = "Florata", subtitle = "Avon", description = ""),
-    CommonItem(id= 5L, photo = "", title = "Homem", subtitle = "Natura", description = ""),
-    CommonItem(id= 6L, photo = "", title = "Luna", subtitle = "Natura", description = ""),
-    CommonItem(id= 7L, photo = "", title = "Florata", subtitle = "Avon", description = ""),
-    CommonItem(id= 8L, photo = "", title = "Homem", subtitle = "Natura", description = ""),
+    CommonItem(id= 1L, photo = "", title = "Kaiak", subtitle = "Natura", description = "Date of sale, Feb 3, 2023"),
+    CommonItem(id= 2L, photo = "", title = "Essencial", subtitle = "Natura", description = "Date of sale, Feb 5, 2023"),
+    CommonItem(id= 3L, photo = "", title = "Essential", subtitle = "Avon", description = "Date of sale, Feb 7, 2023"),
+    CommonItem(id= 4L, photo = "", title = "Florata", subtitle = "Avon", description = "Date of sale, Feb 7, 2023"),
+    CommonItem(id= 5L, photo = "", title = "Homem", subtitle = "Natura", description = "Date of sale, Feb 12, 2023"),
+    CommonItem(id= 6L, photo = "", title = "Luna", subtitle = "Natura", description = "Date of sale, Feb 19, 2023"),
+    CommonItem(id= 7L, photo = "", title = "Florata", subtitle = "Avon", description = "Date of sale, Feb 20, 2023"),
+    CommonItem(id= 8L, photo = "", title = "Homem", subtitle = "Natura", description = "Date of sale, Feb 23, 2023"),
 )
