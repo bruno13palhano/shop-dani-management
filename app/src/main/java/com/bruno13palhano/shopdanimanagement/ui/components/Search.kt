@@ -44,7 +44,7 @@ fun SearchContent(
     navigateUp: () -> Unit
 ) {
     var search by rememberSaveable { mutableStateOf("") }
-    var active by rememberSaveable { mutableStateOf(true) }
+    var active by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(topBar = { TopAppBar( title = {} ) }) {
         SearchBar(
@@ -103,11 +103,12 @@ fun SearchContent(
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
             items(items = stockProducts, key = { stock -> stock.id } ) { stock ->
-                HorizontalProductItem(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    name = stock.name,
+                HorizontalItemList(
+                    modifier = Modifier.padding(vertical = 4.dp),
                     photo = stock.photo,
-                    price = stock.purchasePrice,
+                    title = stock.name,
+                    description = stringResource(id = R.string.quantity_tag, stock.quantity.toString()),
+                    subtitle = stringResource(id = R.string.price_tag, stock.purchasePrice),
                     onClick = { onItemClick(stock.id) }
                 )
             }
