@@ -8,7 +8,6 @@ import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.OrdersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.EditItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.StockOrderListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.StockOrderSearchScreen
 
