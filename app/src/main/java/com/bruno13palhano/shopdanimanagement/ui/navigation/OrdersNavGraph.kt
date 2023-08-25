@@ -10,6 +10,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.OrdersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.EditItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.StockOrderListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.StockOrderSearchScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -18,24 +19,22 @@ fun NavGraphBuilder.ordersNavGraph(
     onMenuClick: () -> Unit
 ) {
     navigation(
-        startDestination = OrdersDestinations.MAIN_ORDERS_ROUTE,
+        startDestination = OrdersDestinations.ORDERS_MAIN_ROUTE,
         route = MainDestinations.ORDERS_ROUTE
     ) {
-        composable(route = OrdersDestinations.MAIN_ORDERS_ROUTE) {
+        composable(route = OrdersDestinations.ORDERS_MAIN_ROUTE) {
             OrdersScreen(
-                onSearchClick = {
-                    navController.navigate(OrdersDestinations.ORDERS_SEARCH_PRODUCT_ROUTE)
-                },
                 onMenuClick = onMenuClick,
                 onProductsClick = {
                     navController.navigate(route = OrdersDestinations.ORDERS_LIST_ROUTE)
                 }
             )
         }
-        composable(route = OrdersDestinations.ORDERS_SEARCH_PRODUCT_ROUTE) {
-            SearchProductScreen(
+        composable(route = OrdersDestinations.ORDERS_SEARCH_ITEM_ROUTE) {
+            StockOrderSearchScreen(
+                isOrderedByCustomer = true,
                 onItemClick = { productId ->
-                    navController.navigate(route = "${OrdersDestinations.ORDERS_SEARCH_PRODUCT_ROUTE}$productId")
+                    navController.navigate(route = "${OrdersDestinations.ORDERS_EDIT_ITEM_ROUTE}$productId")
                 },
                 navigateUp = { navController.navigateUp() }
             )
@@ -45,13 +44,16 @@ fun NavGraphBuilder.ordersNavGraph(
                 isOrderedByCustomer = true,
                 screenTitle = stringResource(id = R.string.orders_list_label),
                 onItemClick = { productId ->
-                    navController.navigate(route = "${OrdersDestinations.ORDERS_EDIT_PRODUCT_ROUTE}$productId")
+                    navController.navigate(route = "${OrdersDestinations.ORDERS_EDIT_ITEM_ROUTE}$productId")
+                },
+                onSearchClick = {
+                    navController.navigate(route = OrdersDestinations.ORDERS_SEARCH_ITEM_ROUTE)
                 },
                 onAddButtonClick = {},
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = OrdersDestinations.ORDERS_EDIT_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
+        composable(route = OrdersDestinations.ORDERS_EDIT_ITEM_WITH_ID_ROUTE) { backStackEntry ->
             backStackEntry.arguments?.getString(ITEM_ID)?.let { orderItemId ->
                 EditItemScreen(
                     stockOrderItemId = orderItemId.toLong(),
@@ -65,9 +67,9 @@ fun NavGraphBuilder.ordersNavGraph(
 }
 
 object OrdersDestinations {
-    const val MAIN_ORDERS_ROUTE = "main_orders_route"
-    const val ORDERS_SEARCH_PRODUCT_ROUTE = "orders_search_product_route"
+    const val ORDERS_MAIN_ROUTE = "orders_main_route"
+    const val ORDERS_SEARCH_ITEM_ROUTE = "orders_search_item_route"
     const val ORDERS_LIST_ROUTE = "orders_list_route"
-    const val ORDERS_EDIT_PRODUCT_ROUTE = "orders_edit_product_route"
-    const val ORDERS_EDIT_PRODUCT_WITH_ID_ROUTE = "$ORDERS_EDIT_PRODUCT_ROUTE{$ITEM_ID}"
+    const val ORDERS_EDIT_ITEM_ROUTE = "orders_edit_item_route"
+    const val ORDERS_EDIT_ITEM_WITH_ID_ROUTE = "$ORDERS_EDIT_ITEM_ROUTE{$ITEM_ID}"
 }
