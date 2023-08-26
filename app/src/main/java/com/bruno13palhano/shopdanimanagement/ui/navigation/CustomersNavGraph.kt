@@ -12,7 +12,6 @@ private const val ITEM_ID = "item_id"
 
 fun NavGraphBuilder.customersNavGraph(
     navController: NavController,
-    onMenuClick: () -> Unit,
     showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
@@ -22,13 +21,13 @@ fun NavGraphBuilder.customersNavGraph(
         composable(route = CustomersDestinations.MAIN_CUSTOMERS_ROUTE) {
             showBottomMenu(false)
             CustomersScreen(
-                onMenuClick = onMenuClick,
                 onItemClick = { customerId ->
                     navController.navigate(route = "${CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_ROUTE}$customerId")
                 },
                 onAddButtonClick = {
                     navController.navigate(route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE)
-                }
+                },
+                navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE) {

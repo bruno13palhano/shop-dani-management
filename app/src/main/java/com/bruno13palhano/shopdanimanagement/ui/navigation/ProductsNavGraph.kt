@@ -14,7 +14,6 @@ private const val ITEM_ID = "item_Id"
 
 fun NavGraphBuilder.productsNavGraph(
     navController: NavController,
-    onMenuClick: () -> Unit,
     showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
@@ -24,10 +23,10 @@ fun NavGraphBuilder.productsNavGraph(
         composable(route = ProductsDestinations.MAIN_PRODUCTS_ROUTE) {
             showBottomMenu(false)
             ProductsScreen(
-                onMenuClick = onMenuClick,
                 onCategoriesClick = {
                     navController.navigate(route = ProductsDestinations.PRODUCTS_CATEGORIES_ROUTE)
-                }
+                },
+                navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = ProductsDestinations.PRODUCTS_CATEGORIES_ROUTE) {
