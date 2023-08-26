@@ -12,13 +12,15 @@ private const val ITEM_ID = "item_id"
 
 fun NavGraphBuilder.customersNavGraph(
     navController: NavController,
-    onMenuClick: () -> Unit
+    onMenuClick: () -> Unit,
+    showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
         startDestination = CustomersDestinations.MAIN_CUSTOMERS_ROUTE,
         route = MainDestinations.CUSTOMERS_ROUTE
     ) {
         composable(route = CustomersDestinations.MAIN_CUSTOMERS_ROUTE) {
+            showBottomMenu(false)
             CustomersScreen(
                 onMenuClick = onMenuClick,
                 onItemClick = { customerId ->
@@ -30,11 +32,13 @@ fun NavGraphBuilder.customersNavGraph(
             )
         }
         composable(route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE) {
+            showBottomMenu(false)
             NewCustomerScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(false)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { customerId ->
                 EditCustomerScreen(
                     customerId = customerId.toLong(),

@@ -17,13 +17,15 @@ private const val ITEM_ID = "item_Id"
 
 fun NavGraphBuilder.stockNavGraph(
     navController: NavController,
-    onMenuClick: () -> Unit
+    onMenuClick: () -> Unit,
+    showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
         startDestination = StockDestinations.STOCK_MAIN_ROUTE,
         route = MainDestinations.STOCK_ROUTE
     ) {
         composable(route = StockDestinations.STOCK_MAIN_ROUTE) {
+            showBottomMenu(true)
             StockScreen(
                 onProductsClick = {
                     navController.navigate(StockDestinations.STOCK_LIST_ROUTE)
@@ -32,6 +34,7 @@ fun NavGraphBuilder.stockNavGraph(
             )
         }
         composable(route = StockDestinations.STOCK_SEARCH_ITEM_ROUTE) {
+            showBottomMenu(true)
             StockOrderSearchScreen(
                 isOrderedByCustomer = false,
                 onItemClick = { productId ->
@@ -43,6 +46,7 @@ fun NavGraphBuilder.stockNavGraph(
             )
         }
         composable(route = StockDestinations.STOCK_LIST_ROUTE) {
+            showBottomMenu(true)
             StockOrderListScreen(
                 isOrderedByCustomer = false,
                 screenTitle = stringResource(id = R.string.stock_list_label),
@@ -61,6 +65,7 @@ fun NavGraphBuilder.stockNavGraph(
             )
         }
         composable(route = StockDestinations.STOCK_ITEM_LIST_ROUTE) {
+            showBottomMenu(true)
             ProductItemListScreen(
                 onItemClick = { productId ->
                     navController.navigate(
@@ -71,6 +76,7 @@ fun NavGraphBuilder.stockNavGraph(
             )
         }
         composable(route = StockDestinations.STOCK_NEW_ITEM_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
                 NewItemScreen(
                     isOrderedByCustomer = false,
@@ -81,6 +87,7 @@ fun NavGraphBuilder.stockNavGraph(
             }
         }
         composable(route = StockDestinations.STOCK_EDIT_ITEM_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { stockItemId ->
                 EditItemScreen(
                     stockOrderItemId = stockItemId.toLong(),

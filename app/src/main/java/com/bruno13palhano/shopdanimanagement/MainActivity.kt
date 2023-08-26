@@ -12,7 +12,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
@@ -31,6 +35,7 @@ class MainActivity : ComponentActivity() {
             ShopDaniManagementTheme {
                 val navController = rememberNavController()
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+                var showBottomBar by rememberSaveable { mutableStateOf(true) }
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -43,11 +48,14 @@ class MainActivity : ComponentActivity() {
                         val coroutineScope = rememberCoroutineScope()
 
                         Scaffold(
-                            bottomBar = { BottomMenu(navController = navController) }
+                            bottomBar = { if (showBottomBar) BottomMenu(navController = navController) }
                         ) {
                             MainNavGraph(
                                 modifier = Modifier.padding(it),
-                                navController = navController
+                                navController = navController,
+                                showBottomMenu = {show ->
+                                    showBottomBar = show
+                                }
                             ) {
                                 coroutineScope.launch {
                                     drawerState.open()

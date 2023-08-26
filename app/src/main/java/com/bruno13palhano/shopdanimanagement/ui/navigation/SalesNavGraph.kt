@@ -16,13 +16,15 @@ private const val ITEM_ID = "item_Id"
 
 fun NavGraphBuilder.salesNavGraph(
     navController: NavController,
-    onMenuClick: () -> Unit
+    onMenuClick: () -> Unit,
+    showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
         startDestination = SalesDestinations.MAIN_SALES_ROUTE,
         route = MainDestinations.SALES_ROUTE
     ) {
         composable(route = SalesDestinations.MAIN_SALES_ROUTE) {
+            showBottomMenu(true)
             SalesScreen(
                 onItemClick = { saleItemId ->
                     navController.navigate(route = "${SalesDestinations.SALES_EDIT_SALE_ROUTE}$saleItemId")
@@ -34,6 +36,7 @@ fun NavGraphBuilder.salesNavGraph(
             )
         }
         composable(route = SalesDestinations.SALES_OPTIONS_ROUTE) {
+            showBottomMenu(true)
             SalesOptionsScreen(
                 onOrdersOptionClick = {
                     navController.navigate(route = SalesDestinations.SALES_PRODUCTS_LIST_ROUTE)
@@ -45,6 +48,7 @@ fun NavGraphBuilder.salesNavGraph(
             )
         }
         composable(route = SalesDestinations.SALES_STOCK_LIST_ROUTE) {
+            showBottomMenu(true)
             SalesStockListScreen(
                 onItemClick = { stockItemId ->
                     navController.navigate(
@@ -55,6 +59,7 @@ fun NavGraphBuilder.salesNavGraph(
             )
         }
         composable(route = SalesDestinations.SALES_PRODUCTS_LIST_ROUTE) {
+            showBottomMenu(true)
             SaleProductsScreen(
                 onItemClick = { productId ->
                     navController.navigate(route = "${SalesDestinations.SALES_NEW_SALE_ORDERS_ROUTE}$productId")
@@ -63,6 +68,7 @@ fun NavGraphBuilder.salesNavGraph(
             )
         }
         composable(route = SalesDestinations.SALES_NEW_SALE_ORDERS_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
                 SaleScreen(
                     isEdit = false,
@@ -75,6 +81,7 @@ fun NavGraphBuilder.salesNavGraph(
             }
         }
         composable(route = SalesDestinations.SALES_NEW_SALE_STOCK_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { stockItemId ->
                 SaleScreen(
                     isEdit = false,
@@ -87,6 +94,7 @@ fun NavGraphBuilder.salesNavGraph(
             }
         }
         composable(route = SalesDestinations.SALES_EDIT_SALE_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { saleItemId ->
                 SaleScreen(
                     isEdit = true,

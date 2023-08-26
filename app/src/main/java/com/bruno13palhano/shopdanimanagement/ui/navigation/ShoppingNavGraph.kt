@@ -16,12 +16,14 @@ private const val ITEM_ID = "item_Id"
 fun NavGraphBuilder.shoppingNavGraph(
     navController: NavController,
     onMenuClick: () -> Unit,
+    showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
         startDestination = ShoppingDestinations.MAIN_SHOPPING_ROUTE,
         route = MainDestinations.SHOPPING_ROUTE,
     ) {
         composable(route = ShoppingDestinations.MAIN_SHOPPING_ROUTE) {
+            showBottomMenu(true)
             ShoppingScreen(
                 onItemClick = { shoppingItemId ->
                     navController.navigate(
@@ -35,6 +37,7 @@ fun NavGraphBuilder.shoppingNavGraph(
             )
         }
         composable(route = ShoppingDestinations.SHOPPING_PRODUCT_LIST_ROUTE) {
+            showBottomMenu(true)
             ShoppingProductListScreen(
                 onItemClick = { productId ->
                     navController.navigate(
@@ -45,6 +48,7 @@ fun NavGraphBuilder.shoppingNavGraph(
             )
         }
         composable(route = ShoppingDestinations.SHOPPING_NEW_SHOPPING_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
                 NewItemScreen(
                     isOrderedByCustomer = false,
@@ -55,6 +59,7 @@ fun NavGraphBuilder.shoppingNavGraph(
             }
         }
         composable(route = ShoppingDestinations.SHOPPING_EDIT_SHOPPING_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { shoppingItemId ->
                 EditShoppingItemScreen(
                     shoppingItemId = shoppingItemId.toLong(),

@@ -12,6 +12,7 @@ fun MainNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = MainDestinations.HOME_ROUTE,
+    showBottomMenu: (show: Boolean) -> Unit = {},
     onMenuClick: () -> Unit,
 ) {
     NavHost(
@@ -20,33 +21,40 @@ fun MainNavGraph(
         modifier = modifier
     ) {
         composable(route = MainDestinations.HOME_ROUTE) {
+            showBottomMenu(true)
             HomeScreen(
                 onMenuClick = onMenuClick
             )
         }
         stockNavGraph(
             navController = navController,
-            onMenuClick = onMenuClick
+            onMenuClick = onMenuClick,
+            showBottomMenu = showBottomMenu
         )
         shoppingNavGraph(
             navController = navController,
-            onMenuClick = onMenuClick
+            onMenuClick = onMenuClick,
+            showBottomMenu = showBottomMenu
         )
         salesNavGraph(
             navController = navController,
-            onMenuClick = onMenuClick
+            onMenuClick = onMenuClick,
+            showBottomMenu = showBottomMenu
         )
         ordersNavGraph(
             navController = navController,
-            onMenuClick = onMenuClick
+            onMenuClick = onMenuClick,
+            showBottomMenu = showBottomMenu
         )
         productsNavGraph(
             navController = navController,
-            onMenuClick = onMenuClick
+            onMenuClick = onMenuClick,
+            showBottomMenu = showBottomMenu
         )
         customersNavGraph(
             navController = navController,
-            onMenuClick = onMenuClick
+            onMenuClick = onMenuClick,
+            showBottomMenu = showBottomMenu
         )
     }
 }

@@ -14,13 +14,15 @@ private const val ITEM_ID = "item_Id"
 
 fun NavGraphBuilder.productsNavGraph(
     navController: NavController,
-    onMenuClick: () -> Unit
+    onMenuClick: () -> Unit,
+    showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
         startDestination = ProductsDestinations.MAIN_PRODUCTS_ROUTE,
         route = MainDestinations.PRODUCTS_ROUTE
     ) {
         composable(route = ProductsDestinations.MAIN_PRODUCTS_ROUTE) {
+            showBottomMenu(false)
             ProductsScreen(
                 onMenuClick = onMenuClick,
                 onCategoriesClick = {
@@ -29,6 +31,7 @@ fun NavGraphBuilder.productsNavGraph(
             )
         }
         composable(route = ProductsDestinations.PRODUCTS_CATEGORIES_ROUTE) {
+            showBottomMenu(false)
             CategoriesScreen(
                 onItemClick = { categoryId ->
                     navController.navigate(route = "${ProductsDestinations.PRODUCTS_LIST_ROUTE}$categoryId")
@@ -37,6 +40,7 @@ fun NavGraphBuilder.productsNavGraph(
             )
         }
         composable(route = ProductsDestinations.PRODUCTS_LIST_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(false)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
                 ProductListScreen(
                     categoryId = categoryId.toLong(),
@@ -55,6 +59,7 @@ fun NavGraphBuilder.productsNavGraph(
             }
         }
         composable(route = ProductsDestinations.PRODUCTS_NEW_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(false)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
                 NewProductScreen(
                     categoryId = categoryId.toLong(),
@@ -63,6 +68,7 @@ fun NavGraphBuilder.productsNavGraph(
             }
         }
         composable(route = ProductsDestinations.PRODUCTS_EDIT_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(false)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
                 EditProductScreen(
                     productId = productId.toLong(),
