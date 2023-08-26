@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.common
+package com.bruno13palhano.shopdanimanagement.ui.screens.products
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoriesContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.CategoriesViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.CategoriesViewModel
 
 @Composable
 fun CategoriesScreen(
