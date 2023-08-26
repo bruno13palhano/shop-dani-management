@@ -70,10 +70,6 @@ fun DrawerMenu(
 ) {
     val items = listOf(
         Screen.Home,
-        Screen.Stock,
-        Screen.Shopping,
-        Screen.Sales,
-        Screen.Requests,
         Screen.Products,
         Screen.Customers
     )
@@ -152,7 +148,7 @@ fun BottomMenu(navController: NavController) {
         Screen.Stock,
         Screen.Shopping,
         Screen.Sales,
-        Screen.Requests,
+        Screen.Orders,
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -161,9 +157,9 @@ fun BottomMenu(navController: NavController) {
     NavigationBar {
         items.forEach { screen ->
             NavigationBarItem(
-                icon = { Icon(imageVector = screen.icon, contentDescription = null)},
+                icon = { Icon(imageVector = screen.icon, contentDescription = null) },
                 label = { Text(text = stringResource(id = screen.resourceId)) },
-                selected = currentDestination?.hierarchy?.any{ it.route == screen.route} == true,
+                selected = currentDestination?.hierarchy?.any{ it.route == screen.route } == true,
                 onClick = {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -183,7 +179,7 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
     object Stock: Screen(MainDestinations.STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
     object Shopping: Screen(MainDestinations.SHOPPING_ROUTE, Icons.Filled.ShoppingCart, R.string.shopping_label)
     object Sales: Screen(MainDestinations.SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
-    object Requests: Screen(MainDestinations.ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
+    object Orders: Screen(MainDestinations.ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
     object Products: Screen(MainDestinations.PRODUCTS_ROUTE, Icons.Filled.PlaylistAdd, R.string.products_label)
     object Customers: Screen(MainDestinations.CUSTOMERS_ROUTE, Icons.Filled.Person, R.string.customers_label)
 }
