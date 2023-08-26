@@ -111,7 +111,7 @@ fun DrawerMenu(
                             onClick = {
                                 selectedItem = screen
                                 navController.navigate(screen.route) {
-                                    popUpTo(navController.graph.startDestinationId) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
                                     }
                                     restoreState = true
