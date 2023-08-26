@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CategoriesScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.CategoriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.EditProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.NewProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
