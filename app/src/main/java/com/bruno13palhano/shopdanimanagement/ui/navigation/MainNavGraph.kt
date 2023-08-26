@@ -4,8 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.bruno13palhano.shopdanimanagement.ui.screens.HomeScreen
 
 @Composable
 fun MainNavGraph(
@@ -20,12 +18,11 @@ fun MainNavGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        composable(route = MainDestinations.HOME_ROUTE) {
-            showBottomMenu(true)
-            HomeScreen(
-                onMenuClick = onMenuClick
-            )
-        }
+        homeNavGraph(
+            navController = navController,
+            onMenuClick = onMenuClick,
+            showBottomMenu = showBottomMenu
+        )
         stockNavGraph(
             navController = navController,
             onMenuClick = onMenuClick,
@@ -48,12 +45,10 @@ fun MainNavGraph(
         )
         productsNavGraph(
             navController = navController,
-            onMenuClick = onMenuClick,
             showBottomMenu = showBottomMenu
         )
         customersNavGraph(
             navController = navController,
-            onMenuClick = onMenuClick,
             showBottomMenu = showBottomMenu
         )
     }
