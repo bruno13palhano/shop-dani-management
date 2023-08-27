@@ -9,7 +9,7 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.ShoppingScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.EditShoppingItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.NewItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.ShoppingProductListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.ProductItemListScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -38,7 +38,7 @@ fun NavGraphBuilder.shoppingNavGraph(
         }
         composable(route = ShoppingDestinations.SHOPPING_PRODUCT_LIST_ROUTE) {
             showBottomMenu(true)
-            ShoppingProductListScreen(
+            ProductItemListScreen(
                 onItemClick = { productId ->
                     navController.navigate(
                         route = "${ShoppingDestinations.SHOPPING_NEW_SHOPPING_PRODUCT_ROUTE}$productId"
