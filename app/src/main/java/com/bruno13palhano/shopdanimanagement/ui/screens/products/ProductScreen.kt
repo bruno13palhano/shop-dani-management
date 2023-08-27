@@ -36,13 +36,20 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun EditProductScreen(
+    isEditable: Boolean,
     productId: Long,
+    categoryId: Long,
     navigateUp: () -> Unit,
     viewModel: EditProductViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getProduct(productId)
+    if (isEditable) {
+        LaunchedEffect(key1 = Unit) {
+            viewModel.getProduct(productId)
+        }
+    } else {
+        viewModel.setCategoryChecked(categoryId)
     }
+
     val isProductValid by viewModel.isProductValid.collectAsStateWithLifecycle()
 
     val takeFlags: Int = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
@@ -100,6 +107,7 @@ fun EditProductScreen(
     val screenTitle = stringResource(id = R.string.edit_product_label)
 
     ProductContent(
+        isEditable = isEditable,
         screenTitle = screenTitle,
         snackbarHostState = snackbarHostState,
         categories = viewModel.allCategories,
@@ -111,7 +119,6 @@ fun EditProductScreen(
         date = viewModel.date,
         category = viewModel.category,
         company = viewModel.company,
-        enableMoreOptionsMenu = true,
         onNameChange = viewModel::updateName,
         onCodeChange = viewModel::updateCode,
         onDescriptionChange = viewModel::updateDescription,
@@ -140,7 +147,11 @@ fun EditProductScreen(
         },
         onActionButtonClick = {
             if (isProductValid) {
-                viewModel.updateProduct(productId)
+                if (isEditable) {
+                    viewModel.updateProduct(productId)
+                } else {
+                    viewModel.insertProduct()
+                }
                 navigateUp()
             } else {
                 scope.launch {

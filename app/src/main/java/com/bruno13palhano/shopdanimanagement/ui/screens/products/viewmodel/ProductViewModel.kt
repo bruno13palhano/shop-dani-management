@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EditProductViewModel @Inject constructor(
+class ProductViewModel @Inject constructor(
     @DefaultProductRepository private val productRepository: ProductData<Product>,
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>
 ) : ViewModel() {
@@ -52,7 +52,7 @@ class EditProductViewModel @Inject constructor(
     private var categories by mutableStateOf(listOf(""))
     var allCategories by mutableStateOf((listOf<CategoryCheck>()))
         private set
-    var allCompanies by mutableStateOf(listOf<CompanyCheck>())
+    var allCompanies by mutableStateOf(companiesCheck)
         private set
 
     val isProductValid = snapshotFlow { name != "" && code != "" && category != "" }
@@ -103,6 +103,19 @@ class EditProductViewModel @Inject constructor(
         category = this.categories.toString().replace("[", "").replace("]", "")
     }
 
+    fun setCategoryChecked(category: Long) {
+        allCategories.forEach { categoryCheck ->
+            if (categoryCheck.id == category) {
+                categoryCheck.isChecked = true
+            }
+        }
+        this.category = allCategories
+            .filter { it.isChecked }
+            .map { it.category }.toString()
+            .replace("[", "").replace("]", "")
+        categories = listOf(this.category)
+    }
+
     fun updateCompany(company: String) {
         this.company = company
         allCompanies
@@ -115,6 +128,22 @@ class EditProductViewModel @Inject constructor(
                 it.isChecked = true
                 it
             }
+    }
+
+    fun insertProduct() {
+        val product = Product(
+            id = 0L,
+            name = name,
+            code = code,
+            description = description,
+            photo = photo,
+            date = dateInMillis,
+            categories = categories,
+            company = company
+        )
+        viewModelScope.launch {
+            productRepository.insert(product)
+        }
     }
 
     fun getProduct(id: Long) {
