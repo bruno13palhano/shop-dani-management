@@ -5,8 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.CategoriesScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.products.EditProductScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.products.NewProductScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductsScreen
 
@@ -61,8 +60,10 @@ fun NavGraphBuilder.productsNavGraph(
         composable(route = ProductsDestinations.PRODUCTS_NEW_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
             showBottomMenu(false)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
-                NewProductScreen(
+                ProductScreen(
+                    isEditable = false,
                     categoryId = categoryId.toLong(),
+                    productId = 0L,
                     navigateUp = { navController.navigateUp() }
                 )
             }
@@ -70,7 +71,9 @@ fun NavGraphBuilder.productsNavGraph(
         composable(route = ProductsDestinations.PRODUCTS_EDIT_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
             showBottomMenu(false)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
-                EditProductScreen(
+                ProductScreen(
+                    isEditable = true,
+                    categoryId = 0L,
                     productId = productId.toLong(),
                     navigateUp = { navController.navigateUp() }
                 )
