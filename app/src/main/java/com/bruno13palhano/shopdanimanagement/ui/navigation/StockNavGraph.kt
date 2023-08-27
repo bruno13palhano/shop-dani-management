@@ -49,6 +49,7 @@ fun NavGraphBuilder.stockNavGraph(
             showBottomMenu(true)
             StockOrderListScreen(
                 isOrderedByCustomer = false,
+                isAddButtonEnabled = true,
                 screenTitle = stringResource(id = R.string.stock_list_label),
                 onItemClick = { productId ->
                     navController.navigate(

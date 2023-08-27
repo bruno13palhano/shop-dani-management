@@ -45,6 +45,7 @@ fun NavGraphBuilder.ordersNavGraph(
             showBottomMenu(true)
             StockOrderListScreen(
                 isOrderedByCustomer = true,
+                isAddButtonEnabled = false,
                 screenTitle = stringResource(id = R.string.orders_list_label),
                 onItemClick = { productId ->
                     navController.navigate(route = "${OrdersDestinations.ORDERS_EDIT_ITEM_ROUTE}$productId")
