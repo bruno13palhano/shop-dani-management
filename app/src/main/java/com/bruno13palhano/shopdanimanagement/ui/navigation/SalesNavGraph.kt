@@ -8,10 +8,10 @@ import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.SalesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.ProductItemListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.StockOrderListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.StockOrderSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesOptionsScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesStockListScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -62,7 +62,10 @@ fun NavGraphBuilder.salesNavGraph(
         }
         composable(route = SalesDestinations.SALES_STOCK_LIST_ROUTE) {
             showBottomMenu(true)
-            SalesStockListScreen(
+            StockOrderListScreen(
+                isOrderedByCustomer = false,
+                isAddButtonEnabled = false,
+                screenTitle = stringResource(id = R.string.stock_list_label),
                 onItemClick = { stockItemId ->
                     navController.navigate(
                         route = "${SalesDestinations.SALES_NEW_SALE_STOCK_ROUTE}$stockItemId"
@@ -71,6 +74,7 @@ fun NavGraphBuilder.salesNavGraph(
                 onSearchClick = {
                     navController.navigate(route = SalesDestinations.SALES_SEARCH_STOCK_ROUTE)
                 },
+                onAddButtonClick = {},
                 navigateUp = { navController.navigateUp() }
             )
         }
