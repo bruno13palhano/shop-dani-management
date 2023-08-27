@@ -144,7 +144,7 @@ fun EditItemScreen(
         onSalePriceChange = viewModel::updateSalePrice,
         onIsPaidChange = viewModel::updateIsPaid,
         onDateClick = { showDatePickerDialog = true },
-        onValidityClick = { showValidityPickerDialog = false },
+        onValidityClick = { showValidityPickerDialog = true },
         categories = viewModel.allCategories,
         companies = viewModel.allCompanies,
         onDismissCategory = {
