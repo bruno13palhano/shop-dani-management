@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -120,7 +121,8 @@ fun ShoppingContent(
                             .padding(8.dp)
                             .clip(RoundedCornerShape(8.dp)),
                         imageVector = Icons.Filled.Image,
-                        contentDescription = stringResource(id = R.string.product_image_label)
+                        contentDescription = stringResource(id = R.string.product_image_label),
+                        contentScale = ContentScale.Crop
                     )
                 } else {
                     Image(
@@ -129,7 +131,8 @@ fun ShoppingContent(
                             .padding(8.dp)
                             .clip(RoundedCornerShape(8.dp)),
                         painter = rememberAsyncImagePainter(model = photo),
-                        contentDescription = stringResource(id = R.string.product_image_label)
+                        contentDescription = stringResource(id = R.string.product_image_label),
+                        contentScale = ContentScale.Crop
                     )
                 }
             }
