@@ -1,6 +1,9 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -20,6 +24,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,21 +37,25 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListContent(
+    isEditable: Boolean,
     categoryId: String,
     showCategoryDialog: Boolean,
     itemList: List<CommonItem>,
+    menuOptions: Array<String>,
     onCategoryChange: (category: String) -> Unit,
     onOkClick: () -> Unit,
     onDismissRequest: () -> Unit,
     onItemClick: (id: Long) -> Unit,
     onEditItemClick: () -> Unit,
+    onMenuItemClick: (index: Int) -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -56,21 +69,46 @@ fun ProductListContent(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onEditItemClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Edit,
-                            contentDescription = stringResource(id = R.string.edit_label)
-                        )
+                    if (isEditable) {
+                        IconButton(onClick = onEditItemClick) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = stringResource(id = R.string.edit_label)
+                            )
+                        }
+                    } else {
+                        IconButton(onClick = { expanded = true }) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Filled.MoreVert,
+                                    contentDescription = stringResource(id = R.string.more_options_label)
+                                )
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    MoreOptionsMenu(
+                                        items = menuOptions,
+                                        expanded = expanded,
+                                        onDismissRequest = { expanded = it },
+                                        onClick = onMenuItemClick
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddButtonClick) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(id = R.string.add_label)
-                )
+            if (isEditable) {
+                FloatingActionButton(onClick = onAddButtonClick) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = stringResource(id = R.string.add_label)
+                    )
+                }
             }
         }
     ) {
@@ -109,14 +147,17 @@ private fun ProductListDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductListContent(
+                isEditable = false,
                 showCategoryDialog = true,
                 categoryId = "Perfume",
                 itemList = items,
+                menuOptions = emptyArray(),
                 onCategoryChange = {},
                 onOkClick = {},
                 onDismissRequest = {},
                 onItemClick = {},
                 onEditItemClick = {},
+                onMenuItemClick = {},
                 onAddButtonClick = {},
                 navigateUp = {}
             )
@@ -136,14 +177,17 @@ private fun ProductListPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductListContent(
+                isEditable = true,
                 showCategoryDialog = true,
                 categoryId = "Perfume",
                 itemList = items,
+                menuOptions = emptyArray(),
                 onCategoryChange = {},
                 onOkClick = {},
                 onDismissRequest = {},
                 onItemClick = {},
                 onEditItemClick = {},
+                onMenuItemClick = {},
                 onAddButtonClick = {},
                 navigateUp = {}
             )
