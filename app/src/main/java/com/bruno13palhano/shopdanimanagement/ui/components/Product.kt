@@ -65,6 +65,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductContent(
+    isEditable: Boolean,
     screenTitle: String,
     snackbarHostState: SnackbarHostState,
     categories: List<CategoryCheck>,
@@ -76,7 +77,6 @@ fun ProductContent(
     date: String,
     category: String,
     company: String,
-    enableMoreOptionsMenu: Boolean,
     onNameChange: (name: String) -> Unit,
     onCodeChange: (code: String) -> Unit,
     onDescriptionChange: (description: String) -> Unit,
@@ -116,7 +116,7 @@ fun ProductContent(
                     }
                 },
                 actions = {
-                    if (enableMoreOptionsMenu) {
+                    if (isEditable) {
                         IconButton(onClick = { expanded = true }) {
                             Box(contentAlignment = Alignment.Center) {
                                 Icon(
@@ -421,7 +421,8 @@ fun ProductContent(
             } else {
                 OutlinedTextField(
                     modifier = Modifier
-                        .padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 8.dp)                        .sizeIn(minHeight = 200.dp)
+                        .padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 8.dp)
+                        .sizeIn(minHeight = 200.dp)
                         .fillMaxWidth()
                         .sizeIn(minHeight = 200.dp)
                         .clearFocusOnKeyboardDismiss(),
@@ -472,7 +473,8 @@ fun ProductDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductContent(
-                screenTitle = "Edit Product",
+                isEditable = false,
+                screenTitle = stringResource(id = R.string.new_product_label),
                 snackbarHostState = remember { SnackbarHostState() },
                 categories = listOf(),
                 companies = listOf(),
@@ -483,7 +485,6 @@ fun ProductDynamicPreview() {
                 date = "",
                 category = "",
                 company = "",
-                enableMoreOptionsMenu = true,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
@@ -513,7 +514,8 @@ fun ProductPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductContent(
-                screenTitle = "New Product",
+                isEditable = false,
+                screenTitle = stringResource(id = R.string.new_product_label),
                 snackbarHostState = remember { SnackbarHostState() },
                 categories = listOf(),
                 companies = listOf(),
@@ -524,7 +526,6 @@ fun ProductPreview() {
                 date = "",
                 category = "",
                 company = "",
-                enableMoreOptionsMenu = false,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
@@ -552,7 +553,8 @@ fun ProductOrderedDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductContent(
-                screenTitle = "Edit Product",
+                isEditable = true,
+                screenTitle = stringResource(id = R.string.edit_product_label),
                 snackbarHostState = remember { SnackbarHostState() },
                 categories = listOf(),
                 companies = listOf(),
@@ -563,7 +565,6 @@ fun ProductOrderedDynamicPreview() {
                 date = "",
                 category = "",
                 company = "",
-                enableMoreOptionsMenu = true,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
@@ -593,7 +594,8 @@ fun ProductOrderedPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductContent(
-                screenTitle = "New Product",
+                isEditable = true,
+                screenTitle = stringResource(id = R.string.edit_product_label),
                 snackbarHostState = remember { SnackbarHostState() },
                 categories = listOf(),
                 companies = listOf(),
@@ -604,7 +606,6 @@ fun ProductOrderedPreview() {
                 date = "",
                 category = "",
                 company = "",
-                enableMoreOptionsMenu = false,
                 onNameChange = {},
                 onCodeChange = {},
                 onDescriptionChange = {},
