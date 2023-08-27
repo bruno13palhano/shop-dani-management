@@ -30,17 +30,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductContent
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductMenuItem
-import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.EditProductViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun EditProductScreen(
+fun ProductScreen(
     isEditable: Boolean,
     productId: Long,
     categoryId: Long,
     navigateUp: () -> Unit,
-    viewModel: EditProductViewModel = hiltViewModel()
+    viewModel: ProductViewModel = hiltViewModel()
 ) {
     if (isEditable) {
         LaunchedEffect(key1 = Unit) {
