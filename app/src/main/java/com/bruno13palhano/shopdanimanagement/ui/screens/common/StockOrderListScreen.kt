@@ -13,6 +13,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.StockOr
 @Composable
 fun StockOrderListScreen(
     isOrderedByCustomer: Boolean,
+    isAddButtonEnabled: Boolean,
     screenTitle: String,
     onItemClick: (id: Long) -> Unit,
     onSearchClick: () -> Unit,
@@ -30,7 +31,7 @@ fun StockOrderListScreen(
     menuOptions.addAll(categories)
 
     StockOrderListContent(
-        isOrderedByCustomer = isOrderedByCustomer,
+        isAddButtonEnabled = isAddButtonEnabled,
         screenTitle = screenTitle,
         itemList = stockList,
         menuOptions = menuOptions.toTypedArray(),
