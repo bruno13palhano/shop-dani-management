@@ -42,6 +42,7 @@ fun NavGraphBuilder.productsNavGraph(
             showBottomMenu(false)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
                 ProductListScreen(
+                    isEditable = true,
                     categoryId = categoryId.toLong(),
                     onItemClick = { productId ->
                         navController.navigate(
