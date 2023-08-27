@@ -7,9 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -41,7 +40,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockOrderListContent(
-    isOrderedByCustomer: Boolean,
+    isAddButtonEnabled: Boolean,
     screenTitle: String,
     itemList: List<Stock>,
     menuOptions: Array<String>,
@@ -96,7 +95,7 @@ fun StockOrderListContent(
             )
         },
         floatingActionButton = {
-            if (!isOrderedByCustomer) {
+            if (isAddButtonEnabled) {
                 FloatingActionButton(onClick = onAddButtonClick) {
                     Icon(
                         imageVector = Icons.Filled.Add,
@@ -106,18 +105,17 @@ fun StockOrderListContent(
             }
         }
     ) {
-        LazyVerticalGrid(
+        LazyColumn(
             modifier = Modifier.padding(it),
-            contentPadding = PaddingValues(4.dp),
-            columns = GridCells.Adaptive(152.dp)
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
         ) {
             items(items = itemList, key = { item -> item.id }) { item ->
-                StockItem(
+                HorizontalItemList(
                     modifier = Modifier.padding(4.dp),
-                    name = item.name,
+                    title = item.name,
+                    subtitle = stringResource(id = R.string.price_tag, item.purchasePrice),
+                    description = stringResource(id = R.string.quantity_tag, item.quantity),
                     photo = item.photo,
-                    price = item.purchasePrice,
-                    quantity = item.quantity,
                     onClick = { onItemClick(item.id) }
                 )
             }
@@ -135,7 +133,7 @@ fun StockOrderListDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockOrderListContent(
-                isOrderedByCustomer = false,
+                isAddButtonEnabled = false,
                 screenTitle = "Stock List",
                 itemList = items,
                 menuOptions = arrayOf(),
@@ -161,7 +159,7 @@ fun StockOrderListItemPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockOrderListContent(
-                isOrderedByCustomer = true,
+                isAddButtonEnabled = true,
                 screenTitle = "Orders List",
                 itemList = items,
                 menuOptions = arrayOf(),
