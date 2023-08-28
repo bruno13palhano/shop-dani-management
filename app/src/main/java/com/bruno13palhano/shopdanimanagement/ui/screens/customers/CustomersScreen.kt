@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -36,7 +36,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 fun CustomersScreen(
     onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit,
-    navigateUp: () -> Unit,
+    onIconMenuClick: () -> Unit,
     viewModel: CustomersViewModel = hiltViewModel()
 ) {
     val customerList by viewModel.customerList.collectAsStateWithLifecycle()
@@ -45,7 +45,7 @@ fun CustomersScreen(
         customerList = customerList,
         onItemClick = onItemClick,
         onAddButtonClick = onAddButtonClick,
-        navigateUp = navigateUp
+        onIconMenuClick = onIconMenuClick
     )
 }
 
@@ -55,17 +55,17 @@ fun CustomersContent(
     customerList: List<CommonItem>,
     onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit,
-    navigateUp: () -> Unit
+    onIconMenuClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.customers_label)) },
                 navigationIcon = {
-                    IconButton(onClick = navigateUp) {
+                    IconButton(onClick = onIconMenuClick) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.up_button_label)
+                            imageVector = Icons.Filled.Menu,
+                            contentDescription = stringResource(id = R.string.drawer_menu_label)
                         )
                     }
                 }
@@ -110,7 +110,7 @@ fun CustomerDynamicPreview() {
                 customerList = customerList,
                 onItemClick = {},
                 onAddButtonClick = {},
-                navigateUp = {}
+                onIconMenuClick = {}
             )
         }
     }
@@ -131,7 +131,7 @@ fun CustomerPreview() {
                 customerList = customerList,
                 onItemClick = {},
                 onAddButtonClick = {},
-                navigateUp = {}
+                onIconMenuClick = {}
             )
         }
     }

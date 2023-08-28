@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,17 +35,17 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 @Composable
 fun ProductsScreen(
     onCategoriesClick: () -> Unit,
-    navigateUp: () -> Unit
+    onIconMenuClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.products_label)) },
                 navigationIcon = {
-                    IconButton(onClick = navigateUp) {
+                    IconButton(onClick = onIconMenuClick) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.up_button_label)
+                            imageVector = Icons.Filled.Menu,
+                            contentDescription = stringResource(id = R.string.drawer_menu_label)
                         )
                     }
                 }
@@ -115,7 +115,7 @@ fun ProductsDynamicPreview() {
         ) {
             ProductsScreen(
                 onCategoriesClick = {},
-                navigateUp = {}
+                onIconMenuClick = {}
             )
         }
     }
@@ -132,7 +132,7 @@ fun ProductsPreview() {
         ) {
             ProductsScreen(
                 onCategoriesClick = {},
-                navigateUp = {}
+                onIconMenuClick = {}
             )
         }
     }
