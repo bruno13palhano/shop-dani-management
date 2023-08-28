@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stockorder
+package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -8,7 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.StockOrderListContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.viewmodel.StockOrderListViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockOrdersListViewModel
 
 @Composable
 fun StockOrderListScreen(
@@ -19,7 +19,7 @@ fun StockOrderListScreen(
     onSearchClick: () -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit,
-    viewModel: StockOrderListViewModel = hiltViewModel()
+    viewModel: StockOrdersListViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.getItems(isOrderedByCustomer)

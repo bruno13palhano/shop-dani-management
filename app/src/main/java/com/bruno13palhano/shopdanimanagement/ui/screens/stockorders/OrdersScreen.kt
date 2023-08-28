@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens
+package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement

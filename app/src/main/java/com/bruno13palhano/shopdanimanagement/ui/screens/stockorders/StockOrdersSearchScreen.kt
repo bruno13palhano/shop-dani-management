@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stockorder
+package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -6,14 +6,14 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.ui.components.SearchContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.viewmodel.StockOrderSearchViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockOrdersSearchViewModel
 
 @Composable
 fun StockOrderSearchScreen(
     isOrderedByCustomer: Boolean,
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,
-    viewModel: StockOrderSearchViewModel = hiltViewModel()
+    viewModel: StockOrdersSearchViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.getSearchCache()

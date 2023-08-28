@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.viewmodel
+package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StockOrderViewModel @Inject constructor(
+class StockOrdersViewModel @Inject constructor(
     @DefaultProductRepository private val productRepository: ProductData<Product>,
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
     @DefaultShoppingRepository private val shoppingRepository: ShoppingData<Shopping>,

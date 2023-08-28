@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stockorder
+package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders
 
 import android.content.res.Configuration
 import androidx.compose.material3.Button
@@ -25,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ItemContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.viewmodel.StockOrderViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockOrdersViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -35,7 +35,7 @@ fun EditItemScreen(
     isOrderedByCustomer: Boolean,
     screenTitle: String,
     navigateUp: () -> Unit,
-    viewModel: StockOrderViewModel = hiltViewModel()
+    viewModel: StockOrdersViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.getStockOrder(stockOrderItemId)

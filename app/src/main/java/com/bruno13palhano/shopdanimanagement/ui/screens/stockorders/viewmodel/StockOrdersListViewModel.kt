@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.viewmodel
+package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StockOrderListViewModel @Inject constructor(
+class StockOrdersListViewModel @Inject constructor(
     @DefaultStockOrderRepository private val stockRepository: StockOrderData<StockOrder>,
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>
 ) : ViewModel() {

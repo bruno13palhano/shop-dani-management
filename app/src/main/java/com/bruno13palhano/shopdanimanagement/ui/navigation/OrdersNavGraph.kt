@@ -6,10 +6,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.OrdersScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.EditItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.StockOrderListScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.StockOrderSearchScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.OrdersScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.EditItemScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderSearchScreen
 
 private const val ITEM_ID = "item_Id"
 
