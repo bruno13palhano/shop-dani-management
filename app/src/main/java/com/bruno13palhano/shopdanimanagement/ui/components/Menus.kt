@@ -62,6 +62,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainDestinations
 import kotlinx.coroutines.launch
 
@@ -162,10 +163,8 @@ private fun DrawerPreview() {
 fun BottomMenu(navController: NavController) {
     val items = listOf(
         Screen.Home,
-        Screen.Stock,
-        Screen.Shopping,
-        Screen.Sales,
-        Screen.Orders,
+        Screen.Products,
+        Screen.Customers
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -193,10 +192,10 @@ fun BottomMenu(navController: NavController) {
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     object Home: Screen(MainDestinations.HOME_ROUTE, Icons.Filled.Home, R.string.home_label)
-    object Stock: Screen(MainDestinations.STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
-    object Shopping: Screen(MainDestinations.SHOPPING_ROUTE, Icons.Filled.ShoppingCart, R.string.shopping_label)
-    object Sales: Screen(MainDestinations.SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
-    object Orders: Screen(MainDestinations.ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
+    object Stock: Screen(HomeDestinations.HOME_STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
+    object Shopping: Screen(HomeDestinations.HOME_SHOPPING_ROUTE, Icons.Filled.ShoppingCart, R.string.shopping_label)
+    object Sales: Screen(HomeDestinations.HOME_SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
+    object Orders: Screen(HomeDestinations.HOME_ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
     object Products: Screen(MainDestinations.PRODUCTS_ROUTE, Icons.Filled.PlaylistAdd, R.string.products_label)
     object Customers: Screen(MainDestinations.CUSTOMERS_ROUTE, Icons.Filled.Person, R.string.customers_label)
 }
