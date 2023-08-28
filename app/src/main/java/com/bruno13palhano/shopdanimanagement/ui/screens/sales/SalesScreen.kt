@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens
+package com.bruno13palhano.shopdanimanagement.ui.screens.sales
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding

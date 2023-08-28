@@ -6,9 +6,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.SalesScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.StockOrderListScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.StockOrderSearchScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesOptionsScreen
