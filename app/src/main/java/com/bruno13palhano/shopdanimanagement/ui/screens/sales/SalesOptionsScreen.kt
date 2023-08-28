@@ -41,7 +41,7 @@ fun SalesOptionsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Sales Options") },
+                title = { Text(text = stringResource(id = R.string.sales_options_label)) },
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(

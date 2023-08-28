@@ -98,4 +98,5 @@
     <string name="customer_tag">Customer: %s</string>
     <string name="date_of_shopping_tag">Date of shopping, %s.</string>
     <string name="date_of_sale_tag">Date of sale, %s.</string>
+    <string name="sales_options_label">Sales Options</string>
 </resources>
