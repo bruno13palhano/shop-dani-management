@@ -4,6 +4,8 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,6 +56,7 @@ fun HomeScreen(
         Column(modifier = Modifier
             .padding(it)
             .padding(horizontal = 8.dp, vertical = 4.dp)
+            .verticalScroll(rememberScrollState())
         ) {
             options.forEach { screen ->
                 SimpleItemList(
