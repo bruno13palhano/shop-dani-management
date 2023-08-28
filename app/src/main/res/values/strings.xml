@@ -2,6 +2,7 @@
     <string name="app_name">ShopDani Management</string>
     <string name="app_logo_label">App logo</string>
     <string name="home_label">Home</string>
+    <string name="insights_label">Insights</string>
     <string name="stock_label">Stock</string>
     <string name="shopping_label">Shopping</string>
     <string name="sales_label">Sales</string>
