@@ -4,10 +4,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.ui.screens.products.CategoriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductsScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductCategoriesScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -22,20 +21,11 @@ fun NavGraphBuilder.productsNavGraph(
     ) {
         composable(route = ProductsDestinations.MAIN_PRODUCTS_ROUTE) {
             showBottomMenu(true)
-            ProductsScreen(
-                onCategoriesClick = {
-                    navController.navigate(route = ProductsDestinations.PRODUCTS_CATEGORIES_ROUTE)
-                },
-                onIconMenuClick = onIconMenuClick
-            )
-        }
-        composable(route = ProductsDestinations.PRODUCTS_CATEGORIES_ROUTE) {
-            showBottomMenu(true)
-            CategoriesScreen(
+            ProductCategoriesScreen(
                 onItemClick = { categoryId ->
                     navController.navigate(route = "${ProductsDestinations.PRODUCTS_LIST_ROUTE}$categoryId")
                 },
-                navigateUp = { navController.navigateUp() }
+                onIconMenuClick = onIconMenuClick
             )
         }
         composable(route = ProductsDestinations.PRODUCTS_LIST_WITH_ID_ROUTE) { backStackEntry ->
@@ -85,7 +75,6 @@ fun NavGraphBuilder.productsNavGraph(
 
 object ProductsDestinations {
     const val MAIN_PRODUCTS_ROUTE = "main_products_route"
-    const val PRODUCTS_CATEGORIES_ROUTE = "products_categories_route"
     const val PRODUCTS_LIST_ROUTE = "products_list_route/"
     const val PRODUCTS_LIST_WITH_ID_ROUTE = "$PRODUCTS_LIST_ROUTE{$ITEM_ID}"
     const val PRODUCTS_NEW_PRODUCT_ROUTE = "products_new_product_route"
