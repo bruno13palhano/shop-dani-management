@@ -8,8 +8,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.HomeScreen
 
 fun NavGraphBuilder.homeNavGraph(
     navController: NavController,
-    onMenuClick: () -> Unit,
-    showBottomMenu: (show: Boolean) -> Unit
+    showBottomMenu: (show: Boolean) -> Unit,
+    onIconMenuClick: () -> Unit
 ) {
     navigation(
         startDestination = HomeDestinations.HOME_MAIN_ROUTE,
@@ -21,7 +21,7 @@ fun NavGraphBuilder.homeNavGraph(
                 onOptionsItemClick = { route ->
                     navController.navigate(route = route)
                 },
-                onMenuClick = onMenuClick,
+                onMenuClick = onIconMenuClick,
             )
         }
         salesNavGraph(

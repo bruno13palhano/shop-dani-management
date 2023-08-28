@@ -11,7 +11,7 @@ fun MainNavGraph(
     navController: NavHostController,
     startDestination: String = MainDestinations.HOME_ROUTE,
     showBottomMenu: (show: Boolean) -> Unit = {},
-    onMenuClick: () -> Unit,
+    onIconMenuClick: () -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -20,16 +20,18 @@ fun MainNavGraph(
     ) {
         homeNavGraph(
             navController = navController,
-            onMenuClick = onMenuClick,
-            showBottomMenu = showBottomMenu
+            showBottomMenu = showBottomMenu,
+            onIconMenuClick = onIconMenuClick
         )
         productsNavGraph(
             navController = navController,
-            showBottomMenu = showBottomMenu
+            showBottomMenu = showBottomMenu,
+            onIconMenuClick = onIconMenuClick,
         )
         customersNavGraph(
             navController = navController,
-            showBottomMenu = showBottomMenu
+            showBottomMenu = showBottomMenu,
+            onIconMenuClick = onIconMenuClick,
         )
     }
 }
