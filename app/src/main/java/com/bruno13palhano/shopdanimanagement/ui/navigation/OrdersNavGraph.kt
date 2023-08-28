@@ -6,10 +6,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.OrdersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.EditItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderSearchScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrdersScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -23,26 +22,7 @@ fun NavGraphBuilder.ordersNavGraph(
     ) {
         composable(route = OrdersDestinations.ORDERS_MAIN_ROUTE) {
             showBottomMenu(true)
-            OrdersScreen(
-                onProductsClick = {
-                    navController.navigate(route = OrdersDestinations.ORDERS_LIST_ROUTE)
-                },
-                navigateUp = { navController.navigateUp() }
-            )
-        }
-        composable(route = OrdersDestinations.ORDERS_SEARCH_ITEM_ROUTE) {
-            showBottomMenu(true)
-            StockOrderSearchScreen(
-                isOrderedByCustomer = true,
-                onItemClick = { productId ->
-                    navController.navigate(route = "${OrdersDestinations.ORDERS_EDIT_ITEM_ROUTE}$productId")
-                },
-                navigateUp = { navController.navigateUp() }
-            )
-        }
-        composable(route = OrdersDestinations.ORDERS_LIST_ROUTE) {
-            showBottomMenu(true)
-            StockOrderListScreen(
+            StockOrdersScreen(
                 isOrderedByCustomer = true,
                 isAddButtonEnabled = false,
                 screenTitle = stringResource(id = R.string.orders_list_label),
@@ -53,6 +33,16 @@ fun NavGraphBuilder.ordersNavGraph(
                     navController.navigate(route = OrdersDestinations.ORDERS_SEARCH_ITEM_ROUTE)
                 },
                 onAddButtonClick = {},
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+        composable(route = OrdersDestinations.ORDERS_SEARCH_ITEM_ROUTE) {
+            showBottomMenu(true)
+            StockOrderSearchScreen(
+                isOrderedByCustomer = true,
+                onItemClick = { productId ->
+                    navController.navigate(route = "${OrdersDestinations.ORDERS_EDIT_ITEM_ROUTE}$productId")
+                },
                 navigateUp = { navController.navigateUp() }
             )
         }
@@ -73,7 +63,6 @@ fun NavGraphBuilder.ordersNavGraph(
 object OrdersDestinations {
     const val ORDERS_MAIN_ROUTE = "orders_main_route"
     const val ORDERS_SEARCH_ITEM_ROUTE = "orders_search_item_route"
-    const val ORDERS_LIST_ROUTE = "orders_list_route"
     const val ORDERS_EDIT_ITEM_ROUTE = "orders_edit_item_route"
     const val ORDERS_EDIT_ITEM_WITH_ID_ROUTE = "$ORDERS_EDIT_ITEM_ROUTE{$ITEM_ID}"
 }
