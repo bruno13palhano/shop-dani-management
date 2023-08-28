@@ -23,14 +23,13 @@ fun ProductListScreen(
     viewModel: ProductListViewModel = hiltViewModel()
 ) {
     if (isEditable) {
+        LaunchedEffect(key1 = Unit) {
+            viewModel.getCategory(categoryId)
+        }
         LaunchedEffect(key1 = viewModel.name) {
             viewModel.getProductsByCategory(viewModel.name)
         }
     } else {
-        LaunchedEffect(key1 = Unit) {
-            viewModel.getCategory(categoryId)
-        }
-
         LaunchedEffect(key1 = Unit) {
             viewModel.getAllProducts()
         }
