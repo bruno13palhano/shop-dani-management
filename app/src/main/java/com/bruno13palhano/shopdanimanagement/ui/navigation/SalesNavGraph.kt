@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrdersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
@@ -61,7 +61,7 @@ fun NavGraphBuilder.salesNavGraph(
         }
         composable(route = SalesDestinations.SALES_STOCK_LIST_ROUTE) {
             showBottomMenu(true)
-            StockOrderListScreen(
+            StockOrdersScreen(
                 isOrderedByCustomer = false,
                 isAddButtonEnabled = false,
                 screenTitle = stringResource(id = R.string.stock_list_label),
