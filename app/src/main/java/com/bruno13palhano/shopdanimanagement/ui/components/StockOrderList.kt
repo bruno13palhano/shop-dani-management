@@ -111,7 +111,7 @@ fun StockOrderListContent(
         ) {
             items(items = itemList, key = { item -> item.id }) { item ->
                 HorizontalItemList(
-                    modifier = Modifier.padding(4.dp),
+                    modifier = Modifier.padding(vertical = 4.dp),
                     title = item.name,
                     subtitle = stringResource(id = R.string.price_tag, item.purchasePrice),
                     description = stringResource(id = R.string.quantity_tag, item.quantity),
@@ -134,7 +134,7 @@ fun StockOrderListDynamicPreview() {
         ) {
             StockOrderListContent(
                 isAddButtonEnabled = false,
-                screenTitle = "Stock List",
+                screenTitle = stringResource(id = R.string.orders_list_label),
                 itemList = items,
                 menuOptions = arrayOf(),
                 onItemClick = {},
@@ -160,7 +160,7 @@ fun StockOrderListItemPreview() {
         ) {
             StockOrderListContent(
                 isAddButtonEnabled = true,
-                screenTitle = "Orders List",
+                screenTitle = stringResource(id = R.string.stock_list_label),
                 itemList = items,
                 menuOptions = arrayOf(),
                 onItemClick = {},
