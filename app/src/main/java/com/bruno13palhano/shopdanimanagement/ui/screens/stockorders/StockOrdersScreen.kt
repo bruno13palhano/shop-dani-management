@@ -11,7 +11,7 @@ import com.bruno13palhano.shopdanimanagement.ui.components.StockOrderListContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockOrdersViewModel
 
 @Composable
-fun StockOrderListScreen(
+fun StockOrdersScreen(
     isOrderedByCustomer: Boolean,
     isAddButtonEnabled: Boolean,
     screenTitle: String,
