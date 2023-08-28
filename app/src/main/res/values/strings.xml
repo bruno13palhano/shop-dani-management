@@ -28,6 +28,7 @@
     <string name="face_label">Face</string>
     <string name="skin_label">Skin</string>
     <string name="hair_label">Hair</string>
+    <string name="product_categories_label">Product Categories</string>
     <string name="stock_product_list">Products</string>
     <string name="new_product_label">New Product</string>
     <string name="edit_product_label">Edit Product</string>
