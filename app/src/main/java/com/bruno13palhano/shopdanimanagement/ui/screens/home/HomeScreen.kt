@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens
+package com.bruno13palhano.shopdanimanagement.ui.screens.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Column
