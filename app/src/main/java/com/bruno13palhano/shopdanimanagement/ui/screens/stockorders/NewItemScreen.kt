@@ -25,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ItemContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockOrdersViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockOrdersItemViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -35,7 +35,7 @@ fun NewItemScreen(
     screenTitle: String,
     productId: Long,
     navigateUp: () -> Unit,
-    viewModel: StockOrdersViewModel = hiltViewModel()
+    viewModel: StockOrdersItemViewModel = hiltViewModel()
 ) {
    LaunchedEffect(key1 = Unit) {
        viewModel.getProduct(productId)
