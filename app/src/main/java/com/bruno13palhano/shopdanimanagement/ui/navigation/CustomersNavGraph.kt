@@ -19,7 +19,7 @@ fun NavGraphBuilder.customersNavGraph(
         route = MainDestinations.CUSTOMERS_ROUTE
     ) {
         composable(route = CustomersDestinations.MAIN_CUSTOMERS_ROUTE) {
-            showBottomMenu(false)
+            showBottomMenu(true)
             CustomersScreen(
                 onItemClick = { customerId ->
                     navController.navigate(route = "${CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_ROUTE}$customerId")
@@ -31,13 +31,13 @@ fun NavGraphBuilder.customersNavGraph(
             )
         }
         composable(route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE) {
-            showBottomMenu(false)
+            showBottomMenu(true)
             NewCustomerScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_WITH_ID_ROUTE) { backStackEntry ->
-            showBottomMenu(false)
+            showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { customerId ->
                 EditCustomerScreen(
                     customerId = customerId.toLong(),

@@ -20,7 +20,7 @@ fun NavGraphBuilder.productsNavGraph(
         route = MainDestinations.PRODUCTS_ROUTE
     ) {
         composable(route = ProductsDestinations.MAIN_PRODUCTS_ROUTE) {
-            showBottomMenu(false)
+            showBottomMenu(true)
             ProductsScreen(
                 onCategoriesClick = {
                     navController.navigate(route = ProductsDestinations.PRODUCTS_CATEGORIES_ROUTE)
@@ -29,7 +29,7 @@ fun NavGraphBuilder.productsNavGraph(
             )
         }
         composable(route = ProductsDestinations.PRODUCTS_CATEGORIES_ROUTE) {
-            showBottomMenu(false)
+            showBottomMenu(true)
             CategoriesScreen(
                 onItemClick = { categoryId ->
                     navController.navigate(route = "${ProductsDestinations.PRODUCTS_LIST_ROUTE}$categoryId")
@@ -38,7 +38,7 @@ fun NavGraphBuilder.productsNavGraph(
             )
         }
         composable(route = ProductsDestinations.PRODUCTS_LIST_WITH_ID_ROUTE) { backStackEntry ->
-            showBottomMenu(false)
+            showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
                 ProductListScreen(
                     isEditable = true,
@@ -58,7 +58,7 @@ fun NavGraphBuilder.productsNavGraph(
             }
         }
         composable(route = ProductsDestinations.PRODUCTS_NEW_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
-            showBottomMenu(false)
+            showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
                 ProductScreen(
                     isEditable = false,
@@ -69,7 +69,7 @@ fun NavGraphBuilder.productsNavGraph(
             }
         }
         composable(route = ProductsDestinations.PRODUCTS_EDIT_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
-            showBottomMenu(false)
+            showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
                 ProductScreen(
                     isEditable = true,
