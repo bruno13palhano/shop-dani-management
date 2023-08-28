@@ -8,7 +8,7 @@ import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.ShoppingScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.EditShoppingItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.NewItemScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.NewItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 
 private const val ITEM_ID = "item_Id"
