@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -18,27 +19,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.Screen
+import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
-
-@Composable
-fun HomeScreen(
-    onMenuClick: () -> Unit
-) {
-    HomeContent(
-        onMenuClick = onMenuClick
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeContent(
-    onMenuClick: () -> Unit
+fun HomeScreen(
+    onOptionsItemClick: (route: String) -> Unit,
+    onMenuClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "") },
+                title = { Text(text = stringResource(id = R.string.home_label)) },
                 navigationIcon = {
                     IconButton(onClick = onMenuClick) {
                         Icon(
@@ -50,10 +46,24 @@ fun HomeContent(
             )
         }
     ) {
-        Column(modifier = Modifier.padding(it)) {
-            Text(
-                text = "Home Screen"
-            )
+        val options = listOf(
+            Screen.Sales,
+            Screen.Stock,
+            Screen.Orders,
+            Screen.Shopping
+        )
+        Column(modifier = Modifier
+            .padding(it)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+        ) {
+            options.forEach { screen ->
+                SimpleItemList(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    itemName = stringResource(id = screen.resourceId),
+                    imageVector = Icons.Filled.ArrowForward,
+                    onClick = { onOptionsItemClick(screen.route) }
+                )
+            }
         }
     }
 }
@@ -68,7 +78,8 @@ fun HomeDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeScreen(
-                onMenuClick = {}
+                onOptionsItemClick = {},
+                onMenuClick = {},
             )
         }
     }
@@ -86,7 +97,8 @@ fun HomePreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeScreen(
-                onMenuClick = {}
+                onOptionsItemClick = {},
+                onMenuClick = {},
             )
         }
     }
