@@ -23,26 +23,6 @@ fun MainNavGraph(
             onMenuClick = onMenuClick,
             showBottomMenu = showBottomMenu
         )
-        stockNavGraph(
-            navController = navController,
-            onMenuClick = onMenuClick,
-            showBottomMenu = showBottomMenu
-        )
-        shoppingNavGraph(
-            navController = navController,
-            onMenuClick = onMenuClick,
-            showBottomMenu = showBottomMenu
-        )
-        salesNavGraph(
-            navController = navController,
-            onMenuClick = onMenuClick,
-            showBottomMenu = showBottomMenu
-        )
-        ordersNavGraph(
-            navController = navController,
-            onMenuClick = onMenuClick,
-            showBottomMenu = showBottomMenu
-        )
         productsNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu
@@ -56,10 +36,6 @@ fun MainNavGraph(
 
 object MainDestinations {
     const val HOME_ROUTE = "home_route"
-    const val STOCK_ROUTE = "stock_route"
-    const val SHOPPING_ROUTE = "shopping_route"
-    const val SALES_ROUTE = "sales_route"
-    const val ORDERS_ROUTE = "orders_route"
     const val PRODUCTS_ROUTE = "products_route"
     const val CUSTOMERS_ROUTE = "customers_route"
 }

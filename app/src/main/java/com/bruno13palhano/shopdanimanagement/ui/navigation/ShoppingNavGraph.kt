@@ -15,12 +15,11 @@ private const val ITEM_ID = "item_Id"
 
 fun NavGraphBuilder.shoppingNavGraph(
     navController: NavController,
-    onMenuClick: () -> Unit,
     showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
         startDestination = ShoppingDestinations.MAIN_SHOPPING_ROUTE,
-        route = MainDestinations.SHOPPING_ROUTE,
+        route = HomeDestinations.HOME_SHOPPING_ROUTE,
     ) {
         composable(route = ShoppingDestinations.MAIN_SHOPPING_ROUTE) {
             showBottomMenu(true)
@@ -30,10 +29,10 @@ fun NavGraphBuilder.shoppingNavGraph(
                         route = "${ShoppingDestinations.SHOPPING_EDIT_SHOPPING_PRODUCT_ROUTE}$shoppingItemId"
                     )
                 },
-                onMenuClick = onMenuClick,
                 onAddButtonClick = {
                     navController.navigate(route = ShoppingDestinations.SHOPPING_PRODUCT_LIST_ROUTE)
-                }
+                },
+                navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = ShoppingDestinations.SHOPPING_PRODUCT_LIST_ROUTE) {

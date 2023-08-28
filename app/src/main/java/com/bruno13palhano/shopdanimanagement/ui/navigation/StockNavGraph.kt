@@ -17,12 +17,11 @@ private const val ITEM_ID = "item_Id"
 
 fun NavGraphBuilder.stockNavGraph(
     navController: NavController,
-    onMenuClick: () -> Unit,
     showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
         startDestination = StockDestinations.STOCK_MAIN_ROUTE,
-        route = MainDestinations.STOCK_ROUTE
+        route = HomeDestinations.HOME_STOCK_ROUTE
     ) {
         composable(route = StockDestinations.STOCK_MAIN_ROUTE) {
             showBottomMenu(true)
@@ -30,7 +29,7 @@ fun NavGraphBuilder.stockNavGraph(
                 onProductsClick = {
                     navController.navigate(StockDestinations.STOCK_LIST_ROUTE)
                 },
-                onMenuClick = onMenuClick
+                navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = StockDestinations.STOCK_SEARCH_ITEM_ROUTE) {

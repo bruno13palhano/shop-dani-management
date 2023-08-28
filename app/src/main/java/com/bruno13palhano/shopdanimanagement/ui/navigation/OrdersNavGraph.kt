@@ -15,20 +15,19 @@ private const val ITEM_ID = "item_Id"
 
 fun NavGraphBuilder.ordersNavGraph(
     navController: NavController,
-    onMenuClick: () -> Unit,
     showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
         startDestination = OrdersDestinations.ORDERS_MAIN_ROUTE,
-        route = MainDestinations.ORDERS_ROUTE
+        route = HomeDestinations.HOME_ORDERS_ROUTE
     ) {
         composable(route = OrdersDestinations.ORDERS_MAIN_ROUTE) {
             showBottomMenu(true)
             OrdersScreen(
-                onMenuClick = onMenuClick,
                 onProductsClick = {
                     navController.navigate(route = OrdersDestinations.ORDERS_LIST_ROUTE)
-                }
+                },
+                navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = OrdersDestinations.ORDERS_SEARCH_ITEM_ROUTE) {

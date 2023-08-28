@@ -6,21 +6,40 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.HomeScreen
 
-private const val ITEM_ID = "item_Id"
-
 fun NavGraphBuilder.homeNavGraph(
     navController: NavController,
-    onMenuClick: () -> Unit
+    onMenuClick: () -> Unit,
+    showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
         startDestination = HomeDestinations.HOME_MAIN_ROUTE,
         route = MainDestinations.HOME_ROUTE,
     ) {
         composable(route = HomeDestinations.HOME_MAIN_ROUTE) {
+            showBottomMenu(true)
             HomeScreen(
-                onMenuClick = onMenuClick
+                onOptionsItemClick = { route ->
+                    navController.navigate(route = route)
+                },
+                onMenuClick = onMenuClick,
             )
         }
+        salesNavGraph(
+            navController = navController,
+            showBottomMenu = showBottomMenu
+        )
+        stockNavGraph(
+            navController = navController,
+            showBottomMenu = showBottomMenu
+        )
+        ordersNavGraph(
+            navController = navController,
+            showBottomMenu = showBottomMenu
+        )
+        shoppingNavGraph(
+            navController = navController,
+            showBottomMenu = showBottomMenu
+        )
     }
 }
 
