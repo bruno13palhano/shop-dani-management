@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.common
+package com.bruno13palhano.shopdanimanagement.ui.screens.stockorder
 
 import android.content.res.Configuration
 import androidx.compose.material3.Button
@@ -25,21 +25,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ItemContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel.ItemViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.viewmodel.StockOrderViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun NewItemScreen(
+fun EditItemScreen(
+    stockOrderItemId: Long,
     isOrderedByCustomer: Boolean,
     screenTitle: String,
-    productId: Long,
     navigateUp: () -> Unit,
-    viewModel: ItemViewModel = hiltViewModel()
+    viewModel: StockOrderViewModel = hiltViewModel()
 ) {
-   LaunchedEffect(key1 = Unit) {
-       viewModel.getProduct(productId)
-   }
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getStockOrder(stockOrderItemId)
+    }
 
     val isItemNotEmpty by viewModel.isItemNotEmpty.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
@@ -144,7 +144,7 @@ fun NewItemScreen(
         onSalePriceChange = viewModel::updateSalePrice,
         onIsPaidChange = viewModel::updateIsPaid,
         onDateClick = { showDatePickerDialog = true },
-        onValidityClick = { showValidityPickerDialog = true},
+        onValidityClick = { showValidityPickerDialog = true },
         categories = viewModel.allCategories,
         companies = viewModel.allCompanies,
         onDismissCategory = {
@@ -159,7 +159,7 @@ fun NewItemScreen(
         },
         onDoneButtonClick = {
             if (isItemNotEmpty) {
-                viewModel.insertItems(productId, isOrderedByCustomer)
+                viewModel.updateStockOrderItem(stockOrderItemId, isOrderedByCustomer)
                 navigateUp()
             } else {
                 scope.launch {

@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.common.viewmodel
+package com.bruno13palhano.shopdanimanagement.ui.screens.stockorder.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
