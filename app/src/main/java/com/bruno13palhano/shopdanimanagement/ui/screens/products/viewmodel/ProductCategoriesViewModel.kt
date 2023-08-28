@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CategoriesViewModel @Inject constructor(
+class ProductCategoriesViewModel @Inject constructor(
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>
 ): ViewModel() {
     val categories = categoryRepository.getAll()

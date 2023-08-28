@@ -8,13 +8,13 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoriesContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.CategoriesViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.ProductCategoriesViewModel
 
 @Composable
-fun ProductsScreen(
+fun ProductCategoriesScreen(
     onIconMenuClick: () -> Unit,
     onItemClick: (categoryId: String) -> Unit,
-    viewModel: CategoriesViewModel = hiltViewModel()
+    viewModel: ProductCategoriesViewModel = hiltViewModel()
 ) {
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     var showCategoryDialog by remember { mutableStateOf(false) }
