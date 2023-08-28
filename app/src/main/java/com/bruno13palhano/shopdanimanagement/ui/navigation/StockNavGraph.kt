@@ -6,12 +6,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.EditItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.NewItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrdersScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -25,28 +24,7 @@ fun NavGraphBuilder.stockNavGraph(
     ) {
         composable(route = StockDestinations.STOCK_MAIN_ROUTE) {
             showBottomMenu(true)
-            StockScreen(
-                onProductsClick = {
-                    navController.navigate(StockDestinations.STOCK_LIST_ROUTE)
-                },
-                navigateUp = { navController.navigateUp() }
-            )
-        }
-        composable(route = StockDestinations.STOCK_SEARCH_ITEM_ROUTE) {
-            showBottomMenu(true)
-            StockOrderSearchScreen(
-                isOrderedByCustomer = false,
-                onItemClick = { productId ->
-                    navController.navigate(
-                        route = "${StockDestinations.STOCK_EDIT_ITEM_ROUTE}$productId"
-                    )
-                },
-                navigateUp = { navController.navigateUp() }
-            )
-        }
-        composable(route = StockDestinations.STOCK_LIST_ROUTE) {
-            showBottomMenu(true)
-            StockOrderListScreen(
+            StockOrdersScreen(
                 isOrderedByCustomer = false,
                 isAddButtonEnabled = true,
                 screenTitle = stringResource(id = R.string.stock_list_label),
@@ -60,6 +38,18 @@ fun NavGraphBuilder.stockNavGraph(
                 },
                 onAddButtonClick = {
                     navController.navigate(route = StockDestinations.STOCK_ITEM_LIST_ROUTE)
+                },
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+        composable(route = StockDestinations.STOCK_SEARCH_ITEM_ROUTE) {
+            showBottomMenu(true)
+            StockOrderSearchScreen(
+                isOrderedByCustomer = false,
+                onItemClick = { productId ->
+                    navController.navigate(
+                        route = "${StockDestinations.STOCK_EDIT_ITEM_ROUTE}$productId"
+                    )
                 },
                 navigateUp = { navController.navigateUp() }
             )
@@ -106,7 +96,6 @@ fun NavGraphBuilder.stockNavGraph(
 object StockDestinations {
     const val STOCK_MAIN_ROUTE = "stock_main_route"
     const val STOCK_SEARCH_ITEM_ROUTE = "stock_search_item_route"
-    const val STOCK_LIST_ROUTE = "stock_list_route"
     const val STOCK_ITEM_LIST_ROUTE = "stock_item_list_route"
     const val STOCK_NEW_ITEM_ROUTE = "stock_new_item_route"
     const val STOCK_NEW_ITEM_WITH_ID_ROUTE = "$STOCK_NEW_ITEM_ROUTE{$ITEM_ID}"
