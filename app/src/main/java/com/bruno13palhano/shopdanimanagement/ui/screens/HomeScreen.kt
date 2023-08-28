@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -60,7 +59,7 @@ fun HomeScreen(
                 SimpleItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
                     itemName = stringResource(id = screen.resourceId),
-                    imageVector = Icons.Filled.ArrowForward,
+                    imageVector = screen.icon,
                     onClick = { onOptionsItemClick(screen.route) }
                 )
             }
