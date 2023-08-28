@@ -11,14 +11,11 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlaylistAdd
-import androidx.compose.material.icons.filled.PointOfSale
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DrawerState
@@ -62,7 +59,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainDestinations
 import kotlinx.coroutines.launch
 
@@ -75,8 +71,7 @@ fun DrawerMenu(
 ) {
     val items = listOf(
         Screen.Home,
-        Screen.Products,
-        Screen.Customers
+        Screen.Insights
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -192,10 +187,7 @@ fun BottomMenu(navController: NavController) {
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     object Home: Screen(MainDestinations.HOME_ROUTE, Icons.Filled.Home, R.string.home_label)
-    object Stock: Screen(HomeDestinations.HOME_STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
-    object Shopping: Screen(HomeDestinations.HOME_SHOPPING_ROUTE, Icons.Filled.ShoppingCart, R.string.shopping_label)
-    object Sales: Screen(HomeDestinations.HOME_SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
-    object Orders: Screen(HomeDestinations.HOME_ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
+    object Insights: Screen(MainDestinations.INSIGHTS_ROUTE, Icons.Filled.Insights, R.string.insights_label)
     object Products: Screen(MainDestinations.PRODUCTS_ROUTE, Icons.Filled.PlaylistAdd, R.string.products_label)
     object Customers: Screen(MainDestinations.CUSTOMERS_ROUTE, Icons.Filled.Person, R.string.customers_label)
 }
