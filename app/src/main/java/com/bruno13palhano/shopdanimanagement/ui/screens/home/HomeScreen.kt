@@ -54,10 +54,10 @@ fun HomeScreen(
         }
     ) {
         val options = listOf(
-            HomeTopScreen.Sales,
-            HomeTopScreen.Stock,
-            HomeTopScreen.Orders,
-            HomeTopScreen.Shopping
+            HomeInnerScreen.Sales,
+            HomeInnerScreen.Stock,
+            HomeInnerScreen.Orders,
+            HomeInnerScreen.Shopping
         )
         Column(modifier = Modifier
             .padding(it)
@@ -76,11 +76,11 @@ fun HomeScreen(
     }
 }
 
-sealed class HomeTopScreen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    object Stock: HomeTopScreen(HomeDestinations.HOME_STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
-    object Shopping: HomeTopScreen(HomeDestinations.HOME_SHOPPING_ROUTE, Icons.Filled.ShoppingCart, R.string.shopping_label)
-    object Sales: HomeTopScreen(HomeDestinations.HOME_SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
-    object Orders: HomeTopScreen(HomeDestinations.HOME_ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
+sealed class HomeInnerScreen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
+    object Stock: HomeInnerScreen(HomeDestinations.HOME_STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
+    object Shopping: HomeInnerScreen(HomeDestinations.HOME_SHOPPING_ROUTE, Icons.Filled.ShoppingCart, R.string.shopping_label)
+    object Sales: HomeInnerScreen(HomeDestinations.HOME_SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
+    object Orders: HomeInnerScreen(HomeDestinations.HOME_ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
 }
 
 @Preview(showBackground = true, showSystemUi = true)
