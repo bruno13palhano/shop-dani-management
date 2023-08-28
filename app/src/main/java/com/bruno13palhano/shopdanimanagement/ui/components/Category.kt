@@ -12,8 +12,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,17 +49,17 @@ fun CategoriesContent(
     onDismissRequest: () -> Unit,
     onOkClick: () -> Unit,
     onItemClick: (categoryId: String) -> Unit,
-    navigateBack: () -> Unit
+    onIconMenuClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.categories_label)) },
+                title = { Text(text = stringResource(id = R.string.product_categories_label)) },
                 navigationIcon = {
-                    IconButton(onClick = navigateBack) {
+                    IconButton(onClick = onIconMenuClick) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.up_button_label)
+                            imageVector = Icons.Filled.Menu,
+                            contentDescription = stringResource(id = R.string.drawer_menu_label)
                         )
                     }
                 }
@@ -117,7 +117,7 @@ private fun CategoriesListDynamicPreview() {
                 onDismissRequest = {},
                 onOkClick = {},
                 onItemClick = {},
-                navigateBack = {},
+                onIconMenuClick = {},
             )
         }
     }
@@ -143,7 +143,7 @@ private fun CategoriesListPreview() {
                 onDismissRequest = {},
                 onOkClick = {},
                 onItemClick = {},
-                navigateBack = {},
+                onIconMenuClick = {},
             )
         }
     }
