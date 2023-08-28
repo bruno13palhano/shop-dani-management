@@ -23,14 +23,18 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun EditCustomerScreen(
+fun CustomerScreen(
+    isEditable: Boolean,
     customerId: Long,
     navigateUp: () -> Unit,
     viewModel: CustomerViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getCustomer(customerId)
+    if (isEditable) {
+        LaunchedEffect(key1 = Unit) {
+            viewModel.getCustomer(customerId)
+        }
     }
+
     val isCustomerNotEmpty by viewModel.isCustomerNotEmpty.collectAsStateWithLifecycle()
     val contentResolver = LocalContext.current.contentResolver
     val galleryLauncher =
@@ -72,7 +76,11 @@ fun EditCustomerScreen(
         },
         onDoneButtonClick = {
             if (isCustomerNotEmpty) {
-                viewModel.updateCustomer(customerId)
+                if (isEditable) {
+                    viewModel.updateCustomer(customerId)
+                } else {
+                    viewModel.insertCustomer()
+                }
                 navigateUp()
             } else {
                 scope.launch {
