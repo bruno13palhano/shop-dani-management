@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -35,8 +35,8 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 @Composable
 fun ShoppingScreen(
     onItemClick: (id: Long) -> Unit,
-    onMenuClick: () -> Unit,
     onAddButtonClick: () -> Unit,
+    navigateUp: () -> Unit,
     viewModel: ShoppingViewModel = hiltViewModel()
 ) {
     val shoppingList by viewModel.shoppingList.collectAsStateWithLifecycle()
@@ -45,7 +45,7 @@ fun ShoppingScreen(
         itemList = shoppingList,
         onItemClick = onItemClick,
         onAddButtonClick = onAddButtonClick,
-        onMenuClick = onMenuClick
+        navigateUp = navigateUp
     )
 }
 
@@ -55,17 +55,17 @@ fun ShoppingContent(
     itemList: List<CommonItem>,
     onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit,
-    onMenuClick: () -> Unit,
+    navigateUp: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.shopping_label)) },
                 navigationIcon = {
-                    IconButton(onClick = onMenuClick) {
+                    IconButton(onClick = navigateUp) {
                         Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = stringResource(id = R.string.drawer_menu_label)
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.up_button_label)
                         )
                     }
                 }
@@ -110,7 +110,7 @@ fun ShoppingDynamicPreview() {
                 itemList = shoppingList,
                 onItemClick = {},
                 onAddButtonClick = {},
-                onMenuClick = {},
+                navigateUp = {},
             )
         }
     }
@@ -131,7 +131,7 @@ fun ShoppingPreview() {
                 itemList = shoppingList,
                 onItemClick = {},
                 onAddButtonClick = {},
-                onMenuClick = {},
+                navigateUp = {},
             )
         }
     }

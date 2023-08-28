@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,8 +29,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesVie
 @Composable
 fun SalesScreen(
     onItemClick: (id: Long) -> Unit,
-    onMenuClick: () -> Unit,
     onAddButtonClick: () -> Unit,
+    navigateUp: () -> Unit,
     viewModel: SalesViewModel = hiltViewModel()
 ) {
     val saleList by viewModel.saleList.collectAsStateWithLifecycle()
@@ -38,8 +38,8 @@ fun SalesScreen(
     SalesContent(
         saleList = saleList,
         onItemClick = onItemClick,
-        onMenuClick = onMenuClick,
-        onAddButtonClick = onAddButtonClick
+        onAddButtonClick = onAddButtonClick,
+        navigateUp = navigateUp
     )
 }
 
@@ -48,18 +48,18 @@ fun SalesScreen(
 fun SalesContent(
     saleList: List<CommonItem>,
     onItemClick: (id: Long) -> Unit,
-    onMenuClick: () -> Unit,
-    onAddButtonClick: () -> Unit
+    onAddButtonClick: () -> Unit,
+    navigateUp: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.sales_label)) },
                 navigationIcon = {
-                    IconButton(onClick = onMenuClick) {
+                    IconButton(onClick = navigateUp) {
                         Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = stringResource(id = R.string.drawer_menu_label)
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.up_button_label)
                         )
                     }
                 }
