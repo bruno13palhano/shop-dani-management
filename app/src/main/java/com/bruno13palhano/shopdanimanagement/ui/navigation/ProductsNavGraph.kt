@@ -13,7 +13,8 @@ private const val ITEM_ID = "item_Id"
 
 fun NavGraphBuilder.productsNavGraph(
     navController: NavController,
-    showBottomMenu: (show: Boolean) -> Unit
+    showBottomMenu: (show: Boolean) -> Unit,
+    onIconMenuClick: () -> Unit
 ) {
     navigation(
         startDestination = ProductsDestinations.MAIN_PRODUCTS_ROUTE,
@@ -25,7 +26,7 @@ fun NavGraphBuilder.productsNavGraph(
                 onCategoriesClick = {
                     navController.navigate(route = ProductsDestinations.PRODUCTS_CATEGORIES_ROUTE)
                 },
-                navigateUp = { navController.navigateUp() }
+                onIconMenuClick = onIconMenuClick
             )
         }
         composable(route = ProductsDestinations.PRODUCTS_CATEGORIES_ROUTE) {
