@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.EditItemScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.ItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrdersScreen
 
@@ -49,7 +49,9 @@ fun NavGraphBuilder.ordersNavGraph(
         composable(route = OrdersDestinations.ORDERS_EDIT_ITEM_WITH_ID_ROUTE) { backStackEntry ->
             showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { orderItemId ->
-                EditItemScreen(
+                ItemScreen(
+                    isEditable = true,
+                    productId = 0L,
                     stockOrderItemId = orderItemId.toLong(),
                     isOrderedByCustomer = true,
                     screenTitle = stringResource(id = R.string.edit_order_item_label),

@@ -8,8 +8,8 @@ import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.ShoppingScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.EditShoppingItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.NewItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.ItemScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -52,7 +52,9 @@ fun NavGraphBuilder.shoppingNavGraph(
         composable(route = ShoppingDestinations.SHOPPING_NEW_SHOPPING_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
             showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
-                NewItemScreen(
+                ItemScreen(
+                    isEditable = false,
+                    stockOrderItemId = 0L,
                     isOrderedByCustomer = false,
                     screenTitle = stringResource(id = R.string.new_shopping_item_label),
                     productId = productId.toLong(),
