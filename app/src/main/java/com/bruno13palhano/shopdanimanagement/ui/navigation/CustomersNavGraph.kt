@@ -5,8 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomersScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.customers.EditCustomerScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.customers.NewCustomerScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerScreen
 
 private const val ITEM_ID = "item_id"
 
@@ -33,14 +32,17 @@ fun NavGraphBuilder.customersNavGraph(
         }
         composable(route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE) {
             showBottomMenu(true)
-            NewCustomerScreen(
+            CustomerScreen(
+                isEditable = false,
+                customerId = 0L,
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_WITH_ID_ROUTE) { backStackEntry ->
             showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { customerId ->
-                EditCustomerScreen(
+                CustomerScreen(
+                    isEditable = true,
                     customerId = customerId.toLong(),
                     navigateUp = { navController.navigateUp() }
                 )
