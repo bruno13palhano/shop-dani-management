@@ -5,6 +5,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.bruno13palhano.shopdanimanagement.ui.screens.insights.ChartsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.InsightsScreen
 
 fun NavGraphBuilder.insightsNavGraph(
@@ -31,9 +32,15 @@ fun NavGraphBuilder.insightsNavGraph(
                 }
             )
         }
+        composable(route = InsightsDestinations.INSIGHTS_CHARTS_ROUTE) {
+            ChartsScreen(
+                navigateUp = { navController.navigateUp() }
+            )
+        }
     }
 }
 
 object InsightsDestinations {
     const val INSIGHTS_MAIN_ROUTE = "insights_main_route"
+    const val INSIGHTS_CHARTS_ROUTE = "insights_charts_route"
 }
