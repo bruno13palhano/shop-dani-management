@@ -23,6 +23,11 @@ fun MainNavGraph(
             showBottomMenu = showBottomMenu,
             onIconMenuClick = onIconMenuClick
         )
+        financialNavGraph(
+            navController = navController,
+            showBottomMenu = showBottomMenu,
+            onIconMenuClick = onIconMenuClick
+        )
         insightsNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu,
@@ -44,6 +49,7 @@ fun MainNavGraph(
 object MainDestinations {
     const val HOME_ROUTE = "home_route"
     const val INSIGHTS_ROUTE = "insights_route"
+    const val FINANCIAL_ROUTE = "financial_route"
     const val PRODUCTS_ROUTE = "products_route"
     const val CUSTOMERS_ROUTE = "customers_route"
 }
