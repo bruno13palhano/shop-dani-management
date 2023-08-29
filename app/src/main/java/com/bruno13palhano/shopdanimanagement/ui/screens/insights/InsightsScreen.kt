@@ -1,6 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.insights
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,18 +24,22 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun InsightsScreen(
-    onIconMenuClick: () -> Unit
+    onIconMenuClick: () -> Unit,
+    goHome: () -> Unit
 ) {
     InsightsContent(
-        onIconMenuClick = onIconMenuClick
+        onIconMenuClick = onIconMenuClick,
+        goHome = goHome
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsightsContent(
-    onIconMenuClick: () -> Unit
+    onIconMenuClick: () -> Unit,
+    goHome: () -> Unit
 ) {
+    BackHandler(enabled = true, onBack = goHome)
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,7 +63,7 @@ fun InsightsContent(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
-@Composable()
+@Composable
 fun InsightsDynamicPreview() {
     ShopDaniManagementTheme {
         Surface(
@@ -66,7 +71,8 @@ fun InsightsDynamicPreview() {
             color = MaterialTheme.colorScheme.background)
         {
             InsightsContent(
-                onIconMenuClick = {}
+                onIconMenuClick = {},
+                goHome = {}
             )
         }
     }
@@ -74,7 +80,7 @@ fun InsightsDynamicPreview() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
-@Composable()
+@Composable
 fun InsightsPreview() {
     ShopDaniManagementTheme(
         dynamicColor = false
@@ -84,7 +90,8 @@ fun InsightsPreview() {
             color = MaterialTheme.colorScheme.background)
         {
             InsightsContent(
-                onIconMenuClick = {}
+                onIconMenuClick = {},
+                goHome = {}
             )
         }
     }

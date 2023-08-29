@@ -1,6 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.financial
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,18 +24,22 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun FinancialScreen(
-    onIconMenuClick: () -> Unit
+    onIconMenuClick: () -> Unit,
+    goHome: () -> Unit
 ) {
     FinancialContent(
-        onIconMenuClick = onIconMenuClick
+        onIconMenuClick = onIconMenuClick,
+        goHome = goHome
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FinancialContent(
-    onIconMenuClick: () -> Unit
+    onIconMenuClick: () -> Unit,
+    goHome: () -> Unit
 ) {
+    BackHandler(enabled = true, onBack = goHome)
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,7 +71,8 @@ fun FinancialDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             FinancialContent(
-                onIconMenuClick = {}
+                onIconMenuClick = {},
+                goHome = {}
             )
         }
     }
@@ -84,7 +90,8 @@ fun FinancialPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             FinancialContent(
-                onIconMenuClick = {}
+                onIconMenuClick = {},
+                goHome = {}
             )
         }
     }
