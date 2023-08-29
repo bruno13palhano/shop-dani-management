@@ -87,4 +87,6 @@ dependencies {
     implementation("androidx.hilt:hilt-work:1.0.0")
     implementation "androidx.work:work-runtime-ktx:$versions_work"
     implementation "androidx.work:work-runtime:$versions_work"
+
+    implementation "com.patrykandpatrick.vico:compose-m3:1.6.5"
 }
