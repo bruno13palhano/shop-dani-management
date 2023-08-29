@@ -20,6 +20,9 @@ fun NavGraphBuilder.insightsNavGraph(
         composable(route = InsightsDestinations.INSIGHTS_MAIN_ROUTE) {
             showBottomMenu(false)
             InsightsScreen(
+                onItemClick = { route ->
+                    navController.navigate(route = route)
+                },
                 onIconMenuClick = onIconMenuClick,
                 goHome = {
                     navController.navigate(route = HomeDestinations.HOME_MAIN_ROUTE) {
