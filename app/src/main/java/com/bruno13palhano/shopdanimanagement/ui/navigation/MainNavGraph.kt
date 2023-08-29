@@ -23,6 +23,11 @@ fun MainNavGraph(
             showBottomMenu = showBottomMenu,
             onIconMenuClick = onIconMenuClick
         )
+        insightsNavGraph(
+            navController = navController,
+            showBottomMenu = showBottomMenu,
+            onIconMenuClick = onIconMenuClick
+        )
         productsNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu,
