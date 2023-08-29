@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Insights
+import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material3.Card
@@ -71,6 +72,7 @@ fun DrawerMenu(
 ) {
     val items = listOf(
         Screen.Home,
+        Screen.Financial,
         Screen.Insights
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -187,6 +189,7 @@ fun BottomMenu(navController: NavController) {
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     object Home: Screen(MainDestinations.HOME_ROUTE, Icons.Filled.Home, R.string.home_label)
+    object Financial: Screen(MainDestinations.FINANCIAL_ROUTE, Icons.Filled.Money, R.string.financial_label)
     object Insights: Screen(MainDestinations.INSIGHTS_ROUTE, Icons.Filled.Insights, R.string.insights_label)
     object Products: Screen(MainDestinations.PRODUCTS_ROUTE, Icons.Filled.PlaylistAdd, R.string.products_label)
     object Customers: Screen(MainDestinations.CUSTOMERS_ROUTE, Icons.Filled.Person, R.string.customers_label)
