@@ -36,4 +36,7 @@ internal interface SaleDao : SaleData<SaleEntity> {
 
     @Query("SELECT * FROM sale_table WHERE customer_id = :customerId")
     override fun getByCustomerId(customerId: Long): Flow<List<SaleEntity>>
+
+    @Query("SELECT * FROM sale_table ORDER BY id DESC LIMIT :offset, :limit")
+    override fun getLastSales(offset: Int, limit: Int): Flow<List<SaleEntity>>
 }
