@@ -47,8 +47,8 @@ import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onOptionsItemClick: (route: String) -> Unit,
@@ -57,6 +57,20 @@ fun HomeScreen(
 ) {
     val lastSalesEntry by viewModel.lastSales.collectAsStateWithLifecycle()
 
+    HomeContent(
+        lastSalesEntry = lastSalesEntry,
+        onOptionsItemClick = onOptionsItemClick,
+        onMenuClick = onMenuClick
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeContent(
+    lastSalesEntry: ChartEntryModelProducer,
+    onOptionsItemClick: (route: String) -> Unit,
+    onMenuClick: () -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -148,9 +162,10 @@ fun HomeDynamicPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            HomeScreen(
+            HomeContent(
+                lastSalesEntry = ChartEntryModelProducer(),
                 onOptionsItemClick = {},
-                onMenuClick = {},
+                onMenuClick = {}
             )
         }
     }
@@ -167,9 +182,10 @@ fun HomePreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            HomeScreen(
+            HomeContent(
+                lastSalesEntry = ChartEntryModelProducer(),
                 onOptionsItemClick = {},
-                onMenuClick = {},
+                onMenuClick = {}
             )
         }
     }
