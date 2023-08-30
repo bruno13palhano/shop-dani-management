@@ -51,7 +51,14 @@ internal class SaleRepository @Inject constructor(
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
         return saleDao.getByCustomerId(customerId)
             .map {
-                it.map { entity -> entity.asExternalModel()}
+                it.map { entity -> entity.asExternalModel() }
+            }
+    }
+
+    override fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>> {
+        return saleDao.getLastSales(offset, limit)
+            .map {
+                it.map { entity -> entity.asExternalModel() }
             }
     }
 }
