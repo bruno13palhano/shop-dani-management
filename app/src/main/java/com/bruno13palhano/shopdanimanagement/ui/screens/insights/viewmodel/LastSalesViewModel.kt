@@ -8,9 +8,10 @@ import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -21,26 +22,45 @@ import javax.inject.Inject
 class LastSalesViewModel @Inject constructor(
     @DefaultSaleRepository private val saleRepository: SaleData<Sale>
 ) : ViewModel() {
+    private var days = arrayOf(0)
     private val currentDay = LocalDate.now()
-    val lastSalesEntry = saleRepository.getLastSales(0, 100)
-        .map {
-            val days = arrayOf(0,0,0,0,0,0,0)
-            val chart = mutableListOf<Pair<String, Float>>()
 
-            it.map { sale -> setDay(days, sale.dateOfSale, sale.quantity) }
-            setChartEntries(chart, days)
-
-            ChartEntryModelProducer(
-                chart.mapIndexed { index, (date, y) ->
-                    DateChartEntry(date, index.toFloat(), y)
-                }
-            )
-        }
+    private val _lastSalesEntry = MutableStateFlow(ChartEntryModelProducer())
+    val lastSalesEntry = _lastSalesEntry
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
             initialValue = ChartEntryModelProducer()
         )
+
+    fun setLastSalesEntryByRange(rangeOfDays: Int) {
+        val chart = mutableListOf<Pair<String, Float>>()
+
+        when (rangeOfDays) {
+            RangeOfDays.SEVEN_DAYS -> {
+                days = arrayOf(0,0,0,0,0,0,0)
+            }
+            RangeOfDays.TWENTY_ONE_DAYS -> {
+                days = arrayOf(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+            }
+            RangeOfDays.THIRTY_ONE_DAYS -> {
+                days = arrayOf(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+            }
+        }
+
+        viewModelScope.launch {
+            saleRepository.getLastSales(0, 100).collect {
+                it.map { sale -> setDay(days, sale.dateOfSale, sale.quantity) }
+                setChartEntries(chart, days)
+
+                _lastSalesEntry.value = ChartEntryModelProducer(
+                    chart.mapIndexed { index, (date, y) ->
+                        DateChartEntry(date, index.toFloat(), y)
+                    }
+                )
+            }
+        }
+    }
 
     private fun setDay(days: Array<Int>, date: Long, quantity: Int) {
         for (i in days.indices) {
@@ -56,4 +76,10 @@ class LastSalesViewModel @Inject constructor(
             chart.add(Pair(currentDay.minusDays(i.toLong()).dayOfWeek.name, days[i].toFloat()))
         }
     }
+}
+
+object RangeOfDays {
+    const val SEVEN_DAYS = 7
+    const val TWENTY_ONE_DAYS = 21
+    const val THIRTY_ONE_DAYS = 31
 }
