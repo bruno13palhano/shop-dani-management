@@ -19,12 +19,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
+import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.LastSalesViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
@@ -39,9 +43,15 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @Composable
 fun LastSalesScreen(
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    viewModel: LastSalesViewModel = hiltViewModel()
 ) {
+    val lastSalesEntry by viewModel.lastSalesEntry.collectAsStateWithLifecycle()
 
+    LastSalesContent(
+        lastSalesEntry = lastSalesEntry,
+        navigateUp = navigateUp
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
