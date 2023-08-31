@@ -1,13 +1,16 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.DefaultSaleRepository
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -33,6 +36,11 @@ class LastSalesViewModel @Inject constructor(
                 }
             )
         }
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5_000),
+            initialValue = ChartEntryModelProducer()
+        )
 
     private fun setDay(days: Array<Int>, date: Long, quantity: Int) {
         for (i in days.indices) {
