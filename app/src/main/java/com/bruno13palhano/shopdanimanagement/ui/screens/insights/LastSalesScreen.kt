@@ -1,11 +1,14 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.insights
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,16 +18,23 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.LastSalesViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.RangeOfDays
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
@@ -44,10 +54,32 @@ fun LastSalesScreen(
     navigateUp: () -> Unit,
     viewModel: LastSalesViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.setLastSalesEntryByRange(RangeOfDays.SEVEN_DAYS)
+    }
     val lastSalesEntry by viewModel.lastSalesEntry.collectAsStateWithLifecycle()
-
+    val menuOptions = arrayOf(
+        stringResource(id = R.string.last_7_days_label),
+        stringResource(id = R.string.last_21_days_label),
+        stringResource(id = R.string.last_31_days_label)
+    )
     LastSalesContent(
         lastSalesEntry = lastSalesEntry,
+        menuOptions = menuOptions,
+        onMenuItemClick = { index ->
+            when (index) {
+                0 -> {
+                    viewModel.setLastSalesEntryByRange(RangeOfDays.SEVEN_DAYS)
+                }
+                1 -> {
+                    viewModel.setLastSalesEntryByRange(RangeOfDays.TWENTY_ONE_DAYS)
+                }
+                2 -> {
+                    viewModel.setLastSalesEntryByRange(RangeOfDays.THIRTY_ONE_DAYS)
+                }
+                else -> {}
+            }
+        },
         navigateUp = navigateUp
     )
 }
@@ -56,8 +88,12 @@ fun LastSalesScreen(
 @Composable
 fun LastSalesContent(
     lastSalesEntry: ChartEntryModelProducer,
+    menuOptions: Array<String>,
+    onMenuItemClick: (index: Int) -> Unit,
     navigateUp: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -68,6 +104,28 @@ fun LastSalesContent(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.up_button_label)
                         )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { expanded = true }) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = stringResource(id = R.string.more_options_label)
+                            )
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                MoreOptionsMenu(
+                                    items = menuOptions,
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = it },
+                                    onClick = onMenuItemClick
+                                )
+                            }
+                        }
                     }
                 }
             )
@@ -118,6 +176,8 @@ fun LastSalesDynamicPreview() {
         ) {
             LastSalesContent(
                 lastSalesEntry = ChartEntryModelProducer(),
+                menuOptions = emptyArray(),
+                onMenuItemClick = {},
                 navigateUp = {}
             )
         }
@@ -137,6 +197,8 @@ fun LastSalesPreview() {
         ) {
             LastSalesContent(
                 lastSalesEntry = ChartEntryModelProducer(),
+                menuOptions = emptyArray(),
+                onMenuItemClick = {},
                 navigateUp = {}
             )
         }
