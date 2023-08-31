@@ -1,6 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.insights
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.graphics.Typeface
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
@@ -42,10 +44,14 @@ import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.column.columnChart
 import com.patrykandpatrick.vico.compose.chart.edges.rememberFadingEdges
 import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
+import com.patrykandpatrick.vico.compose.component.shapeComponent
+import com.patrykandpatrick.vico.compose.component.textComponent
+import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
 import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
+import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.scroll.InitialScroll
 
@@ -63,19 +69,28 @@ fun LastSalesScreen(
         stringResource(id = R.string.last_21_days_label),
         stringResource(id = R.string.last_31_days_label)
     )
+    val sevenDaysTitle = stringResource(id = R.string.last_7_days_label)
+    val twentyOneDaysTitle = stringResource(id = R.string.last_21_days_label)
+    val thirtyOneDaysTitle = stringResource(id = R.string.last_31_days_label)
+    var chartTitle by remember { mutableStateOf(sevenDaysTitle) }
+
     LastSalesContent(
+        screenTitle = chartTitle,
         lastSalesEntry = lastSalesEntry,
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
             when (index) {
                 0 -> {
                     viewModel.setLastSalesEntryByRange(RangeOfDays.SEVEN_DAYS)
+                    chartTitle = sevenDaysTitle
                 }
                 1 -> {
                     viewModel.setLastSalesEntryByRange(RangeOfDays.TWENTY_ONE_DAYS)
+                    chartTitle = twentyOneDaysTitle
                 }
                 2 -> {
                     viewModel.setLastSalesEntryByRange(RangeOfDays.THIRTY_ONE_DAYS)
+                    chartTitle = thirtyOneDaysTitle
                 }
                 else -> {}
             }
@@ -87,6 +102,7 @@ fun LastSalesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LastSalesContent(
+    screenTitle: String,
     lastSalesEntry: ChartEntryModelProducer,
     menuOptions: Array<String>,
     onMenuItemClick: (index: Int) -> Unit,
@@ -97,7 +113,7 @@ fun LastSalesContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.last_sales_label))},
+                title = { Text(text = stringResource(id = R.string.last_sales_label)) },
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(
@@ -156,7 +172,18 @@ fun LastSalesContent(
                     bottomAxis = if (lastSalesEntry.getModel().entries.isEmpty()) {
                         bottomAxis()
                     } else {
-                        bottomAxis(guideline = null, valueFormatter = axisValuesFormatter)
+                        bottomAxis(
+                            guideline = null,
+                            valueFormatter = axisValuesFormatter,
+                            titleComponent = textComponent(
+                                color = MaterialTheme.colorScheme.onBackground,
+                                background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp, bottom = 16.dp),
+                                typeface = Typeface.MONOSPACE
+                            ),
+                            title = screenTitle
+                        )
                     },
                     chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End)
                 )
@@ -175,6 +202,7 @@ fun LastSalesDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             LastSalesContent(
+                screenTitle = stringResource(id = R.string.last_7_days_label),
                 lastSalesEntry = ChartEntryModelProducer(),
                 menuOptions = emptyArray(),
                 onMenuItemClick = {},
@@ -196,6 +224,7 @@ fun LastSalesPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             LastSalesContent(
+                screenTitle = stringResource(id = R.string.last_21_days_label),
                 lastSalesEntry = ChartEntryModelProducer(),
                 menuOptions = emptyArray(),
                 onMenuItemClick = {},
