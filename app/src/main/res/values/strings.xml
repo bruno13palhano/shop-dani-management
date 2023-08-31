@@ -104,4 +104,7 @@
     <string name="sales_options_label">Sales Options</string>
     <string name="charts_label">Charts</string>
     <string name="last_sales_label">Last Sales</string>
+    <string name="last_7_days_label">Last 7 days</string>
+    <string name="last_21_days_label">Last 21 days</string>
+    <string name="last_31_days_label">Last 31 days</string>
 </resources>
