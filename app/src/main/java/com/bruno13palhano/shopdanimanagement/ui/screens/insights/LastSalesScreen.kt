@@ -31,11 +31,13 @@ import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.column.columnChart
 import com.patrykandpatrick.vico.compose.chart.edges.rememberFadingEdges
+import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
 import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
+import com.patrykandpatrick.vico.core.scroll.InitialScroll
 
 @Composable
 fun LastSalesScreen(
@@ -97,7 +99,8 @@ fun LastSalesContent(
                         bottomAxis()
                     } else {
                         bottomAxis(guideline = null, valueFormatter = axisValuesFormatter)
-                    }
+                    },
+                    chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End)
                 )
             }
         }
