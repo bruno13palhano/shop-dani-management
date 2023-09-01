@@ -160,7 +160,9 @@ fun LastSalesContent(
                 )
             ) {
                 Chart(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                        .fillMaxSize(),
                     chart = lineChart(),
                     runInitialAnimation = true,
                     chartModelProducer = lastSalesEntry,
@@ -171,7 +173,7 @@ fun LastSalesContent(
                             color = MaterialTheme.colorScheme.onBackground,
                             background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
                             padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                            margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
+                            margins = dimensionsOf(end = 8.dp),
                             typeface = Typeface.MONOSPACE
                         ),
                         title = stringResource(id = R.string.amount_of_sales_label)
@@ -186,7 +188,7 @@ fun LastSalesContent(
                                 color = MaterialTheme.colorScheme.onBackground,
                                 background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
                                 padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                                margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp, bottom = 16.dp),
+                                margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
                                 typeface = Typeface.MONOSPACE
                             ),
                             title = screenTitle
