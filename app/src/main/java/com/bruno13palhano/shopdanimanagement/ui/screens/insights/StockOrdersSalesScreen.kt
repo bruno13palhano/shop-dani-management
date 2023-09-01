@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
@@ -48,15 +49,20 @@ import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
 import com.patrykandpatrick.vico.compose.component.shapeComponent
 import com.patrykandpatrick.vico.compose.component.textComponent
 import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
+import com.patrykandpatrick.vico.compose.legend.verticalLegend
+import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
 import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.compose.style.currentChartStyle
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.chart.composed.plus
 import com.patrykandpatrick.vico.core.chart.line.LineChart
+import com.patrykandpatrick.vico.core.component.shape.ShapeComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.entry.composed.ComposedChartEntryModelProducer
+import com.patrykandpatrick.vico.core.legend.VerticalLegend
 import com.patrykandpatrick.vico.core.scroll.InitialScroll
 
 @Composable
@@ -161,13 +167,16 @@ fun StockOrdersSalesContent(
             ProvideChartStyle(
                 chartStyle = m3ChartStyle(
                     entityColors = listOf(
-                        MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.secondary
                     )
                 )
             ) {
                 val columnChart = columnChart()
-                val lineChart = lineChart(lines = listOf(LineChart.LineSpec(lineColor = Color.BLUE)))
+                val lineChart = lineChart(lines = listOf(
+                    LineChart.LineSpec(
+                        lineColor = Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
+                    )
+                ))
                 val composedChart = remember(columnChart, lineChart) { columnChart + lineChart }
 
                 Chart(
@@ -176,6 +185,7 @@ fun StockOrdersSalesContent(
                     runInitialAnimation = true,
                     chartModelProducer = chartEntry,
                     marker = rememberMarker(),
+                    legend = rememberLegend(),
                     fadingEdges = rememberFadingEdges(),
                     startAxis = startAxis(),
                     bottomAxis = if (chartEntry.getModel().entries.isEmpty()) {
@@ -188,7 +198,7 @@ fun StockOrdersSalesContent(
                                 color = MaterialTheme.colorScheme.onBackground,
                                 background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
                                 padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                                margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp, bottom = 16.dp),
+                                margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
                                 typeface = Typeface.MONOSPACE
                             ),
                             title = chartTitle
@@ -199,6 +209,37 @@ fun StockOrdersSalesContent(
             }
         }
     }
+}
+
+@Composable
+fun rememberLegend(): VerticalLegend {
+    val legends = listOf(
+        Pair(
+            stringResource(id = R.string.stock_label),
+            Color.toArgb(MaterialTheme.colorScheme.primary.value.toLong())
+        ),
+        Pair(
+            stringResource(id = R.string.orders_label),
+            Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
+        )
+    )
+    return verticalLegend(
+        items = legends.map { legend ->
+            verticalLegendItem(
+                icon = ShapeComponent(Shapes.pillShape, legend.second),
+                label = textComponent(
+                    color = currentChartStyle.axis.axisLabelColor,
+                    textSize = 12.sp,
+                    typeface = Typeface.MONOSPACE
+                ),
+                labelText = legend.first
+            )
+        },
+        iconSize = 8.dp,
+        iconPadding = 10.dp,
+        spacing = 4.dp,
+        padding = dimensionsOf(bottom = 16.dp)
+    )
 }
 
 @Preview(showBackground = true, showSystemUi = true)
