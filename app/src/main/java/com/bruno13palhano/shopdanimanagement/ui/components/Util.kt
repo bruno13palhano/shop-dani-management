@@ -97,7 +97,7 @@ fun Modifier.clickableNoEffect(onClick: () -> Unit): Modifier = composed {
 
 @Composable
 internal fun rememberMarker(): Marker {
-    val labelBackgroundColor = MaterialTheme.colorScheme.surface
+    val labelBackgroundColor = MaterialTheme.colorScheme.onSurface
     val labelBackground = remember(labelBackgroundColor) {
         ShapeComponent(labelBackgroundShape, labelBackgroundColor.toArgb()).setShadow(
             radius = LABEL_BACKGROUND_SHADOW_RADIUS,
@@ -106,6 +106,7 @@ internal fun rememberMarker(): Marker {
         )
     }
     val label = textComponent(
+        color = MaterialTheme.colorScheme.surface,
         background = labelBackground,
         lineCount = LABEL_LINE_COUNT,
         padding = labelPadding,
