@@ -187,7 +187,16 @@ fun StockOrdersSalesContent(
                     marker = rememberMarker(),
                     legend = rememberLegend(),
                     fadingEdges = rememberFadingEdges(),
-                    startAxis = startAxis(),
+                    startAxis = startAxis(
+                        titleComponent = textComponent(
+                            color = MaterialTheme.colorScheme.onBackground,
+                            background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                            padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                            margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
+                            typeface = Typeface.MONOSPACE
+                        ),
+                        title = stringResource(id = R.string.amount_of_sales_label)
+                    ),
                     bottomAxis = if (chartEntry.getModel().entries.isEmpty()) {
                         bottomAxis()
                     } else {
@@ -238,7 +247,7 @@ fun rememberLegend(): VerticalLegend {
         iconSize = 8.dp,
         iconPadding = 10.dp,
         spacing = 4.dp,
-        padding = dimensionsOf(bottom = 16.dp)
+        padding = dimensionsOf(bottom = 8.dp)
     )
 }
 
