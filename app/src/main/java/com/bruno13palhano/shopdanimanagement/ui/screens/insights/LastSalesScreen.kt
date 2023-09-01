@@ -42,6 +42,7 @@ import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.column.columnChart
 import com.patrykandpatrick.vico.compose.chart.edges.rememberFadingEdges
+import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
 import com.patrykandpatrick.vico.compose.component.shapeComponent
 import com.patrykandpatrick.vico.compose.component.textComponent
@@ -161,12 +162,21 @@ fun LastSalesContent(
             ) {
                 Chart(
                     modifier = Modifier.fillMaxSize(),
-                    chart = columnChart(),
+                    chart = lineChart(),
                     runInitialAnimation = true,
                     chartModelProducer = lastSalesEntry,
                     marker = rememberMarker(),
                     fadingEdges = rememberFadingEdges(),
-                    startAxis = startAxis(),
+                    startAxis = startAxis(
+                        titleComponent = textComponent(
+                            color = MaterialTheme.colorScheme.onBackground,
+                            background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                            padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                            margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
+                            typeface = Typeface.MONOSPACE
+                        ),
+                        title = stringResource(id = R.string.amount_of_sales_label)
+                    ),
                     bottomAxis = if (lastSalesEntry.getModel().entries.isEmpty()) {
                         bottomAxis()
                     } else {
