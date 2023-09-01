@@ -8,6 +8,7 @@ import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.ChartsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.InsightsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.LastSalesScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.insights.StockOrdersSalesScreen
 
 fun NavGraphBuilder.insightsNavGraph(
     navController: NavController,
@@ -46,6 +47,11 @@ fun NavGraphBuilder.insightsNavGraph(
                 navigateUp = { navController.navigateUp() }
             )
         }
+        composable(route = InsightsDestinations.INSIGHTS_STOCK_ORDERS_ROUTE) {
+            StockOrdersSalesScreen(
+                navigateUp = { navController.navigateUp() }
+            )
+        }
     }
 }
 
@@ -53,4 +59,5 @@ object InsightsDestinations {
     const val INSIGHTS_MAIN_ROUTE = "insights_main_route"
     const val INSIGHTS_CHARTS_ROUTE = "insights_charts_route"
     const val INSIGHTS_LAST_SALES_ROUTE = "insights_last_sales_route"
+    const val INSIGHTS_STOCK_ORDERS_ROUTE = "insights_stock_orders_route"
 }
