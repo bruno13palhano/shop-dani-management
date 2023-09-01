@@ -35,18 +35,7 @@ class LastSalesViewModel @Inject constructor(
 
     fun setLastSalesEntryByRange(rangeOfDays: Int) {
         val chart = mutableListOf<Pair<String, Float>>()
-
-        when (rangeOfDays) {
-            RangeOfDays.SEVEN_DAYS -> {
-                days = arrayOf(0,0,0,0,0,0,0)
-            }
-            RangeOfDays.TWENTY_ONE_DAYS -> {
-                days = arrayOf(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
-            }
-            RangeOfDays.THIRTY_ONE_DAYS -> {
-                days = arrayOf(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
-            }
-        }
+        days = Array(rangeOfDays) { 0 }
 
         viewModelScope.launch {
             saleRepository.getLastSales(0, 100).collect {
@@ -76,10 +65,4 @@ class LastSalesViewModel @Inject constructor(
             chart.add(Pair(currentDay.minusDays(i.toLong()).dayOfWeek.name, days[i].toFloat()))
         }
     }
-}
-
-object RangeOfDays {
-    const val SEVEN_DAYS = 7
-    const val TWENTY_ONE_DAYS = 21
-    const val THIRTY_ONE_DAYS = 31
 }
