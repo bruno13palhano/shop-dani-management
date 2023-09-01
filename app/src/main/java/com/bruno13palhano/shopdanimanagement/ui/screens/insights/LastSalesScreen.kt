@@ -36,7 +36,6 @@ import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.LastSalesViewModel
-import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.RangeOfDays
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
@@ -61,7 +60,7 @@ fun LastSalesScreen(
     viewModel: LastSalesViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
-        viewModel.setLastSalesEntryByRange(RangeOfDays.SEVEN_DAYS)
+        viewModel.setLastSalesEntryByRange(7)
     }
     val lastSalesEntry by viewModel.lastSalesEntry.collectAsStateWithLifecycle()
     val menuOptions = arrayOf(
@@ -81,15 +80,15 @@ fun LastSalesScreen(
         onMenuItemClick = { index ->
             when (index) {
                 0 -> {
-                    viewModel.setLastSalesEntryByRange(RangeOfDays.SEVEN_DAYS)
+                    viewModel.setLastSalesEntryByRange(7)
                     chartTitle = sevenDaysTitle
                 }
                 1 -> {
-                    viewModel.setLastSalesEntryByRange(RangeOfDays.TWENTY_ONE_DAYS)
+                    viewModel.setLastSalesEntryByRange(21)
                     chartTitle = twentyOneDaysTitle
                 }
                 2 -> {
-                    viewModel.setLastSalesEntryByRange(RangeOfDays.THIRTY_ONE_DAYS)
+                    viewModel.setLastSalesEntryByRange(31)
                     chartTitle = thirtyOneDaysTitle
                 }
                 else -> {}
@@ -160,13 +159,12 @@ fun LastSalesContent(
                     entityColors = listOf(MaterialTheme.colorScheme.primary)
                 )
             ) {
-                val marker = rememberMarker()
                 Chart(
                     modifier = Modifier.fillMaxSize(),
                     chart = columnChart(),
                     runInitialAnimation = true,
                     chartModelProducer = lastSalesEntry,
-                    marker = marker,
+                    marker = rememberMarker(),
                     fadingEdges = rememberFadingEdges(),
                     startAxis = startAxis(),
                     bottomAxis = if (lastSalesEntry.getModel().entries.isEmpty()) {
