@@ -16,6 +16,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,7 +63,12 @@ class LastSalesViewModel @Inject constructor(
 
     private fun setChartEntries(chart: MutableList<Pair<String, Float>>, days: Array<Int>) {
         for (i in days.size-1 downTo 0) {
-            chart.add(Pair(currentDay.minusDays(i.toLong()).dayOfWeek.name, days[i].toFloat()))
+            chart.add(
+                Pair(
+                    DateTimeFormatter.ofPattern("dd/MM").format(currentDay.minusDays(i.toLong())),
+                    days[i].toFloat()
+                )
+            )
         }
     }
 }
