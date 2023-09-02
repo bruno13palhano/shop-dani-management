@@ -1,6 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.graphics.Typeface
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,12 +42,16 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.column.columnChart
 import com.patrykandpatrick.vico.compose.chart.edges.rememberFadingEdges
+import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.component.shapeComponent
+import com.patrykandpatrick.vico.compose.component.textComponent
+import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
 import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
+import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @Composable
@@ -106,13 +111,9 @@ fun HomeContent(
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                text = stringResource(id = R.string.last_sales_label)
-            )
             ProvideChartStyle(
                 chartStyle = m3ChartStyle(
-                    entityColors = listOf(MaterialTheme.colorScheme.primary)
+                    entityColors = listOf(MaterialTheme.colorScheme.tertiary)
                 )
             ) {
                 val marker = rememberMarker()
@@ -120,17 +121,37 @@ fun HomeContent(
                     modifier = Modifier
                         .padding(bottom = 8.dp)
                         .fillMaxWidth()
-                        .height(200.dp),
-                    chart = columnChart(),
+                        .height(264.dp),
+                    chart = lineChart(),
                     runInitialAnimation = true,
                     chartModelProducer = lastSalesEntry,
                     marker = marker,
                     fadingEdges = rememberFadingEdges(),
-                    startAxis = startAxis(),
+                    startAxis = startAxis(
+                        titleComponent = textComponent(
+                            color = MaterialTheme.colorScheme.onBackground,
+                            background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                            padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                            margins = dimensionsOf(end = 8.dp),
+                            typeface = Typeface.MONOSPACE
+                        ),
+                        title = stringResource(id = R.string.amount_of_sales_label)
+                    ),
                     bottomAxis = if (lastSalesEntry.getModel().entries.isEmpty()) {
                         bottomAxis()
                     } else {
-                        bottomAxis(guideline = null, valueFormatter = axisValuesFormatter)
+                        bottomAxis(
+                            guideline = null,
+                            valueFormatter = axisValuesFormatter,
+                            titleComponent = textComponent(
+                                color = MaterialTheme.colorScheme.onBackground,
+                                background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
+                                typeface = Typeface.MONOSPACE
+                            ),
+                            title = stringResource(id = R.string.last_sales_label)
+                        )
                     }
                 )
             }
