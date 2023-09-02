@@ -20,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +37,7 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
-import com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel.StockItemsViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel.ShoppingItemsViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
@@ -67,15 +68,44 @@ import com.patrykandpatrick.vico.core.scroll.InitialScroll
 @Composable
 fun ShoppingItemsScreen(
     navigateUp: () -> Unit,
-    viewModel: StockItemsViewModel = hiltViewModel()
+    viewModel: ShoppingItemsViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.setChartRangeOfDays(7)
+    }
     val stockItems by viewModel.shoppingItems.collectAsStateWithLifecycle()
+    val menuOptions = arrayOf(
+        stringResource(id = R.string.last_7_days_label),
+        stringResource(id = R.string.last_21_days_label),
+        stringResource(id = R.string.last_31_days_label)
+    )
+    val sevenDaysTitle = stringResource(id = R.string.last_7_days_label)
+    val twentyOneDaysTitle = stringResource(id = R.string.last_21_days_label)
+    val thirtyOneDaysTitle = stringResource(id = R.string.last_31_days_label)
+    var chartTitle by remember { mutableStateOf(sevenDaysTitle) }
 
     ShoppingItemsContent(
-        chartTitle = "Test",
+        chartTitle = chartTitle,
         chartEntry = stockItems,
-        menuOptions = emptyArray(),
-        onMenuItemClick = {},
+        menuOptions = menuOptions,
+        onMenuItemClick = { index ->
+            chartTitle = when (index) {
+                1 -> {
+                    viewModel.setChartRangeOfDays(21)
+                    twentyOneDaysTitle
+                }
+
+                2 -> {
+                    viewModel.setChartRangeOfDays(31)
+                    thirtyOneDaysTitle
+                }
+
+                else -> {
+                    viewModel.setChartRangeOfDays(7)
+                    sevenDaysTitle
+                }
+            }
+        },
         navigateUp = navigateUp
     )
 }
@@ -94,7 +124,7 @@ fun ShoppingItemsContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.stock_items_label)) },
+                title = { Text(text = stringResource(id = R.string.shopping_items_label)) },
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(
@@ -169,7 +199,7 @@ fun ShoppingItemsContent(
                             margins = dimensionsOf(end = 8.dp),
                             typeface = Typeface.MONOSPACE
                         ),
-                        title = stringResource(id = R.string.amount_of_sales_label)
+                        title = stringResource(id = R.string.amount_of_items_label)
                     ),
                     bottomAxis = if (chartEntry.getModel().entries.isEmpty()) {
                         bottomAxis()
