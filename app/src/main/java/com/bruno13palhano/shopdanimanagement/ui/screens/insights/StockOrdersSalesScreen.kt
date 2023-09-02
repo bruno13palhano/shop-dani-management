@@ -223,7 +223,7 @@ fun StockOrdersSalesContent(
 }
 
 @Composable
-fun rememberLegend(): VerticalLegend {
+private fun rememberLegend(): VerticalLegend {
     val legends = listOf(
         Pair(
             stringResource(id = R.string.stock_label),
