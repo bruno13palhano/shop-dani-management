@@ -108,7 +108,7 @@
     <string name="last_21_days_label">Last 21 days</string>
     <string name="last_31_days_label">Last 31 days</string>
     <string name="stock_vs_orders_label">Stock vs Orders</string>
-    <string name="shopping_vs_stock_label">Shopping vs Stock</string>
+    <string name="shopping_vs_sales_label">Shopping vs Sales</string>
     <string name="amount_of_sales_label">Amount of sales</string>
     <string name="amount_of_items_label">Amount of items</string>
     <string name="stock_items_label">Stock Items</string>
