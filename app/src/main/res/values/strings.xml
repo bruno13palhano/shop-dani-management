@@ -109,6 +109,7 @@
     <string name="last_31_days_label">Last 31 days</string>
     <string name="stock_vs_orders_label">Stock vs Orders</string>
     <string name="amount_of_sales_label">Amount of sales</string>
+    <string name="amount_of_items_label">Amount of items</string>
     <string name="stock_items_label">Stock Items</string>
     <string name="shopping_items_label">Shopping Items</string>
     <string name="paid_label">Paid</string>
