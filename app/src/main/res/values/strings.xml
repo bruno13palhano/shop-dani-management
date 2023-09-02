@@ -110,6 +110,7 @@
     <string name="stock_vs_orders_label">Stock vs Orders</string>
     <string name="amount_of_sales_label">Amount of sales</string>
     <string name="stock_items_label">Stock Items</string>
+    <string name="shopping_items_label">Shopping Items</string>
     <string name="paid_label">Paid</string>
     <string name="owing_paid_label">Owing</string>
 </resources>
