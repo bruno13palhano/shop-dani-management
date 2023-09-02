@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Shop
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -67,7 +67,7 @@ fun FinancialContent(
         }
     ) {
         val items = listOf(
-            FinancialInnerScreen.StockItems
+            FinancialInnerScreen.ShoppingItems
         )
         Column(modifier = Modifier
             .padding(it)
@@ -87,7 +87,7 @@ fun FinancialContent(
 }
 
 sealed class FinancialInnerScreen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    object StockItems: FinancialInnerScreen(FinancialDestinations.FINANCIAL_STOCK_ITEMS, Icons.Filled.Inventory, R.string.stock_items_label)
+    object ShoppingItems: FinancialInnerScreen(FinancialDestinations.FINANCIAL_SHOPPING_ITEMS, Icons.Filled.Shop, R.string.shopping_items_label)
 }
 
 @Preview(showBackground = true, showSystemUi = true)

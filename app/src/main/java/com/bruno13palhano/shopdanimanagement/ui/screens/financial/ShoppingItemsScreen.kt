@@ -65,13 +65,13 @@ import com.patrykandpatrick.vico.core.legend.VerticalLegend
 import com.patrykandpatrick.vico.core.scroll.InitialScroll
 
 @Composable
-fun StockItemsScreen(
+fun ShoppingItemsScreen(
     navigateUp: () -> Unit,
     viewModel: StockItemsViewModel = hiltViewModel()
 ) {
-    val stockItems by viewModel.stockItems.collectAsStateWithLifecycle()
+    val stockItems by viewModel.shoppingItems.collectAsStateWithLifecycle()
 
-    StockItemContent(
+    ShoppingItemsContent(
         chartTitle = "Test",
         chartEntry = stockItems,
         menuOptions = emptyArray(),
@@ -82,7 +82,7 @@ fun StockItemsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StockItemContent(
+fun ShoppingItemsContent(
     chartTitle: String,
     chartEntry: ComposedChartEntryModelProducer<ChartEntryModel>,
     menuOptions: Array<String>,
@@ -227,13 +227,13 @@ private fun rememberLegend(): VerticalLegend {
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
-fun StockItemDynamicPreview() {
+fun ShoppingItemsDynamicPreview() {
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            StockItemContent(
+            ShoppingItemsContent(
                 chartTitle = stringResource(id = R.string.last_7_days_label),
                 chartEntry = ComposedChartEntryModelProducer(),
                 menuOptions = emptyArray(),
@@ -247,7 +247,7 @@ fun StockItemDynamicPreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
-fun StockItemPreview() {
+fun SshoppingItemsPreview() {
     ShopDaniManagementTheme(
         dynamicColor = false
     ) {
@@ -255,7 +255,7 @@ fun StockItemPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            StockItemContent(
+            ShoppingItemsContent(
                 chartTitle = stringResource(id = R.string.last_21_days_label),
                 chartEntry = ComposedChartEntryModelProducer(),
                 menuOptions = emptyArray(),
