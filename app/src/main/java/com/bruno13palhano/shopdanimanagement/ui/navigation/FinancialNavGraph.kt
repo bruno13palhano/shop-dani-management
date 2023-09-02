@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockItemsScreen
 
 fun NavGraphBuilder.financialNavGraph(
     navController: NavController,
@@ -19,6 +20,9 @@ fun NavGraphBuilder.financialNavGraph(
         composable(route = FinancialDestinations.FINANCIAL_MAIN_ROUTE) {
             showBottomMenu(false)
             FinancialScreen(
+                onItemClick = { route ->
+                    navController.navigate(route)
+                },
                 onIconMenuClick = onIconMenuClick,
                 goHome = {
                     navController.navigate(route = HomeDestinations.HOME_MAIN_ROUTE) {
@@ -31,9 +35,16 @@ fun NavGraphBuilder.financialNavGraph(
                 }
             )
         }
+        composable(route = FinancialDestinations.FINANCIAL_STOCK_ITEMS) {
+            showBottomMenu(false)
+            StockItemsScreen(
+                navigateUp = { navController.navigateUp() }
+            )
+        }
     }
 }
 
 object FinancialDestinations {
     const val FINANCIAL_MAIN_ROUTE = "financial_main_route"
+    const val FINANCIAL_STOCK_ITEMS = "financial_stock_items_route"
 }
