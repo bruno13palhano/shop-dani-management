@@ -111,6 +111,7 @@
     <string name="shopping_vs_sales_label">Shopping vs Sales</string>
     <string name="amount_of_sales_label">Amount of sales</string>
     <string name="amount_of_items_label">Amount of items</string>
+    <string name="amount_of_items_sales_label">Amount of items/sales</string>
     <string name="stock_items_label">Stock Items</string>
     <string name="shopping_items_label">Shopping Items</string>
     <string name="paid_label">Paid</string>
