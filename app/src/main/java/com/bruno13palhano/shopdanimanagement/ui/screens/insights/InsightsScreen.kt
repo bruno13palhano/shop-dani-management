@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PointOfSale
@@ -71,7 +72,8 @@ fun InsightsContent(
         val items = listOf(
             InsightsInnerScreen.Charts,
             InsightsInnerScreen.LastSales,
-            InsightsInnerScreen.StockOrdersSales
+            InsightsInnerScreen.StockOrdersSales,
+            InsightsInnerScreen.ShoppingSales
         )
         Column(
             modifier = Modifier
@@ -95,6 +97,7 @@ sealed class InsightsInnerScreen(val route: String, val icon: ImageVector, @Stri
     object Charts: InsightsInnerScreen(InsightsDestinations.INSIGHTS_CHARTS_ROUTE, Icons.Filled.BarChart, R.string.charts_label)
     object LastSales: InsightsInnerScreen(InsightsDestinations.INSIGHTS_LAST_SALES_ROUTE, Icons.Filled.PointOfSale, R.string.last_sales_label)
     object StockOrdersSales: InsightsInnerScreen(InsightsDestinations.INSIGHTS_STOCK_ORDERS_ROUTE, Icons.Filled.List, R.string.stock_vs_orders_label)
+    object ShoppingSales: InsightsInnerScreen(InsightsDestinations.INSIGHTS_SHOPPING_SALES_ROUTE, Icons.Filled.Checklist, R.string.shopping_vs_sales_label)
 }
 
 @Preview(showBackground = true, showSystemUi = true)
