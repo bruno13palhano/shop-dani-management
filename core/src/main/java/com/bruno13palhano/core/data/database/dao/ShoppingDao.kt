@@ -33,4 +33,7 @@ internal interface ShoppingDao : ShoppingData<ShoppingEntity> {
 
     @Query("SELECT * FROM shopping_table WHERE id = (SELECT max(id) FROM shopping_table)")
     override fun getLast(): Flow<ShoppingEntity>
+
+    @Query("SELECT * FROM shopping_table ORDER BY id DESC LIMIT :offset, :limit")
+    override fun getItemsLimited(offset: Int, limit: Int): Flow<List<ShoppingEntity>>
 }

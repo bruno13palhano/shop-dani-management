@@ -1,3 +1,7 @@
 package com.bruno13palhano.core.data
 
-interface ShoppingData<T> : DataOperations<T>
+import kotlinx.coroutines.flow.Flow
+
+interface ShoppingData<T> : DataOperations<T> {
+    fun getItemsLimited(offset: Int, limit: Int): Flow<List<T>>
+}

@@ -47,4 +47,11 @@ internal class ShoppingCacheRepository @Inject constructor(
             .map { it.asExternalModel() }
             .catch { it.printStackTrace() }
     }
+
+    override fun getItemsLimited(offset: Int, limit: Int): Flow<List<Shopping>> {
+        return shoppingDao.getItemsLimited(offset, limit)
+            .map {
+                it.map { entity -> entity.asExternalModel() }
+            }
+    }
 }
