@@ -91,6 +91,7 @@
     <string name="stock_list_label">Stock List</string>
     <string name="orders_list_label">Orders List</string>
     <string name="customers_label">Customers</string>
+    <string name="customer_label">Customer</string>
     <string name="new_customer_label">New Customer</string>
     <string name="edit_customer_label">Edit Customer</string>
     <string name="customer_photo_label">Customer photo</string>
