@@ -275,7 +275,7 @@ fun CustomerDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             CustomerContent(
-                screenTitle = "New Customer",
+                screenTitle = stringResource(id = R.string.new_customer_label),
                 snackbarHostState = remember { SnackbarHostState() },
                 name = "",
                 photo = "",
