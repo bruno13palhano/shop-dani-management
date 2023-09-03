@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CustomerScreen(
+fun EditCustomerScreen(
     isEditable: Boolean,
     customerId: Long,
     navigateUp: () -> Unit,
@@ -56,7 +56,7 @@ fun CustomerScreen(
     val errorMessage = stringResource(id = R.string.empty_fields_error)
 
     CustomerContent(
-        screenTitle = "Edit Customer",
+        screenTitle = stringResource(id = R.string.edit_customer_label),
         snackbarHostState = snackbarHostState,
         name = viewModel.name,
         photo = viewModel.photo,
