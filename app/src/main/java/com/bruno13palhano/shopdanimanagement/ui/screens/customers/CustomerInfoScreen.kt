@@ -48,6 +48,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 @Composable
 fun CustomerInfoScreen(
     customerId: Long,
+    onEditIconClick: () -> Unit,
     navigateUp: () -> Unit,
     viewModel: CustomerInfoViewModel = hiltViewModel()
 ) {
