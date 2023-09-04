@@ -106,6 +106,7 @@
     <string name="date_of_sale_tag">Date of sale, %s.</string>
     <string name="sales_options_label">Sales Options</string>
     <string name="charts_label">Charts</string>
+    <string name="financial_info_label">Financial Info</string>
     <string name="last_sales_label">Last Sales</string>
     <string name="last_7_days_label">Last 7 days</string>
     <string name="last_21_days_label">Last 21 days</string>
