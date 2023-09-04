@@ -189,7 +189,7 @@ fun CustomerInfoContent(
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
-fun CustomerDynamicPrev() {
+fun CustomerInfoDynamicPreview() {
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -209,7 +209,7 @@ fun CustomerDynamicPrev() {
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
-fun CustomerPrev() {
+fun CustomerInfoPreview() {
     ShopDaniManagementTheme(
         dynamicColor = false
     ) {
