@@ -1,9 +1,11 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerInfoScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerScreen
@@ -34,6 +36,7 @@ fun NavGraphBuilder.customersNavGraph(
         composable(route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE) {
             showBottomMenu(true)
             CustomerScreen(
+                screenTitle = stringResource(id = R.string.new_customer_label),
                 isEditable = false,
                 customerId = 0L,
                 navigateUp = { navController.navigateUp() }
@@ -52,6 +55,7 @@ fun NavGraphBuilder.customersNavGraph(
             showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { customerId ->
                 CustomerScreen(
+                    screenTitle = stringResource(id = R.string.edit_customer_label),
                     isEditable = true,
                     customerId = customerId.toLong(),
                     navigateUp = { navController.navigateUp() }
