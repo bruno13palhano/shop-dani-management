@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EditCustomerViewModel @Inject constructor(
+class CustomerViewModel @Inject constructor(
     @DefaultCustomerRepository private val customerRepository: CustomerData<Customer>
 ) : ViewModel() {
     var name by mutableStateOf("")
