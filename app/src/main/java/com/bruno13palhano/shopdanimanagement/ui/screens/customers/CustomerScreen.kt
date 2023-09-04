@@ -18,16 +18,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.EditCustomerViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.CustomerViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun EditCustomerScreen(
+fun CustomerScreen(
     isEditable: Boolean,
     customerId: Long,
     navigateUp: () -> Unit,
-    viewModel: EditCustomerViewModel = hiltViewModel()
+    viewModel: CustomerViewModel = hiltViewModel()
 ) {
     if (isEditable) {
         LaunchedEffect(key1 = Unit) {
