@@ -25,7 +25,7 @@ fun NavGraphBuilder.customersNavGraph(
             showBottomMenu(true)
             CustomersScreen(
                 onItemClick = { customerId ->
-                    navController.navigate(route = "${CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_ROUTE}$customerId")
+                    navController.navigate(route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_INFO_ROUTE}$customerId")
                 },
                 onAddButtonClick = {
                     navController.navigate(route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE)
