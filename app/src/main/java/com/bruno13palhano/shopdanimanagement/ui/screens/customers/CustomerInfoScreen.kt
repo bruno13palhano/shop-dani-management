@@ -1,7 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.customers
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.graphics.Color
 import android.graphics.Typeface
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -43,7 +42,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
@@ -62,17 +60,12 @@ import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
 import com.patrykandpatrick.vico.compose.component.shapeComponent
 import com.patrykandpatrick.vico.compose.component.textComponent
 import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
-import com.patrykandpatrick.vico.compose.legend.verticalLegend
-import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
 import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
-import com.patrykandpatrick.vico.compose.style.currentChartStyle
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
-import com.patrykandpatrick.vico.core.component.shape.ShapeComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.legend.VerticalLegend
 import com.patrykandpatrick.vico.core.scroll.InitialScroll
 
 @Composable
@@ -92,6 +85,9 @@ fun CustomerInfoScreen(
         name = "",
         address = "",
         photo = "",
+        owingValue = "120.99",
+        purchasesValue = "1590.99",
+        lastPurchaseValue = "77.99",
         entry = entry,
         onEditIconClick = onEditIconClick,
         navigateUp = navigateUp
@@ -104,6 +100,9 @@ fun CustomerInfoContent(
     name: String,
     address: String,
     photo: String,
+    owingValue: String,
+    purchasesValue: String,
+    lastPurchaseValue: String,
     entry: ChartEntryModelProducer,
     onEditIconClick: () -> Unit,
     navigateUp: () -> Unit
@@ -181,6 +180,7 @@ fun CustomerInfoContent(
                             defaultKeyboardAction(ImeAction.Done)
                         }),
                         singleLine = true,
+                        enabled = false,
                         label = {
                             Text(
                                 text = stringResource(id = R.string.name_label),
@@ -212,6 +212,7 @@ fun CustomerInfoContent(
                             defaultKeyboardAction(ImeAction.Done)
                         }),
                         singleLine = true,
+                        enabled = false,
                         label = {
                             Text(
                                 text = stringResource(id = R.string.address_label),
@@ -232,19 +233,19 @@ fun CustomerInfoContent(
                     modifier = Modifier
                         .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
                         .fillMaxWidth(),
-                    text = stringResource(id = R.string.owing_tag, "120.99")
+                    text = stringResource(id = R.string.owing_tag, owingValue)
                 )
                 Text(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                         .fillMaxWidth(),
-                    text = stringResource(id = R.string.amount_of_all_purchases_tag, "1449.90")
+                    text = stringResource(id = R.string.amount_of_all_purchases_tag, purchasesValue)
                 )
                 Text(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         .fillMaxWidth(),
-                    text = stringResource(id = R.string.last_purchase_tag, "77.99")
+                    text = stringResource(id = R.string.last_purchase_tag, lastPurchaseValue)
                 )
             }
             val axisValuesFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
@@ -275,7 +276,7 @@ fun CustomerInfoContent(
                             margins = dimensionsOf(end = 8.dp),
                             typeface = Typeface.MONOSPACE
                         ),
-                        title = "Amount of purchases"
+                        title = stringResource(id = R.string.amount_of_purchases_label)
                     ),
                     bottomAxis = if (entry.getModel().entries.isEmpty()) {
                         bottomAxis()
@@ -290,7 +291,7 @@ fun CustomerInfoContent(
                                 margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
                                 typeface = Typeface.MONOSPACE
                             ),
-                            title = "Last purchases"
+                            title = stringResource(id = R.string.last_31_days_label)
                         )
                     },
                     chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End)
@@ -313,6 +314,9 @@ fun CustomerInfoDynamicPreview() {
                 name = "",
                 address = "",
                 photo = "",
+                owingValue = "120.99",
+                purchasesValue = "1590.99",
+                lastPurchaseValue = "77.99",
                 entry = ChartEntryModelProducer(),
                 onEditIconClick = {},
                 navigateUp = {}
@@ -336,6 +340,9 @@ fun CustomerInfoPreview() {
                 name = "",
                 address = "",
                 photo = "",
+                owingValue = "120.99",
+                purchasesValue = "1590.99",
+                lastPurchaseValue = "77.99",
                 entry = ChartEntryModelProducer(),
                 onEditIconClick = {},
                 navigateUp = {}
