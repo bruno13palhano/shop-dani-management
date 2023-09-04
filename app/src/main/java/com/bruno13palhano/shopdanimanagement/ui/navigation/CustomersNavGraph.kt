@@ -47,6 +47,11 @@ fun NavGraphBuilder.customersNavGraph(
             backStackEntry.arguments?.getString(ITEM_ID)?.let { customerId ->
                 CustomerInfoScreen(
                     customerId = customerId.toLong(),
+                    onEditIconClick = {
+                        navController.navigate(
+                            route = "${CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_ROUTE}$customerId"
+                        )
+                    },
                     navigateUp = { navController.navigateUp() }
                 )
             }
