@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Shop
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,7 +68,8 @@ fun FinancialContent(
         }
     ) {
         val items = listOf(
-            FinancialInnerScreen.ShoppingItems
+            FinancialInnerScreen.ShoppingItems,
+            FinancialInnerScreen.Info
         )
         Column(modifier = Modifier
             .padding(it)
@@ -88,6 +90,7 @@ fun FinancialContent(
 
 sealed class FinancialInnerScreen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     object ShoppingItems: FinancialInnerScreen(FinancialDestinations.FINANCIAL_SHOPPING_ITEMS, Icons.Filled.Shop, R.string.shopping_items_label)
+    object Info: FinancialInnerScreen(FinancialDestinations.FINANCIAL_INFO_ROUTE, Icons.Filled.Info, R.string.financial_info_label)
 }
 
 @Preview(showBackground = true, showSystemUi = true)
