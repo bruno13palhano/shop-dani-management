@@ -119,4 +119,7 @@
     <string name="shopping_items_label">Shopping Items</string>
     <string name="paid_label">Paid</string>
     <string name="owing_paid_label">Owing</string>
+    <string name="owing_tag">Owing, %sR$.</string>
+    <string name="amount_of_all_purchases_tag">Amount of all purchases, %sR$.</string>
+    <string name="last_purchase_tag">Last purchase, %sR$.</string>
 </resources>
