@@ -40,9 +40,7 @@ class CustomerInfoViewModel @Inject constructor(
         var lastPurchaseValue = 0F
         purchases.filter { !it.isPaidByCustomer }.map { owingValue += it.salePrice }
         purchases.map { purchasesValue += it.salePrice }
-        purchases.map { sale ->
-            if (sale.salePrice != 0F) lastPurchaseValue = sale.salePrice
-        }
+        purchases.map { sale -> if (sale.salePrice != 0F) lastPurchaseValue = sale.salePrice }
 
         CustomerInfo(
             name = customer.name,
