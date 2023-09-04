@@ -37,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -76,18 +77,23 @@ fun CustomerInfoScreen(
     viewModel: CustomerInfoViewModel = hiltViewModel()
 ) {
     val entry by viewModel.entry.collectAsStateWithLifecycle()
+    val customerInfo by viewModel.customerInfo.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getCustomerInfo(customerId)
+    }
 
     LaunchedEffect(key1 = Unit) {
         viewModel.getCustomerPurchases(customerId)
     }
 
     CustomerInfoContent(
-        name = "",
-        address = "",
-        photo = "",
-        owingValue = "120.99",
-        purchasesValue = "1590.99",
-        lastPurchaseValue = "77.99",
+        name = customerInfo.name,
+        address = customerInfo.address,
+        photo = customerInfo.photo,
+        owingValue = customerInfo.owingValue,
+        purchasesValue = customerInfo.purchasesValue,
+        lastPurchaseValue = customerInfo.lastPurchaseValue,
         entry = entry,
         onEditIconClick = onEditIconClick,
         navigateUp = navigateUp
@@ -156,6 +162,7 @@ fun CustomerInfoContent(
                                 .size(128.dp)
                                 .padding(8.dp)
                                 .clip(RoundedCornerShape(8.dp)),
+                            contentScale = ContentScale.Crop,
                             painter = rememberAsyncImagePainter(model = photo),
                             contentDescription = stringResource(id = R.string.product_image_label)
                         )
