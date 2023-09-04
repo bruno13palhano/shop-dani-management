@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerInfoScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerScreen
 
@@ -38,6 +39,15 @@ fun NavGraphBuilder.customersNavGraph(
                 navigateUp = { navController.navigateUp() }
             )
         }
+        composable(route = CustomersDestinations.CUSTOMERS_CUSTOMER_INFO_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(true)
+            backStackEntry.arguments?.getString(ITEM_ID)?.let { customerId ->
+                CustomerInfoScreen(
+                    customerId = customerId.toLong(),
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
+        }
         composable(route = CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_WITH_ID_ROUTE) { backStackEntry ->
             showBottomMenu(true)
             backStackEntry.arguments?.getString(ITEM_ID)?.let { customerId ->
@@ -54,6 +64,8 @@ fun NavGraphBuilder.customersNavGraph(
 object CustomersDestinations {
     const val MAIN_CUSTOMERS_ROUTE = "customers_main_route"
     const val CUSTOMERS_NEW_CUSTOMER_ROUTE = "customers_new_customer_route"
+    const val CUSTOMERS_CUSTOMER_INFO_ROUTE = "customers_customer_info_route"
+    const val CUSTOMERS_CUSTOMER_INFO_WITH_ID_ROUTE = "$CUSTOMERS_CUSTOMER_INFO_ROUTE{$ITEM_ID}"
     const val CUSTOMERS_EDIT_CUSTOMER_ROUTE = "customers_edit_customers_route"
     const val CUSTOMERS_EDIT_CUSTOMER_WITH_ID_ROUTE = "$CUSTOMERS_EDIT_CUSTOMER_ROUTE{$ITEM_ID}"
 }
