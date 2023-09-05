@@ -126,7 +126,7 @@
     <string name="last_purchase_tag">Last purchase, %sR$.</string>
     <string name="all_sales_tag">All sales, %.2fR$.</string>
     <string name="stock_sales_tag">Stock sales, %.2fR$.</string>
-    <string name="orders_sales_tag">Orders sales, %2fR$.</string>
+    <string name="orders_sales_tag">Orders sales, %.2fR$.</string>
     <string name="profit_tag">Profit, %.2fR$.</string>
     <string name="liquid_profit_tag">Liquid profit, %.2fR$.</string>
     <string name="shopping_tag">Shopping, %.2fR$.</string>
