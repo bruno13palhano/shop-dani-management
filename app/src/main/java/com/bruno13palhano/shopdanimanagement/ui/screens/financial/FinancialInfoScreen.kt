@@ -1,10 +1,14 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.financial
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.graphics.Color
+import android.graphics.Typeface
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ElevatedCard
@@ -22,11 +26,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel.FinancialInfoViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
+import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.column.columnChart
+import com.patrykandpatrick.vico.compose.chart.edges.rememberFadingEdges
+import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
+import com.patrykandpatrick.vico.compose.component.shapeComponent
+import com.patrykandpatrick.vico.compose.component.textComponent
+import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
+import com.patrykandpatrick.vico.compose.legend.verticalLegend
+import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
+import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
+import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.compose.style.currentChartStyle
+import com.patrykandpatrick.vico.core.axis.AxisPosition
+import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
+import com.patrykandpatrick.vico.core.component.shape.ShapeComponent
+import com.patrykandpatrick.vico.core.component.shape.Shapes
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
+import com.patrykandpatrick.vico.core.legend.VerticalLegend
+import com.patrykandpatrick.vico.core.scroll.InitialScroll
 
 @Composable
 fun FinancialInfoScreen(
@@ -34,6 +62,7 @@ fun FinancialInfoScreen(
     viewModel: FinancialInfoViewModel = hiltViewModel()
 ) {
     val financialInfo by viewModel.financial.collectAsStateWithLifecycle()
+    val entry by viewModel.entry.collectAsStateWithLifecycle()
 
     FinancialInfoContent(
         allSales = financialInfo.allSales,
@@ -41,6 +70,7 @@ fun FinancialInfoScreen(
         ordersSales = financialInfo.ordersSales,
         profit = financialInfo.profit,
         shopping = financialInfo.shopping,
+        entry = entry,
         navigateUp = navigateUp
     )
 }
@@ -53,6 +83,7 @@ fun FinancialInfoContent(
     ordersSales: Float,
     profit: Float,
     shopping: Float,
+    entry: ChartEntryModelProducer,
     navigateUp: () -> Unit
 ) {
     Scaffold(
@@ -103,8 +134,109 @@ fun FinancialInfoContent(
                     text = stringResource(id = R.string.shopping_tag, shopping)
                 )
             }
+            val axisValuesFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
+                try {
+                    (chartValues.chartEntryModel.entries.first()
+                        .getOrNull(value.toInt()) as? DateChartEntry)
+                        ?.date.orEmpty()
+                } catch (ignored: Exception) { "0" }
+            }
+            ProvideChartStyle(chartStyle =
+                m3ChartStyle(
+                    entityColors = listOf(
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.secondary,
+                        MaterialTheme.colorScheme.tertiary,
+                        MaterialTheme.colorScheme.outline,
+                        MaterialTheme.colorScheme.error
+                    )
+                )
+            ) {
+                Chart(
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .sizeIn(minHeight = 280.dp),
+                    chart = columnChart(),
+                    runInitialAnimation = true,
+                    chartModelProducer = entry,
+                    marker = rememberMarker(),
+                    legend = rememberLegend(
+                        listOf(
+                            Pair(
+                                stringResource(id = R.string.sales_label),
+                                Color.toArgb(MaterialTheme.colorScheme.primary.value.toLong())
+                            ),
+                            Pair(
+                                stringResource(id = R.string.stock_label),
+                                Color.toArgb(MaterialTheme.colorScheme.secondary.value.toLong())
+                            ),
+                            Pair(
+                                stringResource(id = R.string.orders_label),
+                                Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
+                            ),
+                            Pair(
+                                stringResource(id = R.string.profit_label),
+                                Color.toArgb(MaterialTheme.colorScheme.outline.value.toLong())
+                            ),
+                            Pair(
+                                stringResource(id = R.string.shopping_label),
+                                Color.toArgb(MaterialTheme.colorScheme.error.value.toLong())
+                            )
+                        )
+                    ),
+                    fadingEdges = rememberFadingEdges(),
+                    startAxis = startAxis(
+                        titleComponent = textComponent(
+                            color = MaterialTheme.colorScheme.onBackground,
+                            background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                            padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                            margins = dimensionsOf(end = 8.dp),
+                            typeface = Typeface.MONOSPACE
+                        ),
+                        title = stringResource(id = R.string.amount_of_money_label)
+                    ),
+                    bottomAxis = if (entry.getModel().entries.isEmpty()) {
+                        bottomAxis()
+                    } else {
+                        bottomAxis(
+                            guideline = null,
+                            valueFormatter = axisValuesFormatter,
+                            titleComponent = textComponent(
+                                color = MaterialTheme.colorScheme.onBackground,
+                                background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                margins = dimensionsOf(top = 8.dp, start = 8.dp),
+                                typeface = Typeface.MONOSPACE
+                            )
+                        )
+                    },
+                    chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End)
+                )
+            }
         }
     }
+}
+
+@Composable
+private fun rememberLegend(legends: List<Pair<String, Int>>): VerticalLegend {
+    return verticalLegend(
+        items = legends.map { legend ->
+            verticalLegendItem(
+                icon = ShapeComponent(Shapes.pillShape, legend.second),
+                label = textComponent(
+                    color = currentChartStyle.axis.axisLabelColor,
+                    textSize = 12.sp,
+                    typeface = Typeface.MONOSPACE
+                ),
+                labelText = legend.first
+            )
+        },
+        iconSize = 8.dp,
+        iconPadding = 10.dp,
+        spacing = 4.dp
+    )
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -122,6 +254,7 @@ fun FinancialInfoDynamicPreview() {
                 ordersSales = 1456.55F,
                 profit = 3000.99F,
                 shopping = 1234.99F,
+                entry = ChartEntryModelProducer(),
                 navigateUp = {}
             )
         }
@@ -145,6 +278,7 @@ fun FinancialInfoPreview() {
                 ordersSales = 1456.55F,
                 profit = 3000.99F,
                 shopping = 1234.99F,
+                entry = ChartEntryModelProducer(),
                 navigateUp = {}
             )
         }
