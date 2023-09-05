@@ -8,9 +8,12 @@ import com.bruno13palhano.core.data.di.DefaultSaleRepository
 import com.bruno13palhano.core.data.di.DefaultShoppingRepository
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.Shopping
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
+import com.patrykandpatrick.vico.core.entry.FloatEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -53,6 +56,24 @@ class FinancialInfoViewModel @Inject constructor(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
             initialValue = FinancialInfo()
+        )
+
+    val entry = financial
+        .map {
+            ChartEntryModelProducer(
+                listOf(
+                    listOf(FloatEntry(0F, it.allSales)),
+                    listOf(FloatEntry(0F, it.stockSales)),
+                    listOf(FloatEntry(0F, it.ordersSales)),
+                    listOf(FloatEntry(0F, it.profit)),
+                    listOf(FloatEntry(0F, it.shopping))
+                )
+            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5_000),
+            initialValue = ChartEntryModelProducer()
         )
 
     data class FinancialInfo(
