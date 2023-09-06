@@ -1,5 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.financial
 
+import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.graphics.Color
 import android.graphics.Typeface
@@ -7,8 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ElevatedCard
@@ -23,6 +26,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -101,7 +105,17 @@ fun FinancialInfoContent(
             )
         }
     ) {
-        Column(modifier = Modifier.padding(it)) {
+        val orientation = LocalConfiguration.current.orientation
+
+        Column(
+            modifier = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                Modifier.padding(it)
+            } else {
+                Modifier
+                    .padding(it)
+                    .verticalScroll(rememberScrollState())
+            }
+        ) {
             ElevatedCard(modifier = Modifier.padding(8.dp)) {
                 Text(
                     modifier = Modifier
@@ -153,11 +167,17 @@ fun FinancialInfoContent(
                 )
             ) {
                 Chart(
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .sizeIn(minHeight = 280.dp),
+                    modifier = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        Modifier
+                            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                    } else {
+                        Modifier
+                            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                            .fillMaxWidth()
+                            .height(304.dp)
+                    },
                     chart = columnChart(),
                     runInitialAnimation = true,
                     chartModelProducer = entry,
