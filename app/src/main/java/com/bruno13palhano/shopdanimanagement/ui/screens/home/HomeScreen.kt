@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PointOfSale
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -95,7 +96,8 @@ fun HomeContent(
             HomeInnerScreen.Sales,
             HomeInnerScreen.Stock,
             HomeInnerScreen.Orders,
-            HomeInnerScreen.Shopping
+            HomeInnerScreen.Shopping,
+            HomeInnerScreen.Shipping
         )
         val axisValuesFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
             try {
@@ -172,6 +174,7 @@ sealed class HomeInnerScreen(val route: String, val icon: ImageVector, @StringRe
     object Shopping: HomeInnerScreen(HomeDestinations.HOME_SHOPPING_ROUTE, Icons.Filled.ShoppingCart, R.string.shopping_label)
     object Sales: HomeInnerScreen(HomeDestinations.HOME_SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
     object Orders: HomeInnerScreen(HomeDestinations.HOME_ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
+    object Shipping: HomeInnerScreen(HomeDestinations.HOME_DELIVERIES_ROUTE, Icons.Filled.LocalShipping, R.string.deliveries_label)
 }
 
 @Preview(showBackground = true, showSystemUi = true)
