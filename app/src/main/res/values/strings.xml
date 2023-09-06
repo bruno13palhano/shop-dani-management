@@ -133,4 +133,6 @@
     <string name="profit_tag">Profit, %.2fR$.</string>
     <string name="liquid_profit_tag">Liquid profit, %.2fR$.</string>
     <string name="shopping_tag">Shopping, %.2fR$.</string>
+    <string name="value_tag">R$ %.2f</string>
+    <string name="total_sales_value_tag">Total sales value, R$ %.2f</string>
 </resources>
