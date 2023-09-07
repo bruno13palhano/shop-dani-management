@@ -361,6 +361,33 @@ fun CircularItemList(
     }
 }
 
+@Composable
+fun InfoItemList(
+    modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String,
+    description: String
+) {
+    Text(
+        modifier = modifier
+            .fillMaxWidth(),
+        text = title,
+        style = MaterialTheme.typography.titleMedium
+    )
+    Text(
+        modifier = modifier
+            .fillMaxWidth(),
+        text = subtitle,
+        style = MaterialTheme.typography.titleMedium
+    )
+    Text(
+        modifier = modifier
+            .fillMaxWidth(),
+        text = description,
+        style = MaterialTheme.typography.bodyMedium
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun StockItemPreview() {
