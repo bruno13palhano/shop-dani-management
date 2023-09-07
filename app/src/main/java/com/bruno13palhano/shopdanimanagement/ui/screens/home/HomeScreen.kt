@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PointOfSale
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,7 +40,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularItemList
-import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
@@ -66,8 +66,11 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val lastSalesEntry by viewModel.lastSales.collectAsStateWithLifecycle()
+    val homeInfo by viewModel.homeInfo.collectAsStateWithLifecycle()
 
     HomeContent(
+        profit = homeInfo.profit,
+        salesValue = homeInfo.sales,
         lastSalesEntry = lastSalesEntry,
         onOptionsItemClick = onOptionsItemClick,
         onMenuClick = onMenuClick
@@ -77,6 +80,8 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
+    profit: Float,
+    salesValue: Float,
     lastSalesEntry: ChartEntryModelProducer,
     onOptionsItemClick: (route: String) -> Unit,
     onMenuClick: () -> Unit,
@@ -123,17 +128,17 @@ fun HomeContent(
             )
             Text(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 2.dp),
-                text = stringResource(id = R.string.value_tag, 356.99F),
+                text = stringResource(id = R.string.value_tag, profit),
                 style = MaterialTheme.typography.titleLarge
             )
             Text(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 8.dp),
-                text = stringResource(id = R.string.total_sales_value_tag, 2345.99F),
+                text = stringResource(id = R.string.total_sales_value_tag, salesValue),
                 style = MaterialTheme.typography.bodyMedium
             )
 
             LazyRow(
-                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
+                contentPadding = PaddingValues(vertical = 16.dp, horizontal = 4.dp)
             ) {
                 items(items = options, key = { option -> option.route } ) { option ->
                     CircularItemList(
@@ -145,57 +150,64 @@ fun HomeContent(
                 }
             }
 
-            ProvideChartStyle(
-                chartStyle = m3ChartStyle(
-                    entityColors = listOf(MaterialTheme.colorScheme.tertiary)
-                )
+            ElevatedCard(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
             ) {
-                val marker = rememberMarker()
-                Chart(
+                Text(
                     modifier = Modifier
-                        .padding(bottom = 8.dp)
                         .fillMaxWidth()
                         .height(264.dp),
-                    chart = lineChart(),
-                    runInitialAnimation = true,
-                    chartModelProducer = lastSalesEntry,
-                    marker = marker,
-                    fadingEdges = rememberFadingEdges(),
-                    startAxis = startAxis(
-                        titleComponent = textComponent(
-                            color = MaterialTheme.colorScheme.onBackground,
-                            background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
-                            padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                            margins = dimensionsOf(end = 8.dp),
-                            typeface = Typeface.MONOSPACE
-                        ),
-                        title = stringResource(id = R.string.amount_of_sales_label)
-                    ),
-                    bottomAxis = if (lastSalesEntry.getModel().entries.isEmpty()) {
-                        bottomAxis()
-                    } else {
-                        bottomAxis(
-                            guideline = null,
-                            valueFormatter = axisValuesFormatter,
+                    text = ""
+                )
+            }
+
+            ElevatedCard(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                ProvideChartStyle(
+                    chartStyle = m3ChartStyle(
+                        entityColors = listOf(MaterialTheme.colorScheme.tertiary)
+                    )
+                ) {
+                    val marker = rememberMarker()
+                    Chart(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                            .height(264.dp),
+                        chart = lineChart(),
+                        runInitialAnimation = true,
+                        chartModelProducer = lastSalesEntry,
+                        marker = marker,
+                        fadingEdges = rememberFadingEdges(),
+                        startAxis = startAxis(
                             titleComponent = textComponent(
                                 color = MaterialTheme.colorScheme.onBackground,
                                 background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
                                 padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                                margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
+                                margins = dimensionsOf(end = 8.dp),
                                 typeface = Typeface.MONOSPACE
                             ),
-                            title = stringResource(id = R.string.last_sales_label)
-                        )
-                    }
-                )
-            }
-            options.forEach { screen ->
-                SimpleItemList(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    itemName = stringResource(id = screen.resourceId),
-                    imageVector = screen.icon,
-                    onClick = { onOptionsItemClick(screen.route) }
-                )
+                            title = stringResource(id = R.string.amount_of_sales_label)
+                        ),
+                        bottomAxis = if (lastSalesEntry.getModel().entries.isEmpty()) {
+                            bottomAxis()
+                        } else {
+                            bottomAxis(
+                                guideline = null,
+                                valueFormatter = axisValuesFormatter,
+                                titleComponent = textComponent(
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                    padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                    margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
+                                    typeface = Typeface.MONOSPACE
+                                ),
+                                title = stringResource(id = R.string.last_sales_label)
+                            )
+                        }
+                    )
+                }
             }
         }
     }
@@ -219,6 +231,8 @@ fun HomeDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeContent(
+                profit = 456.99F,
+                salesValue = 1324.99F,
                 lastSalesEntry = ChartEntryModelProducer(),
                 onOptionsItemClick = {},
                 onMenuClick = {}
@@ -239,6 +253,8 @@ fun HomePreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeContent(
+                profit = 456.99F,
+                salesValue = 1324.99F,
                 lastSalesEntry = ChartEntryModelProducer(),
                 onOptionsItemClick = {},
                 onMenuClick = {}
