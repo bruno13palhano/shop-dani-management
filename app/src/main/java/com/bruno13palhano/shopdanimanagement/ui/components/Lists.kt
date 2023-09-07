@@ -377,7 +377,7 @@ fun InfoItemList(
             modifier = modifier
                 .fillMaxWidth(),
             text = title,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.bodyLarge
         )
         Text(
             modifier = modifier
