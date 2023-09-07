@@ -135,4 +135,12 @@
     <string name="shopping_tag">Shopping, %.2fR$.</string>
     <string name="value_tag">R$ %.2f</string>
     <string name="total_sales_value_tag">Total sales value, R$ %.2f</string>
+    <plurals name="description_label">
+        <item quantity="one">%s, %d item, %s</item>
+        <item quantity="other">%s, %d items, %s</item>
+    </plurals>
+    <plurals name="simple_description_label">
+        <item quantity="one">%d item, %s</item>
+        <item quantity="other">%d items, %s</item>
+    </plurals>
 </resources>
