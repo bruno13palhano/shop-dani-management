@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -336,10 +335,10 @@ fun CircularItemList(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Card(
+        ElevatedCard(
             modifier = Modifier
                 .padding(2.dp)
-                .size(120.dp),
+                .size(104.dp),
             shape = CircleShape,
             onClick = onClick,
         ) {
@@ -347,7 +346,7 @@ fun CircularItemList(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
+                Icon(
                     modifier = Modifier.size(48.dp),
                     imageVector = icon,
                     contentDescription = null
