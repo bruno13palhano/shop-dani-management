@@ -4,10 +4,13 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.graphics.Typeface
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -35,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
@@ -110,9 +114,37 @@ fun HomeContent(
 
         Column(modifier = Modifier
             .padding(it)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
             .verticalScroll(rememberScrollState())
         ) {
+            Text(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 2.dp),
+                text = stringResource(id = R.string.profit_label),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 2.dp),
+                text = stringResource(id = R.string.value_tag, 356.99F),
+                style = MaterialTheme.typography.titleLarge
+            )
+            Text(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 8.dp),
+                text = stringResource(id = R.string.total_sales_value_tag, 2345.99F),
+                style = MaterialTheme.typography.bodyMedium
+            )
+
+            LazyRow(
+                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
+            ) {
+                items(items = options, key = { option -> option.route } ) { option ->
+                    CircularItemList(
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        title = stringResource(id = option.resourceId),
+                        icon = option.icon,
+                        onClick = { onOptionsItemClick(option.route) }
+                    )
+                }
+            }
+
             ProvideChartStyle(
                 chartStyle = m3ChartStyle(
                     entityColors = listOf(MaterialTheme.colorScheme.tertiary)
@@ -159,7 +191,7 @@ fun HomeContent(
             }
             options.forEach { screen ->
                 SimpleItemList(
-                    modifier = Modifier.padding(vertical = 4.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     itemName = stringResource(id = screen.resourceId),
                     imageVector = screen.icon,
                     onClick = { onOptionsItemClick(screen.route) }
