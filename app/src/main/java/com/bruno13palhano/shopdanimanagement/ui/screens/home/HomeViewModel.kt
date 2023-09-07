@@ -23,6 +23,27 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val currentDay = LocalDate.now()
 
+    val homeInfo = saleRepository.getAll()
+        .map {
+            var salesPrice = 0F
+            var purchasePrice = 0F
+
+            it.map { sale ->
+                salesPrice += sale.salePrice
+                purchasePrice += sale.purchasePrice
+            }
+
+            HomeInfo(
+                sales = salesPrice,
+                profit = salesPrice - purchasePrice
+            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5_000),
+            initialValue = HomeInfo()
+        )
+
     val lastSales = saleRepository.getLastSales(0, 100)
         .map {
             val days = arrayOf(0,0,0,0,0,0,0)
@@ -57,4 +78,9 @@ class HomeViewModel @Inject constructor(
             chart.add(Pair(currentDay.minusDays(i.toLong()).dayOfWeek.name, days[i].toFloat()))
         }
     }
+
+    data class HomeInfo(
+        val profit: Float = 0F,
+        val sales: Float = 0F
+    )
 }
