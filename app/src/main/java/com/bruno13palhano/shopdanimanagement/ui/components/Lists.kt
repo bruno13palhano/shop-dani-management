@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -364,28 +365,33 @@ fun CircularItemList(
 @Composable
 fun InfoItemList(
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     title: String,
     subtitle: String,
     description: String
 ) {
-    Text(
-        modifier = modifier
-            .fillMaxWidth(),
-        text = title,
-        style = MaterialTheme.typography.titleMedium
-    )
-    Text(
-        modifier = modifier
-            .fillMaxWidth(),
-        text = subtitle,
-        style = MaterialTheme.typography.titleMedium
-    )
-    Text(
-        modifier = modifier
-            .fillMaxWidth(),
-        text = description,
-        style = MaterialTheme.typography.bodyMedium
-    )
+    Column(
+        modifier = Modifier.padding(contentPadding)
+    ) {
+        Text(
+            modifier = modifier
+                .fillMaxWidth(),
+            text = title,
+            style = MaterialTheme.typography.titleMedium
+        )
+        Text(
+            modifier = modifier
+                .fillMaxWidth(),
+            text = subtitle,
+            style = MaterialTheme.typography.titleMedium
+        )
+        Text(
+            modifier = modifier
+                .fillMaxWidth(),
+            text = description,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
 }
 
 @Preview(showBackground = true)
