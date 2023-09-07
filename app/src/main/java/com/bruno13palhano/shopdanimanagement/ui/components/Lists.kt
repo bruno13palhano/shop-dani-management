@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,6 +30,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -142,7 +145,7 @@ fun SimpleItemList(
                 style = MaterialTheme.typography.titleMedium
             )
             Icon(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(16.dp),
                 imageVector = imageVector,
                 contentDescription = null
             )
@@ -321,6 +324,44 @@ fun HorizontalItemList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CircularItemList(
+    modifier: Modifier = Modifier,
+    title: String,
+    icon: ImageVector,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Card(
+            modifier = Modifier
+                .padding(2.dp)
+                .size(120.dp),
+            shape = CircleShape,
+            onClick = onClick,
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    modifier = Modifier.size(48.dp),
+                    imageVector = icon,
+                    contentDescription = null
+                )
+            }
+        }
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = title,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun StockItemPreview() {
@@ -408,6 +449,24 @@ private fun HorizontalItemListPreview() {
                 subtitle = "Rua 15 de novembro",
                 description = "Test",
                 photo = "",
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CircularItemListPreview() {
+    ShopDaniManagementTheme(
+        dynamicColor = false
+    ) {
+        Surface(
+            color = MaterialTheme.colorScheme.background
+        ) {
+            CircularItemList(
+                title = stringResource(id = R.string.sales_label),
+                icon = Icons.Filled.Image,
                 onClick = {}
             )
         }
