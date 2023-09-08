@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PointOfSale
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.InfoItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
@@ -69,8 +72,7 @@ fun HomeScreen(
     val homeInfo by viewModel.homeInfo.collectAsStateWithLifecycle()
 
     HomeContent(
-        profit = homeInfo.profit,
-        salesValue = homeInfo.sales,
+        homeInfo = homeInfo,
         lastSalesEntry = lastSalesEntry,
         onOptionsItemClick = onOptionsItemClick,
         onMenuClick = onMenuClick
@@ -80,8 +82,7 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
-    profit: Float,
-    salesValue: Float,
+    homeInfo: HomeViewModel.HomeInfo,
     lastSalesEntry: ChartEntryModelProducer,
     onOptionsItemClick: (route: String) -> Unit,
     onMenuClick: () -> Unit,
@@ -128,12 +129,12 @@ fun HomeContent(
             )
             Text(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 2.dp),
-                text = stringResource(id = R.string.value_tag, profit),
+                text = stringResource(id = R.string.value_tag, homeInfo.profit),
                 style = MaterialTheme.typography.titleLarge
             )
             Text(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 8.dp),
-                text = stringResource(id = R.string.total_sales_value_tag, salesValue),
+                text = stringResource(id = R.string.total_sales_value_tag, homeInfo.sales),
                 style = MaterialTheme.typography.bodyMedium
             )
 
@@ -151,13 +152,78 @@ fun HomeContent(
             }
 
             ElevatedCard(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(264.dp),
-                    text = ""
+                InfoItemList(
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
+                    contentPadding = PaddingValues(vertical = 12.dp),
+                    title = "Biggest sale",
+                    subtitle = stringResource(
+                        id = R.string.product_price_tag,
+                        homeInfo.biggestSale.item,
+                        homeInfo.biggestSale.value
+                    ),
+                    description = pluralStringResource(
+                        id = R.plurals.description_label,
+                        count = homeInfo.biggestSale.quantity,
+                        homeInfo.biggestSale.customer,
+                        homeInfo.biggestSale.quantity,
+                        homeInfo.biggestSale.date
+                    )
+                )
+                Divider()
+                InfoItemList(
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
+                    contentPadding = PaddingValues(vertical = 12.dp),
+                    title = "Smallest sale",
+                    subtitle = stringResource(
+                        id = R.string.product_price_tag,
+                        homeInfo.smallestSale.item,
+                        homeInfo.smallestSale.value
+                    ),
+                    description = pluralStringResource(
+                        id = R.plurals.description_label,
+                        count = homeInfo.smallestSale.quantity,
+                        homeInfo.smallestSale.customer,
+                        homeInfo.smallestSale.quantity,
+                        homeInfo.smallestSale.date
+                    )
+                )
+                Divider()
+                InfoItemList(
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
+                    contentPadding = PaddingValues(vertical = 12.dp),
+                    title = "Last sale",
+                    subtitle = stringResource(
+                        id = R.string.product_price_tag,
+                        homeInfo.lastSale.item,
+                        homeInfo.lastSale.value
+                    ),
+                    description = pluralStringResource(
+                        id = R.plurals.description_label,
+                        count = homeInfo.lastSale.quantity,
+                        homeInfo.lastSale.customer,
+                        homeInfo.lastSale.quantity,
+                        homeInfo.lastSale.date
+                    )
+                )
+                Divider()
+                InfoItemList(
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
+                    contentPadding = PaddingValues(vertical = 12.dp),
+                    title = "Last shopping",
+                    subtitle = stringResource(
+                        id = R.string.product_price_tag,
+                        homeInfo.lastShopping.item,
+                        homeInfo.lastShopping.value
+                    ),
+                    description = pluralStringResource(
+                        id = R.plurals.simple_description_label,
+                        count = homeInfo.lastShopping.quantity,
+                        homeInfo.lastShopping.quantity,
+                        homeInfo.lastShopping.date
+                    )
                 )
             }
 
@@ -231,8 +297,7 @@ fun HomeDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeContent(
-                profit = 456.99F,
-                salesValue = 1324.99F,
+                homeInfo = HomeViewModel.HomeInfo(),
                 lastSalesEntry = ChartEntryModelProducer(),
                 onOptionsItemClick = {},
                 onMenuClick = {}
@@ -253,8 +318,7 @@ fun HomePreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeContent(
-                profit = 456.99F,
-                salesValue = 1324.99F,
+                homeInfo = HomeViewModel.HomeInfo(),
                 lastSalesEntry = ChartEntryModelProducer(),
                 onOptionsItemClick = {},
                 onMenuClick = {}
