@@ -4,7 +4,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.home.HomeScreen
 
 fun NavGraphBuilder.homeNavGraph(
@@ -41,11 +40,10 @@ fun NavGraphBuilder.homeNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu
         )
-        composable(route = HomeDestinations.HOME_DELIVERIES_ROUTE) {
-            DeliveriesScreen(
-                navigateUp = { navController.navigateUp() }
-            )
-        }
+        deliveriesNAvGraph(
+            navController = navController,
+            showBottomMenu = showBottomMenu
+        )
     }
 }
 
