@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.bruno13palhano.core.data.database.dao.CategoryDao
 import com.bruno13palhano.core.data.database.dao.CustomerDao
+import com.bruno13palhano.core.data.database.dao.DeliveryDao
 import com.bruno13palhano.core.data.database.dao.ProductDao
 import com.bruno13palhano.core.data.database.dao.SaleDao
 import com.bruno13palhano.core.data.database.dao.SearchCacheDao
@@ -42,4 +43,5 @@ internal abstract class AppDatabase : RoomDatabase() {
     abstract val shoppingDao: ShoppingDao
     abstract val stockOrderDao: StockOrderDao
     abstract val customerDao: CustomerDao
+    abstract val deliveryDao: DeliveryDao
 }
