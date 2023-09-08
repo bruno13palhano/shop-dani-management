@@ -1,6 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.insights
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -32,7 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,7 +39,6 @@ import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.ChartsViewModel
-import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -375,50 +371,4 @@ private fun rememberLegend(legends: List<Pair<String, Int>>): VerticalLegend {
         iconPadding = 10.dp,
         spacing = 4.dp
     )
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
-@Composable
-fun ChartsDynamicPreview() {
-    ShopDaniManagementTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            ChartsContent(
-                bottomAxisTitle = "",
-                lastSalesEntry = ChartEntryModelProducer(),
-                shoppingVsSalesEntry = ChartEntryModelProducer(),
-                stockVsOrderEntry = ComposedChartEntryModelProducer(),
-                menuOptions = emptyArray(),
-                onMenuItemClick = {},
-                navigateUp = {}
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
-@Composable
-fun ChartsPreview() {
-    ShopDaniManagementTheme(
-        dynamicColor = false
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            ChartsContent(
-                bottomAxisTitle = "",
-                lastSalesEntry = ChartEntryModelProducer(),
-                shoppingVsSalesEntry = ChartEntryModelProducer(),
-                stockVsOrderEntry = ComposedChartEntryModelProducer(),
-                menuOptions = emptyArray(),
-                onMenuItemClick = {},
-                navigateUp = {}
-            )
-        }
-    }
 }
