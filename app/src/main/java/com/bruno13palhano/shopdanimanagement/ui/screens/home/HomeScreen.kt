@@ -158,7 +158,7 @@ fun HomeContent(
                 InfoItemList(
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
                     contentPadding = PaddingValues(vertical = 12.dp),
-                    title = "Biggest sale",
+                    title = stringResource(id = R.string.biggest_sale_label),
                     subtitle = stringResource(
                         id = R.string.product_price_tag,
                         homeInfo.biggestSale.item,
@@ -176,7 +176,7 @@ fun HomeContent(
                 InfoItemList(
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
                     contentPadding = PaddingValues(vertical = 12.dp),
-                    title = "Smallest sale",
+                    title = stringResource(id = R.string.smallest_sale_label),
                     subtitle = stringResource(
                         id = R.string.product_price_tag,
                         homeInfo.smallestSale.item,
@@ -194,7 +194,7 @@ fun HomeContent(
                 InfoItemList(
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
                     contentPadding = PaddingValues(vertical = 12.dp),
-                    title = "Last sale",
+                    title = stringResource(id = R.string.last_sale_label),
                     subtitle = stringResource(
                         id = R.string.product_price_tag,
                         homeInfo.lastSale.item,
@@ -212,7 +212,7 @@ fun HomeContent(
                 InfoItemList(
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
                     contentPadding = PaddingValues(vertical = 12.dp),
-                    title = "Last shopping",
+                    title = stringResource(id = R.string.last_shopping_label),
                     subtitle = stringResource(
                         id = R.string.product_price_tag,
                         homeInfo.lastShopping.item,
