@@ -12,6 +12,7 @@ import com.bruno13palhano.core.data.database.dao.ShoppingDao
 import com.bruno13palhano.core.data.database.dao.StockOrderDao
 import com.bruno13palhano.core.data.database.model.CategoryEntity
 import com.bruno13palhano.core.data.database.model.CustomerEntity
+import com.bruno13palhano.core.data.database.model.DeliveryEntity
 import com.bruno13palhano.core.data.database.model.ProductEntity
 import com.bruno13palhano.core.data.database.model.SaleEntity
 import com.bruno13palhano.core.data.database.model.SearchCacheEntity
@@ -26,7 +27,8 @@ import com.bruno13palhano.core.data.database.model.StockOrderEntity
         SaleEntity::class,
         ShoppingEntity::class,
         StockOrderEntity::class,
-        CustomerEntity::class
+        CustomerEntity::class,
+        DeliveryEntity::class
     ],
     version = 1,
     exportSchema = false
