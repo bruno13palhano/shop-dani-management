@@ -102,6 +102,11 @@ fun HomeContent(
             )
         }
     ) {
+        val infoSaleList = listOf(
+            Pair(homeInfo.biggestSale, stringResource(id = R.string.biggest_sale_label)),
+            Pair(homeInfo.smallestSale, stringResource(id = R.string.smallest_sale_label)),
+            Pair(homeInfo.lastSale, stringResource(id = R.string.last_sale_label))
+        )
         val options = listOf(
             HomeInnerScreen.Sales,
             HomeInnerScreen.Stock,
@@ -155,60 +160,26 @@ fun HomeContent(
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             ) {
-                InfoItemList(
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
-                    contentPadding = PaddingValues(vertical = 12.dp),
-                    title = stringResource(id = R.string.biggest_sale_label),
-                    subtitle = stringResource(
-                        id = R.string.product_price_tag,
-                        homeInfo.biggestSale.item,
-                        homeInfo.biggestSale.value
-                    ),
-                    description = pluralStringResource(
-                        id = R.plurals.description_label,
-                        count = homeInfo.biggestSale.quantity,
-                        homeInfo.biggestSale.customer,
-                        homeInfo.biggestSale.quantity,
-                        homeInfo.biggestSale.date
+                infoSaleList.forEach { info ->
+                    InfoItemList(
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
+                        contentPadding = PaddingValues(vertical = 12.dp),
+                        title = info.second,
+                        subtitle = stringResource(
+                            id = R.string.product_price_tag,
+                            info.first.item,
+                            info.first.value
+                        ),
+                        description = pluralStringResource(
+                            id = R.plurals.description_label,
+                            count = info.first.quantity,
+                            info.first.customer,
+                            info.first.quantity,
+                            info.first.date
+                        )
                     )
-                )
-                Divider()
-                InfoItemList(
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
-                    contentPadding = PaddingValues(vertical = 12.dp),
-                    title = stringResource(id = R.string.smallest_sale_label),
-                    subtitle = stringResource(
-                        id = R.string.product_price_tag,
-                        homeInfo.smallestSale.item,
-                        homeInfo.smallestSale.value
-                    ),
-                    description = pluralStringResource(
-                        id = R.plurals.description_label,
-                        count = homeInfo.smallestSale.quantity,
-                        homeInfo.smallestSale.customer,
-                        homeInfo.smallestSale.quantity,
-                        homeInfo.smallestSale.date
-                    )
-                )
-                Divider()
-                InfoItemList(
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
-                    contentPadding = PaddingValues(vertical = 12.dp),
-                    title = stringResource(id = R.string.last_sale_label),
-                    subtitle = stringResource(
-                        id = R.string.product_price_tag,
-                        homeInfo.lastSale.item,
-                        homeInfo.lastSale.value
-                    ),
-                    description = pluralStringResource(
-                        id = R.plurals.description_label,
-                        count = homeInfo.lastSale.quantity,
-                        homeInfo.lastSale.customer,
-                        homeInfo.lastSale.quantity,
-                        homeInfo.lastSale.date
-                    )
-                )
-                Divider()
+                    Divider()
+                }
                 InfoItemList(
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
                     contentPadding = PaddingValues(vertical = 12.dp),
