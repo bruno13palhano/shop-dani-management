@@ -3,12 +3,17 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.ShoppingData
 import com.bruno13palhano.core.data.di.DefaultSaleRepository
+import com.bruno13palhano.core.data.di.DefaultShoppingRepository
 import com.bruno13palhano.core.model.Sale
+import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import java.time.Instant
@@ -19,25 +24,75 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @DefaultSaleRepository private val saleRepository: SaleData<Sale>
+    @DefaultSaleRepository private val saleRepository: SaleData<Sale>,
+    @DefaultShoppingRepository private val shoppingRepository: ShoppingData<Shopping>
 ) : ViewModel() {
     private val currentDay = LocalDate.now()
 
-    val homeInfo = saleRepository.getAll()
-        .map {
-            var salesPrice = 0F
-            var purchasePrice = 0F
+    val homeInfo = combine(saleRepository.getAll(), shoppingRepository.getAll()) { sales, shopping ->
+        var salesPrice = 0F
+        var purchasePrice = 0F
+        var biggestSale = Info()
+        var biggestSaleValue = 0F
+        var smallestSale = Info()
+        var smallestSaleValue = Float.MAX_VALUE
+        var lastSale = Info()
+        var lastShopping = Info()
 
-            it.map { sale ->
-                salesPrice += sale.salePrice
-                purchasePrice += sale.purchasePrice
+        sales.map { sale ->
+            salesPrice += sale.salePrice
+            purchasePrice += sale.purchasePrice
+            if (biggestSaleValue <= sale.salePrice) {
+                biggestSaleValue = sale.salePrice
+                biggestSale = Info(
+                    value = (sale.quantity * sale.salePrice),
+                    customer = sale.customerName,
+                    item = sale.name,
+                    quantity = sale.quantity,
+                    date = dateFormat.format(sale.dateOfSale)
+                )
+            }
+            if (smallestSaleValue >= sale.salePrice) {
+                smallestSaleValue = sale.salePrice
+                smallestSale = Info(
+                    value = (sale.quantity * sale.salePrice),
+                    customer = sale.customerName,
+                    item = sale.name,
+                    quantity = sale.quantity,
+                    date = dateFormat.format(sale.dateOfSale)
+                )
+            }
+            if (sales.lastIndex != -1) {
+                val last = sales.last()
+                lastSale = Info(
+                    value = (last.quantity * last.salePrice),
+                    customer = last.customerName,
+                    item = last.name,
+                    quantity = last.quantity,
+                    date = dateFormat.format(last.dateOfSale)
+                )
             }
 
-            HomeInfo(
-                sales = salesPrice,
-                profit = salesPrice - purchasePrice
-            )
+            if (shopping.lastIndex != -1) {
+                val last = shopping.last()
+                lastShopping = Info(
+                    value = (last.quantity * last.purchasePrice),
+                    customer = "",
+                    item = last.name,
+                    quantity = last.quantity,
+                    date = dateFormat.format(last.date)
+                )
+            }
         }
+        HomeInfo(
+            sales = salesPrice,
+            profit = salesPrice - purchasePrice,
+            biggestSale = biggestSale,
+            smallestSale = smallestSale,
+            lastSale = lastSale,
+            lastShopping = lastShopping
+        )
+    }
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
@@ -81,6 +136,18 @@ class HomeViewModel @Inject constructor(
 
     data class HomeInfo(
         val profit: Float = 0F,
-        val sales: Float = 0F
+        val sales: Float = 0F,
+        val biggestSale: Info = Info(),
+        val smallestSale: Info = Info(),
+        val lastSale: Info = Info(),
+        val lastShopping: Info = Info()
+    )
+
+    data class Info(
+        val value: Float = 0F,
+        val customer: String = "",
+        val item: String = "",
+        val quantity: Int = 0,
+        val date: String = ""
     )
 }
