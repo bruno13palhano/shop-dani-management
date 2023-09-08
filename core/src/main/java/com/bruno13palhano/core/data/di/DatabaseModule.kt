@@ -6,6 +6,7 @@ import com.bruno13palhano.core.data.database.AppDatabase
 import com.bruno13palhano.core.data.database.CategoryConverter
 import com.bruno13palhano.core.data.database.dao.CategoryDao
 import com.bruno13palhano.core.data.database.dao.CustomerDao
+import com.bruno13palhano.core.data.database.dao.DeliveryDao
 import com.bruno13palhano.core.data.database.dao.ProductDao
 import com.bruno13palhano.core.data.database.dao.SaleDao
 import com.bruno13palhano.core.data.database.dao.SearchCacheDao
@@ -55,6 +56,11 @@ internal object DatabaseModule {
     @Provides
     fun providesCustomerDao(database: AppDatabase): CustomerDao {
         return database.customerDao
+    }
+
+    @Provides
+    fun providesDeliveryDao(database: AppDatabase): DeliveryDao {
+        return database.deliveryDao
     }
 
     @Provides
