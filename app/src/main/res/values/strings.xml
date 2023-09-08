@@ -124,6 +124,10 @@
     <string name="paid_label">Paid</string>
     <string name="owing_paid_label">Owing</string>
     <string name="profit_label">Profit</string>
+    <string name="biggest_sale_label">Biggest sale</string>
+    <string name="smallest_sale_label">Smallest sale</string>
+    <string name="last_sale_label">Last sale</string>
+    <string name="last_shopping_label">Last shopping</string>
     <string name="owing_tag">Owing, %sR$.</string>
     <string name="amount_of_all_purchases_tag">Amount of all purchases, %sR$.</string>
     <string name="last_purchase_tag">Last purchase, %sR$.</string>
