@@ -23,6 +23,7 @@ fun DeliveriesDynamicPreview() {
             DeliveriesContent(
                 deliveries = deliveries,
                 onItemClick = {},
+                onAddButtonClick = {},
                 navigateUp = {}
             )
         }
@@ -43,6 +44,7 @@ fun DeliveriesPreview() {
             DeliveriesContent(
                 deliveries = deliveries,
                 onItemClick = {},
+                onAddButtonClick = {},
                 navigateUp = {}
             )
         }
