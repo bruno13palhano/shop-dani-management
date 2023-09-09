@@ -20,7 +20,7 @@ fun NavGraphBuilder.deliveriesNAvGraph(
             showBottomMenu(true)
             DeliveriesScreen(
                 onItemClick = { deliveryId ->
-                    navController.navigate(route = "$DeliveriesDestinations.DELIVERIES_EDIT_DELIVERY_ROUTE$deliveryId")
+                    navController.navigate(route = "${DeliveriesDestinations.DELIVERIES_EDIT_DELIVERY_ROUTE}$deliveryId")
                 },
                 onAddButtonClick = {
                     navController.navigate(route = DeliveriesDestinations.DELIVERIES_NEW_DELIVERY_ROUTE)
