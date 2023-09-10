@@ -10,17 +10,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.CustomerData
+import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultCustomerRepository
+import com.bruno13palhano.core.data.di.DefaultDeliveryRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.data.di.DefaultSaleRepository
 import com.bruno13palhano.core.data.di.DefaultStockOrderRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
@@ -44,7 +47,8 @@ class SaleViewModel @Inject constructor(
     @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
     @DefaultSaleRepository private val saleRepository: SaleData<Sale>,
     @DefaultStockOrderRepository private val stockOrderRepository: StockOrderData<StockOrder>,
-    @DefaultCustomerRepository private val customerRepository: CustomerData<Customer>
+    @DefaultCustomerRepository private val customerRepository: CustomerData<Customer>,
+    @DefaultDeliveryRepository private val deliveryRepository: DeliveryData<Delivery>
 ) : ViewModel() {
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),
@@ -58,6 +62,8 @@ class SaleViewModel @Inject constructor(
         private set
     var customerName by mutableStateOf("")
         private set
+    private var address by mutableStateOf("")
+    private var phoneNumber by mutableStateOf("")
     var photo by mutableStateOf("")
         private set
     var quantity by mutableStateOf("")
@@ -107,7 +113,15 @@ class SaleViewModel @Inject constructor(
         }
         viewModelScope.launch {
             customerRepository.getAll().map {
-                it.map { customer -> CustomerCheck(customer.id, customer.name, false) }
+                it.map { customer ->
+                    CustomerCheck(
+                        id = customer.id,
+                        name = customer.name,
+                        address = customer.address,
+                        phoneNumber = customer.phoneNumber,
+                        isChecked = false
+                    )
+                }
             }.collect { allCustomers = it }
         }
     }
@@ -174,6 +188,8 @@ class SaleViewModel @Inject constructor(
             }
             .filter { it.name == customerName }
             .map {
+                address = it.address
+                phoneNumber = it.phoneNumber
                 customerId = it.id
                 it.isChecked = true
                 it
@@ -280,7 +296,20 @@ class SaleViewModel @Inject constructor(
                 isOrderedByCustomer = true
             )
             viewModelScope.launch {
-                saleRepository.insert(sale)
+                val saleId = saleRepository.insert(sale)
+                val delivery = Delivery(
+                    id = 0L,
+                    saleId = saleId,
+                    customerName = customerName,
+                    address = address,
+                    phoneNumber = phoneNumber,
+                    productName = productName,
+                    price = stringToFloat(salePrice),
+                    shippingDate = dateOfSaleInMillis,
+                    deliveryDate = dateOfSaleInMillis,
+                    delivered = false,
+                )
+                deliveryRepository.insert(delivery)
             }
             viewModelScope.launch {
                 stockOrderRepository.insert(order)
@@ -293,7 +322,20 @@ class SaleViewModel @Inject constructor(
                     stockOrderRepository.updateStockOrderQuantity(stockItemId, finalQuantity)
                 }
                 viewModelScope.launch {
-                    saleRepository.insert(sale)
+                    val saleId = saleRepository.insert(sale)
+                    val delivery = Delivery(
+                        id = 0L,
+                        saleId = saleId,
+                        customerName = customerName,
+                        address = address,
+                        phoneNumber = phoneNumber,
+                        productName = productName,
+                        price = stringToFloat(salePrice),
+                        shippingDate = dateOfSaleInMillis,
+                        deliveryDate = dateOfSaleInMillis,
+                        delivered = false,
+                    )
+                    deliveryRepository.insert(delivery)
                 }
                 onSuccess()
             } else { onError() }
