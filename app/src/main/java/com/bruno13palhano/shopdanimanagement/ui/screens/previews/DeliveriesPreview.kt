@@ -90,6 +90,7 @@ private fun DeliveryDynamicPreview() {
                 onPriceChange = {},
                 onShippingDateClick = {},
                 onDeliveryDateClick = {},
+                onDoneButtonClick = {},
                 navigateUp = {}
             )
         }
@@ -126,6 +127,7 @@ private fun DeliveryPreview() {
                 onPriceChange = {},
                 onShippingDateClick = {},
                 onDeliveryDateClick = {},
+                onDoneButtonClick = {},
                 navigateUp = {}
             )
         }
