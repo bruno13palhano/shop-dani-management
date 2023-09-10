@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveriesScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveryScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -22,25 +23,23 @@ fun NavGraphBuilder.deliveriesNAvGraph(
                 onItemClick = { deliveryId ->
                     navController.navigate(route = "${DeliveriesDestinations.DELIVERIES_EDIT_DELIVERY_ROUTE}$deliveryId")
                 },
-                onAddButtonClick = {
-                    navController.navigate(route = DeliveriesDestinations.DELIVERIES_NEW_DELIVERY_ROUTE)
-                },
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = DeliveriesDestinations.DELIVERIES_NEW_DELIVERY_ROUTE) {
+        composable(route = DeliveriesDestinations.DELIVERIES_EDIT_DELIVERY_WITH_ID_ROUTE) { backStackEntry ->
             showBottomMenu(true)
-        }
-        composable(route = DeliveriesDestinations.DELIVERIES_EDIT_DELIVERY_WITH_ID_ROUTE) {
-            showBottomMenu(true)
-
+            backStackEntry.arguments?.getString(ITEM_ID)?.let { deliveryId ->
+                DeliveryScreen(
+                    deliveryId = deliveryId.toLong(),
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
         }
     }
 }
 
 object DeliveriesDestinations {
     const val DELIVERIES_MAIN_ROUTE = "deliveries_main_route"
-    const val DELIVERIES_NEW_DELIVERY_ROUTE = "deliveries_new_delivery_route"
     const val DELIVERIES_EDIT_DELIVERY_ROUTE = "deliveries_edit_delivery_route"
     const val DELIVERIES_EDIT_DELIVERY_WITH_ID_ROUTE = "$DELIVERIES_EDIT_DELIVERY_ROUTE{$ITEM_ID}"
 }
