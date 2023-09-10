@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -29,14 +27,12 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel.Del
 fun DeliveriesScreen(
     navigateUp: () -> Unit,
     onItemClick: (id: Long) -> Unit,
-    onAddButtonClick: () -> Unit,
     viewModel: DeliveriesViewModel = hiltViewModel()
 ) {
     val deliveries by viewModel.deliveries.collectAsStateWithLifecycle()
     DeliveriesContent(
         deliveries = deliveries,
         onItemClick = onItemClick,
-        onAddButtonClick = onAddButtonClick,
         navigateUp = navigateUp
     )
 }
@@ -46,7 +42,6 @@ fun DeliveriesScreen(
 fun DeliveriesContent(
     deliveries: List<CommonItem>,
     onItemClick: (id: Long) -> Unit,
-    onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
     Scaffold(
@@ -62,14 +57,6 @@ fun DeliveriesContent(
                     }
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = onAddButtonClick) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(id = R.string.add_label)
-                )
-            }
         }
     ) {
         LazyColumn(modifier = Modifier.padding(it)) {
