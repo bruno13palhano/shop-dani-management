@@ -20,8 +20,6 @@ class DeliveryViewModel @Inject constructor(
 ) : ViewModel() {
     var name by mutableStateOf("")
         private set
-    var email by mutableStateOf("")
-        private set
     var address by mutableStateOf("")
         private set
     var phoneNumber by mutableStateOf("")
