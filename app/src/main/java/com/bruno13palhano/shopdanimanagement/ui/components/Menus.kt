@@ -359,5 +359,7 @@ data class CompanyCheck(
 data class CustomerCheck(
     var id: Long,
     var name: String,
+    var address: String,
+    var phoneNumber: String,
     var isChecked: Boolean
 )
