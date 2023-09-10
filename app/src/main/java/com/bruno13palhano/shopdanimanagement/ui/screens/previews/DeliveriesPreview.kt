@@ -71,7 +71,6 @@ private fun DeliveryDynamicPreview() {
         ) {
             DeliveryContent(
                 name = "",
-                email = "",
                 address = "",
                 phoneNumber = "",
                 productName = "",
@@ -108,7 +107,6 @@ private fun DeliveryPreview() {
         ) {
             DeliveryContent(
                 name = "",
-                email = "",
                 address = "",
                 phoneNumber = "",
                 productName = "",
