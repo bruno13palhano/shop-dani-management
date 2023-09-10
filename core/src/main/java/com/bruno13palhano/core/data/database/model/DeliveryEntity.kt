@@ -30,6 +30,12 @@ internal data class DeliveryEntity(
     @ColumnInfo(name = "price")
     val price: Float,
 
+    @ColumnInfo(name = "shipping_date")
+    val shippingDate: Long,
+
+    @ColumnInfo(name = "delivery_date")
+    val deliveryDate: Long,
+
     @ColumnInfo(name = "delivered")
     val delivered: Boolean
 )
@@ -42,6 +48,8 @@ internal fun DeliveryEntity.asExternalModel() = Delivery(
     phoneNumber = phoneNumber,
     productName = productName,
     price = price,
+    shippingDate = shippingDate,
+    deliveryDate = deliveryDate,
     delivered = delivered
 )
 
@@ -53,5 +61,7 @@ internal fun Delivery.asInternalModel() = DeliveryEntity(
     phoneNumber = phoneNumber,
     productName = productName,
     price = price,
+    shippingDate = shippingDate,
+    deliveryDate = deliveryDate,
     delivered = delivered
 )
