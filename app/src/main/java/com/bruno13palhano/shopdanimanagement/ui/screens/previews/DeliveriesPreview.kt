@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.previews
 
-import android.content.res.Configuration
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -9,10 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveriesContent
+import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveryContent
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun DeliveriesDynamicPreview() {
     ShopDaniManagementTheme {
@@ -31,7 +32,7 @@ fun DeliveriesDynamicPreview() {
 }
 
 @Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun DeliveriesPreview() {
     ShopDaniManagementTheme(
@@ -60,3 +61,73 @@ private val deliveries = listOf(
     CommonItem(6L, "", "Socorro Barbosa", "Luna", "Rua 15 de novembro"),
     CommonItem(7L, "", "Fernando Barbosa", "Kaiak", "Rua 15 de novembro"),
  )
+
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+private fun DeliveryDynamicPreview() {
+    ShopDaniManagementTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            DeliveryContent(
+                name = "",
+                email = "",
+                address = "",
+                phoneNumber = "",
+                productName = "",
+                price = "",
+                shippingDate = "",
+                deliveryDate = "",
+                delivered = false,
+                onNameChange = {},
+                onEmailChange = {},
+                onAddressChange = {},
+                onPhoneNumberChange = {},
+                onProductNameChange = {},
+                onDeliveredChange = {},
+                onPriceChange = {},
+                onShippingDateClick = {},
+                onDeliveryDateClick = {},
+                navigateUp = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+private fun DeliveryPreview() {
+    ShopDaniManagementTheme(
+        dynamicColor = false
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            DeliveryContent(
+                name = "",
+                email = "",
+                address = "",
+                phoneNumber = "",
+                productName = "",
+                price = "",
+                shippingDate = "",
+                deliveryDate = "",
+                delivered = false,
+                onNameChange = {},
+                onEmailChange = {},
+                onAddressChange = {},
+                onPhoneNumberChange = {},
+                onProductNameChange = {},
+                onDeliveredChange = {},
+                onPriceChange = {},
+                onShippingDateClick = {},
+                onDeliveryDateClick = {},
+                navigateUp = {}
+            )
+        }
+    }
+}
