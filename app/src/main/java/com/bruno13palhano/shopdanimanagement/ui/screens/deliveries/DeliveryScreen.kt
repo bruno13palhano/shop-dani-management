@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -45,8 +43,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bruno13palhano.shopdanimanagement.R
@@ -221,10 +217,6 @@ fun DeliveryContent(
                         contentDescription = stringResource(id = R.string.name_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
                 readOnly = true,
                 label = {
@@ -232,13 +224,7 @@ fun DeliveryContent(
                         text = stringResource(id = R.string.name_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_name_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -253,10 +239,6 @@ fun DeliveryContent(
                         contentDescription = stringResource(id = R.string.address_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
                 readOnly = true,
                 label = {
@@ -264,13 +246,7 @@ fun DeliveryContent(
                         text = stringResource(id = R.string.address_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_address_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -285,13 +261,6 @@ fun DeliveryContent(
                         contentDescription = stringResource(id = R.string.phone_number_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Number
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
                 readOnly = true,
                 label = {
@@ -299,13 +268,7 @@ fun DeliveryContent(
                         text = stringResource(id = R.string.phone_number_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_phone_number_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -320,10 +283,6 @@ fun DeliveryContent(
                         contentDescription = stringResource(id = R.string.product_name_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
                 readOnly = true,
                 label = {
@@ -331,13 +290,7 @@ fun DeliveryContent(
                         text = stringResource(id = R.string.product_name_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_product_name_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -352,13 +305,6 @@ fun DeliveryContent(
                         contentDescription = stringResource(id = R.string.sale_price_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Decimal
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
                 readOnly = true,
                 label = {
@@ -366,13 +312,7 @@ fun DeliveryContent(
                         text = stringResource(id = R.string.sale_price_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_sale_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -392,10 +332,6 @@ fun DeliveryContent(
                         contentDescription = stringResource(id = R.string.shipping_date_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
                 readOnly = true,
                 label = {
@@ -403,13 +339,7 @@ fun DeliveryContent(
                         text = stringResource(id = R.string.shipping_date_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_shipping_date_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -429,10 +359,6 @@ fun DeliveryContent(
                         contentDescription = stringResource(id = R.string.delivery_date_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
                 readOnly = true,
                 label = {
@@ -440,13 +366,7 @@ fun DeliveryContent(
                         text = stringResource(id = R.string.delivery_date_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_delivery_date_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically
