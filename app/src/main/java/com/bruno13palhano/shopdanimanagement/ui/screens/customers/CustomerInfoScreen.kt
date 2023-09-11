@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -37,7 +35,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -177,24 +174,14 @@ fun CustomerInfoContent(
                                 contentDescription = stringResource(id = R.string.name_label)
                             )
                         },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }),
                         singleLine = true,
-                        enabled = false,
+                        readOnly = true,
                         label = {
                             Text(
                                 text = stringResource(id = R.string.name_label),
                                 fontStyle = FontStyle.Italic
                             )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_name_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
+                        }
                     )
                     OutlinedTextField(
                         modifier = Modifier
@@ -209,24 +196,14 @@ fun CustomerInfoContent(
                                 contentDescription = stringResource(id = R.string.address_label)
                             )
                         },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }),
                         singleLine = true,
-                        enabled = false,
+                        readOnly = true,
                         label = {
                             Text(
                                 text = stringResource(id = R.string.address_label),
                                 fontStyle = FontStyle.Italic
                             )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_address_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
+                        }
                     )
                 }
             }
