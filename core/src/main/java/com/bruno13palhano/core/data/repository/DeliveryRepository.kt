@@ -53,4 +53,9 @@ internal class DeliveryRepository @Inject constructor(
             .map { it.asExternalModel() }
             .catch { it.printStackTrace() }
     }
+
+    override fun getDeliveries(delivered: Boolean): Flow<List<Delivery>> {
+        return deliveryDao.getDeliveries(delivered)
+            .map { it.map { entity -> entity.asExternalModel() } }
+    }
 }

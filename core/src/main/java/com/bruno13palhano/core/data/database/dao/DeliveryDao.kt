@@ -42,4 +42,7 @@ internal interface DeliveryDao : DeliveryData<DeliveryEntity> {
 
     @Query("UPDATE delivery_table SET delivered = :delivered WHERE id = :id")
     override suspend fun updateDelivered(id: Long, delivered: Boolean)
+
+    @Query("SELECT * FROM delivery_table WHERE delivered = :delivered")
+    override fun getDeliveries(delivered: Boolean): Flow<List<DeliveryEntity>>
 }
