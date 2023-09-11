@@ -18,6 +18,10 @@ import javax.inject.Inject
 class DeliveryViewModel @Inject constructor(
     @DefaultDeliveryRepository private val deliveryRepository: DeliveryData<Delivery>
 ) : ViewModel() {
+    private var shippingDateDb = 0L
+    private var deliveryDateDb = 0L
+    private var deliveredDb = false
+
     var name by mutableStateOf("")
         private set
     var address by mutableStateOf("")
@@ -62,8 +66,29 @@ class DeliveryViewModel @Inject constructor(
                 productName = it.productName
                 price = it.price.toString()
                 updateShippingDate(it.shippingDate)
+                shippingDateDb = it.shippingDate
                 updateDeliveryDate(it.deliveryDate)
+                deliveryDateDb = it.deliveryDate
                 delivered = it.delivered
+                deliveredDb = it.delivered
+            }
+        }
+    }
+
+    fun updateDelivery(deliveryId: Long) {
+        if (shippingDateInMillis != shippingDateDb) {
+            viewModelScope.launch {
+                deliveryRepository.updateShippingDate(deliveryId, shippingDateInMillis)
+            }
+        }
+        if (deliveryDateInMillis != deliveryDateDb) {
+            viewModelScope.launch {
+                deliveryRepository.updateDeliveryDate(deliveryId, deliveryDateInMillis)
+            }
+        }
+        if (delivered != deliveredDb) {
+            viewModelScope.launch {
+                deliveryRepository.updateDelivered(deliveryId, delivered)
             }
         }
     }
