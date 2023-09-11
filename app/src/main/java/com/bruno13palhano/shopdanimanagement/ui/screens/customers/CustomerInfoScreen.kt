@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
+import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.CustomerInfoViewModel
@@ -79,6 +81,8 @@ fun CustomerInfoScreen(
         viewModel.getCustomerPurchases(customerId)
     }
 
+    val focusManager = LocalFocusManager.current
+
     CustomerInfoContent(
         name = customerInfo.name,
         address = customerInfo.address,
@@ -88,6 +92,7 @@ fun CustomerInfoScreen(
         lastPurchaseValue = customerInfo.lastPurchaseValue,
         entry = entry,
         onEditIconClick = onEditIconClick,
+        onOutsideClick = { focusManager.clearFocus(force = true) },
         navigateUp = navigateUp
     )
 }
@@ -103,9 +108,11 @@ fun CustomerInfoContent(
     lastPurchaseValue: String,
     entry: ChartEntryModelProducer,
     onEditIconClick: () -> Unit,
+    onOutsideClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
     Scaffold(
+        modifier = Modifier.clickableNoEffect { onOutsideClick() },
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.customer_label)) },
