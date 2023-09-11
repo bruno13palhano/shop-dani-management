@@ -33,4 +33,13 @@ internal interface DeliveryDao : DeliveryData<DeliveryEntity> {
 
     @Query("SELECT * FROM delivery_table WHERE id = (SELECT max(id) FROM delivery_table)")
     override fun getLast(): Flow<DeliveryEntity>
+
+    @Query("UPDATE delivery_table SET shipping_date = :shippingDate WHERE id = :id")
+    override suspend fun updateShippingDate(id: Long, shippingDate: Long)
+
+    @Query("UPDATE delivery_table SET delivery_date = :deliveryDate WHERE id = :id")
+    override suspend fun updateDeliveryDate(id: Long, deliveryDate: Long)
+
+    @Query("UPDATE delivery_table SET delivered = :delivered WHERE id = :id")
+    override suspend fun updateDelivered(id: Long, delivered: Boolean)
 }

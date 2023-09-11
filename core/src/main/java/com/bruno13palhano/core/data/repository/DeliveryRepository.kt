@@ -19,6 +19,18 @@ internal class DeliveryRepository @Inject constructor(
     override suspend fun update(model: Delivery) =
         deliveryDao.update(model.asInternalModel())
 
+    override suspend fun updateShippingDate(id: Long, shippingDate: Long) {
+        deliveryDao.updateShippingDate(id, shippingDate)
+    }
+
+    override suspend fun updateDeliveryDate(id: Long, deliveryDate: Long) {
+        deliveryDao.updateDeliveryDate(id, deliveryDate)
+    }
+
+    override suspend fun updateDelivered(id: Long, delivered: Boolean) {
+        deliveryDao.updateDelivered(id, delivered)
+    }
+
     override suspend fun delete(model: Delivery) =
         deliveryDao.delete(model.asInternalModel())
 
