@@ -78,14 +78,10 @@ private fun DeliveryDynamicPreview() {
                 shippingDate = "",
                 deliveryDate = "",
                 delivered = false,
-                onNameChange = {},
-                onAddressChange = {},
-                onPhoneNumberChange = {},
-                onProductNameChange = {},
                 onDeliveredChange = {},
-                onPriceChange = {},
                 onShippingDateClick = {},
                 onDeliveryDateClick = {},
+                onOutsideClick = {},
                 onDoneButtonClick = {},
                 navigateUp = {}
             )
@@ -113,14 +109,10 @@ private fun DeliveryPreview() {
                 shippingDate = "",
                 deliveryDate = "",
                 delivered = false,
-                onNameChange = {},
-                onAddressChange = {},
-                onPhoneNumberChange = {},
-                onProductNameChange = {},
                 onDeliveredChange = {},
-                onPriceChange = {},
                 onShippingDateClick = {},
                 onDeliveryDateClick = {},
+                onOutsideClick = {},
                 onDoneButtonClick = {},
                 navigateUp = {}
             )
