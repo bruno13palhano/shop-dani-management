@@ -97,6 +97,8 @@
     <string name="edit_customer_label">Edit Customer</string>
     <string name="customer_photo_label">Customer photo</string>
     <string name="delivery_label">Delivery</string>
+    <string name="all_deliveries_label">All deliveries</string>
+    <string name="not_delivered_label">Not delivered</string>
     <string name="email_label">Email</string>
     <string name="address_label">Address</string>
     <string name="phone_number_label">Phone number</string>
