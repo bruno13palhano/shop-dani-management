@@ -372,7 +372,7 @@ fun DeliveryContent(
                     checked = delivered,
                     onCheckedChange = onDeliveredChange
                 )
-                Text(text = stringResource(id = R.string.delivered_label))
+                Text(text = stringResource(id = R.string.is_delivered_label))
             }
         }
     }
