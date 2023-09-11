@@ -99,12 +99,13 @@
     <string name="delivery_label">Delivery</string>
     <string name="all_deliveries_label">All deliveries</string>
     <string name="not_delivered_label">Not delivered</string>
+    <string name="delivered_label">Delivered</string>
     <string name="email_label">Email</string>
     <string name="address_label">Address</string>
     <string name="phone_number_label">Phone number</string>
     <string name="shipping_date_label">Shipping date</string>
     <string name="delivery_date_label">Delivery date</string>
-    <string name="delivered_label">is delivered</string>
+    <string name="is_delivered_label">is delivered</string>
     <string name="enter_email_label">Enter email</string>
     <string name="enter_address_label">Enter address label</string>
     <string name="enter_phone_number_label">Enter phone number</string>
