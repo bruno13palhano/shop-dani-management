@@ -83,6 +83,7 @@ fun CustomerInfoDynamicPreview() {
                 lastPurchaseValue = "77.99",
                 entry = ChartEntryModelProducer(),
                 onEditIconClick = {},
+                onOutsideClick = {},
                 navigateUp = {}
             )
         }
@@ -109,6 +110,7 @@ fun CustomerInfoPreview() {
                 lastPurchaseValue = "77.99",
                 entry = ChartEntryModelProducer(),
                 onEditIconClick = {},
+                onOutsideClick = {},
                 navigateUp = {}
             )
         }
