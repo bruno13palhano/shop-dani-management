@@ -1,5 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.deliveries
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -59,10 +60,13 @@ fun DeliveriesContent(
             )
         }
     ) {
-        LazyColumn(modifier = Modifier.padding(it)) {
+        LazyColumn(
+            modifier = Modifier.padding(it),
+            contentPadding = PaddingValues(vertical = 4.dp)
+        ) {
             items(items = deliveries, key = { delivery -> delivery.id }) { delivery ->
                 CommonItemList(
-                    modifier = Modifier.padding(horizontal = 8.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     title = delivery.title,
                     subtitle = delivery.subtitle,
                     description = delivery.description,
