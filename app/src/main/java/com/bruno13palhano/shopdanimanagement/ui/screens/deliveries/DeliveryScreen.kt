@@ -150,7 +150,10 @@ fun DeliveryScreen(
         onShippingDateClick = { showShippingDatePickerDialog = true },
         onDeliveryDateClick = { showDeliveryDatePickerDialog = true },
         onOutsideClick = { focusManager.clearFocus(force = true) },
-        onDoneButtonClick = {},
+        onDoneButtonClick = {
+            viewModel.updateDelivery(deliveryId)
+            navigateUp()
+        },
         navigateUp = navigateUp
     )
 }
