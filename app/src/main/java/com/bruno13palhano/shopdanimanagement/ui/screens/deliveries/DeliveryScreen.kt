@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -63,7 +62,6 @@ fun DeliveryScreen(
 
     val configuration = LocalConfiguration.current
     val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
     var shippingDatePickerState = rememberDatePickerState()
     var showShippingDatePickerDialog by remember { mutableStateOf(false) }
     var deliveryDatePickerState = rememberDatePickerState()
@@ -151,10 +149,7 @@ fun DeliveryScreen(
         onDeliveredChange = viewModel::updateDelivered,
         onShippingDateClick = { showShippingDatePickerDialog = true },
         onDeliveryDateClick = { showDeliveryDatePickerDialog = true },
-        onOutsideClick = {
-            keyboardController?.hide()
-            focusManager.clearFocus(force = true)
-        },
+        onOutsideClick = { focusManager.clearFocus(force = true) },
         onDoneButtonClick = {},
         navigateUp = navigateUp
     )
