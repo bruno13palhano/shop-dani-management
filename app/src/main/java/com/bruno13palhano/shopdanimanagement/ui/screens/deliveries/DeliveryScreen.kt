@@ -179,8 +179,7 @@ fun DeliveryContent(
     navigateUp: () -> Unit,
 ) {
     Scaffold(
-        modifier = Modifier
-            .clickableNoEffect { onOutsideClick() },
+        modifier = Modifier.clickableNoEffect { onOutsideClick() },
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.delivery_label)) },
