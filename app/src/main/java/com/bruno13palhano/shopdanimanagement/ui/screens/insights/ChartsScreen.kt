@@ -83,32 +83,30 @@ fun ChartsScreen(
         stringResource(id = R.string.last_21_days_label),
         stringResource(id = R.string.last_31_days_label)
     )
-    val sevenDaysTitle = stringResource(id = R.string.last_7_days_label)
-    val twentyOneDaysTitle = stringResource(id = R.string.last_21_days_label)
-    val thirtyOneDaysTitle = stringResource(id = R.string.last_31_days_label)
-    var bottomAxisTitle by remember { mutableStateOf(sevenDaysTitle) }
+
+    var chartTitle by remember { mutableStateOf(menuOptions[0]) }
 
     ChartsContent(
-        bottomAxisTitle = bottomAxisTitle,
+        bottomAxisTitle = chartTitle,
         lastSalesEntry = lastSalesEntry,
         shoppingVsSalesEntry = shoppingVsSalesEntry,
         stockVsOrderEntry = stockVsOrderEntry,
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
-            bottomAxisTitle = when (index) {
+            chartTitle = when (index) {
                 1 -> {
                     viewModel.setItemsDaysRange(21)
-                    twentyOneDaysTitle
+                    menuOptions[1]
                 }
 
                 2 -> {
                     viewModel.setItemsDaysRange(31)
-                    thirtyOneDaysTitle
+                    menuOptions[2]
                 }
 
                 else -> {
                     viewModel.setItemsDaysRange(7)
-                    sevenDaysTitle
+                    menuOptions[0]
                 }
             }
         },

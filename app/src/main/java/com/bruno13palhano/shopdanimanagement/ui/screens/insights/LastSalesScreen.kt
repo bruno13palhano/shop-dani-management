@@ -28,10 +28,8 @@ fun LastSalesScreen(
         stringResource(id = R.string.last_21_days_label),
         stringResource(id = R.string.last_31_days_label)
     )
-    val sevenDaysTitle = stringResource(id = R.string.last_7_days_label)
-    val twentyOneDaysTitle = stringResource(id = R.string.last_21_days_label)
-    val thirtyOneDaysTitle = stringResource(id = R.string.last_31_days_label)
-    var chartTitle by remember { mutableStateOf(sevenDaysTitle) }
+
+    var chartTitle by remember { mutableStateOf(menuOptions[0]) }
 
     SimpleChart(
         screenTitle = stringResource(id = R.string.last_sales_label),
@@ -44,20 +42,19 @@ fun LastSalesScreen(
         legends = listOf(),
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
-            when (index) {
-                0 -> {
-                    viewModel.setLastSalesEntryByRange(7)
-                    chartTitle = sevenDaysTitle
-                }
+            chartTitle = when (index) {
                 1 -> {
                     viewModel.setLastSalesEntryByRange(21)
-                    chartTitle = twentyOneDaysTitle
+                    menuOptions[1]
                 }
                 2 -> {
                     viewModel.setLastSalesEntryByRange(31)
-                    chartTitle = thirtyOneDaysTitle
+                    menuOptions[2]
                 }
-                else -> {}
+                else -> {
+                    viewModel.setLastSalesEntryByRange(7)
+                    menuOptions[0]
+                }
             }
         },
         navigateUp = navigateUp

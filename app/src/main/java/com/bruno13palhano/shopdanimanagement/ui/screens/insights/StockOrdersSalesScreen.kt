@@ -29,10 +29,8 @@ fun StockOrdersSalesScreen(
         stringResource(id = R.string.last_21_days_label),
         stringResource(id = R.string.last_31_days_label)
     )
-    val sevenDaysTitle = stringResource(id = R.string.last_7_days_label)
-    val twentyOneDaysTitle = stringResource(id = R.string.last_21_days_label)
-    val thirtyOneDaysTitle = stringResource(id = R.string.last_31_days_label)
-    var chartTitle by remember { mutableStateOf(sevenDaysTitle) }
+
+    var chartTitle by remember { mutableStateOf(menuOptions[0]) }
 
     ComposedChart(
         screenTitle = stringResource(id = R.string.stock_vs_orders_label),
@@ -53,18 +51,18 @@ fun StockOrdersSalesScreen(
         ),
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
-            when (index) {
-                0 -> {
-                    viewModel.setStockOrdersSalesRange(7)
-                    chartTitle = sevenDaysTitle
-                }
+            chartTitle = when (index) {
                 1 -> {
                     viewModel.setStockOrdersSalesRange(21)
-                    chartTitle = twentyOneDaysTitle
+                    menuOptions[1]
                 }
                 2 -> {
                     viewModel.setStockOrdersSalesRange(31)
-                    chartTitle = thirtyOneDaysTitle
+                    menuOptions[2]
+                }
+                else -> {
+                    viewModel.setStockOrdersSalesRange(7)
+                    menuOptions[0]
                 }
             }
         },
