@@ -13,12 +13,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleChart
-import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.CompanySalesViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.SalesByCompanyViewModel
 
 @Composable
-fun CompanySalesScreen(
+fun SalesByCompanyScreen(
     navigateUp: () -> Unit,
-    viewModel: CompanySalesViewModel = hiltViewModel()
+    viewModel: SalesByCompanyViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.getChartByRange(7)
@@ -43,11 +43,11 @@ fun CompanySalesScreen(
         entry = chartEntry,
         legends = listOf(
             Pair(
-                stringResource(id = R.string.sales_label),
+                stringResource(id = R.string.avon_company_label),
                 Color.toArgb(MaterialTheme.colorScheme.primary.value.toLong())
             ),
             Pair(
-                stringResource(id = R.string.shopping_label),
+                stringResource(id = R.string.natura_company_label),
                 Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
             )
         ),
