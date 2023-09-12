@@ -1,6 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.SaleData
@@ -12,7 +11,6 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -23,7 +21,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
-class CompanySalesViewModel @Inject constructor(
+class SalesByCompanyViewModel @Inject constructor(
     @DefaultSaleRepository private val saleRepository: SaleData<Sale>
 ) : ViewModel() {
     private var days = arrayOf(0)
