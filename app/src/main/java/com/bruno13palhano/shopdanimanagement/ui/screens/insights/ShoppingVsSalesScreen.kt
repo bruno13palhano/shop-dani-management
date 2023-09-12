@@ -54,7 +54,7 @@ fun ShoppingVsSalesScreen(
             )
         ),
         menuOptions = menuOptions,
-        onMenuItemClick = {index ->
+        onMenuItemClick = { index ->
             chartTitle = when (index) {
                 1 -> {
                     viewModel.getChartByRange(21)
