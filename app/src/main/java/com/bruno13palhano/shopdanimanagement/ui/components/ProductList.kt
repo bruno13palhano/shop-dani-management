@@ -1,6 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,9 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -31,11 +28,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
-import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -136,72 +131,3 @@ fun ProductListContent(
         }
     }
 }
-
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
-@Composable
-private fun ProductListDynamicPreview() {
-    ShopDaniManagementTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            ProductListContent(
-                isEditable = false,
-                showCategoryDialog = true,
-                categoryId = "Perfume",
-                itemList = items,
-                menuOptions = emptyArray(),
-                onCategoryChange = {},
-                onOkClick = {},
-                onDismissRequest = {},
-                onItemClick = {},
-                onEditItemClick = {},
-                onMenuItemClick = {},
-                onAddButtonClick = {},
-                navigateUp = {}
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
-@Composable
-private fun ProductListPreview() {
-    ShopDaniManagementTheme(
-        dynamicColor = false
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            ProductListContent(
-                isEditable = true,
-                showCategoryDialog = true,
-                categoryId = "Perfume",
-                itemList = items,
-                menuOptions = emptyArray(),
-                onCategoryChange = {},
-                onOkClick = {},
-                onDismissRequest = {},
-                onItemClick = {},
-                onEditItemClick = {},
-                onMenuItemClick = {},
-                onAddButtonClick = {},
-                navigateUp = {}
-            )
-        }
-    }
-}
-
-private val items = listOf(
-    CommonItem(id= 1L, title = "Essencial", photo = "", subtitle = "Natura", description = ""),
-    CommonItem(id= 2L, title = "Kaiak", photo = "", subtitle = "Natura", description = ""),
-    CommonItem(id= 3L, title = "Homem", photo = "", subtitle = "Natura", description = ""),
-    CommonItem(id= 4L, title = "Florata", photo = "", subtitle = "Avon", description = ""),
-    CommonItem(id= 5L, title = "Essential", photo = "", subtitle = "Avon", description = ""),
-    CommonItem(id= 6L, title = "Luna", photo = "", subtitle = "Natura", description = ""),
-    CommonItem(id= 7L, title = "Homem", photo = "", subtitle = "Natura", description = ""),
-    CommonItem(id= 8L, title = "Florata", photo = "", subtitle = "Avon", description = "")
-)
