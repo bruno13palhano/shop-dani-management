@@ -1,10 +1,8 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,12 +23,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -43,11 +39,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -260,36 +254,6 @@ fun CustomerContent(
                         fontStyle = FontStyle.Italic
                     )
                 }
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
-@Composable
-fun CustomerDynamicPreview() {
-    ShopDaniManagementTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            CustomerContent(
-                screenTitle = stringResource(id = R.string.new_customer_label),
-                snackbarHostState = remember { SnackbarHostState() },
-                name = "",
-                photo = "",
-                email = "",
-                address = "",
-                phoneNumber = "",
-                onNameChange = {},
-                onEmailChange = {},
-                onAddressChange = {},
-                onPhoneNumberChange = {},
-                onPhotoClick = {},
-                onOutsideClick = {},
-                onDoneButtonClick = {},
-                navigateUp = {}
             )
         }
     }
