@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.ChartsScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.insights.CompanySalesScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.insights.SalesByCompanyScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.InsightsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.LastSalesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.ShoppingVsSalesScreen
@@ -60,7 +60,7 @@ fun NavGraphBuilder.insightsNavGraph(
             )
         }
         composable(route = InsightsDestinations.INSIGHTS_COMPANY_SALES_ROUTE) {
-            CompanySalesScreen(
+            SalesByCompanyScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }
