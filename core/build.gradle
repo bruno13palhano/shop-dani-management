@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id("app.cash.sqldelight") version "2.0.0-alpha05"
 }
 
 android {
@@ -32,8 +33,15 @@ android {
     }
 }
 
-dependencies {
+sqldelight {
+    databases {
+        create("ShopDatabase") {
+            packageName.set("com.bruno13palhano.cache")
+        }
+    }
+}
 
+dependencies {
     implementation 'androidx.core:core-ktx:1.10.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -44,4 +52,6 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("app.cash.sqldelight:android-driver:2.0.0-alpha05")
+    implementation("app.cash.sqldelight:coroutines-extensions:2.0.0-alpha05")
 }
