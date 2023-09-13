@@ -1,0 +1,17 @@
+CREATE TABLE product (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    code TEXT NOT NULL,
+    description TEXT NOT NULL,
+    photo TEXT NOT NULL,
+    date INTEGER NOT NULL,
+    categories TEXT NOT NULL,
+    company TEXT NOT NULL
+);
+
+insert:
+INSERT INTO product(name, code, description, photo, date, categories, company)
+    VALUES(?,?,?,?,?,?,?);
+
+getAll:
+SELECT product. * FROM product;
