@@ -1,3 +1,6 @@
+import kotlin.String;
+import kotlin.collections.List;
+
 CREATE TABLE product (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -5,7 +8,7 @@ CREATE TABLE product (
     description TEXT NOT NULL,
     photo TEXT NOT NULL,
     date INTEGER NOT NULL,
-    categories TEXT NOT NULL,
+    categories TEXT  AS List<String> NOT NULL,
     company TEXT NOT NULL
 );
 
