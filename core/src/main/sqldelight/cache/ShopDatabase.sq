@@ -23,7 +23,7 @@ DELETE FROM product WHERE id = ?;
 getAll:
 SELECT product. * FROM product;
 
-getByid:
+getById:
 SELECT product. * FROM product WHERE id = ?;
 
 getLast:
