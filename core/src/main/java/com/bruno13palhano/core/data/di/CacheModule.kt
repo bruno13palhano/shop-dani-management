@@ -1,6 +1,7 @@
 package com.bruno13palhano.core.data.di
 
 import android.content.Context
+import cache.SaleTableQueries
 import cache.ShopDatabaseQueries
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.database.DatabaseFactory
@@ -28,9 +29,9 @@ internal object CacheModule {
 
     @Provides
     @Singleton
-    fun provideShop(
-        database: ShopDatabase
-    ): ShopDatabaseQueries {
-        return database.shopDatabaseQueries
-    }
+    fun provideShop(database: ShopDatabase): ShopDatabaseQueries = database.shopDatabaseQueries
+
+    @Provides
+    @Singleton
+    fun provideSaleTable(database: ShopDatabase): SaleTableQueries = database.saleTableQueries
 }
