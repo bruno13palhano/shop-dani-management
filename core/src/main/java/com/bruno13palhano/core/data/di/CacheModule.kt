@@ -1,6 +1,7 @@
 package com.bruno13palhano.core.data.di
 
 import android.content.Context
+import cache.CustomerTableQueries
 import cache.SaleTableQueries
 import cache.ShopDatabaseQueries
 import com.bruno13palhano.cache.ShopDatabase
@@ -34,4 +35,8 @@ internal object CacheModule {
     @Provides
     @Singleton
     fun provideSaleTable(database: ShopDatabase): SaleTableQueries = database.saleTableQueries
+
+    @Provides
+    @Singleton
+    fun provideCustomerTable(database: ShopDatabase): CustomerTableQueries = database.customerTableQueries
 }
