@@ -17,8 +17,8 @@ CREATE TABLE SaleTable (
     company TEXT NOT NULL,
     dateOfSale INTEGER NOT NULL,
     dateOfPayment INTEGER NOT NULL,
-    isOrderedByCustomer INTEGER AS Boolean,
-    isPaidByCustomer INTEGER AS Boolean
+    isOrderedByCustomer INTEGER AS Boolean NOT NULL,
+    isPaidByCustomer INTEGER AS Boolean NOT NULL
 );
 
 insert:
@@ -28,7 +28,7 @@ INSERT INTO SaleTable(productId, customerId, name, customerName, photo, quantity
 
 update:
 UPDATE SaleTable SET productId = ?, customerId = ?, name = ?, customerName = ?, photo = ?, quantity = ?,
- purchasePrice = ?, salePrice = ?, categories = ?, company = ?, dateOfPayment = ?, dateOfSale = ?,
+ purchasePrice = ?, salePrice = ?, categories = ?, company = ?, dateOfSale = ?, dateOfPayment = ?,
  isOrderedByCustomer = ?, isPaidByCustomer = ? WHERE id = ?;
 
 delete:
@@ -44,7 +44,7 @@ getLast:
 SELECT SaleTable. * FROM SaleTable WHERE id = last_insert_row();
 
 getByCustomerId:
-SELECT SaleTable. * FROM SaleTable WHERE id = ?;
+SELECT SaleTable. * FROM SaleTable WHERE customerId = ?;
 
 getLastSales:
 SELECT SaleTable. * FROM SaleTable ORDER BY id DESC LIMIT ?,?;
