@@ -6,3 +6,22 @@ CREATE TABLE CustomerTable (
     address TEXT NOT NULL,
     phoneNumber TEXT NOT NULL
 );
+
+insert:
+INSERT INTO CustomerTable(name, photo, email, address, phoneNumber)
+ VALUES(?,?,?,?,?);
+
+update:
+UPDATE CustomerTable SET name = ?, photo = ?, email = ?, address = ?, phoneNumber = ? WHERE id = ?;
+
+delete:
+DELETE FROM CustomerTable WHERE id = ?;
+
+getAll:
+SELECT CustomerTable. * FROM CustomerTable;
+
+getById:
+SELECT CustomerTable. * FROM CustomerTable WHERE id = ?;
+
+getLast:
+SELECT CustomerTable. * FROM CustomerTable WHERE id = last_insert_row();
