@@ -15,6 +15,7 @@ import com.bruno13palhano.core.data.repository.ProductRepository
 import com.bruno13palhano.core.data.repository.SaleRepository
 import com.bruno13palhano.core.data.repository.SearchCacheRepository
 import com.bruno13palhano.core.data.repository.ProductCache
+import com.bruno13palhano.core.data.repository.SaleCache
 import com.bruno13palhano.core.data.repository.ShoppingCacheRepository
 import com.bruno13palhano.core.data.repository.StockOrderRepository
 import com.bruno13palhano.core.model.Category
@@ -61,6 +62,9 @@ annotation class DefaultSearchCacheRepository
 
 @Qualifier
 annotation class DefaultSaleRepository
+
+@Qualifier
+annotation class DefaultSaleCache
 
 @Qualifier
 annotation class DefaultShoppingRepository
@@ -122,4 +126,9 @@ internal abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindProductCache(repository: ProductCache): ProductData<Product>
+
+    @DefaultSaleCache
+    @Singleton
+    @Binds
+    abstract fun bindSaleCache(repository: SaleCache): SaleData<Sale>
 }
