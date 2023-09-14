@@ -13,5 +13,26 @@ insert:
 INSERT INTO product(name, code, description, photo, date, categories, company)
     VALUES(?,?,?,?,?,?,?);
 
+update:
+UPDATE product SET name = ?, code = ?, description = ?, photo = ?,
+ date = ?, categories = ?, company = ? WHERE id = ?;
+
+delete:
+DELETE FROM product WHERE id = ?;
+
 getAll:
 SELECT product. * FROM product;
+
+getByid:
+SELECT product. * FROM product WHERE id = ?;
+
+getLast:
+SELECT product. * FROM product WHERE id = last_insert_row();
+
+search:
+SELECT product. * FROM product WHERE name LIKE '%'||?||'%'
+ OR description LIKE '%'||?||'%' OR company LIKE '%'||?||'%'
+ OR categories LIKE '%'||?||'%';
+
+getByCategory:
+SELECT product. * FROM product WHERE categories LIKE '%'||?||'%';
