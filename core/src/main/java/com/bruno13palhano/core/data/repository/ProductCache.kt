@@ -21,7 +21,7 @@ internal class ProductCache @Inject constructor(
             description = model.description,
             photo = model.photo,
             date = model.date,
-            categories = model.categories.toString(),
+            categories = model.categories,
             company = model.company
         )
         return 0L
@@ -34,7 +34,7 @@ internal class ProductCache @Inject constructor(
             description = model.description,
             photo = model.photo,
             date = model.date,
-            categories = model.categories.toString(),
+            categories = model.categories,
             company = model.company,
             id = model.id
         )
@@ -79,7 +79,7 @@ internal class ProductCache @Inject constructor(
         description: String,
         photo: String,
         date: Long,
-        categories: String,
+        categories: List<String>,
         company: String
     ): Product {
         return Product(
@@ -89,7 +89,7 @@ internal class ProductCache @Inject constructor(
             description = description,
             photo = photo,
             date = date,
-            categories = listOf(categories),
+            categories = categories,
             company = company
         )
     }
