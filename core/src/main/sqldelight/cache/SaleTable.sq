@@ -28,8 +28,8 @@ INSERT INTO SaleTable(productId, customerId, name, customerName, photo, quantity
 
 update:
 UPDATE SaleTable SET productId = ?, customerId = ?, name = ?, customerName = ?, photo = ?, quantity = ?,
- purchasePrice = ?, salePrice = ?, categories = ?, company = ?, dateOfPayment = ?, isOrderedByCustomer = ?,
- isPaidByCustomer = ?;
+ purchasePrice = ?, salePrice = ?, categories = ?, company = ?, dateOfPayment = ?, dateOfSale = ?,
+ isOrderedByCustomer = ?, isPaidByCustomer = ? WHERE id = ?;
 
 delete:
 DELETE FROM SaleTable WHERE id = ?;
