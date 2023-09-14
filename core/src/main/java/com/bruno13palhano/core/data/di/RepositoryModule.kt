@@ -14,6 +14,7 @@ import com.bruno13palhano.core.data.repository.DeliveryRepository
 import com.bruno13palhano.core.data.repository.ProductRepository
 import com.bruno13palhano.core.data.repository.SaleRepository
 import com.bruno13palhano.core.data.repository.SearchCacheRepository
+import com.bruno13palhano.core.data.repository.ProductCache
 import com.bruno13palhano.core.data.repository.ShoppingCacheRepository
 import com.bruno13palhano.core.data.repository.StockOrderRepository
 import com.bruno13palhano.core.model.Category
@@ -38,6 +39,9 @@ import javax.inject.Singleton
  */
 @Qualifier
 annotation class DefaultProductRepository
+
+@Qualifier
+annotation class DefaultProductCache
 
 /**
  * Annotation to inject [CategoryRepository]
@@ -113,4 +117,9 @@ internal abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindDeliveryRepository(repository: DeliveryRepository): DeliveryData<Delivery>
+
+    @DefaultProductCache
+    @Singleton
+    @Binds
+    abstract fun bindProductCache(repository: ProductCache): ProductData<Product>
 }
