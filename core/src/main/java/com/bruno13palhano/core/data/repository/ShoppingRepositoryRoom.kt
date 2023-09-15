@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class ShoppingCacheRepositoryRoom @Inject constructor(
+internal class ShoppingRepositoryRoom @Inject constructor(
     private val shoppingDao: ShoppingDao
 ) : ShoppingData<Shopping> {
     override suspend fun insert(model: Shopping): Long {
