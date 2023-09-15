@@ -1,0 +1,34 @@
+import kotlin.Boolean;
+
+CREATE TABLE ShoppingTable (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    productId INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    purchasePrice REAL NOT NULL,
+    quantity INTEGER NOT NULL,
+    date INTEGER NOT NULL,
+    isPaid INTEGER AS Boolean NOT NULL
+);
+
+insert:
+INSERT INTO ShoppingTable(productId, name, purchasePrice, quantity, date, isPaid)
+ VALUES(?,?,?,?,?,?);
+
+update:
+UPDATE ShoppingTable SET productId = ?, name = ?, purchasePrice = ?, quantity = ?, date = ?,
+ isPaid = ? WHERE id = ?;
+
+delete:
+DELETE FROM ShoppingTable WHERE id = ?;
+
+getAll:
+SELECT ShoppingTable. * FROM ShoppingTable;
+
+getById:
+SELECT ShoppingTable. * FROM ShoppingTable WHERE id = ?;
+
+getLast:
+SELECT ShoppingTable. * FROM ShoppingTable WHERE id = last_insert_row();
+
+search:
+SELECT ShoppingTable. * FROM ShoppingTable WHERE name LIKE '%'||?||'%';
