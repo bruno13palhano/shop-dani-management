@@ -18,6 +18,7 @@ import com.bruno13palhano.core.data.repository.SearchCacheRepositoryRoom
 import com.bruno13palhano.core.data.repository.ProductRepositoryLight
 import com.bruno13palhano.core.data.repository.SaleRepositoryLight
 import com.bruno13palhano.core.data.repository.ShoppingCacheRepositoryRoom
+import com.bruno13palhano.core.data.repository.StockOrderRepositoryLight
 import com.bruno13palhano.core.data.repository.StockOrderRepositoryRoom
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
@@ -74,6 +75,9 @@ annotation class DefaultShoppingRepository
 annotation class DefaultStockOrderRepository
 
 @Qualifier
+annotation class SecondaryStockOrderRepository
+
+@Qualifier
 annotation class DefaultCustomerRepository
 
 @Qualifier
@@ -99,7 +103,9 @@ internal abstract class RepositoryModule {
     @DefaultSearchCacheRepository
     @Singleton
     @Binds
-    abstract fun bindSearchCacheRepository(repository: SearchCacheRepositoryRoom): SearchCacheData<SearchCache>
+    abstract fun bindSearchCacheRepository(
+        repository: SearchCacheRepositoryRoom
+    ): SearchCacheData<SearchCache>
 
     @DefaultSaleRepository
     @Singleton
@@ -109,12 +115,16 @@ internal abstract class RepositoryModule {
     @DefaultShoppingRepository
     @Singleton
     @Binds
-    abstract fun bindShoppingRepository(repository: ShoppingCacheRepositoryRoom): ShoppingData<Shopping>
+    abstract fun bindShoppingRepository(
+        repository: ShoppingCacheRepositoryRoom
+    ): ShoppingData<Shopping>
 
     @DefaultStockOrderRepository
     @Singleton
     @Binds
-    abstract fun bindStockOrderRepository(repository: StockOrderRepositoryRoom): StockOrderData<StockOrder>
+    abstract fun bindStockOrderRepository(
+        repository: StockOrderRepositoryRoom)
+    : StockOrderData<StockOrder>
 
     @DefaultCustomerRepository
     @Singleton
@@ -129,7 +139,9 @@ internal abstract class RepositoryModule {
     @SecondaryProductRepository
     @Singleton
     @Binds
-    abstract fun bindSecondaryProductRepository(repository: ProductRepositoryLight): ProductData<Product>
+    abstract fun bindSecondaryProductRepository(
+        repository: ProductRepositoryLight
+    ): ProductData<Product>
 
     @SecondarySaleRepository
     @Singleton
@@ -139,5 +151,14 @@ internal abstract class RepositoryModule {
     @SecondaryCustomerRepository
     @Singleton
     @Binds
-    abstract fun bindSecondaryCustomerRepository(repository: CustomerRepositoryLight): CustomerData<Customer>
+    abstract fun bindSecondaryCustomerRepository(
+        repository: CustomerRepositoryLight
+    ): CustomerData<Customer>
+
+    @SecondaryStockOrderRepository
+    @Singleton
+    @Binds
+    abstract fun bindSecondaryStockOrderRepository(
+        repository: StockOrderRepositoryLight
+    ): StockOrderData<StockOrder>
 }
