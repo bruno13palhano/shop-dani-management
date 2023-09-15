@@ -8,17 +8,17 @@ import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.SearchCacheData
 import com.bruno13palhano.core.data.ShoppingData
 import com.bruno13palhano.core.data.StockOrderData
-import com.bruno13palhano.core.data.repository.CategoryRepository
-import com.bruno13palhano.core.data.repository.CustomerCache
-import com.bruno13palhano.core.data.repository.CustomerRepository
-import com.bruno13palhano.core.data.repository.DeliveryRepository
-import com.bruno13palhano.core.data.repository.ProductRepository
-import com.bruno13palhano.core.data.repository.SaleRepository
-import com.bruno13palhano.core.data.repository.SearchCacheRepository
-import com.bruno13palhano.core.data.repository.ProductCache
-import com.bruno13palhano.core.data.repository.SaleCache
-import com.bruno13palhano.core.data.repository.ShoppingCacheRepository
-import com.bruno13palhano.core.data.repository.StockOrderRepository
+import com.bruno13palhano.core.data.repository.CategoryRepositoryRoom
+import com.bruno13palhano.core.data.repository.CustomerRepositoryLight
+import com.bruno13palhano.core.data.repository.CustomerRepositoryRoom
+import com.bruno13palhano.core.data.repository.DeliveryRepositoryRoom
+import com.bruno13palhano.core.data.repository.ProductRepositoryRoom
+import com.bruno13palhano.core.data.repository.SaleRepositoryRoom
+import com.bruno13palhano.core.data.repository.SearchCacheRepositoryRoom
+import com.bruno13palhano.core.data.repository.ProductRepositoryLight
+import com.bruno13palhano.core.data.repository.SaleRepositoryLight
+import com.bruno13palhano.core.data.repository.ShoppingCacheRepositoryRoom
+import com.bruno13palhano.core.data.repository.StockOrderRepositoryRoom
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Delivery
@@ -35,28 +35,28 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 
 /**
- * Annotation to inject [ProductRepository].
+ * Annotation to inject [ProductRepositoryRoom].
  *
- * Injects the default [ProductRepository] implementation.
+ * Injects the default [ProductRepositoryRoom] implementation.
  */
 @Qualifier
 annotation class DefaultProductRepository
 
 @Qualifier
-annotation class DefaultProductCache
+annotation class SecondaryProductRepository
 
 /**
- * Annotation to inject [CategoryRepository]
+ * Annotation to inject [CategoryRepositoryRoom]
  *
- * Injects the default [CategoryRepository] implementation.
+ * Injects the default [CategoryRepositoryRoom] implementation.
  */
 @Qualifier
 annotation class DefaultCategoryRepository
 
 /**
- * Annotation to inject [SearchCacheRepository]
+ * Annotation to inject [SearchCacheRepositoryRoom]
  *
- * Injects the default [SearchCacheRepository] implementation.
+ * Injects the default [SearchCacheRepositoryRoom] implementation.
  */
 @Qualifier
 annotation class DefaultSearchCacheRepository
@@ -65,7 +65,7 @@ annotation class DefaultSearchCacheRepository
 annotation class DefaultSaleRepository
 
 @Qualifier
-annotation class DefaultSaleCache
+annotation class SecondarySaleRepository
 
 @Qualifier
 annotation class DefaultShoppingRepository
@@ -77,7 +77,7 @@ annotation class DefaultStockOrderRepository
 annotation class DefaultCustomerRepository
 
 @Qualifier
-annotation class DefaultCustomerCache
+annotation class SecondaryCustomerRepository
 
 @Qualifier
 annotation class DefaultDeliveryRepository
@@ -89,55 +89,55 @@ internal abstract class RepositoryModule {
     @DefaultProductRepository
     @Singleton
     @Binds
-    abstract fun bindProductRepository(repository: ProductRepository): ProductData<Product>
+    abstract fun bindProductRepository(repository: ProductRepositoryRoom): ProductData<Product>
 
     @DefaultCategoryRepository
     @Singleton
     @Binds
-    abstract fun bindCategoryRepository(repository: CategoryRepository): CategoryData<Category>
+    abstract fun bindCategoryRepository(repository: CategoryRepositoryRoom): CategoryData<Category>
 
     @DefaultSearchCacheRepository
     @Singleton
     @Binds
-    abstract fun bindSearchCacheRepository(repository: SearchCacheRepository): SearchCacheData<SearchCache>
+    abstract fun bindSearchCacheRepository(repository: SearchCacheRepositoryRoom): SearchCacheData<SearchCache>
 
     @DefaultSaleRepository
     @Singleton
     @Binds
-    abstract fun bindSaleRepository(repository: SaleRepository): SaleData<Sale>
+    abstract fun bindSaleRepository(repository: SaleRepositoryRoom): SaleData<Sale>
 
     @DefaultShoppingRepository
     @Singleton
     @Binds
-    abstract fun bindShoppingRepository(repository: ShoppingCacheRepository): ShoppingData<Shopping>
+    abstract fun bindShoppingRepository(repository: ShoppingCacheRepositoryRoom): ShoppingData<Shopping>
 
     @DefaultStockOrderRepository
     @Singleton
     @Binds
-    abstract fun bindStockOrderRepository(repository: StockOrderRepository): StockOrderData<StockOrder>
+    abstract fun bindStockOrderRepository(repository: StockOrderRepositoryRoom): StockOrderData<StockOrder>
 
     @DefaultCustomerRepository
     @Singleton
     @Binds
-    abstract fun bindCustomerRepository(repository: CustomerRepository): CustomerData<Customer>
+    abstract fun bindCustomerRepository(repository: CustomerRepositoryRoom): CustomerData<Customer>
 
     @DefaultDeliveryRepository
     @Singleton
     @Binds
-    abstract fun bindDeliveryRepository(repository: DeliveryRepository): DeliveryData<Delivery>
+    abstract fun bindDeliveryRepository(repository: DeliveryRepositoryRoom): DeliveryData<Delivery>
 
-    @DefaultProductCache
+    @SecondaryProductRepository
     @Singleton
     @Binds
-    abstract fun bindProductCache(repository: ProductCache): ProductData<Product>
+    abstract fun bindSecondaryProductRepository(repository: ProductRepositoryLight): ProductData<Product>
 
-    @DefaultSaleCache
+    @SecondarySaleRepository
     @Singleton
     @Binds
-    abstract fun bindSaleCache(repository: SaleCache): SaleData<Sale>
+    abstract fun bindSecondarySaleRepository(repository: SaleRepositoryLight): SaleData<Sale>
 
-    @DefaultCustomerCache
+    @SecondaryCustomerRepository
     @Singleton
     @Binds
-    abstract fun bindCustomerCache(repository: CustomerCache): CustomerData<Customer>
+    abstract fun bindSecondaryCustomerRepository(repository: CustomerRepositoryLight): CustomerData<Customer>
 }
