@@ -5,13 +5,16 @@ import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.CustomerTableQueries
 import com.bruno13palhano.core.data.CustomerData
+import com.bruno13palhano.core.data.di.Dispatcher
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Customer
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CustomerRepositoryLight @Inject constructor(
-    private val customerQueries: CustomerTableQueries
+    private val customerQueries: CustomerTableQueries,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CustomerData<Customer> {
     override suspend fun insert(model: Customer): Long {
         customerQueries.insert(
@@ -45,17 +48,17 @@ class CustomerRepositoryLight @Inject constructor(
 
     override fun getAll(): Flow<List<Customer>> {
         return customerQueries.getAll(::mapCustomer)
-            .asFlow().mapToList(Dispatchers.IO)
+            .asFlow().mapToList(ioDispatcher)
     }
 
     override fun getById(id: Long): Flow<Customer> {
         return customerQueries.getById(id, mapper = ::mapCustomer)
-            .asFlow().mapToOne(Dispatchers.IO)
+            .asFlow().mapToOne(ioDispatcher)
     }
 
     override fun getLast(): Flow<Customer> {
         return customerQueries.getLast(mapper = ::mapCustomer)
-            .asFlow().mapToOne(Dispatchers.IO)
+            .asFlow().mapToOne(ioDispatcher)
     }
 
     private fun mapCustomer(
