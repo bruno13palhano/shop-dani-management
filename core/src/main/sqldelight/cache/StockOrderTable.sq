@@ -14,7 +14,7 @@ CREATE TABLE StockOrderTable (
     company TEXT NOT NULL,
     purchasePrice REAL NOT NULL,
     salePrice REAL NOT NULL,
-    isOrderedByCustomer INTEGER AS Boolean
+    isOrderedByCustomer INTEGER AS Boolean NOT NULL
 );
 
 insert:
