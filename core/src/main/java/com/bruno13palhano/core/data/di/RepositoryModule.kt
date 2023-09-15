@@ -18,7 +18,7 @@ import com.bruno13palhano.core.data.repository.SaleRepositoryRoom
 import com.bruno13palhano.core.data.repository.SearchCacheRepositoryRoom
 import com.bruno13palhano.core.data.repository.ProductRepositoryLight
 import com.bruno13palhano.core.data.repository.SaleRepositoryLight
-import com.bruno13palhano.core.data.repository.ShoppingCacheRepositoryRoom
+import com.bruno13palhano.core.data.repository.ShoppingRepositoryRoom
 import com.bruno13palhano.core.data.repository.StockOrderRepositoryLight
 import com.bruno13palhano.core.data.repository.StockOrderRepositoryRoom
 import com.bruno13palhano.core.model.Category
@@ -120,7 +120,7 @@ internal abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindShoppingRepository(
-        repository: ShoppingCacheRepositoryRoom
+        repository: ShoppingRepositoryRoom
     ): ShoppingData<Shopping>
 
     @DefaultStockOrderRepository
