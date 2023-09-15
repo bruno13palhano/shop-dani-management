@@ -1,0 +1,25 @@
+CREATE TABLE CategoryTable (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+insert:
+INSERT INTO CategoryTable(name) VALUES(?);
+
+update:
+UPDATE CategoryTable SET name = ? WHERE id = ?;
+
+delete:
+DELETE FROM CategoryTable WHERE id = ?;
+
+getAll:
+SELECT CategoryTable. * FROM CategoryTable;
+
+getById:
+SELECT CategoryTable. * FROM CategoryTable WHERE id = ?;
+
+getLast:
+SELECT CategoryTable. * FROM CategoryTable WHERE id = last_insert_row();
+
+search:
+SELECT CategoryTable. * FROM CategoryTable WHERE name LIKE '%'||?||'%';
