@@ -5,6 +5,7 @@ import cache.CategoryTableQueries
 import cache.CustomerTableQueries
 import cache.SaleTableQueries
 import cache.ShopDatabaseQueries
+import cache.ShoppingTableQueries
 import cache.StockOrderTableQueries
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.database.DatabaseFactory
@@ -55,4 +56,10 @@ internal object CacheModule {
     fun provideCategoryTable(
         database: ShopDatabase
     ): CategoryTableQueries = database.categoryTableQueries
+
+    @Provides
+    @Singleton
+    fun provideShoppingTable(
+        database: ShopDatabase
+    ): ShoppingTableQueries = database.shoppingTableQueries
 }
