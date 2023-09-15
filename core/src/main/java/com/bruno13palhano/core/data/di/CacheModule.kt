@@ -4,6 +4,7 @@ import android.content.Context
 import cache.CustomerTableQueries
 import cache.SaleTableQueries
 import cache.ShopDatabaseQueries
+import cache.StockOrderTableQueries
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.database.DatabaseFactory
 import com.bruno13palhano.core.data.database.DriverFactory
@@ -38,5 +39,13 @@ internal object CacheModule {
 
     @Provides
     @Singleton
-    fun provideCustomerTable(database: ShopDatabase): CustomerTableQueries = database.customerTableQueries
+    fun provideCustomerTable(
+        database: ShopDatabase
+    ): CustomerTableQueries = database.customerTableQueries
+
+    @Provides
+    @Singleton
+    fun provideStockOrderTable(
+        database: ShopDatabase
+    ): StockOrderTableQueries = database.stockOrderTableQueries
 }
