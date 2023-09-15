@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class CategoryRepository @Inject constructor(
+internal class CategoryRepositoryRoom @Inject constructor(
     private val categoryDao: CategoryDao
 ) : CategoryData<Category> {
     override suspend fun insert(model: Category): Long {

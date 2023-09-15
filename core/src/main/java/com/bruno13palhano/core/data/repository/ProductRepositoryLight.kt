@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-internal class ProductCache @Inject constructor(
+internal class ProductRepositoryLight @Inject constructor(
     private val productQueries: ShopDatabaseQueries
 ) : ProductData<Product> {
 

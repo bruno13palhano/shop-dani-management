@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class SearchCacheRepository @Inject constructor(
+internal class SearchCacheRepositoryRoom @Inject constructor(
     private val searchCacheDao: SearchCacheDao
 ) : SearchCacheData<SearchCache> {
     override suspend fun insert(model: SearchCache): Long {

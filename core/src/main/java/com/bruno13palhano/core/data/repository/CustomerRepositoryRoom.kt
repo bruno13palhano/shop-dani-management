@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class CustomerRepository @Inject constructor(
+internal class CustomerRepositoryRoom @Inject constructor(
     private val customerDao: CustomerDao
 ) : CustomerData<Customer> {
     override suspend fun insert(model: Customer): Long {

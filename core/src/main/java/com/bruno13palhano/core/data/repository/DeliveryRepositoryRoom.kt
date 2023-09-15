@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class DeliveryRepository @Inject constructor(
+internal class DeliveryRepositoryRoom @Inject constructor(
     private val deliveryDao: DeliveryDao
 ) : DeliveryData<Delivery> {
     override suspend fun insert(model: Delivery): Long =

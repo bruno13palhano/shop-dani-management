@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CustomerCache @Inject constructor(
+class CustomerRepositoryLight @Inject constructor(
     private val customerQueries: CustomerTableQueries
 ) : CustomerData<Customer> {
     override suspend fun insert(model: Customer): Long {
