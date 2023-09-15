@@ -5,13 +5,16 @@ import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.ShopDatabaseQueries
 import com.bruno13palhano.core.data.ProductData
+import com.bruno13palhano.core.data.di.Dispatcher
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Product
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 internal class ProductRepositoryLight @Inject constructor(
-    private val productQueries: ShopDatabaseQueries
+    private val productQueries: ShopDatabaseQueries,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : ProductData<Product> {
 
     override suspend fun insert(model: Product): Long {
@@ -46,12 +49,12 @@ internal class ProductRepositoryLight @Inject constructor(
 
     override fun search(value: String): Flow<List<Product>> {
         return productQueries.search(value, value, value,value, mapper = ::mapProduct)
-            .asFlow().mapToList(Dispatchers.IO)
+            .asFlow().mapToList(ioDispatcher)
     }
 
     override fun getByCategory(category: String): Flow<List<Product>> {
         return productQueries.getByCategory(category, mapper = ::mapProduct)
-            .asFlow().mapToList(Dispatchers.IO)
+            .asFlow().mapToList(ioDispatcher)
     }
 
     override suspend fun deleteById(id: Long) {
@@ -59,17 +62,17 @@ internal class ProductRepositoryLight @Inject constructor(
     }
 
     override fun getAll(): Flow<List<Product>> {
-        return productQueries.getAll(::mapProduct).asFlow().mapToList(Dispatchers.IO)
+        return productQueries.getAll(::mapProduct).asFlow().mapToList(ioDispatcher)
     }
 
     override fun getById(id: Long): Flow<Product> {
         return productQueries.getById(id, mapper = ::mapProduct)
-            .asFlow().mapToOne(Dispatchers.IO)
+            .asFlow().mapToOne(ioDispatcher)
     }
 
     override fun getLast(): Flow<Product> {
         return productQueries.getLast(mapper = ::mapProduct)
-            .asFlow().mapToOne(Dispatchers.IO)
+            .asFlow().mapToOne(ioDispatcher)
     }
 
     private fun mapProduct(
