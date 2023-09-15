@@ -30,6 +30,9 @@ delete:
 DELETE FROM StockOrderTable WHERE id = ?;
 
 getAll:
+SELECT StockOrderTable. * FROM StockOrderTable;
+
+getById:
 SELECT StockOrderTable. * FROM StockOrderTable WHERE id = ?;
 
 getLast:
