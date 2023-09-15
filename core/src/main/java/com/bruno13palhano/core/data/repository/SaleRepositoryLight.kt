@@ -5,13 +5,16 @@ import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.SaleTableQueries
 import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.di.Dispatcher
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Sale
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SaleRepositoryLight @Inject constructor(
-    private val saleQueries: SaleTableQueries
+    private val saleQueries: SaleTableQueries,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleData<Sale> {
     override suspend fun insert(model: Sale): Long {
         saleQueries.insert(
@@ -59,22 +62,22 @@ class SaleRepositoryLight @Inject constructor(
 
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
         return saleQueries.getByCustomerId(customerId = customerId, mapper = ::mapSale)
-            .asFlow().mapToList(Dispatchers.IO)
+            .asFlow().mapToList(ioDispatcher)
     }
 
     override fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>> {
         return saleQueries.getLastSales(offset.toLong(), limit.toLong(), mapper = ::mapSale)
-            .asFlow().mapToList(Dispatchers.IO)
+            .asFlow().mapToList(ioDispatcher)
     }
 
     override fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>> {
         return saleQueries.getAllStockSales(offset.toLong(), limit.toLong(), mapper = ::mapSale)
-            .asFlow().mapToList(Dispatchers.IO)
+            .asFlow().mapToList(ioDispatcher)
     }
 
     override fun getAllOrdersSales(offset: Int, limit: Int): Flow<List<Sale>> {
         return saleQueries.getAllOrdersSales(offset.toLong(), limit.toLong(), mapper = ::mapSale)
-            .asFlow().mapToList(Dispatchers.IO)
+            .asFlow().mapToList(ioDispatcher)
     }
 
     override suspend fun deleteById(id: Long) {
@@ -83,17 +86,17 @@ class SaleRepositoryLight @Inject constructor(
 
     override fun getAll(): Flow<List<Sale>> {
         return saleQueries.getAll(mapper = ::mapSale)
-            .asFlow().mapToList(Dispatchers.IO)
+            .asFlow().mapToList(ioDispatcher)
     }
 
     override fun getById(id: Long): Flow<Sale> {
         return saleQueries.getById(id, mapper = ::mapSale)
-            .asFlow().mapToOne(Dispatchers.IO)
+            .asFlow().mapToOne(ioDispatcher)
     }
 
     override fun getLast(): Flow<Sale> {
         return saleQueries.getLast(mapper = ::mapSale)
-            .asFlow().mapToOne(Dispatchers.IO)
+            .asFlow().mapToOne(ioDispatcher)
     }
 
     private fun mapSale(
