@@ -18,6 +18,7 @@ import com.bruno13palhano.core.data.repository.SaleRepositoryRoom
 import com.bruno13palhano.core.data.repository.SearchCacheRepositoryRoom
 import com.bruno13palhano.core.data.repository.ProductRepositoryLight
 import com.bruno13palhano.core.data.repository.SaleRepositoryLight
+import com.bruno13palhano.core.data.repository.ShoppingRepositoryLight
 import com.bruno13palhano.core.data.repository.ShoppingRepositoryRoom
 import com.bruno13palhano.core.data.repository.StockOrderRepositoryLight
 import com.bruno13palhano.core.data.repository.StockOrderRepositoryRoom
@@ -74,6 +75,9 @@ annotation class SecondarySaleRepository
 
 @Qualifier
 annotation class DefaultShoppingRepository
+
+@Qualifier
+annotation class SecondaryShoppingRepository
 
 @Qualifier
 annotation class DefaultStockOrderRepository
@@ -172,4 +176,11 @@ internal abstract class RepositoryModule {
     abstract fun bindSecondaryCategoryRepository(
         repository: CategoryRepositoryLight
     ): CategoryData<Category>
+
+    @SecondaryShoppingRepository
+    @Singleton
+    @Binds
+    abstract fun bindSecondaryShoppingRepository(
+        repository: ShoppingRepositoryLight
+    ): ShoppingData<Shopping>
 }
