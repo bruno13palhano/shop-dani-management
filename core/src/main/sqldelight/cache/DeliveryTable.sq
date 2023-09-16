@@ -18,7 +18,7 @@ INSERT INTO DeliveryTable(saleId, customerName, address, phoneNumber, productNam
  shippingDate, deliveryDate, delivered) VALUES(?,?,?,?,?,?,?,?,?);
 
 update:
-UPDATE DeliveryTable SET customerName = ?, address =?, phoneNumber = ?, productName =?, price = ?,
+UPDATE DeliveryTable SET saleId = ? ,customerName = ?, address =?, phoneNumber = ?, productName =?, price = ?,
  shippingDate = ?, deliveryDate = ?, delivered = ? WHERE id = ?;
 
 delete:
