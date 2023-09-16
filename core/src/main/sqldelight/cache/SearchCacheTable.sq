@@ -1,0 +1,12 @@
+CREATE TABLE SearchCacheTable (
+    search TEXT NOT NULL PRIMARY KEY
+);
+
+insert:
+INSERT INTO SearchCacheTable(search) VALUES(?);
+
+update:
+UPDATE SearchCacheTable SET search = ? WHERE search = ?;
+
+delete:
+DELETE FROM SearchCacheTable WHERE search = ?;
