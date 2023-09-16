@@ -15,6 +15,10 @@ import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.data.di.DefaultShoppingRepository
 import com.bruno13palhano.core.data.di.DefaultStockOrderRepository
+import com.bruno13palhano.core.data.di.SecondaryCategoryRepository
+import com.bruno13palhano.core.data.di.SecondaryProductRepository
+import com.bruno13palhano.core.data.di.SecondaryShoppingRepository
+import com.bruno13palhano.core.data.di.SecondaryStockOrderRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
@@ -34,10 +38,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ItemViewModel @Inject constructor(
-    @DefaultProductRepository private val productRepository: ProductData<Product>,
-    @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
-    @DefaultShoppingRepository private val shoppingRepository: ShoppingData<Shopping>,
-    @DefaultStockOrderRepository private val stockRepository: StockOrderData<StockOrder>
+    @SecondaryProductRepository private val productRepository: ProductData<Product>,
+    @SecondaryCategoryRepository private val categoryRepository: CategoryData<Category>,
+    @SecondaryShoppingRepository private val shoppingRepository: ShoppingData<Shopping>,
+    @SecondaryStockOrderRepository private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),

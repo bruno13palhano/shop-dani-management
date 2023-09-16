@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.di.DefaultCustomerRepository
+import com.bruno13palhano.core.data.di.SecondaryCustomerRepository
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CustomersViewModel @Inject constructor(
-    @DefaultCustomerRepository private val customersRepository: CustomerData<Customer>
+    @SecondaryCustomerRepository private val customersRepository: CustomerData<Customer>
 ): ViewModel() {
     val customerList = customersRepository.getAll()
         .map {

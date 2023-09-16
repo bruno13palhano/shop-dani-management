@@ -6,6 +6,8 @@ import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SearchCacheData
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.data.di.DefaultSearchCacheRepository
+import com.bruno13palhano.core.data.di.SecondaryProductRepository
+import com.bruno13palhano.core.data.di.SecondarySearchCacheRepository
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.core.model.Stock
@@ -19,8 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchProductsViewModel @Inject constructor(
-    @DefaultProductRepository private val productRepository: ProductData<Product>,
-    @DefaultSearchCacheRepository private val searchCacheRepository: SearchCacheData<SearchCache>
+    @SecondaryProductRepository private val productRepository: ProductData<Product>,
+    @SecondarySearchCacheRepository private val searchCacheRepository: SearchCacheData<SearchCache>
 ) : ViewModel() {
     private val _searchCache = MutableStateFlow<List<SearchCache>>(emptyList())
     val searchCache = _searchCache.asStateFlow()

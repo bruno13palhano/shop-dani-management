@@ -20,6 +20,12 @@ import com.bruno13palhano.core.data.di.DefaultDeliveryRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.data.di.DefaultSaleRepository
 import com.bruno13palhano.core.data.di.DefaultStockOrderRepository
+import com.bruno13palhano.core.data.di.SecondaryCategoryRepository
+import com.bruno13palhano.core.data.di.SecondaryCustomerRepository
+import com.bruno13palhano.core.data.di.SecondaryDeliveryRepository
+import com.bruno13palhano.core.data.di.SecondaryProductRepository
+import com.bruno13palhano.core.data.di.SecondarySaleRepository
+import com.bruno13palhano.core.data.di.SecondaryStockOrderRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Customer
@@ -43,12 +49,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaleViewModel @Inject constructor(
-    @DefaultProductRepository private val productRepository: ProductData<Product>,
-    @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>,
-    @DefaultSaleRepository private val saleRepository: SaleData<Sale>,
-    @DefaultStockOrderRepository private val stockOrderRepository: StockOrderData<StockOrder>,
-    @DefaultCustomerRepository private val customerRepository: CustomerData<Customer>,
-    @DefaultDeliveryRepository private val deliveryRepository: DeliveryData<Delivery>
+    @SecondaryProductRepository private val productRepository: ProductData<Product>,
+    @SecondaryCategoryRepository private val categoryRepository: CategoryData<Category>,
+    @SecondarySaleRepository private val saleRepository: SaleData<Sale>,
+    @SecondaryStockOrderRepository private val stockOrderRepository: StockOrderData<StockOrder>,
+    @SecondaryCustomerRepository private val customerRepository: CustomerData<Customer>,
+    @SecondaryDeliveryRepository private val deliveryRepository: DeliveryData<Delivery>
 ) : ViewModel() {
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),

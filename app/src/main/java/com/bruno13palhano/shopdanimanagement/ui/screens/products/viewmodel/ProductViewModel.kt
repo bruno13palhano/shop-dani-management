@@ -11,6 +11,8 @@ import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultProductRepository
+import com.bruno13palhano.core.data.di.SecondaryCategoryRepository
+import com.bruno13palhano.core.data.di.SecondaryProductRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
@@ -27,8 +29,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductViewModel @Inject constructor(
-    @DefaultProductRepository private val productRepository: ProductData<Product>,
-    @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>
+    @SecondaryProductRepository private val productRepository: ProductData<Product>,
+    @SecondaryCategoryRepository private val categoryRepository: CategoryData<Category>
 ) : ViewModel() {
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),

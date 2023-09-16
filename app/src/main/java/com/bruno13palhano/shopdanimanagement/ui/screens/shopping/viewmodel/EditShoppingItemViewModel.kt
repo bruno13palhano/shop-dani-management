@@ -11,6 +11,8 @@ import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.ShoppingData
 import com.bruno13palhano.core.data.di.DefaultProductRepository
 import com.bruno13palhano.core.data.di.DefaultShoppingRepository
+import com.bruno13palhano.core.data.di.SecondaryProductRepository
+import com.bruno13palhano.core.data.di.SecondaryShoppingRepository
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
@@ -23,8 +25,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditShoppingItemViewModel @Inject constructor(
-    @DefaultShoppingRepository private val shoppingRepository: ShoppingData<Shopping>,
-    @DefaultProductRepository private val productRepository: ProductData<Product>
+    @SecondaryShoppingRepository private val shoppingRepository: ShoppingData<Shopping>,
+    @SecondaryProductRepository private val productRepository: ProductData<Product>
 ) : ViewModel() {
     var productId by mutableLongStateOf(0L)
         private set

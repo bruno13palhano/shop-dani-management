@@ -6,6 +6,8 @@ import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
 import com.bruno13palhano.core.data.di.DefaultStockOrderRepository
+import com.bruno13palhano.core.data.di.SecondaryCategoryRepository
+import com.bruno13palhano.core.data.di.SecondaryStockOrderRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Stock
 import com.bruno13palhano.core.model.StockOrder
@@ -19,8 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StockOrdersViewModel @Inject constructor(
-    @DefaultStockOrderRepository private val stockRepository: StockOrderData<StockOrder>,
-    @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>
+    @SecondaryStockOrderRepository private val stockRepository: StockOrderData<StockOrder>,
+    @SecondaryCategoryRepository private val categoryRepository: CategoryData<Category>
 ) : ViewModel() {
     val categories = categoryRepository.getAll()
         .map {

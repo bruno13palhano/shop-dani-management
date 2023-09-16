@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.di.DefaultCategoryRepository
+import com.bruno13palhano.core.data.di.SecondaryCategoryRepository
 import com.bruno13palhano.core.model.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductCategoriesViewModel @Inject constructor(
-    @DefaultCategoryRepository private val categoryRepository: CategoryData<Category>
+    @SecondaryCategoryRepository private val categoryRepository: CategoryData<Category>
 ): ViewModel() {
     val categories = categoryRepository.getAll()
         .stateIn(
