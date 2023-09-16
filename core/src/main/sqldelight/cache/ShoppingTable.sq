@@ -32,3 +32,6 @@ SELECT ShoppingTable. * FROM ShoppingTable WHERE id = last_insert_row();
 
 search:
 SELECT ShoppingTable. * FROM ShoppingTable WHERE name LIKE '%'||?||'%';
+
+getItemsLimited:
+SELECT ShoppingTable. * FROM ShoppingTable ORDER BY id DESC LIMIT ?,?;
