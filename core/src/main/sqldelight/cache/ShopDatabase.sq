@@ -30,7 +30,7 @@ getById:
 SELECT product. * FROM product WHERE id = ?;
 
 getLast:
-SELECT product. * FROM product WHERE id = last_insert_row();
+SELECT product. * FROM product WHERE id = last_insert_rowid();
 
 search:
 SELECT product. * FROM product WHERE name LIKE '%'||?||'%'

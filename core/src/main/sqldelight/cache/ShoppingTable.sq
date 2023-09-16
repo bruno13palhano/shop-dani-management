@@ -28,7 +28,7 @@ getById:
 SELECT ShoppingTable. * FROM ShoppingTable WHERE id = ?;
 
 getLast:
-SELECT ShoppingTable. * FROM ShoppingTable WHERE id = last_insert_row();
+SELECT ShoppingTable. * FROM ShoppingTable WHERE id = last_insert_rowid();
 
 search:
 SELECT ShoppingTable. * FROM ShoppingTable WHERE name LIKE '%'||?||'%';

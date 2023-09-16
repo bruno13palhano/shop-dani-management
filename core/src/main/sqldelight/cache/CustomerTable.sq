@@ -24,4 +24,4 @@ getById:
 SELECT CustomerTable. * FROM CustomerTable WHERE id = ?;
 
 getLast:
-SELECT CustomerTable. * FROM CustomerTable WHERE id = last_insert_row();
+SELECT CustomerTable. * FROM CustomerTable WHERE id = last_insert_rowid();

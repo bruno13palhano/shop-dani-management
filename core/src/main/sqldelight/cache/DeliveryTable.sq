@@ -31,7 +31,7 @@ getById:
 SELECT DeliveryTable. * FROM DeliveryTable WHERE id = ?;
 
 getLast:
-SELECT DeliveryTable. * FROM DeliveryTable WHERE id = last_insert_row();
+SELECT DeliveryTable. * FROM DeliveryTable WHERE id = last_insert_rowid();
 
 updateShippingDate:
 UPDATE DeliveryTable SET shippingDate = ? WHERE id = ?;

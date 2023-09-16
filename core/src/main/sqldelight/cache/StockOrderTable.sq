@@ -36,7 +36,7 @@ getById:
 SELECT StockOrderTable. * FROM StockOrderTable WHERE id = ?;
 
 getLast:
-SELECT StockOrderTable. * FROM StockOrderTable WHERE id = last_insert_row();
+SELECT StockOrderTable. * FROM StockOrderTable WHERE id = last_insert_rowid();
 
 getItems:
 SELECT StockOrderTable. * FROM StockOrderTable WHERE isOrderedByCustomer = ?;

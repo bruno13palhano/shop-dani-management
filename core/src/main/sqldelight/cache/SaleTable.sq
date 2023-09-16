@@ -41,7 +41,7 @@ getById:
 SELECT SaleTable. * FROM SaleTable WHERE id = ?;
 
 getLast:
-SELECT SaleTable. * FROM SaleTable WHERE id = last_insert_row();
+SELECT SaleTable. * FROM SaleTable WHERE id = last_insert_rowid();
 
 getByCustomerId:
 SELECT SaleTable. * FROM SaleTable WHERE customerId = ?;
