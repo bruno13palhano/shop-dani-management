@@ -12,6 +12,7 @@ import com.bruno13palhano.core.data.repository.CategoryRepositoryLight
 import com.bruno13palhano.core.data.repository.CategoryRepositoryRoom
 import com.bruno13palhano.core.data.repository.CustomerRepositoryLight
 import com.bruno13palhano.core.data.repository.CustomerRepositoryRoom
+import com.bruno13palhano.core.data.repository.DeliveryRepositoryLight
 import com.bruno13palhano.core.data.repository.DeliveryRepositoryRoom
 import com.bruno13palhano.core.data.repository.ProductRepositoryRoom
 import com.bruno13palhano.core.data.repository.SaleRepositoryRoom
@@ -97,6 +98,9 @@ annotation class SecondaryCustomerRepository
 
 @Qualifier
 annotation class DefaultDeliveryRepository
+
+@Qualifier
+annotation class SecondaryDeliveryRepository
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -194,4 +198,11 @@ internal abstract class RepositoryModule {
     abstract fun bindSecondaryCacheRepository(
         repository: SearchCacheRepositoryLight
     ): SearchCacheData<SearchCache>
+
+    @SecondaryDeliveryRepository
+    @Singleton
+    @Binds
+    abstract fun bindSecondaryDeliveryRepository(
+        repository: DeliveryRepositoryLight
+    ): DeliveryData<Delivery>
 }
