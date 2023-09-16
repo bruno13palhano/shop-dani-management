@@ -1,12 +1,13 @@
 CREATE TABLE SearchCacheTable (
-    search TEXT NOT NULL PRIMARY KEY
+    id TEXT NOT NULL PRIMARY KEY AUTOINCREMENT,
+    search TEXT NOT NULL
 );
 
 insert:
 INSERT INTO SearchCacheTable(search) VALUES(?);
 
-update:
-UPDATE SearchCacheTable SET search = ? WHERE search = ?;
-
 delete:
-DELETE FROM SearchCacheTable WHERE search = ?;
+DELETE FROM SearchCacheTable WHERE id = ?;
+
+getAll:
+SELECT SearchCacheTable. * FROM SearchCacheTable;
