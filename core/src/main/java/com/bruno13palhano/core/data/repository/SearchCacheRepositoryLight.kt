@@ -16,7 +16,7 @@ class SearchCacheRepositoryLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SearchCacheData<SearchCache> {
     override suspend fun insert(model: SearchCache): Long {
-        searchQueries.insert(model.search)
+        searchQueries.insert(model.search, model.search)
         return 0L
     }
 

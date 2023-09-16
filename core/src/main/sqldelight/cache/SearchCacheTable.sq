@@ -1,10 +1,10 @@
 CREATE TABLE SearchCacheTable (
-    id TEXT NOT NULL PRIMARY KEY AUTOINCREMENT,
+    id TEXT NOT NULL PRIMARY KEY,
     search TEXT NOT NULL
 );
 
 insert:
-INSERT INTO SearchCacheTable(search) VALUES(?);
+INSERT INTO SearchCacheTable(id, search) VALUES(?,?);
 
 delete:
 DELETE FROM SearchCacheTable WHERE id = ?;
