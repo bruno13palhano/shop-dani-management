@@ -48,3 +48,6 @@ SELECT product.id, product.name, product.code, product.description, product.phot
  ProductCategoriesTable.categories, product.company FROM product INNER JOIN ProductCategoriesTable
   ON (ProductCategoriesTable.categories LIKE '%' || :category || '%')
   WHERE product.categoryId = ProductCategoriesTable.id;
+
+getLastId:
+SELECT last_insert_rowid();
