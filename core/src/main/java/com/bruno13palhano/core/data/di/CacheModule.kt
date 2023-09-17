@@ -4,6 +4,7 @@ import android.content.Context
 import cache.CategoryTableQueries
 import cache.CustomerTableQueries
 import cache.DeliveryTableQueries
+import cache.ProductCategoriesTableQueries
 import cache.SaleTableQueries
 import cache.SearchCacheTableQueries
 import cache.ShopDatabaseQueries
@@ -76,4 +77,10 @@ internal object CacheModule {
     fun provideDeliveryTable(
         database: ShopDatabase
     ): DeliveryTableQueries = database.deliveryTableQueries
+
+    @Provides
+    @Singleton
+    fun provideProductCategoriesTable(
+        database: ShopDatabase
+    ): ProductCategoriesTableQueries = database.productCategoriesTableQueries
 }
