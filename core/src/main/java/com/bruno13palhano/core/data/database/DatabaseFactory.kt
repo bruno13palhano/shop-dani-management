@@ -1,7 +1,7 @@
 package com.bruno13palhano.core.data.database
 
 import app.cash.sqldelight.ColumnAdapter
-import cache.Product
+import cache.ProductCategoriesTable
 import cache.SaleTable
 import cache.StockOrderTable
 import com.bruno13palhano.cache.ShopDatabase
@@ -13,10 +13,10 @@ internal class DatabaseFactory(private val driverFactory: DriverFactory) {
             SaleTableAdapter = SaleTable.Adapter(
                 categoriesAdapter = listOfStringAdapter
             ),
-            productAdapter = Product.Adapter(
+            StockOrderTableAdapter = StockOrderTable.Adapter(
                 categoriesAdapter = listOfStringAdapter
             ),
-            StockOrderTableAdapter = StockOrderTable.Adapter(
+            ProductCategoriesTableAdapter = ProductCategoriesTable.Adapter(
                 categoriesAdapter = listOfStringAdapter
             )
         )
