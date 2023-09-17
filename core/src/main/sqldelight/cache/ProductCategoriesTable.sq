@@ -4,12 +4,11 @@ import kotlin.collections.List;
 CREATE TABLE ProductCategoriesTable (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     productId INTEGER NOT NULL,
-    categories TEXT AS List<String> NOT NULL,
-    FOREIGN KEY (productId) REFERENCES product(id) ON DELETE CASCADE
+    categories TEXT AS List<String> NOT NULL
 );
 
 insert:
 INSERT INTO ProductCategoriesTable(productId, categories) VALUES(?,?);
 
-last:
-SELECT last_insert_rowid();
+getByProductId:
+SELECT ProductCategoriesTable.id FROM ProductCategoriesTable WHERE productId = ?;
