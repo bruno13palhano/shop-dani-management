@@ -1,6 +1,3 @@
-import kotlin.String;
-import kotlin.collections.List;
-
 CREATE TABLE product (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -8,34 +5,46 @@ CREATE TABLE product (
     description TEXT NOT NULL,
     photo TEXT NOT NULL,
     date INTEGER NOT NULL,
-    categories TEXT  AS List<String> NOT NULL,
-    company TEXT NOT NULL
+    categoryId INTEGER NOT NULL,
+    company TEXT NOT NULL,
+    FOREIGN KEY (categoryId) REFERENCES ProductCategoriesTable(id) ON DELETE CASCADE
 );
 
 insert:
-INSERT INTO product(name, code, description, photo, date, categories, company)
-    VALUES(?,?,?,?,?,?,?);
+INSERT OR REPLACE INTO product(name, code, description, photo, date, categoryId, company)
+ VALUES(?,?,?,?,?,?,?);
 
 update:
 UPDATE product SET name = ?, code = ?, description = ?, photo = ?,
- date = ?, categories = ?, company = ? WHERE id = ?;
+ date = ?, categoryId = ?, company = ? WHERE id = ?;
 
 delete:
-DELETE FROM product WHERE id = ?;
+DELETE FROM product WHERE id = :productId;
 
 getAll:
-SELECT product. * FROM product;
+SELECT product.id, product.name, product.code, product.description, product.photo, product.date,
+ ProductCategoriesTable.categories, product.company FROM product LEFT JOIN ProductCategoriesTable
+  ON product.categoryId = ProductCategoriesTable.id;
 
 getById:
-SELECT product. * FROM product WHERE id = ?;
+SELECT product.id, product.name, product.code, product.description, product.photo, product.date,
+ ProductCategoriesTable.categories, product.company FROM product LEFT JOIN ProductCategoriesTable
+  ON product.categoryId = ProductCategoriesTable.id WHERE product.id = :produtId;
 
 getLast:
-SELECT product. * FROM product WHERE id = last_insert_rowid();
+SELECT product.id, product.name, product.code, product.description, product.photo, product.date,
+ ProductCategoriesTable.categories, product.company FROM product LEFT JOIN ProductCategoriesTable
+  ON product.categoryId = ProductCategoriesTable.id WHERE product.id = last_insert_rowid();
 
 search:
-SELECT product. * FROM product WHERE name LIKE '%'||?||'%'
- OR description LIKE '%'||?||'%' OR company LIKE '%'||?||'%'
- OR categories LIKE '%'||?||'%';
+SELECT product.id, product.name, product.code, product.description, product.photo, product.date,
+  ProductCategoriesTable.categories, product.company FROM product LEFT JOIN ProductCategoriesTable
+   WHERE ProductCategoriesTable.categories LIKE '%' || :category || '%'
+    OR product.name LIKE '%' || :name || '%' OR product.description LIKE '%' || :description || '%'
+    OR product.company LIKE '%' || :company || '%';
 
 getByCategory:
-SELECT product. * FROM product WHERE categories LIKE '%'||?||'%';
+SELECT product.id, product.name, product.code, product.description, product.photo, product.date,
+ ProductCategoriesTable.categories, product.company FROM product INNER JOIN ProductCategoriesTable
+  ON (ProductCategoriesTable.categories LIKE '%' || :category || '%')
+  WHERE product.categoryId = ProductCategoriesTable.id;
