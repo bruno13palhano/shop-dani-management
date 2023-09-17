@@ -3,12 +3,11 @@ import kotlin.collections.List;
 
 CREATE TABLE ProductCategoriesTable (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    productId INTEGER NOT NULL,
     categories TEXT AS List<String> NOT NULL
 );
 
 insert:
-INSERT INTO ProductCategoriesTable(productId, categories) VALUES(?,?);
+INSERT INTO ProductCategoriesTable(categories) VALUES(?);
 
-getByProductId:
-SELECT ProductCategoriesTable.id FROM ProductCategoriesTable WHERE productId = ?;
+getLastId:
+SELECT last_insert_rowid();
