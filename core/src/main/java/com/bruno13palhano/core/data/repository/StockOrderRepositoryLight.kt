@@ -19,31 +19,23 @@ class StockOrderRepositoryLight @Inject constructor(
     override suspend fun insert(model: StockOrder): Long {
         stockOrderQueries.insert(
             productId = model.productId,
-            name = model.name,
-            photo = model.photo,
             date = model.date,
             validity = model.validity,
             quantity = model.quantity.toLong(),
-            categories = model.categories,
-            company = model.company,
             purchasePrice = model.purchasePrice.toDouble(),
             salePrice = model.salePrice.toDouble(),
             isOrderedByCustomer = model.isOrderedByCustomer
         )
-        return 0L
+        return stockOrderQueries.lastId().executeAsOne()
     }
 
     override suspend fun update(model: StockOrder) {
         stockOrderQueries.update(
             id = model.id,
             productId = model.productId,
-            name = model.name,
-            photo = model.photo,
             date = model.date,
             validity = model.validity,
             quantity = model.quantity.toLong(),
-            categories = model.categories,
-            company = model.company,
             purchasePrice = model.purchasePrice.toDouble(),
             salePrice = model.salePrice.toDouble(),
             isOrderedByCustomer = model.isOrderedByCustomer
@@ -51,7 +43,7 @@ class StockOrderRepositoryLight @Inject constructor(
     }
 
     override suspend fun delete(model: StockOrder) {
-        stockOrderQueries.delete(model.id)
+        stockOrderQueries.delete(id = model.id)
     }
 
     override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
@@ -63,10 +55,10 @@ class StockOrderRepositoryLight @Inject constructor(
 
     override fun search(value: String, isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
         return stockOrderQueries.search(
-            value,
-            value,
-            value,
-            isOrderedByCustomer,
+            name = value,
+            company = value,
+            description = value,
+            isOrderedByCustomer = isOrderedByCustomer,
             mapper = ::mapStockOrder
         ).asFlow().mapToList(ioDispatcher)
     }
@@ -76,18 +68,18 @@ class StockOrderRepositoryLight @Inject constructor(
         isOrderedByCustomer: Boolean
     ): Flow<List<StockOrder>> {
         return stockOrderQueries.getByCategory(
-            category,
-            isOrderedByCustomer,
+            category = category,
+            isOrderedByCustomer = isOrderedByCustomer,
             mapper = ::mapStockOrder
         ).asFlow().mapToList(ioDispatcher)
     }
 
     override suspend fun updateStockOrderQuantity(id: Long, quantity: Int) {
-        stockOrderQueries.updateStockOrderQuantity(quantity.toLong(), id)
+        stockOrderQueries.updateStockOrderQuantity(quantity = quantity.toLong(), id = id)
     }
 
     override suspend fun deleteById(id: Long) {
-        stockOrderQueries.delete(id)
+        stockOrderQueries.delete(id = id)
     }
 
     override fun getAll(): Flow<List<StockOrder>> {
