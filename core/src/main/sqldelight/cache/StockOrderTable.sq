@@ -14,11 +14,11 @@ CREATE TABLE StockOrderTable (
 
 insert:
 INSERT INTO StockOrderTable(productId, date, validity, quantity, purchasePrice, salePrice, isOrderedByCustomer)
- VALUES(?,?,?,?,?,?,?);
+VALUES(?,?,?,?,?,?,?);
 
 update:
 UPDATE StockOrderTable SET productId = ?, date = ?, validity = ?, quantity = ?, purchasePrice = ?,
- salePrice = ?, isOrderedByCustomer = ? WHERE id = ?;
+    salePrice = ?, isOrderedByCustomer = ? WHERE id = ?;
 
 delete:
 DELETE FROM StockOrderTable WHERE id = ?;
@@ -26,40 +26,40 @@ DELETE FROM StockOrderTable WHERE id = ?;
 getAll:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer
- FROM product AS P INNER JOIN StockOrderTable AS S INNER JOIN ProductCategoriesTable AS PC
- ON(P.categoryId = PC.id AND P.id = S.productId);
+FROM product P INNER JOIN StockOrderTable S INNER JOIN ProductCategoriesTable PC
+ON(P.categoryId = PC.id AND P.id = S.productId);
 
 getById:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer
- FROM product AS P INNER JOIN StockOrderTable AS S INNER JOIN ProductCategoriesTable AS PC
- ON(P.categoryId = PC.id AND P.id = S.productId) WHERE S.id = :id;
+FROM product P INNER JOIN StockOrderTable S INNER JOIN ProductCategoriesTable PC
+ON(P.categoryId = PC.id AND P.id = S.productId) WHERE S.id = :id;
 
 getLast:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer
- FROM product AS P INNER JOIN StockOrderTable AS S INNER JOIN ProductCategoriesTable AS PC
- ON(P.categoryId = PC.id AND P.id = S.productId) WHERE S.id = last_insert_rowId();
+FROM product P INNER JOIN StockOrderTable S INNER JOIN ProductCategoriesTable PC
+ON(P.categoryId = PC.id AND P.id = S.productId) WHERE S.id = last_insert_rowId();
 
 getItems:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer
- FROM product AS P INNER JOIN StockOrderTable AS S INNER JOIN ProductCategoriesTable AS PC
- ON(P.categoryId = PC.id AND P.id = S.productId AND S.isOrderedByCustomer = :isOrderedByCustomer);
+FROM product P INNER JOIN StockOrderTable S INNER JOIN ProductCategoriesTable PC
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.isOrderedByCustomer = :isOrderedByCustomer);
 
 search:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer
- FROM StockOrderTable AS S INNER JOIN product AS P INNER JOIN ProductCategoriesTable AS PC
- ON(P.name LIKE '%' || :name || '%' OR P.company LIKE '%' || :company || '%'
+FROM StockOrderTable S INNER JOIN product P INNER JOIN ProductCategoriesTable PC
+ON(P.name LIKE '%' || :name || '%' OR P.company LIKE '%' || :company || '%'
     OR P.description LIKE '%' || :description || '%')
- WHERE S.productId = P.id AND PC.id = P.categoryId AND S.isOrderedByCustomer = :isOrderedByCustomer;
+WHERE S.productId = P.id AND PC.id = P.categoryId AND S.isOrderedByCustomer = :isOrderedByCustomer;
 
 getByCategory:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer
- FROM StockOrderTable AS S INNER JOIN product AS P INNER JOIN ProductCategoriesTable AS PC
- ON (PC.categories LIKE '%' || :category || '%') WHERE S.productId = P.id AND PC.id = P.categoryId
+FROM StockOrderTable S INNER JOIN product P INNER JOIN ProductCategoriesTable PC
+ON(PC.categories LIKE '%' || :category || '%') WHERE S.productId = P.id AND PC.id = P.categoryId
     AND S.isOrderedByCustomer = :isOrderedByCustomer;
 
 updateStockOrderQuantity:

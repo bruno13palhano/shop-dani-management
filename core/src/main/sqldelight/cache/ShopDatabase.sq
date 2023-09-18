@@ -12,41 +12,38 @@ CREATE TABLE product (
 
 insert:
 INSERT OR REPLACE INTO product(name, code, description, photo, date, categoryId, company)
- VALUES(?,?,?,?,?,?,?);
+VALUES(?,?,?,?,?,?,?);
 
 update:
 UPDATE product SET name = ?, code = ?, description = ?, photo = ?,
- date = ?, categoryId = ?, company = ? WHERE id = ?;
+    date = ?, categoryId = ?, company = ? WHERE id = ?;
 
 delete:
 DELETE FROM product WHERE id = :productId;
 
 getAll:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
- FROM product AS P LEFT JOIN ProductCategoriesTable AS PC
- ON P.categoryId = PC.id;
+FROM product P LEFT JOIN ProductCategoriesTable PC ON P.categoryId = PC.id;
 
 getById:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
- FROM product AS P LEFT JOIN ProductCategoriesTable AS PC
- ON P.categoryId = PC.id WHERE P.id = :produtId;
+FROM product P LEFT JOIN ProductCategoriesTable PC ON P.categoryId = PC.id WHERE P.id = :produtId;
 
 getLast:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
- FROM product AS P LEFT JOIN ProductCategoriesTable AS PC
- ON P.categoryId = PC.id WHERE P.id = last_insert_rowid();
+FROM product P LEFT JOIN ProductCategoriesTable PC ON P.categoryId = PC.id
+WHERE P.id = last_insert_rowid();
 
 search:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
- FROM product AS P LEFT JOIN ProductCategoriesTable AS PC
- WHERE PC.categories LIKE '%' || :category || '%' OR P.name LIKE '%' || :name || '%'
-    OR P.description LIKE '%' || :description || '%'
+FROM product P LEFT JOIN ProductCategoriesTable PC WHERE PC.categories LIKE '%' || :category || '%'
+    OR P.name LIKE '%' || :name || '%' OR P.description LIKE '%' || :description || '%'
     OR P.company LIKE '%' || :company || '%';
 
 getByCategory:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
- FROM product AS P INNER JOIN ProductCategoriesTable AS PC
- ON(PC.categories LIKE '%' || :category || '%') WHERE P.categoryId = PC.id;
+FROM product P INNER JOIN ProductCategoriesTable PC ON(PC.categories LIKE '%' || :category || '%')
+WHERE P.categoryId = PC.id;
 
 getCategoryId:
 SELECT product.categoryId FROM product WHERE id = ?;
