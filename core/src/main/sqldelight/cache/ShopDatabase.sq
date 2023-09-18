@@ -48,5 +48,8 @@ SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.co
  FROM product AS P INNER JOIN ProductCategoriesTable AS PC
  ON(PC.categories LIKE '%' || :category || '%') WHERE P.categoryId = PC.id;
 
+getCategoryId:
+SELECT product.categoryId FROM product WHERE id = ?;
+
 getLastId:
 SELECT last_insert_rowid();
