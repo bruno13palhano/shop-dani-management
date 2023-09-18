@@ -1,54 +1,66 @@
 import kotlin.Boolean;
-import kotlin.String;
-import kotlin.collections.List;
 
 CREATE TABLE StockOrderTable (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     productId INTEGER NOT NULL,
-    name TEXT NOT NULL,
-    photo TEXT NOT NULL,
     date INTEGER NOT NULL,
     validity INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
-    categories TEXT AS List<String> NOT NULL,
-    company TEXT NOT NULL,
     purchasePrice REAL NOT NULL,
     salePrice REAL NOT NULL,
-    isOrderedByCustomer INTEGER AS Boolean NOT NULL
+    isOrderedByCustomer INTEGER AS Boolean NOT NULL,
+    FOREIGN KEY (productId) REFERENCES product(id) ON DELETE CASCADE
 );
 
 insert:
-INSERT INTO StockOrderTable(productId, name, photo, date, validity, quantity, categories, company,
- purchasePrice, salePrice, isOrderedByCustomer)
- VALUES(?,?,?,?,?,?,?,?,?,?,?);
+INSERT INTO StockOrderTable(productId, date, validity, quantity, purchasePrice, salePrice, isOrderedByCustomer)
+ VALUES(?,?,?,?,?,?,?);
 
 update:
-UPDATE StockOrderTable SET productId = ?, name = ?, photo = ?, date = ?, validity = ?, quantity = ?,
- categories = ?, company = ?, purchasePrice = ?, salePrice = ?, isOrderedByCustomer = ? WHERE id = ?;
+UPDATE StockOrderTable SET productId = ?, date = ?, validity = ?, quantity = ?, purchasePrice = ?,
+ salePrice = ?, isOrderedByCustomer = ? WHERE id = ?;
 
 delete:
 DELETE FROM StockOrderTable WHERE id = ?;
 
 getAll:
-SELECT StockOrderTable. * FROM StockOrderTable;
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isOrderedByCustomer
+ FROM product AS P INNER JOIN StockOrderTable AS S INNER JOIN ProductCategoriesTable AS PC
+ ON(P.categoryId = PC.id AND P.id = S.productId);
 
 getById:
-SELECT StockOrderTable. * FROM StockOrderTable WHERE id = ?;
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isOrderedByCustomer
+ FROM product AS P INNER JOIN StockOrderTable AS S INNER JOIN ProductCategoriesTable AS PC
+ ON(P.categoryId = PC.id AND P.id = S.productId) WHERE S.id = :id;
 
 getLast:
-SELECT StockOrderTable. * FROM StockOrderTable WHERE id = last_insert_rowid();
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isOrderedByCustomer
+ FROM product AS P INNER JOIN StockOrderTable AS S INNER JOIN ProductCategoriesTable AS PC
+ ON(P.categoryId = PC.id AND P.id = S.productId) WHERE S.id = last_insert_rowId();
 
 getItems:
-SELECT StockOrderTable. * FROM StockOrderTable WHERE isOrderedByCustomer = ?;
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isOrderedByCustomer
+ FROM product AS P INNER JOIN StockOrderTable AS S INNER JOIN ProductCategoriesTable AS PC
+ ON(P.categoryId = PC.id AND P.id = S.productId AND S.isOrderedByCustomer = :isOrderedByCustomer);
 
 search:
-SELECT StockOrderTable. * FROM StockOrderTable WHERE (
- name LIKE '%'||?||'%' OR company LIKE '%'||?||'%' OR categories LIKE '%'||?||'%')
- AND isOrderedByCustomer = ?;
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isOrderedByCustomer
+ FROM StockOrderTable AS S INNER JOIN product AS P INNER JOIN ProductCategoriesTable AS PC
+ ON(P.name LIKE '%' || :name || '%' OR P.company LIKE '%' || :company || '%'
+    OR P.description LIKE '%' || :description || '%')
+ WHERE S.productId = P.id AND PC.id = P.categoryId AND S.isOrderedByCustomer = :isOrderedByCustomer;
 
 getByCategory:
-SELECT StockOrderTable. * FROM StockOrderTable WHERE categories LIKE '%'||?||'%'
- AND isOrderedByCustomer = ?;
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isOrderedByCustomer
+ FROM StockOrderTable AS S INNER JOIN product AS P INNER JOIN ProductCategoriesTable AS PC
+ ON (PC.categories LIKE '%' || :category || '%') WHERE S.productId = P.id AND PC.id = P.categoryId
+    AND S.isOrderedByCustomer = :isOrderedByCustomer;
 
 updateStockOrderQuantity:
 UPDATE StockOrderTable SET quantity = ? WHERE id = ?;
