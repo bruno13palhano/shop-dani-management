@@ -2,17 +2,12 @@ package com.bruno13palhano.core.data.database
 
 import app.cash.sqldelight.ColumnAdapter
 import cache.ProductCategoriesTable
-import cache.SaleTable
-import cache.StockOrderTable
 import com.bruno13palhano.cache.ShopDatabase
 
 internal class DatabaseFactory(private val driverFactory: DriverFactory) {
     fun createDriver(): ShopDatabase {
         return ShopDatabase(
             driver = driverFactory.createDriver(),
-            SaleTableAdapter = SaleTable.Adapter(
-                categoriesAdapter = listOfStringAdapter
-            ),
             ProductCategoriesTableAdapter = ProductCategoriesTable.Adapter(
                 categoriesAdapter = listOfStringAdapter
             )

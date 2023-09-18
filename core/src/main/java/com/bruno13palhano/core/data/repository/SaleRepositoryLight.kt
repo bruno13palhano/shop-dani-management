@@ -20,14 +20,9 @@ class SaleRepositoryLight @Inject constructor(
         saleQueries.insert(
             productId = model.productId,
             customerId =  model.customerId,
-            name = model.name,
-            customerName = model.customerName,
-            photo = model.photo,
             quantity = model.quantity.toLong(),
             purchasePrice = model.purchasePrice.toDouble(),
             salePrice = model.salePrice.toDouble(),
-            categories = model.categories,
-            company = model.company,
             dateOfSale = model.dateOfSale,
             dateOfPayment = model.dateOfPayment,
             isOrderedByCustomer = model.isOrderedByCustomer,
@@ -40,14 +35,9 @@ class SaleRepositoryLight @Inject constructor(
         saleQueries.update(
             productId = model.productId,
             customerId =  model.customerId,
-            name = model.name,
-            customerName = model.customerName,
-            photo = model.photo,
             quantity = model.quantity.toLong(),
             purchasePrice = model.purchasePrice.toDouble(),
             salePrice = model.salePrice.toDouble(),
-            categories = model.categories,
-            company = model.company,
             dateOfSale = model.dateOfSale,
             dateOfPayment = model.dateOfPayment,
             isOrderedByCustomer = model.isOrderedByCustomer,
@@ -57,7 +47,7 @@ class SaleRepositoryLight @Inject constructor(
     }
 
     override suspend fun delete(model: Sale) {
-        saleQueries.delete(model.id)
+        saleQueries.delete(id = model.id)
     }
 
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
@@ -66,22 +56,31 @@ class SaleRepositoryLight @Inject constructor(
     }
 
     override fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>> {
-        return saleQueries.getLastSales(offset.toLong(), limit.toLong(), mapper = ::mapSale)
-            .asFlow().mapToList(ioDispatcher)
+        return saleQueries.getLastSales(
+            offset = offset.toLong(),
+            limit = limit.toLong(),
+            mapper = ::mapSale
+        ).asFlow().mapToList(ioDispatcher)
     }
 
     override fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>> {
-        return saleQueries.getAllStockSales(offset.toLong(), limit.toLong(), mapper = ::mapSale)
-            .asFlow().mapToList(ioDispatcher)
+        return saleQueries.getAllStockSales(
+            offset = offset.toLong(),
+            limit = limit.toLong(),
+            mapper = ::mapSale
+        ).asFlow().mapToList(ioDispatcher)
     }
 
     override fun getAllOrdersSales(offset: Int, limit: Int): Flow<List<Sale>> {
-        return saleQueries.getAllOrdersSales(offset.toLong(), limit.toLong(), mapper = ::mapSale)
-            .asFlow().mapToList(ioDispatcher)
+        return saleQueries.getAllOrdersSales(
+            offset = offset.toLong(),
+            limit = limit.toLong(),
+            mapper = ::mapSale
+        ).asFlow().mapToList(ioDispatcher)
     }
 
     override suspend fun deleteById(id: Long) {
-        return saleQueries.delete(id)
+        return saleQueries.delete(id = id)
     }
 
     override fun getAll(): Flow<List<Sale>> {
@@ -90,7 +89,7 @@ class SaleRepositoryLight @Inject constructor(
     }
 
     override fun getById(id: Long): Flow<Sale> {
-        return saleQueries.getById(id, mapper = ::mapSale)
+        return saleQueries.getById(id = id, mapper = ::mapSale)
             .asFlow().mapToOne(ioDispatcher)
     }
 
