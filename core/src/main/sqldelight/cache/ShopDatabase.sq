@@ -22,32 +22,31 @@ delete:
 DELETE FROM product WHERE id = :productId;
 
 getAll:
-SELECT product.id, product.name, product.code, product.description, product.photo, product.date,
- ProductCategoriesTable.categories, product.company FROM product LEFT JOIN ProductCategoriesTable
-  ON product.categoryId = ProductCategoriesTable.id;
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
+ FROM product AS P LEFT JOIN ProductCategoriesTable AS PC
+ ON P.categoryId = PC.id;
 
 getById:
-SELECT product.id, product.name, product.code, product.description, product.photo, product.date,
- ProductCategoriesTable.categories, product.company FROM product LEFT JOIN ProductCategoriesTable
-  ON product.categoryId = ProductCategoriesTable.id WHERE product.id = :produtId;
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
+ FROM product AS P LEFT JOIN ProductCategoriesTable AS PC
+ ON P.categoryId = PC.id WHERE P.id = :produtId;
 
 getLast:
-SELECT product.id, product.name, product.code, product.description, product.photo, product.date,
- ProductCategoriesTable.categories, product.company FROM product LEFT JOIN ProductCategoriesTable
-  ON product.categoryId = ProductCategoriesTable.id WHERE product.id = last_insert_rowid();
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
+ FROM product AS P LEFT JOIN ProductCategoriesTable AS PC
+ ON P.categoryId = PC.id WHERE P.id = last_insert_rowid();
 
 search:
-SELECT product.id, product.name, product.code, product.description, product.photo, product.date,
-  ProductCategoriesTable.categories, product.company FROM product LEFT JOIN ProductCategoriesTable
-   WHERE ProductCategoriesTable.categories LIKE '%' || :category || '%'
-    OR product.name LIKE '%' || :name || '%' OR product.description LIKE '%' || :description || '%'
-    OR product.company LIKE '%' || :company || '%';
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
+ FROM product AS P LEFT JOIN ProductCategoriesTable AS PC
+ WHERE PC.categories LIKE '%' || :category || '%' OR P.name LIKE '%' || :name || '%'
+    OR P.description LIKE '%' || :description || '%'
+    OR P.company LIKE '%' || :company || '%';
 
 getByCategory:
-SELECT product.id, product.name, product.code, product.description, product.photo, product.date,
- ProductCategoriesTable.categories, product.company FROM product INNER JOIN ProductCategoriesTable
-  ON (ProductCategoriesTable.categories LIKE '%' || :category || '%')
-  WHERE product.categoryId = ProductCategoriesTable.id;
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
+ FROM product AS P INNER JOIN ProductCategoriesTable AS PC
+ ON(PC.categories LIKE '%' || :category || '%') WHERE P.categoryId = PC.id;
 
 getLastId:
 SELECT last_insert_rowid();
