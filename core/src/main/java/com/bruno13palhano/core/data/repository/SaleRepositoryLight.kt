@@ -28,7 +28,7 @@ class SaleRepositoryLight @Inject constructor(
             isOrderedByCustomer = model.isOrderedByCustomer,
             isPaidByCustomer = model.isPaidByCustomer
         )
-        return 0L
+        return saleQueries.getLastId().executeAsOne()
     }
 
     override suspend fun update(model: Sale) {
