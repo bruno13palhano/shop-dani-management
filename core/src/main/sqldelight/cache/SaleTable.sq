@@ -72,3 +72,6 @@ SELECT S.id, S.productId, S.customerId, P.name, C.name, P.photo, S.quantity, S.p
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id)
 WHERE isOrderedByCustomer = 1 ORDER BY S.id DESC LIMIT :offset, :limit;
+
+getLastId:
+SELECT last_insert_rowid();
