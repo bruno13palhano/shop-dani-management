@@ -4,7 +4,7 @@ CREATE TABLE SearchCacheTable (
 );
 
 insert:
-INSERT INTO SearchCacheTable(id, search) VALUES(?,?);
+INSERT OR REPLACE INTO SearchCacheTable(id, search) VALUES(?,?);
 
 delete:
 DELETE FROM SearchCacheTable WHERE id = ?;
