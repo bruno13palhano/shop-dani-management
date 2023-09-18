@@ -64,3 +64,6 @@ SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categorie
 
 updateStockOrderQuantity:
 UPDATE StockOrderTable SET quantity = ? WHERE id = ?;
+
+lastId:
+SELECT last_insert_rowid();
