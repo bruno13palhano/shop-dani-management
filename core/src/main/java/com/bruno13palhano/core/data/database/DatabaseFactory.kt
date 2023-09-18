@@ -13,9 +13,6 @@ internal class DatabaseFactory(private val driverFactory: DriverFactory) {
             SaleTableAdapter = SaleTable.Adapter(
                 categoriesAdapter = listOfStringAdapter
             ),
-            StockOrderTableAdapter = StockOrderTable.Adapter(
-                categoriesAdapter = listOfStringAdapter
-            ),
             ProductCategoriesTableAdapter = ProductCategoriesTable.Adapter(
                 categoriesAdapter = listOfStringAdapter
             )
