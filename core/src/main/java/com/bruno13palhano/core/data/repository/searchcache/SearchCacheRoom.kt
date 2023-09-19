@@ -1,6 +1,5 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.searchcache
 
-import com.bruno13palhano.core.data.SearchCacheData
 import com.bruno13palhano.core.data.database.dao.SearchCacheDao
 import com.bruno13palhano.core.data.database.model.asExternalModel
 import com.bruno13palhano.core.data.database.model.asInternalModel
@@ -9,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class SearchCacheRepositoryRoom @Inject constructor(
+internal class SearchCacheRoom @Inject constructor(
     private val searchCacheDao: SearchCacheDao
-) : SearchCacheData<SearchCache> {
+) : InternalSearchCacheData {
     override suspend fun insert(model: SearchCache): Long {
         return searchCacheDao.insert(model.asInternalModel())
     }
