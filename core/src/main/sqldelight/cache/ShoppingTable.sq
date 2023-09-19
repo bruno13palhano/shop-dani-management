@@ -3,7 +3,6 @@ import kotlin.Boolean;
 CREATE TABLE ShoppingTable (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     productId INTEGER NOT NULL,
-    name TEXT NOT NULL,
     purchasePrice REAL NOT NULL,
     quantity INTEGER NOT NULL,
     date INTEGER NOT NULL,
@@ -11,27 +10,36 @@ CREATE TABLE ShoppingTable (
 );
 
 insert:
-INSERT INTO ShoppingTable(productId, name, purchasePrice, quantity, date, isPaid)
- VALUES(?,?,?,?,?,?);
+INSERT INTO ShoppingTable(productId, purchasePrice, quantity, date, isPaid)
+VALUES(?,?,?,?,?);
 
 update:
-UPDATE ShoppingTable SET productId = ?, name = ?, purchasePrice = ?, quantity = ?, date = ?,
- isPaid = ? WHERE id = ?;
+UPDATE ShoppingTable SET productId = ?, purchasePrice = ?, quantity = ?, date = ?, isPaid = ?
+WHERE id = ?;
 
 delete:
 DELETE FROM ShoppingTable WHERE id = ?;
 
 getAll:
-SELECT ShoppingTable. * FROM ShoppingTable;
+SELECT S.id, S.productId, P.name, S.purchasePrice, S.quantity, S.date, S.isPaid
+FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId);
 
 getById:
-SELECT ShoppingTable. * FROM ShoppingTable WHERE id = ?;
+SELECT S.id, S.productId, P.name, S.purchasePrice, S.quantity, S.date, S.isPaid
+FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId) WHERE S.id = ?;
 
 getLast:
-SELECT ShoppingTable. * FROM ShoppingTable WHERE id = last_insert_rowid();
+SELECT S.id, S.productId, P.name, S.purchasePrice, S.quantity, S.date, S.isPaid
+FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId) WHERE S.id = last_insert_rowid();
 
 search:
-SELECT ShoppingTable. * FROM ShoppingTable WHERE name LIKE '%'||?||'%';
+SELECT S.id, S.productId, P.name, S.purchasePrice, S.quantity, S.date, S.isPaid
+FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId)
+WHERE P.name LIKE '%' || :productName || '%';
 
 getItemsLimited:
-SELECT ShoppingTable. * FROM ShoppingTable ORDER BY id DESC LIMIT ?,?;
+SELECT S.id, S.productId, P.name, S.purchasePrice, S.quantity, S.date, S.isPaid
+FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId) ORDER BY S.id DESC LIMIT :offset, :limit;
+
+getLastId:
+SELECT last_insert_rowid();
