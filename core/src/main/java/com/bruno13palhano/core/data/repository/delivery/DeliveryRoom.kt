@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.delivery
 
 import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.database.dao.DeliveryDao
@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class DeliveryRepositoryRoom @Inject constructor(
+internal class DeliveryRoom @Inject constructor(
     private val deliveryDao: DeliveryDao
-) : DeliveryData<Delivery> {
+) : InternalDeliveryData {
     override suspend fun insert(model: Delivery): Long =
         deliveryDao.insert(model.asInternalModel())
 

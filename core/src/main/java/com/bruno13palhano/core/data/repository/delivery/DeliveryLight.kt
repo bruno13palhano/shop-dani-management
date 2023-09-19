@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.delivery
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
@@ -12,10 +12,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class DeliveryRepositoryLight @Inject constructor(
+class DeliveryLight @Inject constructor(
     private val deliveryQueries: DeliveryTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : DeliveryData<Delivery> {
+) : InternalDeliveryData {
     override suspend fun insert(model: Delivery): Long {
         deliveryQueries.insert(
             saleId = model.saleId,
