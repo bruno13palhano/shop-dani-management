@@ -19,20 +19,18 @@ class ShoppingRepositoryLight @Inject constructor(
     override suspend fun insert(model: Shopping): Long {
         shoppingQueries.insert(
             productId = model.productId,
-            name = model.name,
             purchasePrice = model.purchasePrice.toDouble(),
             quantity = model.quantity.toLong(),
             date = model.date,
             isPaid = model.isPaid
         )
-        return 0L
+        return shoppingQueries.getLastId().executeAsOne()
     }
 
     override suspend fun update(model: Shopping) {
         shoppingQueries.update(
             id = model.id,
             productId = model.productId,
-            name = model.name,
             purchasePrice = model.purchasePrice.toDouble(),
             quantity = model.quantity.toLong(),
             date = model.date,
@@ -41,28 +39,28 @@ class ShoppingRepositoryLight @Inject constructor(
     }
 
     override suspend fun delete(model: Shopping) {
-        shoppingQueries.delete(model.id)
+        shoppingQueries.delete(id = model.id)
     }
 
     override fun getItemsLimited(offset: Int, limit: Int): Flow<List<Shopping>> {
         return shoppingQueries.getItemsLimited(
-            offset.toLong(),
-            limit.toLong(),
+            offset = offset.toLong(),
+            limit = limit.toLong(),
             mapper = ::mapShopping
         ).asFlow().mapToList(ioDispatcher)
     }
 
     override suspend fun deleteById(id: Long) {
-        shoppingQueries.delete(id)
+        shoppingQueries.delete(id = id)
     }
 
     override fun getAll(): Flow<List<Shopping>> {
-        return shoppingQueries.getLast(mapper = ::mapShopping)
+        return shoppingQueries.getAll(mapper = ::mapShopping)
             .asFlow().mapToList(ioDispatcher)
     }
 
     override fun getById(id: Long): Flow<Shopping> {
-        return shoppingQueries.getById(id, mapper = ::mapShopping)
+        return shoppingQueries.getById(id = id, mapper = ::mapShopping)
             .asFlow().mapToOne(ioDispatcher)
     }
 
