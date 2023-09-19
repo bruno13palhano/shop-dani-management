@@ -6,7 +6,7 @@ import com.bruno13palhano.core.model.Customer
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CustomerRepository @Inject constructor(
+internal class CustomerRepository @Inject constructor(
     @InternalCustomerLight private val customerData: InternalCustomerData
 ) : CustomerData<Customer> {
     override suspend fun insert(model: Customer): Long {
