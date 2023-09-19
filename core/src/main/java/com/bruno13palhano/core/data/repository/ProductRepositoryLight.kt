@@ -35,13 +35,18 @@ internal class ProductRepositoryLight @Inject constructor(
     }
 
     override suspend fun update(model: Product) {
+        val categoryId = productQueries.getCategoryId(id = model.id).executeAsOne()
+        productCategoriesQueries.update(
+            categories = model.categories,
+            id = categoryId
+        )
         productQueries.update(
             name = model.name,
             code = model.code,
             description = model.description,
             photo = model.photo,
             date = model.date,
-            categoryId = productQueries.getCategoryId(id = model.id).executeAsOne(),
+            categoryId = categoryId,
             company = model.company,
             id = model.id
         )
