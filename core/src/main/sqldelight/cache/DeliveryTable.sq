@@ -46,4 +46,5 @@ UPDATE DeliveryTable SET delivered = ? WHERE id = ?;
 getDeliveries:
 SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.shippingDate,
     D.deliveryDate, D.delivered FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D
-INNER JOIN CustomerTable C WHERE delivered = :delivered;
+INNER JOIN CustomerTable C ON(P.id = S.productId AND D.saleId = S.id AND C.id = S.customerId)
+WHERE delivered = :delivered;
