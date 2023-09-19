@@ -1,6 +1,5 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.product
 
-import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.database.dao.ProductDao
 import com.bruno13palhano.core.data.database.model.asExternalModel
 import com.bruno13palhano.core.data.database.model.asInternalModel
@@ -10,9 +9,9 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class ProductRepositoryRoom @Inject constructor(
+internal class ProductRoom @Inject constructor(
     private val productDao: ProductDao
-) : ProductData<Product> {
+) : InternalProductData {
     override suspend fun insert(model: Product): Long {
         return productDao.insert(model.asInternalModel())
     }

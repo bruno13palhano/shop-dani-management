@@ -1,11 +1,10 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.product
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.ProductCategoriesTableQueries
 import cache.ShopDatabaseQueries
-import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Product
@@ -13,11 +12,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-internal class ProductRepositoryLight @Inject constructor(
+internal class ProductLight @Inject constructor(
     private val productQueries: ShopDatabaseQueries,
     private val productCategoriesQueries: ProductCategoriesTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : ProductData<Product> {
+) : InternalProductData {
     override suspend fun insert(model: Product): Long {
         productCategoriesQueries.insert(
             categories = model.categories
