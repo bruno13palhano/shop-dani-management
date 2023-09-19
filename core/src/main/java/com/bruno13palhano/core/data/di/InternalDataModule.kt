@@ -1,6 +1,5 @@
 package com.bruno13palhano.core.data.di
 
-import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.repository.category.CategoryLight
 import com.bruno13palhano.core.data.repository.category.CategoryRoom
 import com.bruno13palhano.core.data.repository.category.InternalCategoryData
@@ -13,9 +12,9 @@ import com.bruno13palhano.core.data.repository.delivery.InternalDeliveryData
 import com.bruno13palhano.core.data.repository.product.InternalProductData
 import com.bruno13palhano.core.data.repository.product.ProductLight
 import com.bruno13palhano.core.data.repository.product.ProductRoom
+import com.bruno13palhano.core.data.repository.sale.InternalSaleData
 import com.bruno13palhano.core.data.repository.sale.SaleLight
 import com.bruno13palhano.core.data.repository.sale.SaleRoom
-import com.bruno13palhano.core.model.Sale
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -100,10 +99,10 @@ internal abstract class InternalDataModule {
     @InternalSaleRoom
     @Singleton
     @Binds
-    abstract fun bindInternalSaleRoom(repository: SaleRoom): SaleData<Sale>
+    abstract fun bindInternalSaleRoom(repository: SaleRoom): InternalSaleData
 
     @InternalSaleLight
     @Singleton
     @Binds
-    abstract fun bindInternalSaleLight(repository: SaleLight): SaleData<Sale>
+    abstract fun bindInternalSaleLight(repository: SaleLight): InternalSaleData
 }
