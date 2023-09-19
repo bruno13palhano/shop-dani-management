@@ -50,7 +50,7 @@ internal annotation class InternalProductLight
 internal annotation class InternalSaleRoom
 
 @Qualifier
-annotation class InternalSaleLight
+internal annotation class InternalSaleLight
 
 @InstallIn(SingletonComponent::class)
 @Module
