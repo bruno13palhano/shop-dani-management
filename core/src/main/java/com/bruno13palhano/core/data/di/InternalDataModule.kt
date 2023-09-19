@@ -1,13 +1,14 @@
 package com.bruno13palhano.core.data.di
 
-import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.repository.category.CategoryLight
 import com.bruno13palhano.core.data.repository.category.CategoryRoom
 import com.bruno13palhano.core.data.repository.category.InternalCategoryData
 import com.bruno13palhano.core.data.repository.customer.CustomerLight
 import com.bruno13palhano.core.data.repository.customer.CustomerRoom
 import com.bruno13palhano.core.data.repository.customer.InternalCustomerData
-import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.data.repository.delivery.DeliveryLight
+import com.bruno13palhano.core.data.repository.delivery.DeliveryRoom
+import com.bruno13palhano.core.data.repository.delivery.InternalDeliveryData
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -26,6 +27,12 @@ internal annotation class InternalCustomerRoom
 
 @Qualifier
 internal annotation class InternalCustomerLight
+
+@Qualifier
+internal annotation class InternalDeliveryRoom
+
+@Qualifier
+internal annotation class InternalDeliveryLight
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -50,4 +57,14 @@ internal abstract class InternalDataModule {
     @Singleton
     @Binds
     abstract fun bindInternalCustomerLight(repository: CustomerLight): InternalCustomerData
+
+    @InternalDeliveryRoom
+    @Singleton
+    @Binds
+    abstract fun bindInternalDeliveryRoom(repository: DeliveryRoom): InternalDeliveryData
+
+    @InternalDeliveryLight
+    @Singleton
+    @Binds
+    abstract fun bindInternalDeliveryLight(repository: DeliveryLight): InternalDeliveryData
 }
