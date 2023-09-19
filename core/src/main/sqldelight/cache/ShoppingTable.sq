@@ -21,24 +21,24 @@ delete:
 DELETE FROM ShoppingTable WHERE id = ?;
 
 getAll:
-SELECT S.id, S.productId, P.name, S.purchasePrice, S.quantity, S.date, S.isPaid
+SELECT S.id, S.productId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
 FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId);
 
 getById:
-SELECT S.id, S.productId, P.name, S.purchasePrice, S.quantity, S.date, S.isPaid
+SELECT S.id, S.productId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
 FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId) WHERE S.id = ?;
 
 getLast:
-SELECT S.id, S.productId, P.name, S.purchasePrice, S.quantity, S.date, S.isPaid
+SELECT S.id, S.productId, P.name, P.photo,S.purchasePrice, S.quantity, S.date, S.isPaid
 FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId) WHERE S.id = last_insert_rowid();
 
 search:
-SELECT S.id, S.productId, P.name, S.purchasePrice, S.quantity, S.date, S.isPaid
+SELECT S.id, S.productId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
 FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId)
 WHERE P.name LIKE '%' || :productName || '%';
 
 getItemsLimited:
-SELECT S.id, S.productId, P.name, S.purchasePrice, S.quantity, S.date, S.isPaid
+SELECT S.id, S.productId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
 FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId) ORDER BY S.id DESC LIMIT :offset, :limit;
 
 getLastId:

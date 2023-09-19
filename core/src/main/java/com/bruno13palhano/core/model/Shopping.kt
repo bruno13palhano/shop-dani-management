@@ -4,6 +4,7 @@ data class Shopping(
     val id: Long,
     val productId: Long,
     val name: String,
+    val photo: String,
     val purchasePrice: Float,
     val quantity: Int,
     val date: Long,

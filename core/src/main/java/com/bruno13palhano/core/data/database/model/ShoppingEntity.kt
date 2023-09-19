@@ -18,6 +18,9 @@ internal data class ShoppingEntity(
     @ColumnInfo(name = "name")
     val name: String,
 
+    @ColumnInfo(name = "photo")
+    val photo: String,
+
     @ColumnInfo(name = "purchase_price")
     val purchasePrice: Float,
 
@@ -35,6 +38,7 @@ internal fun ShoppingEntity.asExternalModel() = Shopping(
     id = id,
     productId = productId,
     name = name,
+    photo = photo,
     purchasePrice = purchasePrice,
     quantity = quantity,
     date = date,
@@ -45,6 +49,7 @@ internal fun Shopping.asInternalModel() = ShoppingEntity(
     id = id,
     productId = productId,
     name = name,
+    photo = photo,
     purchasePrice = purchasePrice,
     quantity = quantity,
     date = date,
