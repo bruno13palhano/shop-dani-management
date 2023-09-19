@@ -1,6 +1,5 @@
 package com.bruno13palhano.core.data.repository.category
 
-import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.database.dao.CategoryDao
 import com.bruno13palhano.core.data.database.model.asExternalModel
 import com.bruno13palhano.core.data.database.model.asInternalModel
@@ -10,7 +9,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class CategoryRepositoryRoom @Inject constructor(
+internal class CategoryRoom @Inject constructor(
     private val categoryDao: CategoryDao
 ) : InternalCategoryData {
     override suspend fun insert(model: Category): Long {
