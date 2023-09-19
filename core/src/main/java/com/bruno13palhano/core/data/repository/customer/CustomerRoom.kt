@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.customer
 
 import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.database.dao.CustomerDao
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class CustomerRepositoryRoom @Inject constructor(
+internal class CustomerRoom @Inject constructor(
     private val customerDao: CustomerDao
 ) : CustomerData<Customer> {
     override suspend fun insert(model: Customer): Long {

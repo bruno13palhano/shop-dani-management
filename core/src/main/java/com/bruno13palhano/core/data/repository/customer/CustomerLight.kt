@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.customer
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CustomerRepositoryLight @Inject constructor(
+internal class CustomerLight @Inject constructor(
     private val customerQueries: CustomerTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CustomerData<Customer> {
