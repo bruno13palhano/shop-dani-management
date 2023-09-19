@@ -1,6 +1,5 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.sale
 
-import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.database.dao.SaleDao
 import com.bruno13palhano.core.data.database.model.asExternalModel
 import com.bruno13palhano.core.data.database.model.asInternalModel
@@ -10,9 +9,9 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class SaleRepositoryRoom @Inject constructor(
+internal class SaleRoom @Inject constructor(
     private val saleDao: SaleDao
-) : SaleData<Sale> {
+) : InternalSaleData {
     override suspend fun insert(model: Sale): Long {
         return saleDao.insert(model.asInternalModel())
     }

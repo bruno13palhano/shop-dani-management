@@ -1,10 +1,9 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.sale
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.SaleTableQueries
-import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Sale
@@ -12,10 +11,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SaleRepositoryLight @Inject constructor(
+internal class SaleLight @Inject constructor(
     private val saleQueries: SaleTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : SaleData<Sale> {
+) : InternalSaleData {
     override suspend fun insert(model: Sale): Long {
         saleQueries.insert(
             productId = model.productId,
