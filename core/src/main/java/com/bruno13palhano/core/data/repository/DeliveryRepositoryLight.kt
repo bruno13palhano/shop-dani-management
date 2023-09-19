@@ -19,11 +19,6 @@ class DeliveryRepositoryLight @Inject constructor(
     override suspend fun insert(model: Delivery): Long {
         deliveryQueries.insert(
             saleId = model.saleId,
-            customerName = model.customerName,
-            address = model.address,
-            phoneNumber = model.phoneNumber,
-            productName = model.productName,
-            price = model.price.toDouble(),
             shippingDate = model.shippingDate,
             deliveryDate = model.deliveryDate,
             delivered = model.delivered
@@ -35,11 +30,6 @@ class DeliveryRepositoryLight @Inject constructor(
         deliveryQueries.update(
             id = model.id,
             saleId = model.saleId,
-            customerName = model.customerName,
-            address = model.address,
-            phoneNumber = model.phoneNumber,
-            productName = model.productName,
-            price = model.price.toDouble(),
             shippingDate = model.shippingDate,
             deliveryDate = model.deliveryDate,
             delivered = model.delivered
@@ -47,19 +37,19 @@ class DeliveryRepositoryLight @Inject constructor(
     }
 
     override suspend fun delete(model: Delivery) {
-        deliveryQueries.delete(model.id)
+        deliveryQueries.delete(id = model.id)
     }
 
     override suspend fun updateShippingDate(id: Long, shippingDate: Long) {
-        deliveryQueries.updateShippingDate(shippingDate, id)
+        deliveryQueries.updateShippingDate(shippingDate = shippingDate, id = id)
     }
 
     override suspend fun updateDeliveryDate(id: Long, deliveryDate: Long) {
-        deliveryQueries.updateDeliveryDate(deliveryDate, id)
+        deliveryQueries.updateDeliveryDate(deliveryDate = deliveryDate, id = id)
     }
 
     override suspend fun updateDelivered(id: Long, delivered: Boolean) {
-        deliveryQueries.updateDelivered(delivered, id)
+        deliveryQueries.updateDelivered(delivered = delivered, id = id)
     }
 
     override fun getDeliveries(delivered: Boolean): Flow<List<Delivery>> {
@@ -68,7 +58,7 @@ class DeliveryRepositoryLight @Inject constructor(
     }
 
     override suspend fun deleteById(id: Long) {
-        deliveryQueries.delete(id)
+        deliveryQueries.delete(id = id)
     }
 
     override fun getAll(): Flow<List<Delivery>> {
