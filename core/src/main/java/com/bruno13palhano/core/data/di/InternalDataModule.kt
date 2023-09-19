@@ -9,6 +9,9 @@ import com.bruno13palhano.core.data.repository.customer.InternalCustomerData
 import com.bruno13palhano.core.data.repository.delivery.DeliveryLight
 import com.bruno13palhano.core.data.repository.delivery.DeliveryRoom
 import com.bruno13palhano.core.data.repository.delivery.InternalDeliveryData
+import com.bruno13palhano.core.data.repository.product.InternalProductData
+import com.bruno13palhano.core.data.repository.product.ProductLight
+import com.bruno13palhano.core.data.repository.product.ProductRoom
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,6 +36,12 @@ internal annotation class InternalDeliveryRoom
 
 @Qualifier
 internal annotation class InternalDeliveryLight
+
+@Qualifier
+internal annotation class InternalProductRoom
+
+@Qualifier
+internal annotation class InternalProductLight
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -67,4 +76,14 @@ internal abstract class InternalDataModule {
     @Singleton
     @Binds
     abstract fun bindInternalDeliveryLight(repository: DeliveryLight): InternalDeliveryData
+
+    @InternalProductRoom
+    @Singleton
+    @Binds
+    abstract fun bindInternalProductRoom(repository: ProductRoom): InternalProductData
+
+    @InternalProductLight
+    @Singleton
+    @Binds
+    abstract fun bindInternalProductLight(repository: ProductLight): InternalProductData
 }
