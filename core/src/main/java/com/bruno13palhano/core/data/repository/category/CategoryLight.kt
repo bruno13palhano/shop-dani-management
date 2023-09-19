@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.category
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
@@ -12,10 +12,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CategoryRepositoryLight @Inject constructor(
+internal class CategoryRepositoryLight @Inject constructor(
     private val categoryQueries:  CategoryTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : CategoryData<Category> {
+) : InternalCategoryData {
     override suspend fun insert(model: Category): Long {
         categoryQueries.insert(name = model.name)
         return 0L

@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.category
 
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.database.dao.CategoryDao
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 internal class CategoryRepositoryRoom @Inject constructor(
     private val categoryDao: CategoryDao
-) : CategoryData<Category> {
+) : InternalCategoryData {
     override suspend fun insert(model: Category): Long {
         return categoryDao.insert(model.asInternalModel())
     }
