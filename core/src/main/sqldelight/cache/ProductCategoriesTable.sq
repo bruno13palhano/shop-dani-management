@@ -9,5 +9,8 @@ CREATE TABLE ProductCategoriesTable (
 insert:
 INSERT INTO ProductCategoriesTable(categories) VALUES(?);
 
+update:
+UPDATE ProductCategoriesTable SET categories = ? WHERE id = ?;
+
 getLastId:
 SELECT last_insert_rowid();
