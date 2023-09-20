@@ -24,7 +24,7 @@ internal class CustomerLight @Inject constructor(
             address = model.address,
             phoneNumber = model.phoneNumber
         )
-        return 0L
+        return customerQueries.getLastId().executeAsOne()
     }
 
     override suspend fun update(model: Customer) {
