@@ -1,5 +1,6 @@
 package com.bruno13palhano.core.data.di
 
+import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.repository.category.CategoryLight
 import com.bruno13palhano.core.data.repository.category.CategoryRoom
 import com.bruno13palhano.core.data.repository.category.InternalCategoryData
@@ -21,6 +22,10 @@ import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRoom
 import com.bruno13palhano.core.data.repository.shopping.InternalShoppingData
 import com.bruno13palhano.core.data.repository.shopping.ShoppingLight
 import com.bruno13palhano.core.data.repository.shopping.ShoppingRoom
+import com.bruno13palhano.core.data.repository.stockorder.InternalStockOrderData
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderLight
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRoom
+import com.bruno13palhano.core.model.StockOrder
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -69,6 +74,12 @@ internal annotation class InternalShoppingRoom
 
 @Qualifier
 internal annotation class InternalShoppingLight
+
+@Qualifier
+internal annotation class InternalStockOrderRoom
+
+@Qualifier
+internal annotation class InternalStockOrderLight
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -143,4 +154,14 @@ internal abstract class InternalDataModule {
     @Singleton
     @Binds
     abstract fun bindInternalShoppingLight(repository: ShoppingLight): InternalShoppingData
+
+    @InternalStockOrderRoom
+    @Singleton
+    @Binds
+    abstract fun bindStockOrderRepository(repository: StockOrderRoom): StockOrderData<StockOrder>
+
+    @InternalStockOrderLight
+    @Singleton
+    @Binds
+    abstract fun bindInternalStockOrderLight(repository: StockOrderLight): InternalStockOrderData
 }
