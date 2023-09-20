@@ -10,12 +10,6 @@ import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.database.model.CategoryEntity
 import kotlinx.coroutines.flow.Flow
 
-/**
- * [CategoryEntity] Dao interface.
- *
- * A Data Access Object for the [CategoryEntity].
- * This interface is responsible for handling [CategoryEntity] access to Room database.
- */
 @Dao
 internal interface CategoryDao : CategoryData<CategoryEntity> {
 
