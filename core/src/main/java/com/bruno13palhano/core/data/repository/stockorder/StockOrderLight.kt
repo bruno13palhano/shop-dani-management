@@ -1,10 +1,9 @@
-package com.bruno13palhano.core.data.repository
+package com.bruno13palhano.core.data.repository.stockorder
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.StockOrderTableQueries
-import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.StockOrder
@@ -12,10 +11,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class StockOrderRepositoryLight @Inject constructor(
+class StockOrderLight @Inject constructor(
     private val stockOrderQueries: StockOrderTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : StockOrderData<StockOrder> {
+) : InternalStockOrderData {
     override suspend fun insert(model: StockOrder): Long {
         stockOrderQueries.insert(
             productId = model.productId,
