@@ -4,6 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.CategoryTableQueries
+import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
@@ -14,7 +15,7 @@ import javax.inject.Inject
 internal class CategoryLight @Inject constructor(
     private val categoryQueries:  CategoryTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : InternalCategoryData {
+) : CategoryData<Category> {
     override suspend fun insert(model: Category): Long {
         categoryQueries.insert(name = model.name)
         return 0L

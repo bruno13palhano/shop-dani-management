@@ -1,5 +1,6 @@
 package com.bruno13palhano.core.data.repository.sale
 
+import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.database.dao.SaleDao
 import com.bruno13palhano.core.data.database.model.asExternalModel
 import com.bruno13palhano.core.data.database.model.asInternalModel
@@ -11,7 +12,7 @@ import javax.inject.Inject
 
 internal class SaleRoom @Inject constructor(
     private val saleDao: SaleDao
-) : InternalSaleData {
+) : SaleData<Sale> {
     override suspend fun insert(model: Sale): Long {
         return saleDao.insert(model.asInternalModel())
     }

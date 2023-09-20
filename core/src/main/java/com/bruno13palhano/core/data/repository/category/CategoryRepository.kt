@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 internal class CategoryRepository @Inject constructor(
-    @InternalCategoryLight private val categoryData: InternalCategoryData
+    @InternalCategoryLight private val categoryData: CategoryData<Category>
 ): CategoryData<Category> {
     override fun search(value: String): Flow<List<Category>> {
         return categoryData.search(value = value)

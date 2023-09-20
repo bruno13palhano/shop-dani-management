@@ -4,6 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.StockOrderTableQueries
+import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.StockOrder
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class StockOrderLight @Inject constructor(
     private val stockOrderQueries: StockOrderTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : InternalStockOrderData {
+) : StockOrderData<StockOrder> {
     override suspend fun insert(model: StockOrder): Long {
         stockOrderQueries.insert(
             productId = model.productId,

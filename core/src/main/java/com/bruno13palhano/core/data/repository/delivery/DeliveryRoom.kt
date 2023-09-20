@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 internal class DeliveryRoom @Inject constructor(
     private val deliveryDao: DeliveryDao
-) : InternalDeliveryData {
+) : DeliveryData<Delivery> {
     override suspend fun insert(model: Delivery): Long =
         deliveryDao.insert(model.asInternalModel())
 

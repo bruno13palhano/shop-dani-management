@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 internal class SearchCacheRepository @Inject constructor(
-    @InternalSearchCacheLight private val searchCacheData: InternalSearchCacheData
+    @InternalSearchCacheLight private val searchCacheData: SearchCacheData<SearchCache>
 ) : SearchCacheData<SearchCache> {
     override suspend fun insert(model: SearchCache): Long {
         return searchCacheData.insert(model = model)

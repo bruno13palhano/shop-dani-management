@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 internal class DeliveryRepository @Inject constructor(
-    @InternalDeliveryLight private val deliveryData: InternalDeliveryData
+    @InternalDeliveryLight private val deliveryData: DeliveryData<Delivery>
 ) : DeliveryData<Delivery> {
     override suspend fun insert(model: Delivery): Long {
         return deliveryData.insert(model = model)

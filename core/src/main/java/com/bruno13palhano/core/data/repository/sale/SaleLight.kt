@@ -4,6 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.SaleTableQueries
+import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Sale
@@ -14,7 +15,7 @@ import javax.inject.Inject
 internal class SaleLight @Inject constructor(
     private val saleQueries: SaleTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : InternalSaleData {
+) : SaleData<Sale> {
     override suspend fun insert(model: Sale): Long {
         saleQueries.insert(
             productId = model.productId,

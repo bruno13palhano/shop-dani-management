@@ -5,6 +5,7 @@ import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.ProductCategoriesTableQueries
 import cache.ShopDatabaseQueries
+import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Product
@@ -16,7 +17,7 @@ internal class ProductLight @Inject constructor(
     private val productQueries: ShopDatabaseQueries,
     private val productCategoriesQueries: ProductCategoriesTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : InternalProductData {
+) : ProductData<Product> {
     override suspend fun insert(model: Product): Long {
         productCategoriesQueries.insert(
             categories = model.categories

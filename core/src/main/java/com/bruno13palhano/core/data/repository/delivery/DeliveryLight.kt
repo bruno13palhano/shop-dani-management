@@ -15,7 +15,7 @@ import javax.inject.Inject
 class DeliveryLight @Inject constructor(
     private val deliveryQueries: DeliveryTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : InternalDeliveryData {
+) : DeliveryData<Delivery> {
     override suspend fun insert(model: Delivery): Long {
         deliveryQueries.insert(
             saleId = model.saleId,
