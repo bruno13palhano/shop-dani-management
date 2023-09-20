@@ -23,3 +23,6 @@ SELECT CategoryTable. * FROM CategoryTable WHERE id = last_insert_rowid();
 
 search:
 SELECT CategoryTable. * FROM CategoryTable WHERE name LIKE '%'||?||'%';
+
+getLastId:
+SELECT last_insert_rowid();
