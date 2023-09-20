@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -28,7 +27,7 @@ import com.bruno13palhano.shopdanimanagement.ui.components.ShoppingContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel.EditShoppingItemViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditShoppingItemScreen(
     shoppingItemId: Long,
@@ -37,9 +36,6 @@ fun EditShoppingItemScreen(
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.getShoppingItem(shoppingItemId)
-    }
-    LaunchedEffect(key1 = viewModel.productId) {
-        viewModel.getPhoto(viewModel.productId)
     }
 
     val isItemNotEmpty by viewModel.isItemNotEmpty.collectAsStateWithLifecycle()
