@@ -11,14 +11,10 @@ import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.ShoppingData
 import com.bruno13palhano.core.data.StockOrderData
-import com.bruno13palhano.core.data.di.DefaultCategoryRepository
-import com.bruno13palhano.core.data.di.DefaultProductRepository
-import com.bruno13palhano.core.data.di.DefaultShoppingRepository
-import com.bruno13palhano.core.data.di.DefaultStockOrderRepository
-import com.bruno13palhano.core.data.di.SecondaryCategoryRepository
-import com.bruno13palhano.core.data.di.SecondaryProductRepository
-import com.bruno13palhano.core.data.di.SecondaryShoppingRepository
-import com.bruno13palhano.core.data.di.SecondaryStockOrderRepository
+import com.bruno13palhano.core.data.di.CategoryRep
+import com.bruno13palhano.core.data.di.ProductRep
+import com.bruno13palhano.core.data.di.ShoppingRep
+import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
@@ -38,10 +34,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ItemViewModel @Inject constructor(
-    @SecondaryProductRepository private val productRepository: ProductData<Product>,
-    @SecondaryCategoryRepository private val categoryRepository: CategoryData<Category>,
-    @SecondaryShoppingRepository private val shoppingRepository: ShoppingData<Shopping>,
-    @SecondaryStockOrderRepository private val stockRepository: StockOrderData<StockOrder>
+    @ProductRep private val productRepository: ProductData<Product>,
+    @CategoryRep private val categoryRepository: CategoryData<Category>,
+    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>,
+    @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),
@@ -191,6 +187,7 @@ class ItemViewModel @Inject constructor(
             id = 0L,
             productId = productId,
             name = name,
+            photo = photo,
             purchasePrice = stringToFloat(purchasePrice),
             quantity = quantity.toInt(),
             date = dateInMillis,

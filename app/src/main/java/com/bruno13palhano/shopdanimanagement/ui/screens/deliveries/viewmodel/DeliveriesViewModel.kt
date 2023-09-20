@@ -3,8 +3,7 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.DeliveryData
-import com.bruno13palhano.core.data.di.DefaultDeliveryRepository
-import com.bruno13palhano.core.data.di.SecondaryDeliveryRepository
+import com.bruno13palhano.core.data.di.DeliveryRep
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DeliveriesViewModel @Inject constructor(
-    @SecondaryDeliveryRepository private val deliveryRepository: DeliveryData<Delivery>
+    @DeliveryRep private val deliveryRepository: DeliveryData<Delivery>
 ) : ViewModel() {
     private var _deliveries = MutableStateFlow(emptyList<Delivery>())
     val deliveries = _deliveries

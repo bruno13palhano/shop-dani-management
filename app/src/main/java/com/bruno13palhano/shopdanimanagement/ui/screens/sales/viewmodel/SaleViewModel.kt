@@ -14,18 +14,12 @@ import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.StockOrderData
-import com.bruno13palhano.core.data.di.DefaultCategoryRepository
-import com.bruno13palhano.core.data.di.DefaultCustomerRepository
-import com.bruno13palhano.core.data.di.DefaultDeliveryRepository
-import com.bruno13palhano.core.data.di.DefaultProductRepository
-import com.bruno13palhano.core.data.di.DefaultSaleRepository
-import com.bruno13palhano.core.data.di.DefaultStockOrderRepository
-import com.bruno13palhano.core.data.di.SecondaryCategoryRepository
-import com.bruno13palhano.core.data.di.SecondaryCustomerRepository
-import com.bruno13palhano.core.data.di.SecondaryDeliveryRepository
-import com.bruno13palhano.core.data.di.SecondaryProductRepository
-import com.bruno13palhano.core.data.di.SecondarySaleRepository
-import com.bruno13palhano.core.data.di.SecondaryStockOrderRepository
+import com.bruno13palhano.core.data.di.CategoryRep
+import com.bruno13palhano.core.data.di.CustomerRep
+import com.bruno13palhano.core.data.di.DeliveryRep
+import com.bruno13palhano.core.data.di.ProductRep
+import com.bruno13palhano.core.data.di.SaleRep
+import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Customer
@@ -49,12 +43,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaleViewModel @Inject constructor(
-    @SecondaryProductRepository private val productRepository: ProductData<Product>,
-    @SecondaryCategoryRepository private val categoryRepository: CategoryData<Category>,
-    @SecondarySaleRepository private val saleRepository: SaleData<Sale>,
-    @SecondaryStockOrderRepository private val stockOrderRepository: StockOrderData<StockOrder>,
-    @SecondaryCustomerRepository private val customerRepository: CustomerData<Customer>,
-    @SecondaryDeliveryRepository private val deliveryRepository: DeliveryData<Delivery>
+    @ProductRep private val productRepository: ProductData<Product>,
+    @CategoryRep private val categoryRepository: CategoryData<Category>,
+    @SaleRep private val saleRepository: SaleData<Sale>,
+    @StockOrderRep private val stockOrderRepository: StockOrderData<StockOrder>,
+    @CustomerRep private val customerRepository: CustomerData<Customer>,
+    @DeliveryRep private val deliveryRepository: DeliveryData<Delivery>
 ) : ViewModel() {
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),

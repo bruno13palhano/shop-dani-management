@@ -7,10 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.di.DefaultCategoryRepository
-import com.bruno13palhano.core.data.di.DefaultProductRepository
-import com.bruno13palhano.core.data.di.SecondaryCategoryRepository
-import com.bruno13palhano.core.data.di.SecondaryProductRepository
+import com.bruno13palhano.core.data.di.CategoryRep
+import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
@@ -26,8 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
-    @SecondaryCategoryRepository private val categoryRepository: CategoryData<Category>,
-    @SecondaryProductRepository private val productRepository: ProductData<Product>
+    @CategoryRep private val categoryRepository: CategoryData<Category>,
+    @ProductRep private val productRepository: ProductData<Product>
 ) : ViewModel() {
     val categories = categoryRepository.getAll()
         .map {
@@ -73,6 +71,7 @@ class ProductListViewModel @Inject constructor(
         viewModelScope.launch {
             productRepository.getAll().collect {
                 _orders.value = it.map { product ->
+                    println(product)
                     CommonItem(
                         id = product.id,
                         photo = product.photo,
@@ -89,6 +88,8 @@ class ProductListViewModel @Inject constructor(
         viewModelScope.launch {
             productRepository.getByCategory(category).collect {
                 _orders.value = it.map { product ->
+                    println(category)
+                    println(product)
                     CommonItem(
                         id = product.id,
                         photo = product.photo,

@@ -4,10 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.di.DefaultCustomerRepository
-import com.bruno13palhano.core.data.di.DefaultSaleRepository
-import com.bruno13palhano.core.data.di.SecondaryCustomerRepository
-import com.bruno13palhano.core.data.di.SecondarySaleRepository
+import com.bruno13palhano.core.data.di.CustomerRep
+import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
@@ -28,8 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CustomerInfoViewModel @Inject constructor(
-    @SecondaryCustomerRepository private val customerRepository: CustomerData<Customer>,
-    @SecondarySaleRepository private val saleRepository: SaleData<Sale>
+    @CustomerRep private val customerRepository: CustomerData<Customer>,
+    @SaleRep private val saleRepository: SaleData<Sale>
 ) : ViewModel() {
     private val currentDay = LocalDate.now()
 

@@ -2,10 +2,13 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.ShoppingData
-import com.bruno13palhano.core.data.di.DefaultSaleRepository
-import com.bruno13palhano.core.data.di.DefaultShoppingRepository
+import com.bruno13palhano.core.data.di.ProductRep
+import com.bruno13palhano.core.data.di.SaleRep
+import com.bruno13palhano.core.data.di.ShoppingRep
+import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
@@ -24,10 +27,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @DefaultSaleRepository private val saleRepository: SaleData<Sale>,
-    @DefaultShoppingRepository private val shoppingRepository: ShoppingData<Shopping>
+    @SaleRep private val saleRepository: SaleData<Sale>,
+    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>,
+    @ProductRep private val productRepository: ProductData<Product>
 ) : ViewModel() {
     private val currentDay = LocalDate.now()
+
+    val products = productRepository.getByCategory("bruno")
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
 
     val homeInfo = combine(saleRepository.getAll(), shoppingRepository.getAll()) { sales, shopping ->
         var salesPrice = 0F

@@ -3,8 +3,7 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.di.DefaultSaleRepository
-import com.bruno13palhano.core.data.di.SecondarySaleRepository
+import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
@@ -16,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SalesViewModel @Inject constructor(
-    @SecondarySaleRepository private val saleRepository: SaleData<Sale>
+    @SaleRep private val saleRepository: SaleData<Sale>
 ) : ViewModel() {
     val saleList = saleRepository.getAll()
         .map {

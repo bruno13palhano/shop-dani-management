@@ -9,10 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.ShoppingData
-import com.bruno13palhano.core.data.di.DefaultProductRepository
-import com.bruno13palhano.core.data.di.DefaultShoppingRepository
-import com.bruno13palhano.core.data.di.SecondaryProductRepository
-import com.bruno13palhano.core.data.di.SecondaryShoppingRepository
+import com.bruno13palhano.core.data.di.ProductRep
+import com.bruno13palhano.core.data.di.ShoppingRep
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
@@ -25,8 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditShoppingItemViewModel @Inject constructor(
-    @SecondaryShoppingRepository private val shoppingRepository: ShoppingData<Shopping>,
-    @SecondaryProductRepository private val productRepository: ProductData<Product>
+    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>,
+    @ProductRep private val productRepository: ProductData<Product>
 ) : ViewModel() {
     var productId by mutableLongStateOf(0L)
         private set
@@ -79,6 +77,7 @@ class EditShoppingItemViewModel @Inject constructor(
         viewModelScope.launch {
             shoppingRepository.getById(shoppingItemId).collect {
                 name = it.name
+                photo = it.photo
                 purchasePrice = it.purchasePrice.toString()
                 quantity = it.quantity.toString()
                 isPaid = it.isPaid
@@ -90,9 +89,9 @@ class EditShoppingItemViewModel @Inject constructor(
 
     fun getPhoto(productId: Long) {
         viewModelScope.launch {
-            productRepository.getById(productId).collect {
-                photo = it.photo
-            }
+//            productRepository.getById(productId).collect {
+//                photo = it.photo
+//            }
         }
     }
 
@@ -101,6 +100,7 @@ class EditShoppingItemViewModel @Inject constructor(
             id = id,
             productId = productId,
             name = name,
+            photo = photo,
             purchasePrice = stringToFloat(purchasePrice),
             quantity = quantity.toInt(),
             date = dateInMillis,
