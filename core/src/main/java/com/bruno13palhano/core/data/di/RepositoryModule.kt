@@ -8,8 +8,6 @@ import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.SearchCacheData
 import com.bruno13palhano.core.data.ShoppingData
 import com.bruno13palhano.core.data.StockOrderData
-import com.bruno13palhano.core.data.repository.StockOrderRepositoryLight
-import com.bruno13palhano.core.data.repository.StockOrderRepositoryRoom
 import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
@@ -17,6 +15,7 @@ import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.data.repository.shopping.ShoppingRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Delivery
@@ -54,28 +53,11 @@ annotation class SearchCacheRep
 annotation class ShoppingRep
 
 @Qualifier
-annotation class DefaultStockOrderRepository
-
-@Qualifier
-annotation class SecondaryStockOrderRepository
+annotation class StockOrderRep
 
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class RepositoryModule {
-
-    @DefaultStockOrderRepository
-    @Singleton
-    @Binds
-    abstract fun bindStockOrderRepository(
-        repository: StockOrderRepositoryRoom)
-    : StockOrderData<StockOrder>
-
-    @SecondaryStockOrderRepository
-    @Singleton
-    @Binds
-    abstract fun bindSecondaryStockOrderRepository(
-        repository: StockOrderRepositoryLight
-    ): StockOrderData<StockOrder>
 
     @CategoryRep
     @Singleton
@@ -113,4 +95,11 @@ internal abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindShoppingRepository(repository: ShoppingRepository): ShoppingData<Shopping>
+
+    @StockOrderRep
+    @Singleton
+    @Binds
+    abstract fun bindStockOrderRepository(
+        repository: StockOrderRepository
+    ): StockOrderData<StockOrder>
 }
