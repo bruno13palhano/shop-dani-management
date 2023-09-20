@@ -17,7 +17,7 @@ class SearchCacheLight @Inject constructor(
 ) : SearchCacheData<SearchCache> {
     override suspend fun insert(model: SearchCache): Long {
         searchQueries.insert(model.search, model.search)
-        return 0L
+        return searchQueries.getLastId().executeAsOne()
     }
 
     override suspend fun deleteById(search: String) {

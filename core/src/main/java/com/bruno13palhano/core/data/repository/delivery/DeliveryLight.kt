@@ -23,7 +23,7 @@ class DeliveryLight @Inject constructor(
             deliveryDate = model.deliveryDate,
             delivered = model.delivered
         )
-        return 0L
+        return deliveryQueries.getLastId().executeAsOne()
     }
 
     override suspend fun update(model: Delivery) {

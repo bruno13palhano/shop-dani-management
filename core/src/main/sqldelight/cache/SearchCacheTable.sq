@@ -11,3 +11,6 @@ DELETE FROM SearchCacheTable WHERE id = ?;
 
 getAll:
 SELECT SearchCacheTable. * FROM SearchCacheTable;
+
+getLastId:
+SELECT last_insert_rowid();
