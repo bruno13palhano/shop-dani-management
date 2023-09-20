@@ -7,11 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.ShoppingData
-import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.ShoppingRep
-import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
@@ -23,8 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditShoppingItemViewModel @Inject constructor(
-    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>,
-    @ProductRep private val productRepository: ProductData<Product>
+    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>
 ) : ViewModel() {
     var productId by mutableLongStateOf(0L)
         private set
@@ -84,14 +80,6 @@ class EditShoppingItemViewModel @Inject constructor(
                 updateDate(it.date)
                 productId = it.productId
             }
-        }
-    }
-
-    fun getPhoto(productId: Long) {
-        viewModelScope.launch {
-//            productRepository.getById(productId).collect {
-//                photo = it.photo
-//            }
         }
     }
 
