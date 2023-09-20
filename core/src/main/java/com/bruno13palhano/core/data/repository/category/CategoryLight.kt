@@ -18,7 +18,7 @@ internal class CategoryLight @Inject constructor(
 ) : CategoryData<Category> {
     override suspend fun insert(model: Category): Long {
         categoryQueries.insert(name = model.name)
-        return 0L
+        return categoryQueries.getLastId().executeAsOne()
     }
 
     override suspend fun update(model: Category) {
