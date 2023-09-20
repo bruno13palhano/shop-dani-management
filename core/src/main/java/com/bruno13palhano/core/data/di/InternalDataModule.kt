@@ -18,6 +18,9 @@ import com.bruno13palhano.core.data.repository.sale.SaleRoom
 import com.bruno13palhano.core.data.repository.searchcache.InternalSearchCacheData
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheLight
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRoom
+import com.bruno13palhano.core.data.repository.shopping.InternalShoppingData
+import com.bruno13palhano.core.data.repository.shopping.ShoppingLight
+import com.bruno13palhano.core.data.repository.shopping.ShoppingRoom
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -60,6 +63,12 @@ internal annotation class InternalSearchCacheRoom
 
 @Qualifier
 internal annotation class InternalSearchCacheLight
+
+@Qualifier
+internal annotation class InternalShoppingRoom
+
+@Qualifier
+internal annotation class InternalShoppingLight
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -124,4 +133,14 @@ internal abstract class InternalDataModule {
     @Singleton
     @Binds
     abstract fun bindInternalSearchCacheLight(repository: SearchCacheLight): InternalSearchCacheData
+
+    @InternalShoppingRoom
+    @Singleton
+    @Binds
+    abstract fun bindInternalShoppingRoom(repository: ShoppingRoom): InternalShoppingData
+
+    @InternalShoppingLight
+    @Singleton
+    @Binds
+    abstract fun bindInternalShoppingLight(repository: ShoppingLight): InternalShoppingData
 }
