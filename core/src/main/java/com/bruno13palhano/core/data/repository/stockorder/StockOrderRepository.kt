@@ -2,12 +2,13 @@ package com.bruno13palhano.core.data.repository.stockorder
 
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.InternalStockOrderLight
+import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.core.model.StockOrder
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 internal class StockOrderRepository @Inject constructor(
-    @InternalStockOrderLight private val stockOrderData: StockOrderData<StockOrder>
+    @InternalStockOrderLight private val stockOrderData: StockOrderData<StockOrder>,
 ) : StockOrderData<StockOrder> {
     override suspend fun insert(model: StockOrder): Long {
         return stockOrderData.insert(model = model)
@@ -19,6 +20,18 @@ internal class StockOrderRepository @Inject constructor(
 
     override suspend fun delete(model: StockOrder) {
         stockOrderData.delete(model = model)
+    }
+
+    override suspend fun insertItems(
+        stockOrder: StockOrder,
+        shopping: Shopping,
+        isOrderedByCustomer: Boolean
+    ) {
+        stockOrderData.insertItems(
+            stockOrder = stockOrder,
+            shopping = shopping,
+            isOrderedByCustomer = isOrderedByCustomer
+        )
     }
 
     override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {

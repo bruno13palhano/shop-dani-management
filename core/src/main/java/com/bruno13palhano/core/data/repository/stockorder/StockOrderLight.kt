@@ -3,10 +3,12 @@ package com.bruno13palhano.core.data.repository.stockorder
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
+import cache.ShoppingTableQueries
 import cache.StockOrderTableQueries
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.core.model.StockOrder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +16,7 @@ import javax.inject.Inject
 
 class StockOrderLight @Inject constructor(
     private val stockOrderQueries: StockOrderTableQueries,
+    private val shoppingQueries: ShoppingTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : StockOrderData<StockOrder> {
     override suspend fun insert(model: StockOrder): Long {
@@ -44,6 +47,31 @@ class StockOrderLight @Inject constructor(
 
     override suspend fun delete(model: StockOrder) {
         stockOrderQueries.delete(id = model.id)
+    }
+
+    override suspend fun insertItems(
+        stockOrder: StockOrder,
+        shopping: Shopping,
+        isOrderedByCustomer: Boolean
+    ) {
+        if (!isOrderedByCustomer) {
+            shoppingQueries.insert(
+                productId = shopping.productId,
+                purchasePrice = shopping.purchasePrice.toDouble(),
+                quantity = shopping.quantity.toLong(),
+                date = shopping.date,
+                isPaid = shopping.isPaid
+            )
+        }
+        stockOrderQueries.insert(
+            productId = stockOrder.productId,
+            date = stockOrder.date,
+            purchasePrice = stockOrder.purchasePrice.toDouble(),
+            validity = stockOrder.validity,
+            quantity = stockOrder.quantity.toLong(),
+            salePrice = stockOrder.salePrice.toDouble(),
+            isOrderedByCustomer = stockOrder.isOrderedByCustomer
+        )
     }
 
     override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
