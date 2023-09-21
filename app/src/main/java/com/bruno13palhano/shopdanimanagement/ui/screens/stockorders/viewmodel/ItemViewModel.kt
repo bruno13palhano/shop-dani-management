@@ -9,11 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.ShoppingData
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.ProductRep
-import com.bruno13palhano.core.data.di.ShoppingRep
 import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
@@ -36,7 +34,6 @@ import javax.inject.Inject
 class ItemViewModel @Inject constructor(
     @ProductRep private val productRepository: ProductData<Product>,
     @CategoryRep private val categoryRepository: CategoryData<Category>,
-    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>,
     @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
     private val companiesCheck = listOf(
@@ -208,13 +205,12 @@ class ItemViewModel @Inject constructor(
             isOrderedByCustomer = isOrderedByCustomer
 
         )
-        if (!isOrderedByCustomer) {
-            viewModelScope.launch {
-                shoppingRepository.insert(shoppingItem)
-            }
-        }
         viewModelScope.launch {
-            stockRepository.insert(stockItem)
+            stockRepository.insertItems(
+                stockOrder = stockItem,
+                shopping = shoppingItem,
+                isOrderedByCustomer = isOrderedByCustomer
+            )
         }
     }
 
