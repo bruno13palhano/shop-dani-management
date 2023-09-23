@@ -280,65 +280,94 @@ class SaleViewModel @Inject constructor(
             isOrderedByCustomer = isOrderedByCustomer,
             isPaidByCustomer = isPaidByCustomer
         )
-        if (isOrderedByCustomer) {
-            val order = StockOrder(
-                id = 0L,
-                productId = productId,
-                name = productName,
-                photo = photo,
-                date = currentDate,
-                validity = currentDate,
-                quantity = stringToInt(quantity),
-                categories = categories,
-                company = company,
-                purchasePrice = stringToFloat(purchasePrice),
-                salePrice = stringToFloat(salePrice),
-                isOrderedByCustomer = true
-            )
-            viewModelScope.launch {
-                val saleId = saleRepository.insert(sale)
-                val delivery = Delivery(
-                    id = 0L,
-                    saleId = saleId,
-                    customerName = customerName,
-                    address = address,
-                    phoneNumber = phoneNumber,
-                    productName = productName,
-                    price = stringToFloat(salePrice),
-                    shippingDate = dateOfSaleInMillis,
-                    deliveryDate = dateOfSaleInMillis,
-                    delivered = false,
-                )
-                deliveryRepository.insert(delivery)
-            }
-            viewModelScope.launch {
-                stockOrderRepository.insert(order)
-            }
-            onSuccess()
-        } else {
-            val finalQuantity = (stockQuantity - stringToInt(quantity))
-            if (finalQuantity >= 0) {
-                viewModelScope.launch {
-                    stockOrderRepository.updateStockOrderQuantity(stockItemId, finalQuantity)
-                }
-                viewModelScope.launch {
-                    val saleId = saleRepository.insert(sale)
-                    val delivery = Delivery(
-                        id = 0L,
-                        saleId = saleId,
-                        customerName = customerName,
-                        address = address,
-                        phoneNumber = phoneNumber,
-                        productName = productName,
-                        price = stringToFloat(salePrice),
-                        shippingDate = dateOfSaleInMillis,
-                        deliveryDate = dateOfSaleInMillis,
-                        delivered = false,
-                    )
-                    deliveryRepository.insert(delivery)
-                }
-                onSuccess()
-            } else { onError() }
+        val order = StockOrder(
+            id = stockItemId,
+            productId = productId,
+            name = productName,
+            photo = photo,
+            date = currentDate,
+            validity = currentDate,
+            quantity = stockQuantity,
+            categories = categories,
+            company = company,
+            purchasePrice = stringToFloat(purchasePrice),
+            salePrice = stringToFloat(salePrice),
+            isOrderedByCustomer = isOrderedByCustomer
+        )
+        val delivery = Delivery(
+            id = 0L,
+            saleId = 0L,
+            customerName = customerName,
+            address = address,
+            phoneNumber = phoneNumber,
+            productName = productName,
+            price = stringToFloat(salePrice),
+            shippingDate = dateOfSaleInMillis,
+            deliveryDate = dateOfSaleInMillis,
+            delivered = false,
+        )
+//        if (isOrderedByCustomer) {
+//            val order = StockOrder(
+//                id = 0L,
+//                productId = productId,
+//                name = productName,
+//                photo = photo,
+//                date = currentDate,
+//                validity = currentDate,
+//                quantity = stringToInt(quantity),
+//                categories = categories,
+//                company = company,
+//                purchasePrice = stringToFloat(purchasePrice),
+//                salePrice = stringToFloat(salePrice),
+//                isOrderedByCustomer = true
+//            )
+//            viewModelScope.launch {
+//                val saleId = saleRepository.insert(sale)
+//                val delivery = Delivery(
+//                    id = 0L,
+//                    saleId = saleId,
+//                    customerName = customerName,
+//                    address = address,
+//                    phoneNumber = phoneNumber,
+//                    productName = productName,
+//                    price = stringToFloat(salePrice),
+//                    shippingDate = dateOfSaleInMillis,
+//                    deliveryDate = dateOfSaleInMillis,
+//                    delivered = false,
+//                )
+//                deliveryRepository.insert(delivery)
+//            }
+//            viewModelScope.launch {
+//                stockOrderRepository.insert(order)
+//            }
+//            onSuccess()
+//        } else {
+//            val finalQuantity = (stockQuantity - stringToInt(quantity))
+//            if (finalQuantity >= 0) {
+//                viewModelScope.launch {
+//                    stockOrderRepository.updateStockOrderQuantity(stockItemId, finalQuantity)
+//                }
+//                viewModelScope.launch {
+//                    val saleId = saleRepository.insert(sale)
+//                    val delivery = Delivery(
+//                        id = 0L,
+//                        saleId = saleId,
+//                        customerName = customerName,
+//                        address = address,
+//                        phoneNumber = phoneNumber,
+//                        productName = productName,
+//                        price = stringToFloat(salePrice),
+//                        shippingDate = dateOfSaleInMillis,
+//                        deliveryDate = dateOfSaleInMillis,
+//                        delivered = false,
+//                    )
+//                    deliveryRepository.insert(delivery)
+//                }
+//                onSuccess()
+//            } else { onError() }
+//        }
+        viewModelScope.launch {
+            saleRepository.insertItems(sale = sale, stockOrder = order, delivery = delivery)
         }
     }
 
