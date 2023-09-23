@@ -10,13 +10,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.CustomerRep
-import com.bruno13palhano.core.data.di.DeliveryRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.di.StockOrderRep
@@ -48,7 +46,6 @@ class SaleViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleData<Sale>,
     @StockOrderRep private val stockOrderRepository: StockOrderData<StockOrder>,
     @CustomerRep private val customerRepository: CustomerData<Customer>,
-    @DeliveryRep private val deliveryRepository: DeliveryData<Delivery>
 ) : ViewModel() {
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),
@@ -263,111 +260,17 @@ class SaleViewModel @Inject constructor(
         onSuccess: () -> Unit,
         onError: () -> Unit
     ) {
-        val sale = Sale(
-            id = 0L,
-            productId = productId,
-            customerId = customerId,
-            name = productName,
-            customerName = customerName,
-            photo = photo,
-            quantity = stringToInt(quantity),
-            purchasePrice = stringToFloat(purchasePrice),
-            salePrice = stringToFloat(salePrice),
-            categories = categories,
-            company = company,
-            dateOfSale = dateOfSaleInMillis,
-            dateOfPayment = dateOfPaymentInMillis,
-            isOrderedByCustomer = isOrderedByCustomer,
-            isPaidByCustomer = isPaidByCustomer
-        )
-        val order = StockOrder(
-            id = stockItemId,
-            productId = productId,
-            name = productName,
-            photo = photo,
-            date = currentDate,
-            validity = currentDate,
-            quantity = stockQuantity,
-            categories = categories,
-            company = company,
-            purchasePrice = stringToFloat(purchasePrice),
-            salePrice = stringToFloat(salePrice),
-            isOrderedByCustomer = isOrderedByCustomer
-        )
-        val delivery = Delivery(
-            id = 0L,
-            saleId = 0L,
-            customerName = customerName,
-            address = address,
-            phoneNumber = phoneNumber,
-            productName = productName,
-            price = stringToFloat(salePrice),
-            shippingDate = dateOfSaleInMillis,
-            deliveryDate = dateOfSaleInMillis,
-            delivered = false,
-        )
-//        if (isOrderedByCustomer) {
-//            val order = StockOrder(
-//                id = 0L,
-//                productId = productId,
-//                name = productName,
-//                photo = photo,
-//                date = currentDate,
-//                validity = currentDate,
-//                quantity = stringToInt(quantity),
-//                categories = categories,
-//                company = company,
-//                purchasePrice = stringToFloat(purchasePrice),
-//                salePrice = stringToFloat(salePrice),
-//                isOrderedByCustomer = true
-//            )
-//            viewModelScope.launch {
-//                val saleId = saleRepository.insert(sale)
-//                val delivery = Delivery(
-//                    id = 0L,
-//                    saleId = saleId,
-//                    customerName = customerName,
-//                    address = address,
-//                    phoneNumber = phoneNumber,
-//                    productName = productName,
-//                    price = stringToFloat(salePrice),
-//                    shippingDate = dateOfSaleInMillis,
-//                    deliveryDate = dateOfSaleInMillis,
-//                    delivered = false,
-//                )
-//                deliveryRepository.insert(delivery)
-//            }
-//            viewModelScope.launch {
-//                stockOrderRepository.insert(order)
-//            }
-//            onSuccess()
-//        } else {
-//            val finalQuantity = (stockQuantity - stringToInt(quantity))
-//            if (finalQuantity >= 0) {
-//                viewModelScope.launch {
-//                    stockOrderRepository.updateStockOrderQuantity(stockItemId, finalQuantity)
-//                }
-//                viewModelScope.launch {
-//                    val saleId = saleRepository.insert(sale)
-//                    val delivery = Delivery(
-//                        id = 0L,
-//                        saleId = saleId,
-//                        customerName = customerName,
-//                        address = address,
-//                        phoneNumber = phoneNumber,
-//                        productName = productName,
-//                        price = stringToFloat(salePrice),
-//                        shippingDate = dateOfSaleInMillis,
-//                        deliveryDate = dateOfSaleInMillis,
-//                        delivered = false,
-//                    )
-//                    deliveryRepository.insert(delivery)
-//                }
-//                onSuccess()
-//            } else { onError() }
-//        }
+        val sale = initSale(productId = productId, isOrderedByCustomer = isOrderedByCustomer)
+        val order = initStockOrder(productId = productId, isOrderedByCustomer = isOrderedByCustomer)
+        val delivery = initDelivery()
         viewModelScope.launch {
-            saleRepository.insertItems(sale = sale, stockOrder = order, delivery = delivery)
+            saleRepository.insertItems(
+                sale = sale,
+                stockOrder = order,
+                delivery = delivery,
+                onSuccess = onSuccess,
+                onError = onError
+            )
         }
     }
 
@@ -423,4 +326,50 @@ class SaleViewModel @Inject constructor(
             saleRepository.deleteById(saleId)
         }
     }
+
+    private fun initSale(productId: Long, isOrderedByCustomer: Boolean) = Sale(
+        id = 0L,
+        productId = productId,
+        customerId = customerId,
+        name = productName,
+        customerName = customerName,
+        photo = photo,
+        quantity = stringToInt(quantity),
+        purchasePrice = stringToFloat(purchasePrice),
+        salePrice = stringToFloat(salePrice),
+        categories = categories,
+        company = company,
+        dateOfSale = dateOfSaleInMillis,
+        dateOfPayment = dateOfPaymentInMillis,
+        isOrderedByCustomer = isOrderedByCustomer,
+        isPaidByCustomer = isPaidByCustomer
+    )
+
+    private fun initStockOrder(productId: Long, isOrderedByCustomer: Boolean) = StockOrder(
+        id = stockItemId,
+        productId = productId,
+        name = productName,
+        photo = photo,
+        date = currentDate,
+        validity = currentDate,
+        quantity = stockQuantity,
+        categories = categories,
+        company = company,
+        purchasePrice = stringToFloat(purchasePrice),
+        salePrice = stringToFloat(salePrice),
+        isOrderedByCustomer = isOrderedByCustomer
+    )
+
+    private fun initDelivery() = Delivery(
+        id = 0L,
+        saleId = 0L,
+        customerName = customerName,
+        address = address,
+        phoneNumber = phoneNumber,
+        productName = productName,
+        price = stringToFloat(salePrice),
+        shippingDate = dateOfSaleInMillis,
+        deliveryDate = dateOfSaleInMillis,
+        delivered = false
+    )
 }
