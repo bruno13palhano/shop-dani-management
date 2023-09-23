@@ -23,8 +23,20 @@ internal class SaleRepository @Inject constructor(
         saleData.delete(model = model)
     }
 
-    override suspend fun insertItems(sale: Sale, stockOrder: StockOrder, delivery: Delivery) {
-        saleData.insertItems(sale = sale, stockOrder = stockOrder, delivery = delivery)
+    override suspend fun insertItems(
+        sale: Sale,
+        stockOrder: StockOrder,
+        delivery: Delivery,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
+        saleData.insertItems(
+            sale = sale,
+            stockOrder = stockOrder,
+            delivery = delivery,
+            onSuccess = onSuccess,
+            onError = onError
+        )
     }
 
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {

@@ -56,7 +56,13 @@ internal class SaleLight @Inject constructor(
         saleQueries.delete(id = model.id)
     }
 
-    override suspend fun insertItems(sale: Sale, stockOrder: StockOrder, delivery: Delivery) {
+    override suspend fun insertItems(
+        sale: Sale,
+        stockOrder: StockOrder,
+        delivery: Delivery,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
         if (sale.isOrderedByCustomer) {
             saleQueries.transaction {
                 saleQueries.insert(
@@ -86,10 +92,12 @@ internal class SaleLight @Inject constructor(
                     isOrderedByCustomer = true
                 )
             }
+            onSuccess()
         } else {
-            saleQueries.transaction {
-                val quantity = stockOrder.quantity - sale.quantity
-                if (quantity >= 0) {
+            val quantity = stockOrder.quantity - sale.quantity
+
+            if (quantity >= 0) {
+                saleQueries.transaction {
                     stockOrderQueries.updateStockOrderQuantity(
                         id = stockOrder.id,
                         quantity = quantity.toLong()
@@ -112,6 +120,9 @@ internal class SaleLight @Inject constructor(
                         delivered = delivery.delivered
                     )
                 }
+                onSuccess()
+            } else {
+                onError()
             }
         }
     }
