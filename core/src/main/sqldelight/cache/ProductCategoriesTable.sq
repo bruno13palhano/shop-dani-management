@@ -1,9 +1,9 @@
-import kotlin.String;
+import com.bruno13palhano.core.model.Category;
 import kotlin.collections.List;
 
 CREATE TABLE ProductCategoriesTable (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    categories TEXT AS List<String> NOT NULL
+    categories TEXT AS List<Category> NOT NULL
 );
 
 insert:
