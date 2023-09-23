@@ -20,6 +20,6 @@ data class Product(
     val description: String,
     val photo: String,
     val date: Long,
-    val categories: List<String>,
+    val categories: List<Category>,
     val company: String
 )

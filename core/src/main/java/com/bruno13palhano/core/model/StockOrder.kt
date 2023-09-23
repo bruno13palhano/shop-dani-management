@@ -8,7 +8,7 @@ data class StockOrder(
     val date: Long,
     val validity: Long,
     val quantity: Int,
-    val categories: List<String>,
+    val categories: List<Category>,
     val company: String,
     val purchasePrice: Float,
     val salePrice: Float,
