@@ -148,7 +148,7 @@ class ProductViewModel @Inject constructor(
                 updateDate(it.date)
                 categories = it.categories
                 company = it.company
-//                setCategoriesChecked(categories)
+                setCategoriesChecked(categories)
                 category = categories.joinToString(", ")
                 setCompanyChecked(it.company)
             }
