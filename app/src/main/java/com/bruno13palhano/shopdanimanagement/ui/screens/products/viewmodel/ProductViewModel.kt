@@ -131,16 +131,8 @@ class ProductViewModel @Inject constructor(
     }
 
     fun insertProduct() {
-        val product = Product(
-            id = 0L,
-            name = name,
-            code = code,
-            description = description,
-            photo = photo,
-            date = dateInMillis,
-            categories = categories,
-            company = company
-        )
+        val product = initProduct(id = 0L)
+
         viewModelScope.launch {
             productRepository.insert(product)
         }
@@ -186,16 +178,7 @@ class ProductViewModel @Inject constructor(
     }
 
     fun updateProduct(id: Long) {
-        val product = Product(
-            id = id,
-            name = name,
-            code = code,
-            description = description,
-            photo = photo,
-            date = dateInMillis,
-            categories = categories,
-            company = company,
-        )
+        val product = initProduct(id = id)
 
         viewModelScope.launch {
             productRepository.update(product)
@@ -207,4 +190,15 @@ class ProductViewModel @Inject constructor(
             productRepository.deleteById(id)
         }
     }
+
+    private fun initProduct(id: Long) = Product(
+        id = id,
+        name = name,
+        code = code,
+        description = description,
+        photo = photo,
+        date = dateInMillis,
+        categories = categories,
+        company = company
+    )
 }
