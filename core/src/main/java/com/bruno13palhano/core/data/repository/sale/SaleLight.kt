@@ -3,17 +3,23 @@ package com.bruno13palhano.core.data.repository.sale
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
+import cache.DeliveryTableQueries
 import cache.SaleTableQueries
+import cache.StockOrderTableQueries
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
+import com.bruno13palhano.core.model.StockOrder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 internal class SaleLight @Inject constructor(
     private val saleQueries: SaleTableQueries,
+    private val deliveryQueries: DeliveryTableQueries,
+    private val stockOrderQueries: StockOrderTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleData<Sale> {
     override suspend fun insert(model: Sale): Long {
@@ -48,6 +54,66 @@ internal class SaleLight @Inject constructor(
 
     override suspend fun delete(model: Sale) {
         saleQueries.delete(id = model.id)
+    }
+
+    override suspend fun insertItems(sale: Sale, stockOrder: StockOrder, delivery: Delivery) {
+        if (sale.isOrderedByCustomer) {
+            saleQueries.transaction {
+                saleQueries.insert(
+                    productId = sale.productId,
+                    customerId = sale.customerId,
+                    quantity = sale.quantity.toLong(),
+                    salePrice = sale.salePrice.toDouble(),
+                    purchasePrice = sale.purchasePrice.toDouble(),
+                    dateOfSale = sale.dateOfSale,
+                    dateOfPayment = sale.dateOfPayment,
+                    isOrderedByCustomer = true,
+                    isPaidByCustomer = sale.isPaidByCustomer
+                )
+                deliveryQueries.insert(
+                    saleId = saleQueries.getLastId().executeAsOne(),
+                    shippingDate = delivery.shippingDate,
+                    deliveryDate = delivery.deliveryDate,
+                    delivered = delivery.delivered
+                )
+                stockOrderQueries.insert(
+                    productId = saleQueries.getLastId().executeAsOne(),
+                    date = stockOrder.date,
+                    validity = stockOrder.validity,
+                    quantity = stockOrder.quantity.toLong(),
+                    purchasePrice = stockOrder.purchasePrice.toDouble(),
+                    salePrice = stockOrder.salePrice.toDouble(),
+                    isOrderedByCustomer = true
+                )
+            }
+        } else {
+            saleQueries.transaction {
+                val quantity = stockOrder.quantity - sale.quantity
+                if (quantity >= 0) {
+                    stockOrderQueries.updateStockOrderQuantity(
+                        id = stockOrder.id,
+                        quantity = quantity.toLong()
+                    )
+                    saleQueries.insert(
+                        productId = sale.productId,
+                        customerId = sale.customerId,
+                        quantity = sale.quantity.toLong(),
+                        purchasePrice = sale.purchasePrice.toDouble(),
+                        salePrice = sale.salePrice.toDouble(),
+                        dateOfSale = sale.dateOfSale,
+                        dateOfPayment = sale.dateOfPayment,
+                        isOrderedByCustomer = false,
+                        isPaidByCustomer = sale.isPaidByCustomer
+                    )
+                    deliveryQueries.insert(
+                        saleId = saleQueries.getLastId().executeAsOne(),
+                        shippingDate = delivery.shippingDate,
+                        deliveryDate = delivery.deliveryDate,
+                        delivered = delivery.delivered
+                    )
+                }
+            }
+        }
     }
 
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {

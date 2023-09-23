@@ -2,7 +2,9 @@ package com.bruno13palhano.core.data.repository.sale
 
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.InternalSaleLight
+import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
+import com.bruno13palhano.core.model.StockOrder
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -19,6 +21,10 @@ internal class SaleRepository @Inject constructor(
 
     override suspend fun delete(model: Sale) {
         saleData.delete(model = model)
+    }
+
+    override suspend fun insertItems(sale: Sale, stockOrder: StockOrder, delivery: Delivery) {
+        saleData.insertItems(sale = sale, stockOrder = stockOrder, delivery = delivery)
     }
 
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
