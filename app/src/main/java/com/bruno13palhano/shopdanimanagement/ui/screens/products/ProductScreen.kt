@@ -19,7 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -33,10 +32,11 @@ import com.bruno13palhano.shopdanimanagement.ui.components.ProductMenuItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductScreen(
     isEditable: Boolean,
+    screenTitle: String,
     productId: Long,
     categoryId: Long,
     navigateUp: () -> Unit,
@@ -104,7 +104,6 @@ fun ProductScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val errorMessage = stringResource(id = R.string.empty_fields_error)
-    val screenTitle = stringResource(id = R.string.edit_product_label)
 
     ProductContent(
         isEditable = isEditable,

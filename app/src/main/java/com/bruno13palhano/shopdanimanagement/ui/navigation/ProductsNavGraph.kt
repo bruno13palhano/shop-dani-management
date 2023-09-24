@@ -1,9 +1,11 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductCategoriesScreen
@@ -23,7 +25,9 @@ fun NavGraphBuilder.productsNavGraph(
             showBottomMenu(true)
             ProductCategoriesScreen(
                 onItemClick = { categoryId ->
-                    navController.navigate(route = "${ProductsDestinations.PRODUCTS_LIST_ROUTE}$categoryId")
+                    navController.navigate(
+                        route = "${ProductsDestinations.PRODUCTS_LIST_ROUTE}$categoryId"
+                    )
                 },
                 onIconMenuClick = onIconMenuClick
             )
@@ -53,6 +57,7 @@ fun NavGraphBuilder.productsNavGraph(
             backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
                 ProductScreen(
                     isEditable = false,
+                    screenTitle = stringResource(id = R.string.new_product_label),
                     categoryId = categoryId.toLong(),
                     productId = 0L,
                     navigateUp = { navController.navigateUp() }
@@ -64,6 +69,7 @@ fun NavGraphBuilder.productsNavGraph(
             backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
                 ProductScreen(
                     isEditable = true,
+                    screenTitle = stringResource(id = R.string.edit_product_label),
                     categoryId = 0L,
                     productId = productId.toLong(),
                     navigateUp = { navController.navigateUp() }
