@@ -49,7 +49,7 @@ class ProductViewModel @Inject constructor(
         private set
     var company by mutableStateOf(companiesCheck[0].name.company)
         private set
-    private var categories by mutableStateOf(listOf(""))
+    private var categories by mutableStateOf(listOf<Category>())
     var allCategories by mutableStateOf((listOf<CategoryCheck>()))
         private set
     var allCompanies by mutableStateOf(companiesCheck)
@@ -99,8 +99,8 @@ class ProductViewModel @Inject constructor(
         categories
             .filter { it.isChecked }
             .map { catList.add(Category(it.id, it.category)) }
-        this.categories = catList.map { it.name }
-        category = this.categories.toString().replace("[", "").replace("]", "")
+        this.categories = catList
+        category = this.categories.joinToString(", ") { it.name }
     }
 
     fun setCategoryChecked(category: Long) {
@@ -113,7 +113,11 @@ class ProductViewModel @Inject constructor(
             .filter { it.isChecked }
             .map { it.category }.toString()
             .replace("[", "").replace("]", "")
-        categories = listOf(this.category)
+        categories = allCategories
+            .filter { it.isChecked }
+            .map { categoryChecked ->
+                Category(id = categoryChecked.id, name = categoryChecked.category)
+            }
     }
 
     fun updateCompany(company: String) {
@@ -148,18 +152,18 @@ class ProductViewModel @Inject constructor(
                 updateDate(it.date)
                 categories = it.categories
                 company = it.company
-                setCategoriesChecked(categories)
-                category = categories.joinToString(", ")
+                setCategoriesChecked(it.categories)
+                category = it.categories.joinToString(", ") { category -> category.name }
                 setCompanyChecked(it.company)
             }
         }
     }
 
     //Sets all current categories
-    private fun setCategoriesChecked(allCategories: List<String>) {
+    private fun setCategoriesChecked(allCategories: List<Category>) {
         this.allCategories.forEach { categoryCheck ->
             allCategories.forEach {
-                if (categoryCheck.category == it.replace("[","" ).replace("]", "")) {
+                if (categoryCheck.id == it.id) {
                     categoryCheck.isChecked = true
                 }
             }
@@ -198,7 +202,9 @@ class ProductViewModel @Inject constructor(
         description = description,
         photo = photo,
         date = dateInMillis,
-        categories = categories,
+        categories = allCategories
+            .filter { it.isChecked }
+            .map { Category(id = it.id, name = it.category) },
         company = company
     )
 }

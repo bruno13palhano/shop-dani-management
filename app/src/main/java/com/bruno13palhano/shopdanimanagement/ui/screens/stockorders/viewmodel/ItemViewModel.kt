@@ -63,7 +63,7 @@ class ItemViewModel @Inject constructor(
         private set
     var company by mutableStateOf("")
         private set
-    private var categories by mutableStateOf(listOf(""))
+    private var categories by mutableStateOf(listOf<Category>())
     var allCategories by mutableStateOf((listOf<CategoryCheck>()))
         private set
     var allCompanies by mutableStateOf(companiesCheck)
@@ -115,15 +115,16 @@ class ItemViewModel @Inject constructor(
         categories
             .filter { it.isChecked }
             .map { catList.add(Category(it.id, it.category)) }
-        this.categories = catList.map { it.name }
-        category = this.categories.toString().replace("[", "")
-            .replace("]", "")
+        this.categories = catList
+        category = this.categories.joinToString(", ") { category ->
+            category.name
+        }
     }
 
-    private fun setCategoriesChecked(allCategories: List<String>) {
+    private fun setCategoriesChecked(allCategories: List<Category>) {
         this.allCategories.forEach { categoryCheck ->
             allCategories.forEach {
-                if (categoryCheck.category == it.replace("[","" ).replace("]", "")) {
+                if (categoryCheck.id == it.id) {
                     categoryCheck.isChecked = true
                 }
             }
