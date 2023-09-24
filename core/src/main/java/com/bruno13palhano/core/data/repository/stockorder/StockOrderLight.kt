@@ -8,6 +8,7 @@ import cache.StockOrderTableQueries
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.core.model.StockOrder
 import kotlinx.coroutines.CoroutineDispatcher
@@ -133,7 +134,7 @@ class StockOrderLight @Inject constructor(
         date: Long,
         validity: Long,
         quantity: Long,
-        categories: List<String>,
+        categories: List<Category>,
         company: String,
         purchasePrice: Double,
         salePrice: Double,
