@@ -80,18 +80,19 @@ class EditShoppingItemViewModel @Inject constructor(
     }
 
     fun updateShoppingItem(id: Long) {
-        val shoppingItem = Shopping(
-            id = id,
-            productId = productId,
-            name = name,
-            photo = photo,
-            purchasePrice = stringToFloat(purchasePrice),
-            quantity = quantity.toInt(),
-            date = dateInMillis,
-            isPaid = isPaid
-        )
         viewModelScope.launch {
-            shoppingRepository.insert(shoppingItem)
+            shoppingRepository.update(createShoppingItem(id))
         }
     }
+
+    private fun createShoppingItem(id: Long) = Shopping(
+        id = id,
+        productId = productId,
+        name = name,
+        photo = photo,
+        purchasePrice = stringToFloat(purchasePrice),
+        quantity = quantity.toInt(),
+        date = dateInMillis,
+        isPaid = isPaid
+    )
 }
