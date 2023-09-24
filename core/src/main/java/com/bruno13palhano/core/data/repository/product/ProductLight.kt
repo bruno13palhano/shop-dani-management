@@ -8,6 +8,7 @@ import cache.ShopDatabaseQueries
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -96,7 +97,7 @@ internal class ProductLight @Inject constructor(
         description: String,
         photo: String,
         date: Long,
-        categories: List<String>?,
+        categories: List<Category>,
         company: String
     ): Product {
         return Product(
@@ -106,7 +107,7 @@ internal class ProductLight @Inject constructor(
             description = description,
             photo = photo,
             date = date,
-            categories = categories!!,
+            categories = categories,
             company = company
         )
     }
