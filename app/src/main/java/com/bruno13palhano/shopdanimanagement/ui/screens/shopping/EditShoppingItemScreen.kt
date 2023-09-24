@@ -94,7 +94,6 @@ fun EditShoppingItemScreen(
         isPaid = viewModel.isPaid,
         photo = viewModel.photo,
         date = viewModel.date,
-        onNameChange = viewModel::updateName,
         onPurchasePriceChange = viewModel::updatePurchasePrice,
         onQuantityChange = viewModel::updateQuantity,
         onIsPaidChange = viewModel::updateIsPaid,

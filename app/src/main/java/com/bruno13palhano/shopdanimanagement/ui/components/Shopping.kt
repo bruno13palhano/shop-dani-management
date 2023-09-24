@@ -59,7 +59,6 @@ fun ShoppingContent(
     isPaid: Boolean,
     photo: String,
     date: String,
-    onNameChange: (name: String) -> Unit,
     onPurchasePriceChange: (purchasePrice: String) -> Unit,
     onQuantityChange: (quantity: String) -> Unit,
     onIsPaidChange: (isPaid: Boolean) -> Unit,
@@ -136,30 +135,21 @@ fun ShoppingContent(
                     .fillMaxWidth()
                     .clearFocusOnKeyboardDismiss(),
                 value = name,
-                onValueChange = onNameChange,
+                onValueChange = {},
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Title,
                         contentDescription = stringResource(id = R.string.name_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
+                readOnly = true,
                 label = {
                     Text(
                         text = stringResource(id = R.string.name_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_name_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             OutlinedTextField(
                 modifier = Modifier
