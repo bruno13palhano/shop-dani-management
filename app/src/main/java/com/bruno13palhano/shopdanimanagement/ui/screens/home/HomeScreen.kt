@@ -66,9 +66,6 @@ fun HomeScreen(
     val lastSalesEntry by viewModel.lastSales.collectAsStateWithLifecycle()
     val homeInfo by viewModel.homeInfo.collectAsStateWithLifecycle()
 
-    val cache by viewModel.products.collectAsStateWithLifecycle()
-    println("valor do cache: $cache")
-
     HomeContent(
         homeInfo = homeInfo,
         lastSalesEntry = lastSalesEntry,
