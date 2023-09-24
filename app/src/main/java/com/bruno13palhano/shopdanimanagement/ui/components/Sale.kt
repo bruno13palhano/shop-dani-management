@@ -78,20 +78,14 @@ fun SaleContent(
     category: String,
     company: String,
     isPaidByCustomer: Boolean,
-    onProductNameChange: (productName: String) -> Unit,
     onQuantityChange: (quantity: String) -> Unit,
     onPurchasePriceChange: (purchasePrice: String) -> Unit,
     onSalePriceChange: (salePrice: String) -> Unit,
     onIsPaidByCustomerChange: (isPaidByCustomer: Boolean) -> Unit,
     onDateOfSaleClick: () -> Unit,
     onDateOfPaymentClick: () -> Unit,
-    categories: List<CategoryCheck>,
-    companies: List<CompanyCheck>,
     customers: List<CustomerCheck>,
-    onDismissCategory: () -> Unit,
-    onDismissCompany: () -> Unit,
     onDismissCustomer: () -> Unit,
-    onCompanySelected: (selected: String) -> Unit,
     onCustomerSelected: (selected: String) -> Unit,
     onOutsideClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
@@ -99,8 +93,6 @@ fun SaleContent(
     navigateUp: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var openCategorySheet by rememberSaveable { mutableStateOf(false) }
-    var openCompanySheet by rememberSaveable { mutableStateOf(false) }
     var openCustomerSheet by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -162,19 +154,6 @@ fun SaleContent(
             .fillMaxHeight()
             .verticalScroll(rememberScrollState())
         ) {
-            CategoryBottomSheet(
-                categories = categories,
-                openBottomSheet = openCategorySheet,
-                onBottomSheetChange = { show -> openCategorySheet = show },
-                onDismissCategory = onDismissCategory
-            )
-            CompanyBottomSheet(
-                companies = companies,
-                openBottomSheet = openCompanySheet,
-                onBottomSheetChange = { show -> openCompanySheet = show },
-                onDismissCompany = onDismissCompany,
-                onSelectedItem = onCompanySelected
-            )
             CustomerBottomSheet(
                 customers = customers,
                 openBottomSheet = openCustomerSheet,
@@ -217,30 +196,21 @@ fun SaleContent(
                             .fillMaxWidth()
                             .clearFocusOnKeyboardDismiss(),
                         value = productName,
-                        onValueChange = onProductNameChange,
+                        onValueChange = {},
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Filled.Title,
                                 contentDescription = stringResource(id = R.string.name_label)
                             )
                         },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }),
                         singleLine = true,
+                        readOnly = true,
                         label = {
                             Text(
                                 text = stringResource(id = R.string.name_label),
                                 fontStyle = FontStyle.Italic
                             )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_name_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
+                        }
                     )
                     OutlinedTextField(
                         modifier = Modifier
@@ -461,12 +431,7 @@ fun SaleContent(
             OutlinedTextField(
                 modifier = Modifier
                     .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (focusState.hasFocus) {
-                            openCategorySheet = true
-                        }
-                    },
+                    .fillMaxWidth(),
                 value = category,
                 onValueChange = {},
                 leadingIcon = {
@@ -475,10 +440,6 @@ fun SaleContent(
                         contentDescription = stringResource(id = R.string.categories_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
                 readOnly = true,
                 label = {
@@ -486,23 +447,12 @@ fun SaleContent(
                         text = stringResource(id = R.string.categories_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_categories_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             OutlinedTextField(
                 modifier = Modifier
                     .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (focusState.hasFocus) {
-                            openCompanySheet = true
-                        }
-                    },
+                    .fillMaxWidth(),
                 value = company,
                 onValueChange = {},
                 leadingIcon = {
@@ -511,10 +461,6 @@ fun SaleContent(
                         contentDescription = stringResource(id = R.string.company_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
                 readOnly = true,
                 label = {
@@ -522,13 +468,7 @@ fun SaleContent(
                         text = stringResource(id = R.string.company_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_company_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically

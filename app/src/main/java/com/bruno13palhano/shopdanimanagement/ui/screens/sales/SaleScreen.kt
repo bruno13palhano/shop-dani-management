@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -28,7 +27,7 @@ import com.bruno13palhano.shopdanimanagement.ui.components.SaleContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SaleViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SaleScreen(
     isEdit: Boolean,
@@ -154,23 +153,14 @@ fun SaleScreen(
         category = viewModel.category,
         company = viewModel.company,
         isPaidByCustomer = viewModel.isPaidByCustomer,
-        onProductNameChange = viewModel::updateProductName,
         onQuantityChange = viewModel::updateQuantity,
         onPurchasePriceChange = viewModel::updatePurchasePrice,
         onSalePriceChange = viewModel::updateSalePrice,
         onIsPaidByCustomerChange = viewModel::updateIsPaidByCustomer,
         onDateOfSaleClick = { showDateOfSalePickerDialog = true },
         onDateOfPaymentClick = { showDateOfPaymentPickerDialog = true },
-        categories = viewModel.allCategories,
-        companies = viewModel.allCompanies,
         customers = viewModel.allCustomers,
-        onDismissCategory = {
-            viewModel.updateCategories(viewModel.allCategories)
-            focusManager.clearFocus(force = true)
-        },
-        onDismissCompany = { focusManager.clearFocus(force = true) },
         onDismissCustomer = { focusManager.clearFocus(force = true) },
-        onCompanySelected = viewModel::updateCompany,
         onCustomerSelected = viewModel::updateCustomerName,
         onOutsideClick = {
             keyboardController?.hide()
