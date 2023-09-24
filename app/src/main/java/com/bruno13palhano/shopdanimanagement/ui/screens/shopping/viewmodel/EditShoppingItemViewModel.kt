@@ -48,10 +48,6 @@ class EditShoppingItemViewModel @Inject constructor(
             initialValue = false
         )
 
-    fun updateName(name: String) {
-        this.name = name
-    }
-
     fun updatePurchasePrice(purchasePrice: String) {
         this.purchasePrice = purchasePrice
     }
