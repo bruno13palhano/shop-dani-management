@@ -161,35 +161,10 @@ class ItemViewModel @Inject constructor(
     }
 
     fun insertItems(productId: Long, isOrderedByCustomer: Boolean) {
-        val shoppingItem = Shopping(
-            id = 0L,
-            productId = productId,
-            name = name,
-            photo = photo,
-            purchasePrice = stringToFloat(purchasePrice),
-            quantity = quantity.toInt(),
-            date = dateInMillis,
-            isPaid = false
-        )
-        val stockItem = StockOrder(
-            id = 0L,
-            productId = productId,
-            name = name,
-            photo = photo,
-            quantity = quantity.toInt(),
-            date = dateInMillis,
-            validity = validityInMillis,
-            categories = categories,
-            company = company,
-            purchasePrice = stringToFloat(purchasePrice),
-            salePrice = stringToFloat(salePrice),
-            isOrderedByCustomer = isOrderedByCustomer
-
-        )
         viewModelScope.launch {
             stockRepository.insertItems(
-                stockOrder = stockItem,
-                shopping = shoppingItem,
+                stockOrder = createStockOrder(productId, isOrderedByCustomer),
+                shopping = createShopping(productId),
                 isOrderedByCustomer = isOrderedByCustomer
             )
         }
@@ -214,22 +189,34 @@ class ItemViewModel @Inject constructor(
     }
 
     fun updateStockOrderItem(stockOrderItemId: Long, isOrderedByCustomer: Boolean) {
-        val stockItem = StockOrder(
-            id = stockOrderItemId,
-            productId = productId,
-            name = name,
-            photo = photo,
-            quantity = quantity.toInt(),
-            date = dateInMillis,
-            validity = validityInMillis,
-            categories = categories,
-            company = company,
-            purchasePrice = stringToFloat(purchasePrice),
-            salePrice = stringToFloat(salePrice),
-            isOrderedByCustomer = isOrderedByCustomer
-        )
         viewModelScope.launch {
-            stockRepository.update(stockItem)
+            stockRepository.update(createStockOrder(stockOrderItemId, isOrderedByCustomer))
         }
     }
+
+    private fun createStockOrder(productId: Long, isOrderedByCustomer: Boolean) = StockOrder(
+        id = 0L,
+        productId = productId,
+        name = name,
+        photo = photo,
+        quantity = quantity.toInt(),
+        date = dateInMillis,
+        validity = validityInMillis,
+        categories = categories,
+        company = company,
+        purchasePrice = stringToFloat(purchasePrice),
+        salePrice = stringToFloat(salePrice),
+        isOrderedByCustomer = isOrderedByCustomer
+    )
+
+    private fun createShopping(productId: Long) = Shopping(
+        id = 0L,
+        productId = productId,
+        name = name,
+        photo = photo,
+        purchasePrice = stringToFloat(purchasePrice),
+        quantity = quantity.toInt(),
+        date = dateInMillis,
+        isPaid = false
+    )
 }
