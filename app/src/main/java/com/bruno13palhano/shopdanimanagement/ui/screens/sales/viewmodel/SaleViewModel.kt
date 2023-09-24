@@ -84,10 +84,8 @@ class SaleViewModel @Inject constructor(
     var company by mutableStateOf(companiesCheck[0].name.company)
         private set
     private var categories by mutableStateOf(listOf<Category>())
-    var allCategories by mutableStateOf(listOf<CategoryCheck>())
-        private set
-    var allCompanies by mutableStateOf(listOf<CompanyCheck>())
-        private set
+    private var allCategories by mutableStateOf(listOf<CategoryCheck>())
+    private var allCompanies by mutableStateOf(listOf<CompanyCheck>())
     var allCustomers by mutableStateOf(listOf<CustomerCheck>())
         private set
     var isPaidByCustomer by mutableStateOf(false)
@@ -123,10 +121,6 @@ class SaleViewModel @Inject constructor(
         }
     }
 
-    fun updateProductName(productName: String) {
-        this.productName = productName
-    }
-
     fun updateQuantity(quantity: String) {
         this.quantity = quantity
     }
@@ -153,27 +147,13 @@ class SaleViewModel @Inject constructor(
         this.isPaidByCustomer = isPaidByCustomer
     }
 
-    fun updateCategories(categories: List<CategoryCheck>) {
+    private fun updateCategories(categories: List<CategoryCheck>) {
         val catList = mutableListOf<Category>()
         categories
             .filter { it.isChecked }
             .map { catList.add(Category(it.id, it.category)) }
         this.categories = catList
         category = this.categories.joinToString(", ") { it.name }
-    }
-
-    fun updateCompany(company: String) {
-        this.company = company
-        allCompanies
-            .map {
-                it.isChecked = false
-                it
-            }
-            .filter { it.name.company == company }
-            .map {
-                it.isChecked = true
-                it
-            }
     }
 
     fun updateCustomerName(customerName: String) {
@@ -260,14 +240,11 @@ class SaleViewModel @Inject constructor(
         onSuccess: () -> Unit,
         onError: () -> Unit
     ) {
-        val sale = initSale(productId = productId, isOrderedByCustomer = isOrderedByCustomer)
-        val order = initStockOrder(productId = productId, isOrderedByCustomer = isOrderedByCustomer)
-        val delivery = initDelivery()
         viewModelScope.launch {
             saleRepository.insertItems(
-                sale = sale,
-                stockOrder = order,
-                delivery = delivery,
+                sale = createSale(id = 0L, productId = productId, isOrderedByCustomer = isOrderedByCustomer),
+                stockOrder = createStockOrder(productId = productId, isOrderedByCustomer = isOrderedByCustomer),
+                delivery = createDelivery(),
                 onSuccess = onSuccess,
                 onError = onError
             )
@@ -299,25 +276,10 @@ class SaleViewModel @Inject constructor(
     }
 
     fun updateSale(saleId: Long) {
-        val sale = Sale(
-            id = saleId,
-            productId = productId,
-            customerId = customerId,
-            name = productName,
-            customerName = customerName,
-            photo = photo,
-            quantity = stringToInt(quantity),
-            purchasePrice = stringToFloat(purchasePrice),
-            salePrice = stringToFloat(salePrice),
-            categories = categories,
-            company = company,
-            dateOfSale = dateOfSaleInMillis,
-            dateOfPayment = dateOfPaymentInMillis,
-            isOrderedByCustomer = isOrderedByCustomer,
-            isPaidByCustomer = isPaidByCustomer
-        )
         viewModelScope.launch {
-            saleRepository.update(sale)
+            saleRepository.update(
+                createSale(id = saleId, productId = productId, isOrderedByCustomer = isOrderedByCustomer)
+            )
         }
     }
 
@@ -327,8 +289,8 @@ class SaleViewModel @Inject constructor(
         }
     }
 
-    private fun initSale(productId: Long, isOrderedByCustomer: Boolean) = Sale(
-        id = 0L,
+    private fun createSale(id: Long, productId: Long, isOrderedByCustomer: Boolean) = Sale(
+        id = id,
         productId = productId,
         customerId = customerId,
         name = productName,
@@ -345,7 +307,7 @@ class SaleViewModel @Inject constructor(
         isPaidByCustomer = isPaidByCustomer
     )
 
-    private fun initStockOrder(productId: Long, isOrderedByCustomer: Boolean) = StockOrder(
+    private fun createStockOrder(productId: Long, isOrderedByCustomer: Boolean) = StockOrder(
         id = stockItemId,
         productId = productId,
         name = productName,
@@ -360,7 +322,7 @@ class SaleViewModel @Inject constructor(
         isOrderedByCustomer = isOrderedByCustomer
     )
 
-    private fun initDelivery() = Delivery(
+    private fun createDelivery() = Delivery(
         id = 0L,
         saleId = 0L,
         customerName = customerName,
