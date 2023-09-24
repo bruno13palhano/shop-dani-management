@@ -9,6 +9,7 @@ import cache.StockOrderTableQueries
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
@@ -185,7 +186,7 @@ internal class SaleLight @Inject constructor(
         quantity: Long,
         purchasePrice: Double,
         salePrice: Double,
-        categories: List<String>,
+        categories: List<Category>,
         company: String,
         dateOfSale: Long,
         dateOfPayment: Long,
