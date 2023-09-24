@@ -38,11 +38,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -72,25 +68,16 @@ fun ItemContent(
     category: String,
     company: String,
     isPaid: Boolean,
-    onNameChange: (name: String) -> Unit,
     onQuantityChange: (quantity: String) -> Unit,
     onPurchasePriceChange: (purchasePrice: String) -> Unit,
     onSalePriceChange: (salePrice: String) -> Unit,
     onIsPaidChange: (isPaid: Boolean) -> Unit,
     onDateClick: () -> Unit,
     onValidityClick: () -> Unit,
-    categories: List<CategoryCheck>,
-    companies: List<CompanyCheck>,
-    onDismissCategory: () -> Unit,
-    onDismissCompany: () -> Unit,
-    onCompanySelected: (selected: String) -> Unit,
     onOutsideClick: () -> Unit,
     onDoneButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
-    var openCategorySheet by rememberSaveable { mutableStateOf(false) }
-    var openCompanySheet by rememberSaveable { mutableStateOf(false) }
-
     Scaffold(
         modifier = Modifier.clickableNoEffect { onOutsideClick() },
         snackbarHost = {
@@ -128,19 +115,6 @@ fun ItemContent(
             .fillMaxHeight()
             .verticalScroll(rememberScrollState())
         ) {
-            CategoryBottomSheet(
-                categories = categories,
-                openBottomSheet = openCategorySheet,
-                onBottomSheetChange = { show -> openCategorySheet = show },
-                onDismissCategory = onDismissCategory
-            )
-            CompanyBottomSheet(
-                companies = companies,
-                openBottomSheet = openCompanySheet,
-                onBottomSheetChange = { show -> openCompanySheet = show },
-                onDismissCompany = onDismissCompany,
-                onSelectedItem = onCompanySelected
-            )
             Row(
                 verticalAlignment = Alignment.Bottom
             ) {
@@ -177,30 +151,21 @@ fun ItemContent(
                             .fillMaxWidth()
                             .clearFocusOnKeyboardDismiss(),
                         value = name,
-                        onValueChange = onNameChange,
+                        onValueChange = {},
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Filled.Title,
                                 contentDescription = stringResource(id = R.string.name_label)
                             )
                         },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }),
                         singleLine = true,
+                        readOnly = true,
                         label = {
                             Text(
                                 text = stringResource(id = R.string.name_label),
                                 fontStyle = FontStyle.Italic
                             )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_name_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
+                        }
                     )
                     OutlinedTextField(
                         modifier = Modifier
@@ -385,12 +350,7 @@ fun ItemContent(
             OutlinedTextField(
                 modifier = Modifier
                     .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (focusState.hasFocus) {
-                            openCategorySheet = true
-                        }
-                    },
+                    .fillMaxWidth(),
                 value = category,
                 onValueChange = {},
                 leadingIcon = {
@@ -399,10 +359,6 @@ fun ItemContent(
                         contentDescription = stringResource(id = R.string.categories_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
                 readOnly = true,
                 label = {
@@ -410,23 +366,12 @@ fun ItemContent(
                         text = stringResource(id = R.string.categories_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_categories_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             OutlinedTextField(
                 modifier = Modifier
                     .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (focusState.hasFocus) {
-                            openCompanySheet = true
-                        }
-                    },
+                    .fillMaxWidth(),
                 value = company,
                 onValueChange = {},
                 leadingIcon = {
@@ -435,10 +380,6 @@ fun ItemContent(
                         contentDescription = stringResource(id = R.string.company_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
                 readOnly = true,
                 label = {
@@ -446,13 +387,7 @@ fun ItemContent(
                         text = stringResource(id = R.string.company_label),
                         fontStyle = FontStyle.Italic
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_company_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                }
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically
