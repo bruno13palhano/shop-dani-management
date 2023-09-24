@@ -143,21 +143,12 @@ fun ItemScreen(
         category = viewModel.category,
         company = viewModel.company,
         isPaid = viewModel.isPaid,
-        onNameChange = viewModel::updateName,
         onQuantityChange = viewModel::updateQuantity,
         onPurchasePriceChange = viewModel::updatePurchasePrice,
         onSalePriceChange = viewModel::updateSalePrice,
         onIsPaidChange = viewModel::updateIsPaid,
         onDateClick = { showDatePickerDialog = true },
         onValidityClick = { showValidityPickerDialog = true },
-        categories = viewModel.allCategories,
-        companies = viewModel.allCompanies,
-        onDismissCategory = {
-            viewModel.updateCategories(viewModel.allCategories)
-            focusManager.clearFocus(force = true)
-        },
-        onDismissCompany = { focusManager.clearFocus(force = true) },
-        onCompanySelected = viewModel::updateCompany,
         onOutsideClick = {
             keyboardController?.hide()
             focusManager.clearFocus(force = true)

@@ -64,10 +64,8 @@ class ItemViewModel @Inject constructor(
     var company by mutableStateOf("")
         private set
     private var categories by mutableStateOf(listOf<Category>())
-    var allCategories by mutableStateOf((listOf<CategoryCheck>()))
-        private set
-    var allCompanies by mutableStateOf(companiesCheck)
-        private set
+    private var allCategories by mutableStateOf((listOf<CategoryCheck>()))
+    private var allCompanies by mutableStateOf(companiesCheck)
     var isPaid by mutableStateOf(false)
         private set
 
@@ -79,10 +77,6 @@ class ItemViewModel @Inject constructor(
             started = WhileSubscribed(5_000),
             initialValue = false
         )
-
-    fun updateName(name: String) {
-        this.name = name
-    }
 
     fun updateQuantity(quantity: String) {
         this.quantity = quantity
@@ -110,7 +104,7 @@ class ItemViewModel @Inject constructor(
         this.isPaid = isPaid
     }
 
-    fun updateCategories(categories: List<CategoryCheck>) {
+    private fun updateCategories(categories: List<CategoryCheck>) {
         val catList = mutableListOf<Category>()
         categories
             .filter { it.isChecked }
@@ -130,20 +124,6 @@ class ItemViewModel @Inject constructor(
             }
         }
         updateCategories(this.allCategories)
-    }
-
-    fun updateCompany(company: String) {
-        this.company = company
-        allCompanies
-            .map {
-                it.isChecked = false
-                it
-            }
-            .filter { it.name.company == company }
-            .map {
-                it.isChecked = true
-                it
-            }
     }
 
     private fun setCompanyChecked(company: String) {
