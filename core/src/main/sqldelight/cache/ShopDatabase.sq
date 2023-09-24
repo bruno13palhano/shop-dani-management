@@ -23,20 +23,20 @@ DELETE FROM product WHERE id = :productId;
 
 getAll:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
-FROM product P LEFT JOIN ProductCategoriesTable PC ON P.categoryId = PC.id;
+FROM product P INNER JOIN ProductCategoriesTable PC ON P.categoryId = PC.id;
 
 getById:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
-FROM product P LEFT JOIN ProductCategoriesTable PC ON P.categoryId = PC.id WHERE P.id = :produtId;
+FROM product P INNER JOIN ProductCategoriesTable PC ON P.categoryId = PC.id WHERE P.id = :produtId;
 
 getLast:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
-FROM product P LEFT JOIN ProductCategoriesTable PC ON P.categoryId = PC.id
+FROM product P INNER JOIN ProductCategoriesTable PC ON P.categoryId = PC.id
 WHERE P.id = last_insert_rowid();
 
 search:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
-FROM product P LEFT JOIN ProductCategoriesTable PC WHERE PC.categories LIKE '%' || :category || '%'
+FROM product P INNER JOIN ProductCategoriesTable PC WHERE PC.categories LIKE '%' || :category || '%'
     OR P.name LIKE '%' || :name || '%' OR P.description LIKE '%' || :description || '%'
     OR P.company LIKE '%' || :company || '%';
 
