@@ -79,6 +79,8 @@ class SaleViewModel @Inject constructor(
         private set
     var salePrice by mutableStateOf("")
         private set
+    var deliveryPrice by mutableStateOf("")
+        private set
     var category by mutableStateOf("")
         private set
     var company by mutableStateOf(companiesCheck[0].name.company)
@@ -141,6 +143,10 @@ class SaleViewModel @Inject constructor(
 
     fun updateSalePrice(salePrice: String) {
         this.salePrice = salePrice
+    }
+
+    fun updateDeliveryPrice(deliveryPrice: String) {
+        this.deliveryPrice = deliveryPrice
     }
 
     fun updateIsPaidByCustomer(isPaidByCustomer: Boolean) {
@@ -262,6 +268,7 @@ class SaleViewModel @Inject constructor(
                 quantity = it.quantity.toString()
                 purchasePrice = it.purchasePrice.toString()
                 salePrice = it.salePrice.toString()
+                deliveryPrice = it.deliveryPrice.toString()
                 categories = it.categories
                 company = it.company
                 isPaidByCustomer = it.isPaidByCustomer
@@ -299,6 +306,7 @@ class SaleViewModel @Inject constructor(
         quantity = stringToInt(quantity),
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
+        deliveryPrice = stringToFloat(deliveryPrice),
         categories = categories,
         company = company,
         dateOfSale = dateOfSaleInMillis,
@@ -330,6 +338,7 @@ class SaleViewModel @Inject constructor(
         phoneNumber = phoneNumber,
         productName = productName,
         price = stringToFloat(salePrice),
+        deliveryPrice = stringToFloat(deliveryPrice),
         shippingDate = dateOfSaleInMillis,
         deliveryDate = dateOfSaleInMillis,
         delivered = false
