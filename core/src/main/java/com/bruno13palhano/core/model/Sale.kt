@@ -10,6 +10,7 @@ data class Sale(
     val quantity: Int,
     val purchasePrice: Float,
     val salePrice: Float,
+    val deliveryPrice: Float,
     val categories: List<Category>,
     val company: String,
     val dateOfSale: Long,
