@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Paid
 import androidx.compose.material.icons.filled.Person
@@ -74,6 +75,7 @@ fun SaleContent(
     dateOfSale: String,
     dateOfPayment: String,
     purchasePrice: String,
+    deliveryPrice: String,
     salePrice: String,
     category: String,
     company: String,
@@ -81,6 +83,7 @@ fun SaleContent(
     onQuantityChange: (quantity: String) -> Unit,
     onPurchasePriceChange: (purchasePrice: String) -> Unit,
     onSalePriceChange: (salePrice: String) -> Unit,
+    onDeliveryPriceChange: (deliveryPrice: String) -> Unit,
     onIsPaidByCustomerChange: (isPaidByCustomer: Boolean) -> Unit,
     onDateOfSaleClick: () -> Unit,
     onDateOfPaymentClick: () -> Unit,
@@ -427,6 +430,44 @@ fun SaleContent(
                         fontStyle = FontStyle.Italic
                     )
                 },
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .fillMaxWidth()
+                    .clearFocusOnKeyboardDismiss(),
+                value = deliveryPrice,
+                onValueChange = { deliveryPriceValue ->
+                    if (deliveryPriceValue.isEmpty() || deliveryPrice.matches(pattern)) {
+                        onDeliveryPriceChange(deliveryPriceValue)
+                    }
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.LocalShipping,
+                        contentDescription = stringResource(id = R.string.delivery_price_label)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Decimal
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.delivery_price_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.enter_delivery_price_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
             )
             OutlinedTextField(
                 modifier = Modifier
