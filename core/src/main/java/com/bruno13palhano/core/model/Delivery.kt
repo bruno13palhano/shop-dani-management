@@ -8,6 +8,7 @@ data class Delivery(
     val phoneNumber: String,
     val productName: String,
     val price: Float,
+    val deliveryPrice: Float,
     val shippingDate: Long,
     val deliveryDate: Long,
     val delivered: Boolean,
