@@ -1,15 +1,19 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.deliveries
 
 import android.content.res.Configuration
+import android.icu.text.DecimalFormat
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.EditCalendar
+import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.LocationCity
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
@@ -42,12 +46,15 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel.DeliveryViewModel
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -143,9 +150,11 @@ fun DeliveryScreen(
         phoneNumber = viewModel.phoneNumber,
         productName = viewModel.productName,
         price = viewModel.price,
+        deliveryPrice = "",
         shippingDate = viewModel.shippingDate,
         deliveryDate = viewModel.deliveryDate,
         delivered = viewModel.delivered,
+        onDeliveryPriceChange = {},
         onDeliveredChange = viewModel::updateDelivered,
         onShippingDateClick = { showShippingDatePickerDialog = true },
         onDeliveryDateClick = { showDeliveryDatePickerDialog = true },
@@ -166,9 +175,11 @@ fun DeliveryContent(
     phoneNumber: String,
     productName: String,
     price: String,
+    deliveryPrice: String,
     shippingDate: String,
     deliveryDate: String,
     delivered: Boolean,
+    onDeliveryPriceChange: (deliveryPrice: String) -> Unit,
     onDeliveredChange: (delivered: Boolean) -> Unit,
     onShippingDateClick: () -> Unit,
     onDeliveryDateClick: () -> Unit,
@@ -176,6 +187,10 @@ fun DeliveryContent(
     onDoneButtonClick: () -> Unit,
     navigateUp: () -> Unit,
 ) {
+    val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
+    val decimalSeparator = decimalFormat.decimalFormatSymbols.decimalSeparator
+    val pattern = remember { Regex("^\\d*\\$decimalSeparator?\\d*\$") }
+
     Scaffold(
         modifier = Modifier.clickableNoEffect { onOutsideClick() },
         topBar = {
@@ -307,6 +322,44 @@ fun DeliveryContent(
                 label = {
                     Text(
                         text = stringResource(id = R.string.sale_price_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .fillMaxWidth()
+                    .clearFocusOnKeyboardDismiss(),
+                value = deliveryPrice,
+                onValueChange = { deliveryPriceValue ->
+                    if (deliveryPriceValue.isEmpty() || deliveryPrice.matches(pattern)) {
+                        onDeliveryPriceChange(deliveryPriceValue)
+                    }
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.LocalShipping,
+                        contentDescription = stringResource(id = R.string.delivery_price_label)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Decimal
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.delivery_price_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.enter_delivery_price_label),
                         fontStyle = FontStyle.Italic
                     )
                 }
