@@ -3,36 +3,44 @@ import kotlin.Boolean;
 CREATE TABLE DeliveryTable (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     saleId INTEGER NOT NULL,
+    deliveryPrice REAL NOT NULL,
     shippingDate INTEGER NOT NULL,
     deliveryDate INTEGER NOT NULL,
     delivered INTEGER AS Boolean NOT NULL
 );
 
 insert:
-INSERT INTO DeliveryTable(saleId, shippingDate, deliveryDate, delivered)
-VALUES(?,?,?,?);
+INSERT INTO DeliveryTable(saleId, deliveryPrice, shippingDate, deliveryDate, delivered)
+VALUES(?,?,?,?,?);
 
 update:
-UPDATE DeliveryTable SET saleId = ?, shippingDate = ?, deliveryDate = ?, delivered = ? WHERE id = ?;
+UPDATE DeliveryTable SET saleId = ?, deliveryPrice = ?, shippingDate = ?, deliveryDate = ?,
+    delivered = ?
+WHERE id = ?;
 
 delete:
 DELETE FROM DeliveryTable WHERE id = ?;
 
 getAll:
-SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.shippingDate,
-    D.deliveryDate, D.delivered FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D
-INNER JOIN CustomerTable C ON(P.id = S.productId AND D.saleId = S.id AND C.id = S.customerId);
+SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.deliveryPrice,
+    D.shippingDate, D.deliveryDate, D.delivered
+FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D INNER JOIN CustomerTable C
+ON(P.id = S.productId AND D.saleId = S.id AND C.id = S.customerId);
 
 getById:
-SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.shippingDate,
-    D.deliveryDate, D.delivered FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D
-INNER JOIN CustomerTable C ON(P.id = S.productId AND D.saleId = S.id AND C.id = S.customerId)
-WHERE D.id = ?;
+SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.deliveryPrice,
+    D.shippingDate, D.deliveryDate, D.delivered
+FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D INNER JOIN CustomerTable C
+ON(P.id = S.productId AND D.saleId = S.id AND C.id = S.customerId) WHERE D.id = ?;
 
 getLast:
-SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.shippingDate,
-    D.deliveryDate, D.delivered FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D
-INNER JOIN CustomerTable C WHERE D.id = last_insert_rowid();
+SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.deliveryPrice,
+    D.shippingDate, D.deliveryDate, D.delivered
+FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D INNER JOIN CustomerTable C
+WHERE D.id = last_insert_rowid();
+
+updateDeliveryPrice:
+UPDATE DeliveryTable SET deliveryPrice = ? WHERE id = ?;
 
 updateShippingDate:
 UPDATE DeliveryTable SET shippingDate = ? WHERE id = ?;
@@ -44,10 +52,10 @@ updateDelivered:
 UPDATE DeliveryTable SET delivered = ? WHERE id = ?;
 
 getDeliveries:
-SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.shippingDate,
-    D.deliveryDate, D.delivered FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D
-INNER JOIN CustomerTable C ON(P.id = S.productId AND D.saleId = S.id AND C.id = S.customerId)
-WHERE delivered = :delivered;
+SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.deliveryPrice,
+    D.shippingDate, D.deliveryDate, D.delivered
+FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D INNER JOIN CustomerTable C
+ON(P.id = S.productId AND D.saleId = S.id AND C.id = S.customerId) WHERE delivered = :delivered;
 
 getLastId:
 SELECT last_insert_rowid();
