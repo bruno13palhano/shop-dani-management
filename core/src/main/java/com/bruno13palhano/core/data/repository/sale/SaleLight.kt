@@ -33,7 +33,8 @@ internal class SaleLight @Inject constructor(
             dateOfSale = model.dateOfSale,
             dateOfPayment = model.dateOfPayment,
             isOrderedByCustomer = model.isOrderedByCustomer,
-            isPaidByCustomer = model.isPaidByCustomer
+            isPaidByCustomer = model.isPaidByCustomer,
+            canceled = model.canceled
         )
         return saleQueries.getLastId().executeAsOne()
     }
@@ -49,6 +50,7 @@ internal class SaleLight @Inject constructor(
             dateOfPayment = model.dateOfPayment,
             isOrderedByCustomer = model.isOrderedByCustomer,
             isPaidByCustomer = model.isPaidByCustomer,
+            canceled = model.canceled,
             id = model.id
         )
     }
@@ -75,7 +77,8 @@ internal class SaleLight @Inject constructor(
                     dateOfSale = sale.dateOfSale,
                     dateOfPayment = sale.dateOfPayment,
                     isOrderedByCustomer = true,
-                    isPaidByCustomer = sale.isPaidByCustomer
+                    isPaidByCustomer = sale.isPaidByCustomer,
+                    canceled = sale.canceled
                 )
                 deliveryQueries.insert(
                     saleId = saleQueries.getLastId().executeAsOne(),
@@ -113,7 +116,8 @@ internal class SaleLight @Inject constructor(
                         dateOfSale = sale.dateOfSale,
                         dateOfPayment = sale.dateOfPayment,
                         isOrderedByCustomer = false,
-                        isPaidByCustomer = sale.isPaidByCustomer
+                        isPaidByCustomer = sale.isPaidByCustomer,
+                        canceled = sale.canceled
                     )
                     deliveryQueries.insert(
                         saleId = saleQueries.getLastId().executeAsOne(),
@@ -168,6 +172,14 @@ internal class SaleLight @Inject constructor(
             .asFlow().mapToList(ioDispatcher)
     }
 
+    override fun getCanceledSales(offset: Int, limit: Int): Flow<List<Sale>> {
+        return saleQueries.getCanceledSales(
+            offset = offset.toLong(),
+            limit = limit.toLong(),
+            mapper = ::mapSale
+        ).asFlow().mapToList(ioDispatcher)
+    }
+
     override fun getById(id: Long): Flow<Sale> {
         return saleQueries.getById(id = id, mapper = ::mapSale)
             .asFlow().mapToOne(ioDispatcher)
@@ -194,7 +206,8 @@ internal class SaleLight @Inject constructor(
         dateOfSale: Long,
         dateOfPayment: Long,
         isOrderedByCustomer: Boolean,
-        isPaidByCustomer: Boolean
+        isPaidByCustomer: Boolean,
+        canceled: Boolean
     ): Sale {
         return Sale(
             id = id,
@@ -212,7 +225,8 @@ internal class SaleLight @Inject constructor(
             dateOfSale = dateOfSale,
             dateOfPayment = dateOfPayment,
             isOrderedByCustomer = isOrderedByCustomer,
-            isPaidByCustomer = isPaidByCustomer
+            isPaidByCustomer = isPaidByCustomer,
+            canceled = canceled
         )
     }
 }

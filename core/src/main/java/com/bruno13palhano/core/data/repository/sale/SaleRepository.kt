@@ -63,6 +63,10 @@ internal class SaleRepository @Inject constructor(
         return saleData.getAll()
     }
 
+    override fun getCanceledSales(offset: Int, limit: Int): Flow<List<Sale>> {
+        return saleData.getCanceledSales(offset = offset, limit = limit)
+    }
+
     override fun getById(id: Long): Flow<Sale> {
         return saleData.getById(id = id)
     }
