@@ -10,6 +10,7 @@ import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.di.DeliveryRep
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
+import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class DeliveryViewModel @Inject constructor(
     @DeliveryRep private val deliveryRepository: DeliveryData<Delivery>
 ) : ViewModel() {
+    private var deliveryPriceDb = 0F
     private var shippingDateDb = 0L
     private var deliveryDateDb = 0L
     private var deliveredDb = false
@@ -32,6 +34,8 @@ class DeliveryViewModel @Inject constructor(
         private set
     var price by mutableStateOf("")
         private set
+    var deliveryPrice by mutableStateOf("")
+        private set
     var shippingDateInMillis by mutableLongStateOf(0L)
         private set
     var shippingDate by mutableStateOf("")
@@ -42,6 +46,10 @@ class DeliveryViewModel @Inject constructor(
         private set
     var delivered by mutableStateOf(false)
         private set
+
+    fun updateDeliveryPrice(deliveryPrice: String) {
+        this.deliveryPrice = deliveryPrice
+    }
 
     fun updateShippingDate(shippingDate: Long) {
         shippingDateInMillis = shippingDate
@@ -65,9 +73,11 @@ class DeliveryViewModel @Inject constructor(
                 phoneNumber = it.phoneNumber
                 productName = it.productName
                 price = it.price.toString()
+                deliveryPrice = it.deliveryPrice.toString()
                 updateShippingDate(it.shippingDate)
                 shippingDateDb = it.shippingDate
                 updateDeliveryDate(it.deliveryDate)
+                deliveryPriceDb = it.deliveryPrice
                 deliveryDateDb = it.deliveryDate
                 delivered = it.delivered
                 deliveredDb = it.delivered
@@ -76,6 +86,11 @@ class DeliveryViewModel @Inject constructor(
     }
 
     fun updateDelivery(deliveryId: Long) {
+        if (stringToFloat(deliveryPrice) != deliveryPriceDb) {
+            viewModelScope.launch {
+                deliveryRepository.updateDeliveryPrice(deliveryId, stringToFloat(deliveryPrice))
+            }
+        }
         if (shippingDateInMillis != shippingDateDb) {
             viewModelScope.launch {
                 deliveryRepository.updateShippingDate(deliveryId, shippingDateInMillis)
