@@ -79,6 +79,7 @@ internal class SaleLight @Inject constructor(
                 )
                 deliveryQueries.insert(
                     saleId = saleQueries.getLastId().executeAsOne(),
+                    deliveryPrice = delivery.deliveryPrice.toDouble(),
                     shippingDate = delivery.shippingDate,
                     deliveryDate = delivery.deliveryDate,
                     delivered = delivery.delivered
@@ -116,6 +117,7 @@ internal class SaleLight @Inject constructor(
                     )
                     deliveryQueries.insert(
                         saleId = saleQueries.getLastId().executeAsOne(),
+                        deliveryPrice = delivery.deliveryPrice.toDouble(),
                         shippingDate = delivery.shippingDate,
                         deliveryDate = delivery.deliveryDate,
                         delivered = delivery.delivered

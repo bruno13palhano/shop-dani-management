@@ -19,6 +19,7 @@ class DeliveryLight @Inject constructor(
     override suspend fun insert(model: Delivery): Long {
         deliveryQueries.insert(
             saleId = model.saleId,
+            deliveryPrice = model.deliveryPrice.toDouble(),
             shippingDate = model.shippingDate,
             deliveryDate = model.deliveryDate,
             delivered = model.delivered
@@ -30,6 +31,7 @@ class DeliveryLight @Inject constructor(
         deliveryQueries.update(
             id = model.id,
             saleId = model.saleId,
+            deliveryPrice = model.deliveryPrice.toDouble(),
             shippingDate = model.shippingDate,
             deliveryDate = model.deliveryDate,
             delivered = model.delivered
@@ -84,6 +86,7 @@ class DeliveryLight @Inject constructor(
         phoneNumber: String,
         productName: String,
         price: Double,
+        deliveryPrice: Double,
         shippingDate: Long,
         deliveryDate: Long,
         delivered: Boolean
@@ -95,6 +98,7 @@ class DeliveryLight @Inject constructor(
         phoneNumber = phoneNumber,
         productName = productName,
         price = price.toFloat(),
+        deliveryPrice = deliveryPrice.toFloat(),
         shippingDate = shippingDate,
         deliveryDate = deliveryDate,
         delivered = delivered
