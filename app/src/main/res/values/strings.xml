@@ -103,12 +103,14 @@
     <string name="email_label">Email</string>
     <string name="address_label">Address</string>
     <string name="phone_number_label">Phone number</string>
+    <string name="delivery_price_label">Delivery price</string>
     <string name="shipping_date_label">Shipping date</string>
     <string name="delivery_date_label">Delivery date</string>
     <string name="is_delivered_label">is delivered</string>
     <string name="enter_email_label">Enter email</string>
     <string name="enter_address_label">Enter address label</string>
     <string name="enter_phone_number_label">Enter phone number</string>
+    <string name="enter_delivery_price_label">Enter delivery price</string>
     <string name="enter_shipping_date_label">Enter shipping date</string>
     <string name="enter_delivery_date_label">Enter delivery date</string>
     <string name="customer_tag">Customer: %s</string>
