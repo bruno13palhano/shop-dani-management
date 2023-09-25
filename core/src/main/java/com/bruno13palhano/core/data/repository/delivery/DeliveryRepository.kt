@@ -21,6 +21,10 @@ internal class DeliveryRepository @Inject constructor(
         deliveryData.delete(model = model)
     }
 
+    override suspend fun updateDeliveryPrice(id: Long, deliveryPrice: Float) {
+        deliveryData.updateDeliveryPrice(id = id, deliveryPrice = deliveryPrice)
+    }
+
     override suspend fun updateShippingDate(id: Long, shippingDate: Long) {
         deliveryData.updateShippingDate(id = id, shippingDate = shippingDate)
     }
