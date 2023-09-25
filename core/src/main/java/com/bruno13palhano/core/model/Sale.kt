@@ -16,5 +16,6 @@ data class Sale(
     val dateOfSale: Long,
     val dateOfPayment: Long,
     val isOrderedByCustomer: Boolean,
-    val isPaidByCustomer: Boolean
+    val isPaidByCustomer: Boolean,
+    val canceled: Boolean
 )
