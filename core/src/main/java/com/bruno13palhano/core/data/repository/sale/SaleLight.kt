@@ -15,6 +15,7 @@ import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import javax.inject.Inject
 
 internal class SaleLight @Inject constructor(
@@ -27,6 +28,7 @@ internal class SaleLight @Inject constructor(
         saleQueries.insert(
             productId = model.productId,
             customerId =  model.customerId,
+            stockOrderId = model.stockOrderId,
             quantity = model.quantity.toLong(),
             purchasePrice = model.purchasePrice.toDouble(),
             salePrice = model.salePrice.toDouble(),
@@ -43,6 +45,7 @@ internal class SaleLight @Inject constructor(
         saleQueries.update(
             productId = model.productId,
             customerId =  model.customerId,
+            stockOrderId = model.stockOrderId,
             quantity = model.quantity.toLong(),
             purchasePrice = model.purchasePrice.toDouble(),
             salePrice = model.salePrice.toDouble(),
@@ -55,12 +58,14 @@ internal class SaleLight @Inject constructor(
         )
     }
 
-    override suspend fun setCanceledSale(saleId: Long, stockOrderId: Long, canceled: Boolean) {
-        saleQueries.setCanceledSale(id = saleId, canceled = canceled)
+    override suspend fun cancelSale(saleId: Long) {
+        val sale = saleQueries.getById(id = saleId).executeAsOne()
+        saleQueries.setCanceledSale(id = saleId)
         deliveryQueries.deleteBySaleId(saleId = saleId)
         stockOrderQueries.updateStockOrderQuantity(
-            id = stockOrderId,
-            quantity = stockOrderQueries.getStockQuantity(id = stockOrderId).executeAsOne()
+            id = sale.stockOrderId,
+            quantity = stockOrderQueries.getStockQuantity(id = sale.stockOrderId).executeAsOne()
+                    + sale.quantity
         )
     }
 
@@ -80,6 +85,7 @@ internal class SaleLight @Inject constructor(
                 saleQueries.insert(
                     productId = sale.productId,
                     customerId = sale.customerId,
+                    stockOrderId = sale.stockOrderId,
                     quantity = sale.quantity.toLong(),
                     salePrice = sale.salePrice.toDouble(),
                     purchasePrice = sale.purchasePrice.toDouble(),
@@ -119,6 +125,7 @@ internal class SaleLight @Inject constructor(
                     saleQueries.insert(
                         productId = sale.productId,
                         customerId = sale.customerId,
+                        stockOrderId = stockOrder.id,
                         quantity = sale.quantity.toLong(),
                         purchasePrice = sale.purchasePrice.toDouble(),
                         salePrice = sale.salePrice.toDouble(),
@@ -146,6 +153,7 @@ internal class SaleLight @Inject constructor(
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
         return saleQueries.getByCustomerId(customerId = customerId, mapper = ::mapSale)
             .asFlow().mapToList(ioDispatcher)
+            .catch { it.printStackTrace() }
     }
 
     override fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>> {
@@ -173,7 +181,7 @@ internal class SaleLight @Inject constructor(
     }
 
     override suspend fun deleteById(id: Long) {
-        return saleQueries.delete(id = id)
+        saleQueries.delete(id = id)
     }
 
     override fun getAll(): Flow<List<Sale>> {
@@ -192,17 +200,20 @@ internal class SaleLight @Inject constructor(
     override fun getById(id: Long): Flow<Sale> {
         return saleQueries.getById(id = id, mapper = ::mapSale)
             .asFlow().mapToOne(ioDispatcher)
+            .catch { it.printStackTrace() }
     }
 
     override fun getLast(): Flow<Sale> {
         return saleQueries.getLast(mapper = ::mapSale)
             .asFlow().mapToOne(ioDispatcher)
+            .catch { it.printStackTrace() }
     }
 
     private fun mapSale(
         id: Long,
         productId: Long,
         customerId: Long,
+        stockOrderId: Long,
         name: String,
         customerName: String,
         photo: String,
@@ -222,6 +233,7 @@ internal class SaleLight @Inject constructor(
             id = id,
             productId = productId,
             customerId = customerId,
+            stockOrderId = stockOrderId,
             name = name,
             customerName = customerName,
             photo = photo,
