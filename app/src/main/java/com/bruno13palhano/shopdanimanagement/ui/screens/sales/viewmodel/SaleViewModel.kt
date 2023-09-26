@@ -51,7 +51,7 @@ class SaleViewModel @Inject constructor(
         CompanyCheck(Company.AVON, true),
         CompanyCheck(Company.NATURA, false)
     )
-    private var stockItemId by mutableLongStateOf(0L)
+    private var stockOrderId by mutableLongStateOf(0L)
     private var productId by mutableLongStateOf(0L)
     private var customerId by mutableLongStateOf(0L)
     private var isOrderedByCustomer by mutableStateOf(false)
@@ -195,7 +195,7 @@ class SaleViewModel @Inject constructor(
     fun getStockItem(stockId: Long) {
         viewModelScope.launch {
             stockOrderRepository.getById(stockId).collect {
-                stockItemId = stockId
+                stockOrderId = stockId
                 productName = it.name
                 photo = it.photo
                 purchasePrice = it.purchasePrice.toString()
@@ -262,6 +262,7 @@ class SaleViewModel @Inject constructor(
             saleRepository.getById(saleId).collect {
                 productId = it.productId
                 customerId = it.customerId
+                stockOrderId = it.stockOrderId
                 productName = it.name
                 customerName = it.customerName
                 photo = it.photo
@@ -296,10 +297,17 @@ class SaleViewModel @Inject constructor(
         }
     }
 
+    fun cancelSale(saleId: Long) {
+        viewModelScope.launch {
+            saleRepository.cancelSale(saleId = saleId)
+        }
+    }
+
     private fun createSale(id: Long, productId: Long, isOrderedByCustomer: Boolean) = Sale(
         id = id,
         productId = productId,
         customerId = customerId,
+        stockOrderId = stockOrderId,
         name = productName,
         customerName = customerName,
         photo = photo,
@@ -312,11 +320,12 @@ class SaleViewModel @Inject constructor(
         dateOfSale = dateOfSaleInMillis,
         dateOfPayment = dateOfPaymentInMillis,
         isOrderedByCustomer = isOrderedByCustomer,
-        isPaidByCustomer = isPaidByCustomer
+        isPaidByCustomer = isPaidByCustomer,
+        canceled = false
     )
 
     private fun createStockOrder(productId: Long, isOrderedByCustomer: Boolean) = StockOrder(
-        id = stockItemId,
+        id = stockOrderId,
         productId = productId,
         name = productName,
         photo = photo,
