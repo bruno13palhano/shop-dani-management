@@ -91,12 +91,12 @@ fun NavGraphBuilder.salesNavGraph(
         }
         composable(route = SalesDestinations.SALES_NEW_SALE_ORDERS_WITH_ID_ROUTE) { backStackEntry ->
             showBottomMenu(true)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
+            backStackEntry.arguments?.getString(ITEM_ID)?.let { orderItemId ->
                 SaleScreen(
                     isEdit = false,
                     screenTitle = stringResource(id = R.string.new_sale_label),
                     isOrderedByCustomer = true,
-                    productId = productId.toLong(),
+                    stockOrderId = orderItemId.toLong(),
                     saleId = 0L,
                     navigateUp = { navController.navigateUp() }
                 )
@@ -109,7 +109,7 @@ fun NavGraphBuilder.salesNavGraph(
                     isEdit = false,
                     screenTitle = stringResource(id = R.string.new_sale_label),
                     isOrderedByCustomer = false,
-                    productId = stockItemId.toLong(),
+                    stockOrderId = stockItemId.toLong(),
                     saleId = 0L,
                     navigateUp = { navController.navigateUp() }
                 )
@@ -122,7 +122,7 @@ fun NavGraphBuilder.salesNavGraph(
                     isEdit = true,
                     screenTitle = stringResource(id = R.string.edit_sale_label),
                     isOrderedByCustomer = true,
-                    productId = 0L,
+                    stockOrderId = 0L,
                     saleId = saleItemId.toLong(),
                     navigateUp = { navController.navigateUp() }
                 )
