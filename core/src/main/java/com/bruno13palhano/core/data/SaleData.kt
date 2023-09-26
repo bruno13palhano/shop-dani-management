@@ -18,4 +18,5 @@ interface SaleData<T> : DataOperations<T> {
     fun getAllStockSales(offset: Int, limit: Int): Flow<List<T>>
     fun getAllOrdersSales(offset: Int, limit: Int): Flow<List<T>>
     fun getCanceledSales(offset: Int, limit: Int): Flow<List<T>>
+    suspend fun setCanceledSale(saleId: Long, stockOrderId: Long, canceled: Boolean)
 }
