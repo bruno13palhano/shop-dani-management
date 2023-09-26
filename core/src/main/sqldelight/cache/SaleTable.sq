@@ -3,6 +3,7 @@ import kotlin.Boolean;
 CREATE TABLE SaleTable (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     productId INTEGER NOT NULL,
+    stockOrderId INTEGER NOT NULL,
     customerId INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
     purchasePrice REAL NOT NULL,
@@ -15,20 +16,21 @@ CREATE TABLE SaleTable (
 );
 
 insert:
-INSERT INTO SaleTable(productId, customerId, quantity, purchasePrice, salePrice, dateOfSale,
+INSERT INTO SaleTable(productId, customerId, stockOrderId, quantity, purchasePrice, salePrice, dateOfSale,
     dateOfPayment, isOrderedByCustomer, isPaidByCustomer, canceled)
-VALUES (?,?,?,?,?,?,?,?,?, ?);
+VALUES (?, ?,?,?,?,?,?,?,?,?, ?);
 
 update:
-UPDATE SaleTable SET productId = ?, customerId = ?, quantity = ?, purchasePrice = ?, salePrice = ?,
-    dateOfSale = ?, dateOfPayment = ?, isOrderedByCustomer = ?, isPaidByCustomer = ?, canceled = ?
+UPDATE SaleTable SET productId = ?, customerId = ?, stockOrderId = ?, quantity = ?,
+    purchasePrice = ?, salePrice = ?, dateOfSale = ?, dateOfPayment = ?, isOrderedByCustomer = ?,
+    isPaidByCustomer = ?, canceled = ?
 WHERE id = ?;
 
 delete:
 DELETE FROM SaleTable WHERE id = ?;
 
 getAll:
-SELECT S.id, S.productId, S.customerId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
     S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
     S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
@@ -37,7 +39,7 @@ ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.sal
 WHERE S.canceled = 0;
 
 getById:
-SELECT S.id, S.productId, S.customerId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
     S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
     S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
@@ -46,7 +48,7 @@ ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.sal
 WHERE S.id = ?;
 
 getLast:
-SELECT S.id, S.productId, S.customerId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
     S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
     S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
@@ -55,7 +57,7 @@ ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.sal
 WHERE P.id = last_insert_rowid();
 
 getByCustomerId:
-SELECT S.id, S.productId, S.customerId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
     S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
     S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
@@ -64,7 +66,7 @@ ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.sal
 WHERE S.customerId = :customerId;
 
 getLastSales:
-SELECT S.id, S.productId, S.customerId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
     S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
     S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
@@ -73,7 +75,7 @@ ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.sal
 ORDER BY S.id DESC LIMIT :offset, :limit;
 
 getAllStockSales:
-SELECT S.id, S.productId, S.customerId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
     S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
     S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
@@ -82,7 +84,7 @@ ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.sal
 WHERE S.isOrderedByCustomer = 0 ORDER BY S.id DESC LIMIT :offset, :limit;
 
 getAllOrdersSales:
-SELECT S.id, S.productId, S.customerId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
     S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
     S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
@@ -91,7 +93,7 @@ ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.sal
 WHERE S.isOrderedByCustomer = 1 ORDER BY S.id DESC LIMIT :offset, :limit;
 
 getCanceledSales:
-SELECT S.id, S.productId, S.customerId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
     S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
     S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
