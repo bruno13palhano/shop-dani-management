@@ -62,6 +62,9 @@ FROM StockOrderTable S INNER JOIN product P INNER JOIN ProductCategoriesTable PC
 ON(PC.categories LIKE '%' || :category || '%') WHERE S.productId = P.id AND PC.id = P.categoryId
     AND S.isOrderedByCustomer = :isOrderedByCustomer;
 
+getStockQuantity:
+SELECT quantity FROM StockOrderTable WHERE id = ?;
+
 updateStockOrderQuantity:
 UPDATE StockOrderTable SET quantity = ? WHERE id = ?;
 
