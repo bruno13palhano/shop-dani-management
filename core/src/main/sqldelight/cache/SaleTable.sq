@@ -99,5 +99,8 @@ INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE S.canceled = 1 ORDER BY S.id DESC LIMIT :offset, :limit;
 
+setCanceledSale:
+UPDATE SaleTable SET canceled = ? WHERE id = ?;
+
 getLastId:
 SELECT last_insert_rowid();
