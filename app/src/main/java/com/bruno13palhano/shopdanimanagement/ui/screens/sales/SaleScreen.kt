@@ -33,7 +33,7 @@ fun SaleScreen(
     isEdit: Boolean,
     screenTitle: String,
     isOrderedByCustomer: Boolean,
-    productId: Long,
+    stockOrderId: Long,
     saleId: Long,
     navigateUp: () -> Unit,
     viewModel: SaleViewModel = hiltViewModel()
@@ -43,9 +43,9 @@ fun SaleScreen(
             viewModel.getSale(saleId)
         } else {
             if (isOrderedByCustomer) {
-                viewModel.getProduct(productId)
+                viewModel.getProduct(stockOrderId)
             } else {
-                viewModel.getStockItem(productId)
+                viewModel.getStockItem(stockOrderId)
             }
         }
     }
@@ -134,7 +134,8 @@ fun SaleScreen(
     val stockQuantityMessage = stringResource(id = R.string.only_x_items_error_label, viewModel.stockQuantity)
 
     val menuItems = arrayOf(
-        stringResource(id = R.string.delete_label)
+        stringResource(id = R.string.delete_label),
+        stringResource(id = R.string.cancel_label)
     )
 
     SaleContent(
@@ -174,6 +175,10 @@ fun SaleScreen(
                     viewModel.deleteSale(saleId)
                     navigateUp()
                 }
+                SaleItemMenu.cancel -> {
+                    viewModel.cancelSale(saleId)
+                    navigateUp()
+                }
             }
         },
         onDoneButtonClick = {
@@ -183,7 +188,7 @@ fun SaleScreen(
                     navigateUp()
                 } else {
                     viewModel.insertSale(
-                        productId = productId,
+                        productId = stockOrderId,
                         isOrderedByCustomer = isOrderedByCustomer,
                         onSuccess = navigateUp,
                         onError = {
@@ -207,4 +212,5 @@ fun SaleScreen(
 
 private object SaleItemMenu {
     const val delete = 0
+    const val cancel = 1
 }
