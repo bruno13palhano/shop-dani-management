@@ -21,6 +21,9 @@ WHERE id = ?;
 delete:
 DELETE FROM DeliveryTable WHERE id = ?;
 
+deleteBySaleId:
+DELETE FROM DeliveryTable WHERE saleId = ?;
+
 getAll:
 SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.deliveryPrice,
     D.shippingDate, D.deliveryDate, D.delivered
