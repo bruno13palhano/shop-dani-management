@@ -19,6 +19,10 @@ internal class SaleRepository @Inject constructor(
         saleData.update(model = model)
     }
 
+    override suspend fun setCanceledSale(id: Long, stockOrderId: Long, canceled: Boolean) {
+        saleData.setCanceledSale(saleId = id, stockOrderId = stockOrderId, canceled = canceled)
+    }
+
     override suspend fun delete(model: Sale) {
         saleData.delete(model = model)
     }

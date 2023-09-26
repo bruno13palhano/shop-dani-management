@@ -55,6 +55,15 @@ internal class SaleLight @Inject constructor(
         )
     }
 
+    override suspend fun setCanceledSale(saleId: Long, stockOrderId: Long, canceled: Boolean) {
+        saleQueries.setCanceledSale(id = saleId, canceled = canceled)
+        deliveryQueries.deleteBySaleId(saleId = saleId)
+        stockOrderQueries.updateStockOrderQuantity(
+            id = stockOrderId,
+            quantity = stockOrderQueries.getStockQuantity(id = stockOrderId).executeAsOne()
+        )
+    }
+
     override suspend fun delete(model: Sale) {
         saleQueries.delete(id = model.id)
     }
