@@ -12,5 +12,6 @@ data class StockOrder(
     val company: String,
     val purchasePrice: Float,
     val salePrice: Float,
-    val isOrderedByCustomer: Boolean
+    val isOrderedByCustomer: Boolean,
+    val isPaid: Boolean
 )
