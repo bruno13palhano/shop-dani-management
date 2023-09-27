@@ -42,7 +42,7 @@ class ShoppingItemsViewModel @Inject constructor(
         days = Array(rangeOfDays) { 0 }
 
         viewModelScope.launch {
-            stockRepository.getItems(isOrderedByCustomer = true)
+            stockRepository.getItems(isOrderedByCustomer = false)
                 .map {
                     it.filter { item -> item.isPaid }
                         .map { item -> setQuantityOfItemsInTheDay(days, item.date, item.quantity) }

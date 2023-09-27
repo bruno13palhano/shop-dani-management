@@ -42,7 +42,7 @@ class ChartsViewModel @Inject constructor(
         )
 
     private val _stockSales = saleRepository.getAllStockSales(0, 100)
-    private val _shopping = stockRepository.getItems(isOrderedByCustomer = true)
+    private val _shopping = stockRepository.getItems(isOrderedByCustomer = false)
     private val _chartEntry = MutableStateFlow(ChartEntryModelProducer())
     val chartEntry = _chartEntry
         .stateIn(

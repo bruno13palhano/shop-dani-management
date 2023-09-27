@@ -24,7 +24,7 @@ class FinancialInfoViewModel @Inject constructor(
 ) : ViewModel() {
     val financial = combine(
         saleRepository.getAll(),
-        stockRepository.getItems(isOrderedByCustomer = true)
+        stockRepository.getItems(isOrderedByCustomer = false)
     ) { sale, shopping ->
         var allSalesPurchasePrice = 0F
         var allSales = 0F
