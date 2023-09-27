@@ -18,7 +18,7 @@ class ShoppingLight @Inject constructor(
 ) : ShoppingData<Shopping> {
     override suspend fun insert(model: Shopping): Long {
         shoppingQueries.insert(
-            productId = model.productId,
+            stockItemId = model.stockItemId,
             purchasePrice = model.purchasePrice.toDouble(),
             quantity = model.quantity.toLong(),
             date = model.date,
@@ -30,7 +30,7 @@ class ShoppingLight @Inject constructor(
     override suspend fun update(model: Shopping) {
         shoppingQueries.update(
             id = model.id,
-            productId = model.productId,
+            stockItemId = model.stockItemId,
             purchasePrice = model.purchasePrice.toDouble(),
             quantity = model.quantity.toLong(),
             date = model.date,
@@ -71,7 +71,7 @@ class ShoppingLight @Inject constructor(
 
     private fun mapShopping(
         id: Long,
-        productId: Long,
+        stockItemId: Long,
         name: String,
         photo: String,
         purchasePrice: Double,
@@ -80,7 +80,7 @@ class ShoppingLight @Inject constructor(
         isPaid: Boolean
     ) = Shopping(
         id = id,
-        productId = productId,
+        stockItemId = stockItemId,
         name = name,
         photo = photo,
         purchasePrice = purchasePrice.toFloat(),
