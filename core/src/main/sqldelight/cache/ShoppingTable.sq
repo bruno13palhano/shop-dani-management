@@ -2,7 +2,7 @@ import kotlin.Boolean;
 
 CREATE TABLE ShoppingTable (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    productId INTEGER NOT NULL,
+    stockItemId INTEGER NOT NULL,
     purchasePrice REAL NOT NULL,
     quantity INTEGER NOT NULL,
     date INTEGER NOT NULL,
@@ -10,36 +10,40 @@ CREATE TABLE ShoppingTable (
 );
 
 insert:
-INSERT INTO ShoppingTable(productId, purchasePrice, quantity, date, isPaid)
+INSERT INTO ShoppingTable(stockItemId, purchasePrice, quantity, date, isPaid)
 VALUES(?,?,?,?,?);
 
 update:
-UPDATE ShoppingTable SET productId = ?, purchasePrice = ?, quantity = ?, date = ?, isPaid = ?
+UPDATE ShoppingTable SET stockItemId = ?, purchasePrice = ?, quantity = ?, date = ?, isPaid = ?
 WHERE id = ?;
 
 delete:
 DELETE FROM ShoppingTable WHERE id = ?;
 
 getAll:
-SELECT S.id, S.productId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
-FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId);
+SELECT S.id, S.stockItemId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
+FROM product P INNER JOIN ShoppingTable S INNER JOIN StockOrderTable St
+ON(P.id = St.productId AND St.id = S.stockItemId);
 
 getById:
-SELECT S.id, S.productId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
-FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId) WHERE S.id = ?;
+SELECT S.id, S.stockItemId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
+FROM product P INNER JOIN ShoppingTable S INNER JOIN StockOrderTable St
+ON(P.id = St.productId AND St.id = S.stockItemId) WHERE S.id = ?;
 
 getLast:
-SELECT S.id, S.productId, P.name, P.photo,S.purchasePrice, S.quantity, S.date, S.isPaid
-FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId) WHERE S.id = last_insert_rowid();
+SELECT S.id, S.stockItemId, P.name, P.photo,S.purchasePrice, S.quantity, S.date, S.isPaid
+FROM product P INNER JOIN ShoppingTable S INNER JOIN StockOrderTable St
+ON(P.id = St.productId AND St.id = S.stockItemId) WHERE S.id = last_insert_rowid();
 
 search:
-SELECT S.id, S.productId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
-FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId)
-WHERE P.name LIKE '%' || :productName || '%';
+SELECT S.id, S.stockItemId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
+FROM product P INNER JOIN ShoppingTable S INNER JOIN StockOrderTable St
+ON(P.id = St.productId AND St.id = S.stockItemId) WHERE P.name LIKE '%' || :productName || '%';
 
 getItemsLimited:
-SELECT S.id, S.productId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
-FROM product P INNER JOIN ShoppingTable S ON(P.id = S.productId) ORDER BY S.id DESC LIMIT :offset, :limit;
+SELECT S.id, S.stockItemId, P.name, P.photo, S.purchasePrice, S.quantity, S.date, S.isPaid
+FROM product P INNER JOIN ShoppingTable S INNER JOIN StockOrderTable St
+ON(P.id = St.productId AND St.id = S.stockItemId) ORDER BY S.id DESC LIMIT :offset, :limit;
 
 getLastId:
 SELECT last_insert_rowid();
