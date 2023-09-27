@@ -2,9 +2,9 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.ShoppingData
-import com.bruno13palhano.core.data.di.ShoppingRep
-import com.bruno13palhano.core.model.Shopping
+import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.di.StockOrderRep
+import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.composed.plus
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShoppingItemsViewModel @Inject constructor(
-    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>
+    @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
     private var days = arrayOf(0)
     private val currentDay = LocalDate.now()
@@ -42,7 +42,7 @@ class ShoppingItemsViewModel @Inject constructor(
         days = Array(rangeOfDays) { 0 }
 
         viewModelScope.launch {
-            shoppingRepository.getItemsLimited(0, 100)
+            stockRepository.getItems(isOrderedByCustomer = true)
                 .map {
                     it.filter { item -> item.isPaid }
                         .map { item -> setQuantityOfItemsInTheDay(days, item.date, item.quantity) }
