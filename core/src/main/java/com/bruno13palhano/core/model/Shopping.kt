@@ -2,7 +2,7 @@ package com.bruno13palhano.core.model
 
 data class Shopping(
     val id: Long,
-    val productId: Long,
+    val stockItemId: Long,
     val name: String,
     val photo: String,
     val purchasePrice: Float,
