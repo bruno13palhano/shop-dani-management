@@ -109,7 +109,8 @@ internal class SaleLight @Inject constructor(
                     quantity = stockOrder.quantity.toLong(),
                     purchasePrice = stockOrder.purchasePrice.toDouble(),
                     salePrice = stockOrder.salePrice.toDouble(),
-                    isOrderedByCustomer = true
+                    isOrderedByCustomer = true,
+                    isPaid = stockOrder.isPaid
                 )
             }
             onSuccess()
