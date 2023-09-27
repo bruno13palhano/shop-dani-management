@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -24,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ItemContent
+import com.bruno13palhano.shopdanimanagement.ui.screens.setAlarmNotification
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.ItemViewModel
 import kotlinx.coroutines.launch
 
@@ -48,6 +50,7 @@ fun ItemScreen(
 
     val isItemNotEmpty by viewModel.isItemNotEmpty.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
+    val context = LocalContext.current
     val orientation = configuration.orientation
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -157,8 +160,22 @@ fun ItemScreen(
             if (isItemNotEmpty) {
                 if (isEditable) {
                     viewModel.updateStockOrderItem(stockOrderItemId, isOrderedByCustomer)
+                    setAlarmNotification(
+                        id = stockOrderItemId,
+                        title = viewModel.name,
+                        date = viewModel.validityInMillis,
+                        description = viewModel.company,
+                        context = context
+                    )
                 } else {
                     viewModel.insertItems(productId, isOrderedByCustomer)
+                    setAlarmNotification(
+                        id = productId,
+                        title = viewModel.name,
+                        date = viewModel.validityInMillis,
+                        description = viewModel.company,
+                        context = context
+                    )
                 }
                 navigateUp()
             } else {
