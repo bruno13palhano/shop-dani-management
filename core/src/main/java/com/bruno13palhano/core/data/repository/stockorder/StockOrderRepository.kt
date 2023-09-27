@@ -22,16 +22,8 @@ internal class StockOrderRepository @Inject constructor(
         stockOrderData.delete(model = model)
     }
 
-    override suspend fun insertItems(
-        stockOrder: StockOrder,
-        shopping: Shopping,
-        isOrderedByCustomer: Boolean
-    ) {
-        stockOrderData.insertItems(
-            stockOrder = stockOrder,
-            shopping = shopping,
-            isOrderedByCustomer = isOrderedByCustomer
-        )
+    override suspend fun insertItems(stockOrder: StockOrder, isPaid: Boolean) {
+        stockOrderData.insertItems(stockOrder = stockOrder, isPaid = isPaid)
     }
 
     override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {

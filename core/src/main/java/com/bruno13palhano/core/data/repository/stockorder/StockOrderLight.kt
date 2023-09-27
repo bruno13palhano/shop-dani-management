@@ -50,20 +50,7 @@ class StockOrderLight @Inject constructor(
         stockOrderQueries.delete(id = model.id)
     }
 
-    override suspend fun insertItems(
-        stockOrder: StockOrder,
-        shopping: Shopping,
-        isOrderedByCustomer: Boolean
-    ) {
-        if (!isOrderedByCustomer) {
-            shoppingQueries.insert(
-                productId = shopping.productId,
-                purchasePrice = shopping.purchasePrice.toDouble(),
-                quantity = shopping.quantity.toLong(),
-                date = shopping.date,
-                isPaid = shopping.isPaid
-            )
-        }
+    override suspend fun insertItems(stockOrder: StockOrder, isPaid: Boolean) {
         stockOrderQueries.insert(
             productId = stockOrder.productId,
             date = stockOrder.date,
@@ -73,6 +60,18 @@ class StockOrderLight @Inject constructor(
             salePrice = stockOrder.salePrice.toDouble(),
             isOrderedByCustomer = stockOrder.isOrderedByCustomer
         )
+        val lastStockOrder = stockOrderQueries.getById(
+            id = stockOrderQueries.lastId().executeAsOne()
+        ).executeAsOne()
+        if (!stockOrder.isOrderedByCustomer) {
+            shoppingQueries.insert(
+                stockItemId = lastStockOrder.id,
+                purchasePrice = lastStockOrder.purchasePrice,
+                quantity = lastStockOrder.quantity,
+                date = lastStockOrder.date,
+                isPaid = isPaid
+            )
+        }
     }
 
     override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
