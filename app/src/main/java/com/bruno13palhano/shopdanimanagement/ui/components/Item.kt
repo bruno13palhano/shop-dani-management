@@ -2,9 +2,11 @@ package com.bruno13palhano.shopdanimanagement.ui.components
 
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,6 +23,7 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Paid
 import androidx.compose.material.icons.filled.PriceCheck
 import androidx.compose.material.icons.filled.ShoppingBag
@@ -38,7 +41,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,6 +64,7 @@ import java.util.Locale
 fun ItemContent(
     screenTitle: String,
     snackbarHostState: SnackbarHostState,
+    menuItems: Array<String>,
     name: String,
     photo: String,
     quantity: String,
@@ -73,11 +80,14 @@ fun ItemContent(
     onSalePriceChange: (salePrice: String) -> Unit,
     onIsPaidChange: (isPaid: Boolean) -> Unit,
     onDateClick: () -> Unit,
+    onMoreOptionsItemClick: (index: Int) -> Unit,
     onValidityClick: () -> Unit,
     onOutsideClick: () -> Unit,
     onDoneButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Scaffold(
         modifier = Modifier.clickableNoEffect { onOutsideClick() },
         snackbarHost = {
@@ -92,6 +102,26 @@ fun ItemContent(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.up_button_label)
                         )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = stringResource(id = R.string.more_options_label)
+                        )
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            MoreOptionsMenu(
+                                items = menuItems,
+                                expanded = expanded,
+                                onDismissRequest = { expandedValue -> expanded = expandedValue },
+                                onClick = onMoreOptionsItemClick
+                            )
+                        }
                     }
                 }
             )

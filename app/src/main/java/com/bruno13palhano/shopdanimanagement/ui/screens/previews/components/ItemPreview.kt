@@ -26,6 +26,7 @@ fun ItemDynamicPreview() {
             ItemContent(
                 screenTitle = stringResource(id = R.string.new_stock_item_label),
                 snackbarHostState = remember { SnackbarHostState() },
+                menuItems = arrayOf(),
                 name = "",
                 photo = "",
                 quantity = "",
@@ -41,6 +42,7 @@ fun ItemDynamicPreview() {
                 onSalePriceChange = {},
                 onIsPaidChange = {},
                 onDateClick = {},
+                onMoreOptionsItemClick = {},
                 onValidityClick = {},
                 onOutsideClick = {},
                 onDoneButtonClick = {},
@@ -64,6 +66,7 @@ fun ItemPreview() {
             ItemContent(
                 screenTitle = stringResource(id = R.string.edit_stock_item_label),
                 snackbarHostState = remember { SnackbarHostState() },
+                menuItems = arrayOf(),
                 name = "",
                 photo = "",
                 quantity = "",
@@ -79,6 +82,7 @@ fun ItemPreview() {
                 onSalePriceChange = {},
                 onIsPaidChange = {},
                 onDateClick = {},
+                onMoreOptionsItemClick = {},
                 onValidityClick = {},
                 onOutsideClick = {},
                 onDoneButtonClick = {},

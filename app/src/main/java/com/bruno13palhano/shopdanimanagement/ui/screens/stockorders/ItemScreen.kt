@@ -129,6 +129,9 @@ fun ItemScreen(
         }
     }
 
+    val menuItems = arrayOf(
+        stringResource(id = R.string.delete_label)
+    )
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val errorMessage = stringResource(id = R.string.empty_fields_error)
@@ -136,6 +139,7 @@ fun ItemScreen(
     ItemContent(
         screenTitle = screenTitle,
         snackbarHostState = snackbarHostState,
+        menuItems = menuItems,
         name = viewModel.name,
         photo = viewModel.photo,
         quantity = viewModel.quantity,
@@ -152,6 +156,14 @@ fun ItemScreen(
         onIsPaidChange = viewModel::updateIsPaid,
         onDateClick = { showDatePickerDialog = true },
         onValidityClick = { showValidityPickerDialog = true },
+        onMoreOptionsItemClick = { index ->
+            when (index) {
+                0 -> {
+                    viewModel.deleteStockOrderItem(stockOrderId = stockOrderItemId)
+                    navigateUp()
+                }
+            }
+        },
         onOutsideClick = {
             keyboardController?.hide()
             focusManager.clearFocus(force = true)
