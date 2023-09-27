@@ -3,11 +3,11 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.ShoppingData
+import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.SaleRep
-import com.bruno13palhano.core.data.di.ShoppingRep
+import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.Shopping
+import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
@@ -25,11 +25,14 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleData<Sale>,
-    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>,
+    @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
     private val currentDay = LocalDate.now()
 
-    val homeInfo = combine(saleRepository.getAll(), shoppingRepository.getAll()) { sales, shopping ->
+    val homeInfo = combine(
+        saleRepository.getAll(),
+        stockRepository.getItems(isOrderedByCustomer = true)
+    ) { sales, shopping ->
         var salesPrice = 0F
         var purchasePrice = 0F
         var biggestSale = Info()
