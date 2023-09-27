@@ -88,6 +88,8 @@ class SaleViewModel @Inject constructor(
         private set
     var isPaidByCustomer by mutableStateOf(false)
         private set
+    var isPaid by mutableStateOf(false)
+        private set
 
     val isSaleNotEmpty = snapshotFlow {
         productName.isNotEmpty() && quantity.isNotEmpty() && purchasePrice.isNotEmpty() && salePrice.isNotEmpty()
@@ -189,6 +191,7 @@ class SaleViewModel @Inject constructor(
                 stockQuantity = it.quantity
                 setCategoriesChecked(it.categories)
                 setCompanyChecked(it.company)
+                isPaid = it.isPaid
             }
         }
     }
@@ -319,7 +322,8 @@ class SaleViewModel @Inject constructor(
         company = company,
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
-        isOrderedByCustomer = isOrderedByCustomer
+        isOrderedByCustomer = isOrderedByCustomer,
+        isPaid = isPaid
     )
 
     private fun createDelivery() = Delivery(
