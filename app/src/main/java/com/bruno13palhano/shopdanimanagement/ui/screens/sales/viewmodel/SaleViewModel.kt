@@ -10,19 +10,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.CustomerRep
-import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Delivery
-import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
@@ -41,7 +38,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaleViewModel @Inject constructor(
-    @ProductRep private val productRepository: ProductData<Product>,
     @CategoryRep private val categoryRepository: CategoryData<Category>,
     @SaleRep private val saleRepository: SaleData<Sale>,
     @StockOrderRep private val stockOrderRepository: StockOrderData<StockOrder>,
@@ -179,23 +175,11 @@ class SaleViewModel @Inject constructor(
             }
     }
 
-    fun getProduct(id: Long) {
-        viewModelScope.launch {
-            productRepository.getById(id).collect {
-                productName = it.name
-                photo = it.photo
-                categories = it.categories
-                company = it.company
-                setCategoriesChecked(it.categories)
-                setCompanyChecked(it.company)
-            }
-        }
-    }
-
     fun getStockItem(stockId: Long) {
         viewModelScope.launch {
             stockOrderRepository.getById(stockId).collect {
                 stockOrderId = stockId
+                productId = it.productId
                 productName = it.name
                 photo = it.photo
                 purchasePrice = it.purchasePrice.toString()
@@ -241,7 +225,6 @@ class SaleViewModel @Inject constructor(
     }
 
     fun insertSale(
-        productId: Long,
         isOrderedByCustomer: Boolean,
         onSuccess: () -> Unit,
         onError: () -> Unit
