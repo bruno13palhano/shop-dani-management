@@ -26,6 +26,7 @@ fun ShoppingDynamicPreview() {
             ShoppingContent(
                 screenTitle = stringResource(id = R.string.new_item_label),
                 snackbarHostState = remember { SnackbarHostState() },
+                menuItems = arrayOf(),
                 name = "",
                 purchasePrice = "",
                 quantity = "",
@@ -36,6 +37,7 @@ fun ShoppingDynamicPreview() {
                 onQuantityChange = {},
                 onIsPaidChange = {},
                 onDateClick = {},
+                onMoreOptionsItemClick = {},
                 onOutsideClick = {},
                 onDoneClick = {},
                 navigateUp = {}
@@ -58,6 +60,7 @@ fun ShoppingPreview() {
             ShoppingContent(
                 screenTitle = stringResource(id = R.string.new_item_label),
                 snackbarHostState = remember { SnackbarHostState() },
+                menuItems = arrayOf(),
                 name = "",
                 purchasePrice = "",
                 quantity = "",
@@ -68,6 +71,7 @@ fun ShoppingPreview() {
                 onQuantityChange = {},
                 onIsPaidChange = {},
                 onDateClick = {},
+                onMoreOptionsItemClick = {},
                 onOutsideClick = {},
                 onDoneClick = {},
                 navigateUp = {}

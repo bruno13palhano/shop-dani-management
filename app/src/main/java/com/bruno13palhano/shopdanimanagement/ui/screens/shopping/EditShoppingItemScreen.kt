@@ -81,6 +81,10 @@ fun EditShoppingItemScreen(
         }
     }
 
+    val menuItems = arrayOf(
+        stringResource(id = R.string.delete_label)
+    )
+
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val errorMessage = stringResource(id = R.string.empty_fields_error)
@@ -88,6 +92,7 @@ fun EditShoppingItemScreen(
     ShoppingContent(
         screenTitle = stringResource(id = R.string.edit_shopping_item_label),
         snackbarHostState = snackbarHostState,
+        menuItems = menuItems,
         name = viewModel.name,
         purchasePrice = viewModel.purchasePrice,
         quantity = viewModel.quantity,
@@ -98,13 +103,21 @@ fun EditShoppingItemScreen(
         onQuantityChange = viewModel::updateQuantity,
         onIsPaidChange = viewModel::updateIsPaid,
         onDateClick = { showDatePickerDialog = true },
+        onMoreOptionsItemClick = { index ->
+            when (index) {
+                0 -> {
+                    viewModel.deleteShoppingItem()
+                    navigateUp()
+                }
+            }
+        },
         onOutsideClick = {
             keyboardController?.hide()
             focusManager.clearFocus(force = true)
         },
         onDoneClick = {
             if (isItemNotEmpty) {
-                viewModel.updateShoppingItem(shoppingItemId)
+                viewModel.updateShoppingItem()
                 navigateUp()
             } else {
                 scope.launch {
