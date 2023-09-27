@@ -1,15 +1,17 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.ShoppingData
-import com.bruno13palhano.core.data.di.ShoppingRep
-import com.bruno13palhano.core.model.Shopping
+import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.di.StockOrderRep
+import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,10 +22,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditShoppingItemViewModel @Inject constructor(
-    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>
+    @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
-    var productId by mutableLongStateOf(0L)
-        private set
+    private var stockItemId by mutableLongStateOf(0L)
+    private var productId by mutableLongStateOf(0L)
+    private var validity by mutableLongStateOf(0L)
+    private var categories by mutableStateOf(listOf<Category>())
+    private var company by mutableStateOf("")
+    private var salePrice by mutableFloatStateOf(0F)
+    private var isOrderedByCustomer by mutableStateOf(false)
+
     var name by mutableStateOf("")
         private set
     var photo by mutableStateOf("")
@@ -67,32 +75,49 @@ class EditShoppingItemViewModel @Inject constructor(
 
     fun getShoppingItem(shoppingItemId: Long) {
         viewModelScope.launch {
-            shoppingRepository.getById(shoppingItemId).collect {
+            stockRepository.getById(shoppingItemId).collect {
+                stockItemId = it.id
+                productId = it.productId
                 name = it.name
                 photo = it.photo
-                purchasePrice = it.purchasePrice.toString()
-                quantity = it.quantity.toString()
-                isPaid = it.isPaid
                 updateDate(it.date)
-                productId = it.productId
+                validity = it.validity
+                quantity = it.quantity.toString()
+                categories = it.categories
+                company = it.company
+                purchasePrice = it.purchasePrice.toString()
+                salePrice = it.salePrice
+                isOrderedByCustomer = it.isOrderedByCustomer
+                isPaid = it.isPaid
             }
         }
     }
 
-    fun updateShoppingItem(id: Long) {
+    fun updateShoppingItem() {
         viewModelScope.launch {
-            shoppingRepository.update(createShoppingItem(id))
+            stockRepository.update(createShoppingItem())
         }
     }
 
-    private fun createShoppingItem(id: Long) = Shopping(
-        id = id,
+    fun deleteShoppingItem() {
+        viewModelScope.launch {
+            stockRepository.deleteById(id = stockItemId)
+        }
+    }
+
+    private fun createShoppingItem() = StockOrder(
+        id = stockItemId,
         productId = productId,
         name = name,
         photo = photo,
-        purchasePrice = stringToFloat(purchasePrice),
-        quantity = quantity.toInt(),
         date = dateInMillis,
+        validity = validity,
+        quantity = quantity.toInt(),
+        categories = categories,
+        company = company,
+        purchasePrice = stringToFloat(purchasePrice),
+        salePrice = salePrice,
+        isOrderedByCustomer = isOrderedByCustomer,
         isPaid = isPaid
     )
 }
