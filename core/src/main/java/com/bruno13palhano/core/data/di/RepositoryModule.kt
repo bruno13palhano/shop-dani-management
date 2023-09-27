@@ -6,7 +6,6 @@ import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.SearchCacheData
-import com.bruno13palhano.core.data.ShoppingData
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
@@ -14,7 +13,6 @@ import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
-import com.bruno13palhano.core.data.repository.shopping.ShoppingRepository
 import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
@@ -22,7 +20,6 @@ import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.core.model.StockOrder
 import dagger.Binds
 import dagger.Module
@@ -48,9 +45,6 @@ annotation class SaleRep
 
 @Qualifier
 annotation class SearchCacheRep
-
-@Qualifier
-annotation class ShoppingRep
 
 @Qualifier
 annotation class StockOrderRep
@@ -90,11 +84,6 @@ internal abstract class RepositoryModule {
     abstract fun bindSearchCacheRepository(
         repository: SearchCacheRepository
     ): SearchCacheData<SearchCache>
-
-    @ShoppingRep
-    @Singleton
-    @Binds
-    abstract fun bindShoppingRepository(repository: ShoppingRepository): ShoppingData<Shopping>
 
     @StockOrderRep
     @Singleton

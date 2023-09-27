@@ -6,7 +6,6 @@ import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.SearchCacheData
-import com.bruno13palhano.core.data.ShoppingData
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.repository.category.CategoryLight
 import com.bruno13palhano.core.data.repository.customer.CustomerLight
@@ -14,7 +13,6 @@ import com.bruno13palhano.core.data.repository.delivery.DeliveryLight
 import com.bruno13palhano.core.data.repository.product.ProductLight
 import com.bruno13palhano.core.data.repository.sale.SaleLight
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheLight
-import com.bruno13palhano.core.data.repository.shopping.ShoppingLight
 import com.bruno13palhano.core.data.repository.stockorder.StockOrderLight
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
@@ -22,7 +20,6 @@ import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.core.model.StockOrder
 import dagger.Binds
 import dagger.Module
@@ -48,9 +45,6 @@ internal annotation class InternalSaleLight
 
 @Qualifier
 internal annotation class InternalSearchCacheLight
-
-@Qualifier
-internal annotation class InternalShoppingLight
 
 @Qualifier
 internal annotation class InternalStockOrderLight
@@ -90,11 +84,6 @@ internal abstract class InternalDataModule {
     abstract fun bindInternalSearchCacheLight(
         repository: SearchCacheLight
     ): SearchCacheData<SearchCache>
-
-    @InternalShoppingLight
-    @Singleton
-    @Binds
-    abstract fun bindInternalShoppingLight(repository: ShoppingLight): ShoppingData<Shopping>
 
     @InternalStockOrderLight
     @Singleton
