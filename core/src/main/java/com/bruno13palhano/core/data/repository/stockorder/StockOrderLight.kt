@@ -3,21 +3,19 @@ package com.bruno13palhano.core.data.repository.stockorder
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
-import cache.ShoppingTableQueries
 import cache.StockOrderTableQueries
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.core.model.StockOrder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import javax.inject.Inject
 
 class StockOrderLight @Inject constructor(
     private val stockOrderQueries: StockOrderTableQueries,
-    private val shoppingQueries: ShoppingTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : StockOrderData<StockOrder> {
     override suspend fun insert(model: StockOrder): Long {
@@ -28,7 +26,8 @@ class StockOrderLight @Inject constructor(
             quantity = model.quantity.toLong(),
             purchasePrice = model.purchasePrice.toDouble(),
             salePrice = model.salePrice.toDouble(),
-            isOrderedByCustomer = model.isOrderedByCustomer
+            isOrderedByCustomer = model.isOrderedByCustomer,
+            isPaid = model.isPaid
         )
         return stockOrderQueries.lastId().executeAsOne()
     }
@@ -42,7 +41,8 @@ class StockOrderLight @Inject constructor(
             quantity = model.quantity.toLong(),
             purchasePrice = model.purchasePrice.toDouble(),
             salePrice = model.salePrice.toDouble(),
-            isOrderedByCustomer = model.isOrderedByCustomer
+            isOrderedByCustomer = model.isOrderedByCustomer,
+            isPaid = model.isPaid
         )
     }
 
@@ -58,20 +58,9 @@ class StockOrderLight @Inject constructor(
             validity = stockOrder.validity,
             quantity = stockOrder.quantity.toLong(),
             salePrice = stockOrder.salePrice.toDouble(),
-            isOrderedByCustomer = stockOrder.isOrderedByCustomer
+            isOrderedByCustomer = stockOrder.isOrderedByCustomer,
+            isPaid = stockOrder.isPaid
         )
-        val lastStockOrder = stockOrderQueries.getById(
-            id = stockOrderQueries.lastId().executeAsOne()
-        ).executeAsOne()
-        if (!stockOrder.isOrderedByCustomer) {
-            shoppingQueries.insert(
-                stockItemId = lastStockOrder.id,
-                purchasePrice = lastStockOrder.purchasePrice,
-                quantity = lastStockOrder.quantity,
-                date = lastStockOrder.date,
-                isPaid = isPaid
-            )
-        }
     }
 
     override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
@@ -118,11 +107,13 @@ class StockOrderLight @Inject constructor(
     override fun getById(id: Long): Flow<StockOrder> {
         return stockOrderQueries.getById(id = id, mapper = ::mapStockOrder)
             .asFlow().mapToOne(ioDispatcher)
+            .catch { it.printStackTrace() }
     }
 
     override fun getLast(): Flow<StockOrder> {
         return stockOrderQueries.getLast(mapper = ::mapStockOrder)
             .asFlow().mapToOne(ioDispatcher)
+            .catch { it.printStackTrace() }
     }
 
     private fun mapStockOrder(
@@ -137,7 +128,8 @@ class StockOrderLight @Inject constructor(
         company: String,
         purchasePrice: Double,
         salePrice: Double,
-        isOrderedByCustomer: Boolean
+        isOrderedByCustomer: Boolean,
+        isPaid: Boolean
     ) = StockOrder(
         id = id,
         productId = productId,
@@ -150,6 +142,7 @@ class StockOrderLight @Inject constructor(
         company = company,
         purchasePrice = purchasePrice.toFloat(),
         salePrice = salePrice.toFloat(),
-        isOrderedByCustomer = isOrderedByCustomer
+        isOrderedByCustomer = isOrderedByCustomer,
+        isPaid = isPaid
     )
 }
