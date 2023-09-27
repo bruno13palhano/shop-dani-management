@@ -182,6 +182,7 @@ class ItemViewModel @Inject constructor(
                 setCompanyChecked(it.company)
                 purchasePrice = it.purchasePrice.toString()
                 salePrice = it.salePrice.toString()
+                isPaid = it.isPaid
             }
         }
     }
