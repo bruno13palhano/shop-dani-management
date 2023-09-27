@@ -17,7 +17,7 @@ import javax.inject.Inject
 class ShoppingViewModel @Inject constructor(
     @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
-    val shoppingList = stockRepository.getItems(isOrderedByCustomer = true)
+    val shoppingList = stockRepository.getItems(isOrderedByCustomer = false)
         .map {
             it.map { shopping ->
                 CommonItem(
