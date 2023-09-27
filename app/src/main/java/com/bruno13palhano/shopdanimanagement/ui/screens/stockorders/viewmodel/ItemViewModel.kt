@@ -16,7 +16,6 @@ import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.core.model.Shopping
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
 import com.bruno13palhano.shopdanimanagement.ui.components.CompanyCheck
@@ -164,8 +163,7 @@ class ItemViewModel @Inject constructor(
         viewModelScope.launch {
             stockRepository.insertItems(
                 stockOrder = createStockOrder(productId, isOrderedByCustomer),
-                shopping = createShopping(productId),
-                isOrderedByCustomer = isOrderedByCustomer
+                isPaid = isPaid
             )
         }
     }
@@ -194,6 +192,12 @@ class ItemViewModel @Inject constructor(
         }
     }
 
+    fun deleteStockOrderItem(stockOrderId: Long) {
+        viewModelScope.launch {
+            stockRepository.deleteById(id = stockOrderId)
+        }
+    }
+
     private fun createStockOrder(productId: Long, isOrderedByCustomer: Boolean) = StockOrder(
         id = 0L,
         productId = productId,
@@ -206,7 +210,8 @@ class ItemViewModel @Inject constructor(
         company = company,
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
-        isOrderedByCustomer = isOrderedByCustomer
+        isOrderedByCustomer = isOrderedByCustomer,
+        isPaid = isPaid
     )
 
     private fun updateStockOrder(stockOrderId: Long, isOrderedByCustomer: Boolean) = StockOrder(
@@ -221,17 +226,7 @@ class ItemViewModel @Inject constructor(
         company = company,
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
-        isOrderedByCustomer = isOrderedByCustomer
-    )
-
-    private fun createShopping(productId: Long) = Shopping(
-        id = 0L,
-        productId = productId,
-        name = name,
-        photo = photo,
-        purchasePrice = stringToFloat(purchasePrice),
-        quantity = quantity.toInt(),
-        date = dateInMillis,
-        isPaid = false
+        isOrderedByCustomer = isOrderedByCustomer,
+        isPaid = isPaid
     )
 }
