@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -25,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SaleContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SaleViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.setAlarmNotification
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,14 +44,11 @@ fun SaleScreen(
         if (isEdit) {
             viewModel.getSale(saleId)
         } else {
-            if (isOrderedByCustomer) {
-                viewModel.getProduct(stockOrderId)
-            } else {
-                viewModel.getStockItem(stockOrderId)
-            }
+            viewModel.getStockItem(stockOrderId)
         }
     }
     val isSaleNotEmpty by viewModel.isSaleNotEmpty.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -188,9 +187,17 @@ fun SaleScreen(
                     navigateUp()
                 } else {
                     viewModel.insertSale(
-                        productId = stockOrderId,
                         isOrderedByCustomer = isOrderedByCustomer,
-                        onSuccess = navigateUp,
+                        onSuccess = {
+                            navigateUp()
+                            setAlarmNotification(
+                                id = stockOrderId,
+                                title = viewModel.customerName,
+                                date = viewModel.dateOfPaymentInMillis,
+                                description = viewModel.company,
+                                context = context
+                            )
+                        },
                         onError = {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
