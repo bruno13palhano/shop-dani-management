@@ -3,11 +3,11 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.ShoppingData
+import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.SaleRep
-import com.bruno13palhano.core.data.di.ShoppingRep
+import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.Shopping
+import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.composed.plus
@@ -28,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChartsViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleData<Sale>,
-    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>,
+    @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
     private var days = arrayOf(0)
     private val currentDay = LocalDate.now()
@@ -42,7 +42,7 @@ class ChartsViewModel @Inject constructor(
         )
 
     private val _stockSales = saleRepository.getAllStockSales(0, 100)
-    private val _shopping = shoppingRepository.getItemsLimited(0, 100)
+    private val _shopping = stockRepository.getItems(isOrderedByCustomer = true)
     private val _chartEntry = MutableStateFlow(ChartEntryModelProducer())
     val chartEntry = _chartEntry
         .stateIn(
