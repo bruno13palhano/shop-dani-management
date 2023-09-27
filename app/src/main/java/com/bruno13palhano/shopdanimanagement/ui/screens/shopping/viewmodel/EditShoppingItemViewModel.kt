@@ -1,7 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,13 +23,13 @@ import javax.inject.Inject
 class EditShoppingItemViewModel @Inject constructor(
     @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
-    private var stockItemId by mutableLongStateOf(0L)
-    private var productId by mutableLongStateOf(0L)
-    private var validity by mutableLongStateOf(0L)
-    private var categories by mutableStateOf(listOf<Category>())
-    private var company by mutableStateOf("")
-    private var salePrice by mutableFloatStateOf(0F)
-    private var isOrderedByCustomer by mutableStateOf(false)
+    private var stockItemId = 0L
+    private var productId = 0L
+    private var validity = 0L
+    private var categories = listOf<Category>()
+    private var company = ""
+    private var salePrice = 0F
+    private var isOrderedByCustomer = false
 
     var name by mutableStateOf("")
         private set
