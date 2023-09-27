@@ -3,11 +3,11 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.ShoppingData
+import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.SaleRep
-import com.bruno13palhano.core.data.di.ShoppingRep
+import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.Shopping
+import com.bruno13palhano.core.model.StockOrder
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,9 +20,12 @@ import javax.inject.Inject
 @HiltViewModel
 class FinancialInfoViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleData<Sale>,
-    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>
+    @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
-    val financial = combine(saleRepository.getAll(), shoppingRepository.getAll()) { sale, shopping ->
+    val financial = combine(
+        saleRepository.getAll(),
+        stockRepository.getItems(isOrderedByCustomer = true)
+    ) { sale, shopping ->
         var allSalesPurchasePrice = 0F
         var allSales = 0F
         var stockSales = 0F
