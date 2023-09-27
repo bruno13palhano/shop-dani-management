@@ -2,9 +2,9 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.shopping.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.ShoppingData
-import com.bruno13palhano.core.data.di.ShoppingRep
-import com.bruno13palhano.core.model.Shopping
+import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.di.StockOrderRep
+import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,14 +15,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShoppingViewModel @Inject constructor(
-    @ShoppingRep private val shoppingRepository: ShoppingData<Shopping>
+    @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
-    val shoppingList = shoppingRepository.getAll()
+    val shoppingList = stockRepository.getItems(isOrderedByCustomer = true)
         .map {
             it.map { shopping ->
                 CommonItem(
                     id = shopping.id,
-                    photo = "",
+                    photo = shopping.photo,
                     title = shopping.name,
                     subtitle = shopping.quantity.toString(),
                     description = dateFormat.format(shopping.date)
