@@ -190,12 +190,27 @@ class ItemViewModel @Inject constructor(
 
     fun updateStockOrderItem(stockOrderItemId: Long, isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
-            stockRepository.update(createStockOrder(stockOrderItemId, isOrderedByCustomer))
+            stockRepository.update(updateStockOrder(stockOrderItemId, isOrderedByCustomer))
         }
     }
 
     private fun createStockOrder(productId: Long, isOrderedByCustomer: Boolean) = StockOrder(
         id = 0L,
+        productId = productId,
+        name = name,
+        photo = photo,
+        quantity = quantity.toInt(),
+        date = dateInMillis,
+        validity = validityInMillis,
+        categories = categories,
+        company = company,
+        purchasePrice = stringToFloat(purchasePrice),
+        salePrice = stringToFloat(salePrice),
+        isOrderedByCustomer = isOrderedByCustomer
+    )
+
+    private fun updateStockOrder(stockOrderId: Long, isOrderedByCustomer: Boolean) = StockOrder(
+        id = stockOrderId,
         productId = productId,
         name = name,
         photo = photo,
