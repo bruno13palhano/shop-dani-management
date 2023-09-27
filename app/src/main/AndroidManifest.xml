@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:name=".dependencies.DependenciesApplication"
         android:allowBackup="true"
@@ -23,6 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".ui.notifications.receivers.ExpiredProductsReceiver"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
