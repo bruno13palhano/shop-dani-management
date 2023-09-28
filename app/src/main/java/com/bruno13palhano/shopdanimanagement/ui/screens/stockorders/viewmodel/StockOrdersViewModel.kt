@@ -7,7 +7,7 @@ import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Stock
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.core.model.StockOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

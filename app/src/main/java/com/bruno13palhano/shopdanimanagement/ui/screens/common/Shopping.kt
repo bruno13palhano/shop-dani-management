@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.model
+package com.bruno13palhano.shopdanimanagement.ui.screens.common
 
 data class Shopping(
     val id: Long,

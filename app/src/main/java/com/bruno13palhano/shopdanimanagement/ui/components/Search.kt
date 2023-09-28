@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.core.model.Stock
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.shopdanimanagement.R
 
 @OptIn(ExperimentalMaterial3Api::class)

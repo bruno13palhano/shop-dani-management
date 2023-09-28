@@ -8,7 +8,7 @@ import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SearchCacheRep
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.core.model.Stock
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
