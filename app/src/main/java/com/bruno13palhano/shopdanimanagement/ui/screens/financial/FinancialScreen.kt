@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Shop
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -63,7 +64,8 @@ fun FinancialContent(
     ) {
         val items = listOf(
             FinancialInnerScreen.ShoppingItems,
-            FinancialInnerScreen.Info
+            FinancialInnerScreen.Info,
+            FinancialInnerScreen.CustomersDebit
         )
         Column(modifier = Modifier
             .padding(it)
@@ -85,4 +87,5 @@ fun FinancialContent(
 sealed class FinancialInnerScreen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     object ShoppingItems: FinancialInnerScreen(FinancialDestinations.FINANCIAL_SHOPPING_ITEMS, Icons.Filled.Shop, R.string.shopping_items_label)
     object Info: FinancialInnerScreen(FinancialDestinations.FINANCIAL_INFO_ROUTE, Icons.Filled.Info, R.string.financial_info_label)
+    object CustomersDebit: FinancialInnerScreen(FinancialDestinations.FINANCIAL_CUSTOMERS_DEBITS_ROUTE, Icons.Filled.Payments, R.string.customers_debit_label)
 }
