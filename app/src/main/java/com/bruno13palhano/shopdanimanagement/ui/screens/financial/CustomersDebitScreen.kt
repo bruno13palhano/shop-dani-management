@@ -74,7 +74,7 @@ fun CustomersDebitContent(
                 CommonItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
                     title = item.title,
-                    subtitle = item.subtitle,
+                    subtitle = stringResource(id = R.string.customer_debit_tag, item.subtitle),
                     description = item.description,
                     onClick = { onItemClick(item.id) }
                 )
