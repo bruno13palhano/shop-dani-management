@@ -155,6 +155,7 @@
     <string name="value_tag">R$ %.2f</string>
     <string name="product_price_tag">%s, R$ %.2f</string>
     <string name="total_sales_value_tag">Total sales value, R$ %.2f</string>
+    <string name="customer_debit_tag">Debit of R$ %s</string>
     <plurals name="description_label">
         <item quantity="one">%s, %d item, %s</item>
         <item quantity="other">%s, %d items, %s</item>
