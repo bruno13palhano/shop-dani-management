@@ -75,7 +75,7 @@ fun CustomersDebitContent(
                     modifier = Modifier.padding(vertical = 4.dp),
                     title = item.title,
                     subtitle = stringResource(id = R.string.customer_debit_tag, item.subtitle),
-                    description = item.description,
+                    description = stringResource(id = R.string.date_of_payment_tag , item.description),
                     onClick = { onItemClick(item.id) }
                 )
             }
