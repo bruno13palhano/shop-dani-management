@@ -143,6 +143,7 @@
     <string name="smallest_sale_label">Smallest sale</string>
     <string name="last_sale_label">Last sale</string>
     <string name="last_shopping_label">Last shopping</string>
+    <string name="missing_products_label">Missing products</string>
     <string name="owing_tag">Owing, %sR$.</string>
     <string name="amount_of_all_purchases_tag">Amount of all purchases, %sR$.</string>
     <string name="last_purchase_tag">Last purchase, %sR$.</string>
