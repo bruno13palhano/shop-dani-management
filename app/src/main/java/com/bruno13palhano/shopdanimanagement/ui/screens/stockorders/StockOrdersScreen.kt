@@ -63,7 +63,9 @@ fun StockOrdersScreen(
                     0 -> {
                         viewModel.getItems(true)
                     }
-                    else -> { viewModel.getItemsByCategories(menuOptions[index], true) }
+                    else -> {
+                        viewModel.getItemsByCategories(menuOptions[index], true)
+                    }
                 }
             }
         },
