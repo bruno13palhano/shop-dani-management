@@ -71,4 +71,24 @@ class StockOrdersViewModel @Inject constructor(
             }
         }
     }
+
+    fun getMissingItems() {
+        viewModelScope.launch {
+            stockRepository.getItems(false)
+                .map {
+                    it.filter { stockItem -> stockItem.quantity == 0 }
+                    it.map { stockItem ->
+                        Stock(
+                            id = stockItem.id,
+                            name = stockItem.name,
+                            photo = stockItem.photo,
+                            purchasePrice = stockItem.purchasePrice,
+                            quantity = stockItem.quantity
+                        )
+                    }
+                }.collect {
+                    _stockList.value = it
+                }
+        }
+    }
 }
