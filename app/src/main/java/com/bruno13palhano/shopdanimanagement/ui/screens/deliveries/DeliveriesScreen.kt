@@ -130,7 +130,7 @@ fun DeliveriesContent(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     title = delivery.title,
                     subtitle = delivery.subtitle,
-                    description = delivery.description,
+                    description = stringResource(id = R.string.deliver_to_tag, delivery.description),
                     onClick = { onItemClick(delivery.id) }
                 )
             }
