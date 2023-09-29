@@ -25,7 +25,17 @@ fun StockOrdersScreen(
         viewModel.getItems(isOrderedByCustomer)
     }
 
-    val menuOptions = mutableListOf(stringResource(id = R.string.all_products_label))
+    val menuOptions =
+        if (!isOrderedByCustomer) {
+            mutableListOf(
+                stringResource(id = R.string.all_products_label),
+                stringResource(id = R.string.out_of_stock_label)
+            )
+        } else {
+            mutableListOf(
+                stringResource(id = R.string.all_products_label)
+            )
+        }
     val stockList by viewModel.stockList.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     menuOptions.addAll(categories)
@@ -38,10 +48,23 @@ fun StockOrdersScreen(
         onItemClick = onItemClick,
         onSearchClick = onSearchClick,
         onMenuItemClick = { index ->
-            if (index == 0) {
-                viewModel.getItems(isOrderedByCustomer)
+            if (!isOrderedByCustomer) {
+                when (index) {
+                    0 -> {
+                        viewModel.getItems(false)
+                    }
+                    1 -> { viewModel.getOutOfStock() }
+                    else -> {
+                        viewModel.getItemsByCategories(menuOptions[index], false)
+                    }
+                }
             } else {
-                viewModel.getItemsByCategories(menuOptions[index], isOrderedByCustomer)
+                when (index) {
+                    0 -> {
+                        viewModel.getItems(true)
+                    }
+                    else -> { viewModel.getItemsByCategories(menuOptions[index], true) }
+                }
             }
         },
         onAddButtonClick = onAddButtonClick,
