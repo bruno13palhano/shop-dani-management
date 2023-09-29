@@ -6,6 +6,7 @@ import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
@@ -25,7 +26,7 @@ class CustomersDebitViewModel @Inject constructor(
                     photo = sale.photo,
                     title = sale.customerName,
                     subtitle = sale.salePrice.toString(),
-                    description = sale.dateOfPayment.toString()
+                    description = dateFormat.format(sale.dateOfPayment)
                 )
             }
         }
