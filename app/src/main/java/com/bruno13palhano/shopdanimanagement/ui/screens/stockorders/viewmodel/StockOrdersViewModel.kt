@@ -72,7 +72,7 @@ class StockOrdersViewModel @Inject constructor(
         }
     }
 
-    fun getMissingItems() {
+    fun getOutOfStock() {
         viewModelScope.launch {
             stockRepository.getItems(false)
                 .map {
