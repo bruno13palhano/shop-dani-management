@@ -88,8 +88,6 @@ class ProductListViewModel @Inject constructor(
         viewModelScope.launch {
             productRepository.getByCategory(category).collect {
                 _orders.value = it.map { product ->
-                    println(category)
-                    println(product)
                     CommonItem(
                         id = product.id,
                         photo = product.photo,
