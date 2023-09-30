@@ -37,6 +37,12 @@ SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categorie
 FROM product P INNER JOIN StockOrderTable S INNER JOIN ProductCategoriesTable PC
 ON(P.categoryId = PC.id AND P.id = S.productId) WHERE S.isPaid = 0 AND isOrderedByCustomer = 0;
 
+getOutOfStock:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isOrderedByCustomer, S.isPaid
+FROM product P INNER JOIN StockOrderTable S INNER JOIN ProductCategoriesTable PC
+ON(P.categoryId = PC.id AND P.id = S.productId) WHERE S.quantity = 0 AND isOrderedByCustomer = 0;
+
 getById:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer, S.isPaid
