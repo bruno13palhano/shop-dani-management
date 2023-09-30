@@ -60,14 +60,14 @@ class StockOrdersViewModel @Inject constructor(
         viewModelScope.launch {
             stockRepository.getByCategory(category, isOrderedByCustomer).collect {
                 _stockList.value = it.map { stockOrder ->
-                        Stock(
-                            id = stockOrder.id,
-                            name = stockOrder.name,
-                            photo = stockOrder.photo,
-                            purchasePrice = stockOrder.purchasePrice,
-                            quantity = stockOrder.quantity
-                        )
-                    }
+                    Stock(
+                        id = stockOrder.id,
+                        name = stockOrder.name,
+                        photo = stockOrder.photo,
+                        purchasePrice = stockOrder.purchasePrice,
+                        quantity = stockOrder.quantity
+                    )
+                }
             }
         }
     }
