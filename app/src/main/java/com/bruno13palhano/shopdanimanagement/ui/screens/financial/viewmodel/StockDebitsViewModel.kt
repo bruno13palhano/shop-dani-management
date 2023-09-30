@@ -16,18 +16,17 @@ import javax.inject.Inject
 class StockDebitsViewModel @Inject constructor(
     @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
 ) : ViewModel() {
-    val debitItems = stockRepository.getItems(false)
+    val debitItems = stockRepository.getDebitStock()
         .map {
-            it.filter { stockItem -> !stockItem.isPaid }
-                .map { stockItem ->
-                    Stock(
-                        id = stockItem.id,
-                        name = stockItem.name,
-                        photo = stockItem.photo,
-                        purchasePrice = stockItem.purchasePrice,
-                        quantity = stockItem.quantity
-                    )
-                }
+            it.map { stockItem ->
+                Stock(
+                    id = stockItem.id,
+                    name = stockItem.name,
+                    photo = stockItem.photo,
+                    purchasePrice = stockItem.purchasePrice,
+                    quantity = stockItem.quantity
+                )
+            }
         }
         .stateIn(
             scope = viewModelScope,
