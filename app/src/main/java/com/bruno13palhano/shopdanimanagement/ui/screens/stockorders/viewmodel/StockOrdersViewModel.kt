@@ -42,17 +42,16 @@ class StockOrdersViewModel @Inject constructor(
 
     fun getItems(isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
-            stockRepository.getItems(isOrderedByCustomer).collect {
-                _stockList.value = it.filter { stockOrder -> stockOrder.quantity > 0 }
-                    .map { stockOrder ->
-                        Stock(
-                            id = stockOrder.id,
-                            name = stockOrder.name,
-                            photo = stockOrder.photo,
-                            purchasePrice = stockOrder.purchasePrice,
-                            quantity = stockOrder.quantity
-                        )
-                    }
+            stockRepository.getStockOrderItems(isOrderedByCustomer).collect {
+                _stockList.value = it.map { stockOrder ->
+                    Stock(
+                        id = stockOrder.id,
+                        name = stockOrder.name,
+                        photo = stockOrder.photo,
+                        purchasePrice = stockOrder.purchasePrice,
+                        quantity = stockOrder.quantity
+                    )
+                }
             }
         }
     }
