@@ -55,6 +55,10 @@ internal class StockOrderRepository @Inject constructor(
         return stockOrderData.getAll()
     }
 
+    override fun getDebitStock(): Flow<List<StockOrder>> {
+        return stockOrderData.getDebitStock()
+    }
+
     override fun getById(id: Long): Flow<StockOrder> {
         return stockOrderData.getById(id = id)
     }

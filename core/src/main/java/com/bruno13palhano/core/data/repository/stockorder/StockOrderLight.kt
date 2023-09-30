@@ -104,6 +104,11 @@ class StockOrderLight @Inject constructor(
             .asFlow().mapToList(ioDispatcher)
     }
 
+    override fun getDebitStock(): Flow<List<StockOrder>> {
+        return stockOrderQueries.getDebitStock(mapper = ::mapStockOrder)
+            .asFlow().mapToList(ioDispatcher)
+    }
+
     override fun getById(id: Long): Flow<StockOrder> {
         return stockOrderQueries.getById(id = id, mapper = ::mapStockOrder)
             .asFlow().mapToOne(ioDispatcher)
