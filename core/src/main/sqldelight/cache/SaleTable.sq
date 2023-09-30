@@ -16,8 +16,8 @@ CREATE TABLE SaleTable (
 );
 
 insert:
-INSERT INTO SaleTable(productId, customerId, stockOrderId, quantity, purchasePrice, salePrice, dateOfSale,
-    dateOfPayment, isOrderedByCustomer, isPaidByCustomer, canceled)
+INSERT INTO SaleTable(productId, customerId, stockOrderId, quantity, purchasePrice, salePrice,
+    dateOfSale, dateOfPayment, isOrderedByCustomer, isPaidByCustomer, canceled)
 VALUES (?, ?,?,?,?,?,?,?,?,?, ?);
 
 update:
@@ -30,72 +30,72 @@ delete:
 DELETE FROM SaleTable WHERE id = ?;
 
 getAll:
-SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
-    S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
-    S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE S.canceled = 0;
 
 getById:
-SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
-    S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
-    S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE S.id = ?;
 
 getLast:
-SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
-    S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
-    S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE P.id = last_insert_rowid();
 
 getByCustomerId:
-SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
-    S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
-    S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE S.customerId = :customerId;
 
 getLastSales:
-SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
-    S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
-    S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 ORDER BY S.id DESC LIMIT :offset, :limit;
 
 getAllStockSales:
-SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
-    S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
-    S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE S.isOrderedByCustomer = 0 ORDER BY S.id DESC LIMIT :offset, :limit;
 
 getAllOrdersSales:
-SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
-    S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
-    S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE S.isOrderedByCustomer = 1 ORDER BY S.id DESC LIMIT :offset, :limit;
 
 getCanceledSales:
-SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity, S.purchasePrice,
-    S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale, S.dateOfPayment,
-    S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
@@ -103,6 +103,15 @@ WHERE S.canceled = 1 ORDER BY S.id DESC LIMIT :offset, :limit;
 
 setCanceledSale:
 UPDATE SaleTable SET canceled = 1 WHERE id = ?;
+
+getDebitSales:
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
+WHERE S.isPaidByCustomer = 0 AND S.canceled = 0;
 
 getLastId:
 SELECT last_insert_rowid();
