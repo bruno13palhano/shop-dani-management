@@ -11,6 +11,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CustomersDebit
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialInfoScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.ShoppingItemsScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 
 private const val ITEM_ID = "item_Id"
@@ -54,6 +55,13 @@ fun NavGraphBuilder.financialNavGraph(
                 navigateUp = { navController.navigateUp() }
             )
         }
+        composable(route = FinancialDestinations.FINANCIAL_STOCK_DEBITS_ROUTE) {
+            showBottomMenu(false)
+            StockDebitsScreen(
+                onItemClick = {  },
+                navigateUp = { navController.navigateUp() }
+            )
+        }
         composable(route = FinancialDestinations.FINANCIAL_CUSTOMERS_DEBITS_ROUTE) {
             showBottomMenu(false)
             CustomersDebitScreen(
@@ -86,6 +94,7 @@ object FinancialDestinations {
     const val FINANCIAL_SHOPPING_ITEMS = "financial_shopping_items_route"
     const val FINANCIAL_INFO_ROUTE = "financial_info_route"
     const val FINANCIAL_CUSTOMERS_DEBITS_ROUTE = "financial_customers_debit_route"
+    const val FINANCIAL_STOCK_DEBITS_ROUTE = "financial_stock_debits_route"
     const val FINANCIAL_SALE_ITEM_ROUTE = "financial_sale_item_route"
     const val FINANCIAL_SALE_ITEM_WITH_ID_ROUTE = "$FINANCIAL_SALE_ITEM_ROUTE{$ITEM_ID}"
 }
