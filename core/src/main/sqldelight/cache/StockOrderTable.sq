@@ -61,6 +61,13 @@ SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categorie
 FROM product P INNER JOIN StockOrderTable S INNER JOIN ProductCategoriesTable PC
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.isOrderedByCustomer = :isOrderedByCustomer);
 
+getStockOrderItems:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isOrderedByCustomer, S.isPaid
+FROM product P INNER JOIN StockOrderTable S INNER JOIN ProductCategoriesTable PC
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.isOrderedByCustomer = :isOrderedByCustomer)
+WHERE S.quantity > 0;
+
 search:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer, S.isPaid
