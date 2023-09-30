@@ -17,8 +17,7 @@ import javax.inject.Inject
 class CustomersDebitViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleData<Sale>
 ) : ViewModel() {
-    val debits = saleRepository.getAll()
-        .map { it.filter { sale -> !sale.isPaidByCustomer } }
+    val debits = saleRepository.getDebitSales()
         .map {
             it.map { sale ->
                 CommonItem(
