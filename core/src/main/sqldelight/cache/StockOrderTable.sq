@@ -81,7 +81,7 @@ SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categorie
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer, S.isPaid
 FROM StockOrderTable S INNER JOIN product P INNER JOIN ProductCategoriesTable PC
 ON(PC.categories LIKE '%' || :category || '%') WHERE S.productId = P.id AND PC.id = P.categoryId
-    AND S.isOrderedByCustomer = :isOrderedByCustomer;
+    AND S.isOrderedByCustomer = :isOrderedByCustomer AND S.quantity > 0;
 
 getStockQuantity:
 SELECT quantity FROM StockOrderTable WHERE id = ?;
