@@ -10,4 +10,5 @@ interface StockOrderData<T> : DataOperations<T> {
     fun getByCategory(category: String, isOrderedByCustomer: Boolean): Flow<List<T>>
     suspend fun updateStockOrderQuantity(id: Long, quantity: Int)
     fun getDebitStock(): Flow<List<T>>
+    fun getOutOfStock(): Flow<List<T>>
 }
