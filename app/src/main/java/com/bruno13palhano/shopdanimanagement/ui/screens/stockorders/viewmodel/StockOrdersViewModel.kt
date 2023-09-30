@@ -76,8 +76,8 @@ class StockOrdersViewModel @Inject constructor(
 
     fun getOutOfStock() {
         viewModelScope.launch {
-            stockRepository.getItems(false).collect {
-                _stockList.value = it.filter { stockItem -> stockItem.quantity == 0 }.map { stockItem ->
+            stockRepository.getOutOfStock().collect {
+                _stockList.value = it.map { stockItem ->
                     Stock(
                         id = stockItem.id,
                         name = stockItem.name,
