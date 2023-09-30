@@ -43,15 +43,16 @@ class StockOrdersViewModel @Inject constructor(
     fun getItems(isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
             stockRepository.getItems(isOrderedByCustomer).collect {
-                _stockList.value = it.map { stockOrder ->
-                    Stock(
-                        id = stockOrder.id,
-                        name = stockOrder.name,
-                        photo = stockOrder.photo,
-                        purchasePrice = stockOrder.purchasePrice,
-                        quantity = stockOrder.quantity
-                    )
-                }
+                _stockList.value = it.filter { stockOrder -> stockOrder.quantity > 0 }
+                    .map { stockOrder ->
+                        Stock(
+                            id = stockOrder.id,
+                            name = stockOrder.name,
+                            photo = stockOrder.photo,
+                            purchasePrice = stockOrder.purchasePrice,
+                            quantity = stockOrder.quantity
+                        )
+                    }
             }
         }
     }
@@ -59,36 +60,33 @@ class StockOrdersViewModel @Inject constructor(
     fun getItemsByCategories(category: String, isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
             stockRepository.getByCategory(category, isOrderedByCustomer).collect {
-                _stockList.value = it.map { stockOrder ->
-                    Stock(
-                        id = stockOrder.id,
-                        name = stockOrder.name,
-                        photo = stockOrder.photo,
-                        purchasePrice = stockOrder.purchasePrice,
-                        quantity = stockOrder.quantity
-                    )
-                }
+                _stockList.value = it.filter { stockOrder -> stockOrder.quantity > 0 }
+                    .map { stockOrder ->
+                        Stock(
+                            id = stockOrder.id,
+                            name = stockOrder.name,
+                            photo = stockOrder.photo,
+                            purchasePrice = stockOrder.purchasePrice,
+                            quantity = stockOrder.quantity
+                        )
+                    }
             }
         }
     }
 
     fun getOutOfStock() {
         viewModelScope.launch {
-            stockRepository.getItems(false)
-                .map {
-                    it.filter { stockItem -> stockItem.quantity == 0 }
-                    it.map { stockItem ->
-                        Stock(
-                            id = stockItem.id,
-                            name = stockItem.name,
-                            photo = stockItem.photo,
-                            purchasePrice = stockItem.purchasePrice,
-                            quantity = stockItem.quantity
-                        )
-                    }
-                }.collect {
-                    _stockList.value = it
+            stockRepository.getItems(false).collect {
+                _stockList.value = it.filter { stockItem -> stockItem.quantity == 0 }.map { stockItem ->
+                    Stock(
+                        id = stockItem.id,
+                        name = stockItem.name,
+                        photo = stockItem.photo,
+                        purchasePrice = stockItem.purchasePrice,
+                        quantity = stockItem.quantity
+                    )
                 }
+            }
         }
     }
 }
