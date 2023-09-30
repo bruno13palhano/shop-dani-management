@@ -210,6 +210,11 @@ internal class SaleLight @Inject constructor(
             .catch { it.printStackTrace() }
     }
 
+    override fun getDebitSales(): Flow<List<Sale>> {
+        return saleQueries.getDebitSales(mapper = ::mapSale)
+            .asFlow().mapToList(ioDispatcher)
+    }
+
     private fun mapSale(
         id: Long,
         productId: Long,

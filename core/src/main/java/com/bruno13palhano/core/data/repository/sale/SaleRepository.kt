@@ -78,4 +78,8 @@ internal class SaleRepository @Inject constructor(
     override fun getLast(): Flow<Sale> {
         return saleData.getLast()
     }
+
+    override fun getDebitSales(): Flow<List<Sale>> {
+        return saleData.getDebitSales()
+    }
 }
