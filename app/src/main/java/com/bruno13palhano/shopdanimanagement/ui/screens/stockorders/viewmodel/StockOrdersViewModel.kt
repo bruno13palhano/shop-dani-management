@@ -59,8 +59,7 @@ class StockOrdersViewModel @Inject constructor(
     fun getItemsByCategories(category: String, isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
             stockRepository.getByCategory(category, isOrderedByCustomer).collect {
-                _stockList.value = it.filter { stockOrder -> stockOrder.quantity > 0 }
-                    .map { stockOrder ->
+                _stockList.value = it.map { stockOrder ->
                         Stock(
                             id = stockOrder.id,
                             name = stockOrder.name,
