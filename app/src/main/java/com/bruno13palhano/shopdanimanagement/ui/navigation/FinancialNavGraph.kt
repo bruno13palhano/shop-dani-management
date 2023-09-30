@@ -13,6 +13,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialScree
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.ShoppingItemsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.ItemScreen
 
 private const val ITEM_ID = "item_Id"
 
@@ -58,7 +59,11 @@ fun NavGraphBuilder.financialNavGraph(
         composable(route = FinancialDestinations.FINANCIAL_STOCK_DEBITS_ROUTE) {
             showBottomMenu(false)
             StockDebitsScreen(
-                onItemClick = {  },
+                onItemClick = { stockItemId ->
+                    navController.navigate(
+                        route = "${FinancialDestinations.FINANCIAL_STOCK_ITEM_ROUTE}$stockItemId"
+                    )
+                },
                 navigateUp = { navController.navigateUp() }
             )
         }
@@ -86,6 +91,19 @@ fun NavGraphBuilder.financialNavGraph(
                 )
             }
         }
+        composable(route = FinancialDestinations.FINANCIAL_STOCK_ITEM_WITH_ID_ROUTE) { backStackEntry ->
+            showBottomMenu(false)
+            backStackEntry.arguments?.getString(ITEM_ID)?.let { stockItemId ->
+                ItemScreen(
+                    isEditable = true,
+                    isOrderedByCustomer = false,
+                    productId = 0L,
+                    stockOrderItemId = stockItemId.toLong(),
+                    screenTitle = stringResource(id = R.string.edit_stock_item_label),
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
+        }
     }
 }
 
@@ -97,4 +115,6 @@ object FinancialDestinations {
     const val FINANCIAL_STOCK_DEBITS_ROUTE = "financial_stock_debits_route"
     const val FINANCIAL_SALE_ITEM_ROUTE = "financial_sale_item_route"
     const val FINANCIAL_SALE_ITEM_WITH_ID_ROUTE = "$FINANCIAL_SALE_ITEM_ROUTE{$ITEM_ID}"
+    const val FINANCIAL_STOCK_ITEM_ROUTE = "financial_stock_item_route"
+    const val FINANCIAL_STOCK_ITEM_WITH_ID_ROUTE = "$FINANCIAL_STOCK_ITEM_ROUTE{$ITEM_ID}"
 }
