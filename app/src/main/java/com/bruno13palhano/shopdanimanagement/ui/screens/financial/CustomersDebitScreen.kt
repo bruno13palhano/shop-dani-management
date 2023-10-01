@@ -1,6 +1,9 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.financial
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,7 +21,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CommonItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel.CustomersDebitViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
@@ -36,10 +46,27 @@ fun CustomersDebitScreen(
     navigateUp: () -> Unit,
     viewModel: CustomersDebitViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getAllDebits()
+    }
+
     val debits by viewModel.debits.collectAsStateWithLifecycle()
+    val menuItems = arrayOf(
+        stringResource(id = R.string.order_desc_label),
+        stringResource(id = R.string.order_asc_label)
+    )
+
     CustomersDebitContent(
         debits = debits,
+        menuItems = menuItems,
         onItemClick = onItemClick,
+        onMoreOptionsItemClick = { index ->
+            when (index) {
+                0 -> { viewModel.getDebitByCustomerNameDesc() }
+                1 -> { viewModel.getDebitByCustomerNameAsc() }
+                else -> { viewModel.getAllDebits() }
+            }
+        },
         navigateUp = navigateUp
     )
 }
@@ -48,9 +75,13 @@ fun CustomersDebitScreen(
 @Composable
 fun CustomersDebitContent(
     debits: List<CommonItem>,
+    menuItems: Array<String>,
     onItemClick: (id: Long) -> Unit,
+    onMoreOptionsItemClick: (index: Int) -> Unit,
     navigateUp: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -61,6 +92,28 @@ fun CustomersDebitContent(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.up_button_label)
                         )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { expanded = true }) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = stringResource(id = R.string.drawer_menu_label)
+                            )
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                MoreOptionsMenu(
+                                    items = menuItems,
+                                    expanded = expanded,
+                                    onDismissRequest = { expandedValue -> expanded = expandedValue },
+                                    onClick = onMoreOptionsItemClick
+                                )
+                            }
+                        }
                     }
                 }
             )
@@ -94,7 +147,9 @@ fun CustomersDebitDynamicPreview() {
         ) {
             CustomersDebitContent(
                 debits = debits,
+                menuItems = arrayOf(),
                 onItemClick = {},
+                onMoreOptionsItemClick = {},
                 navigateUp = {}
             )
         }
@@ -114,7 +169,9 @@ fun CustomersDebitPreview() {
         ) {
             CustomersDebitContent(
                 debits = debits,
+                menuItems = arrayOf(),
                 onItemClick = {},
+                onMoreOptionsItemClick = {},
                 navigateUp = {}
             )
         }
