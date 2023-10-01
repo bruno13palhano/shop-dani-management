@@ -3,7 +3,7 @@ CREATE TABLE product (
     name TEXT NOT NULL,
     code TEXT NOT NULL,
     description TEXT NOT NULL,
-    photo TEXT NOT NULL,
+    photo BLOB NOT NULL,
     date INTEGER NOT NULL,
     categoryId INTEGER NOT NULL,
     company TEXT NOT NULL,
