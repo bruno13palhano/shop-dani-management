@@ -2,24 +2,33 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.di.DeliveryRep
 import com.bruno13palhano.core.data.di.SaleRep
+import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class FinancialInfoViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleData<Sale>
+    @SaleRep private val saleRepository: SaleData<Sale>,
+    @DeliveryRep private val deliveryRepository: DeliveryData<Delivery>
 ) : ViewModel() {
-    val financial = saleRepository.getAll().map { sale ->
+    val financial = combine(
+        saleRepository.getAll(),
+        deliveryRepository.getAll()
+    ) { sale, deliveries ->
         var allSalesPurchasePrice = 0F
         var allSales = 0F
+        var allDeliveriesPrice = 0F
         var stockSales = 0F
         var ordersSales = 0F
 
@@ -34,11 +43,15 @@ class FinancialInfoViewModel @Inject constructor(
             }
         }
 
+        deliveries.map {
+            allDeliveriesPrice += it.deliveryPrice
+        }
+
         FinancialInfo(
             allSales = allSales,
             stockSales = stockSales,
             ordersSales = ordersSales,
-            profit = allSales - allSalesPurchasePrice,
+            profit = allSales - (allSalesPurchasePrice + allDeliveriesPrice),
         )
     }
         .stateIn(
