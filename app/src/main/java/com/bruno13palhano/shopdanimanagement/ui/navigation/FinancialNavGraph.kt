@@ -10,7 +10,6 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CustomersDebitScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialInfoScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.financial.ShoppingItemsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.ItemScreen
@@ -42,12 +41,6 @@ fun NavGraphBuilder.financialNavGraph(
                         launchSingleTop = true
                     }
                 }
-            )
-        }
-        composable(route = FinancialDestinations.FINANCIAL_SHOPPING_ITEMS) {
-            showBottomMenu(false)
-            ShoppingItemsScreen(
-                navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = FinancialDestinations.FINANCIAL_INFO_ROUTE) {
@@ -109,7 +102,6 @@ fun NavGraphBuilder.financialNavGraph(
 
 object FinancialDestinations {
     const val FINANCIAL_MAIN_ROUTE = "financial_main_route"
-    const val FINANCIAL_SHOPPING_ITEMS = "financial_shopping_items_route"
     const val FINANCIAL_INFO_ROUTE = "financial_info_route"
     const val FINANCIAL_CUSTOMERS_DEBITS_ROUTE = "financial_customers_debit_route"
     const val FINANCIAL_STOCK_DEBITS_ROUTE = "financial_stock_debits_route"

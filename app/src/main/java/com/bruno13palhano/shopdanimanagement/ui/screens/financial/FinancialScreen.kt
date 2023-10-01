@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Payments
-import androidx.compose.material.icons.filled.Shop
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -64,7 +63,6 @@ fun FinancialContent(
         }
     ) {
         val items = listOf(
-            FinancialInnerScreen.ShoppingItems,
             FinancialInnerScreen.Info,
             FinancialInnerScreen.CustomersDebit,
             FinancialInnerScreen.StockDebits
@@ -87,7 +85,6 @@ fun FinancialContent(
 }
 
 sealed class FinancialInnerScreen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    object ShoppingItems: FinancialInnerScreen(FinancialDestinations.FINANCIAL_SHOPPING_ITEMS, Icons.Filled.Shop, R.string.shopping_items_label)
     object Info: FinancialInnerScreen(FinancialDestinations.FINANCIAL_INFO_ROUTE, Icons.Filled.Info, R.string.financial_info_label)
     object CustomersDebit: FinancialInnerScreen(FinancialDestinations.FINANCIAL_CUSTOMERS_DEBITS_ROUTE, Icons.Filled.Payments, R.string.customers_debit_label)
     object StockDebits: FinancialInnerScreen(FinancialDestinations.FINANCIAL_STOCK_DEBITS_ROUTE, Icons.Filled.Inventory, R.string.stock_debits_label)

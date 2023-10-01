@@ -36,10 +36,6 @@ fun NavGraphBuilder.homeNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu
         )
-        shoppingNavGraph(
-            navController = navController,
-            showBottomMenu = showBottomMenu
-        )
         deliveriesNAvGraph(
             navController = navController,
             showBottomMenu = showBottomMenu
@@ -50,7 +46,6 @@ fun NavGraphBuilder.homeNavGraph(
 object HomeDestinations {
     const val HOME_MAIN_ROUTE = "home_main_route"
     const val HOME_STOCK_ROUTE = "home_stock_route"
-    const val HOME_SHOPPING_ROUTE = "home_shopping_route"
     const val HOME_SALES_ROUTE = "home_sales_route"
     const val HOME_ORDERS_ROUTE = "home_orders_route"
     const val HOME_DELIVERIES_ROUTE = "home_deliveries_route"

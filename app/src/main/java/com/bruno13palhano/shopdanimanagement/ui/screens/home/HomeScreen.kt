@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PointOfSale
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -106,7 +105,6 @@ fun HomeContent(
             HomeInnerScreen.Sales,
             HomeInnerScreen.Stock,
             HomeInnerScreen.Orders,
-            HomeInnerScreen.Shopping,
             HomeInnerScreen.Shipping
         )
         val axisValuesFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
@@ -231,7 +229,6 @@ fun HomeContent(
 
 sealed class HomeInnerScreen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
     object Stock: HomeInnerScreen(HomeDestinations.HOME_STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
-    object Shopping: HomeInnerScreen(HomeDestinations.HOME_SHOPPING_ROUTE, Icons.Filled.ShoppingCart, R.string.shopping_label)
     object Sales: HomeInnerScreen(HomeDestinations.HOME_SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
     object Orders: HomeInnerScreen(HomeDestinations.HOME_ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
     object Shipping: HomeInnerScreen(HomeDestinations.HOME_DELIVERIES_ROUTE, Icons.Filled.LocalShipping, R.string.deliveries_label)

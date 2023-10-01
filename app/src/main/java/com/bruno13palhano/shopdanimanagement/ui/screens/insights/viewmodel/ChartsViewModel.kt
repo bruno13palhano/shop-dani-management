@@ -3,18 +3,14 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.SaleRep
-import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.composed.plus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -27,24 +23,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChartsViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleData<Sale>,
-    @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
+    @SaleRep private val saleRepository: SaleData<Sale>
 ) : ViewModel() {
     private var days = arrayOf(0)
     private val currentDay = LocalDate.now()
 
     private val _lastSalesEntry = MutableStateFlow(ChartEntryModelProducer())
     val lastSalesEntry = _lastSalesEntry
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = ChartEntryModelProducer()
-        )
-
-    private val _stockSales = saleRepository.getAllStockSales(0, 100)
-    private val _shopping = stockRepository.getItems(isOrderedByCustomer = false)
-    private val _chartEntry = MutableStateFlow(ChartEntryModelProducer())
-    val chartEntry = _chartEntry
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -85,33 +70,6 @@ class ChartsViewModel @Inject constructor(
                 }
                 .collect {
                     _allSales.value = it
-                }
-        }
-
-        viewModelScope.launch {
-            combine(_stockSales, _shopping) { stockSales, shopping ->
-                val stockSalesChart = mutableListOf<Pair<String, Float>>()
-                val shoppingChart = mutableListOf<Pair<String, Float>>()
-
-                days = Array(rangeOfDays) { 0 }
-                stockSales.map { setQuantity(days, it.dateOfSale, it.quantity) }
-                setChartEntries(stockSalesChart, days)
-
-                days = Array(rangeOfDays) { 0 }
-                shopping.map { setQuantity(days, it.date, it.quantity) }
-                setChartEntries(shoppingChart, days)
-
-                ChartEntryModelProducer(
-                    stockSalesChart.mapIndexed { index, (date, y) ->
-                        DateChartEntry(date, index.toFloat(), y)
-                    },
-                    shoppingChart.mapIndexed { index, (date, y) ->
-                        DateChartEntry(date, index.toFloat(), y)
-                    }
-                )
-            }
-                .collect {
-                    _chartEntry.value = it
                 }
         }
 

@@ -63,7 +63,6 @@ fun ChartsDynamicPreview() {
             ChartsContent(
                 bottomAxisTitle = "",
                 lastSalesEntry = ChartEntryModelProducer(),
-                shoppingVsSalesEntry = ChartEntryModelProducer(),
                 stockVsOrderEntry = ComposedChartEntryModelProducer(),
                 menuOptions = emptyArray(),
                 onMenuItemClick = {},
@@ -87,7 +86,6 @@ fun ChartsPreview() {
             ChartsContent(
                 bottomAxisTitle = "",
                 lastSalesEntry = ChartEntryModelProducer(),
-                shoppingVsSalesEntry = ChartEntryModelProducer(),
                 stockVsOrderEntry = ComposedChartEntryModelProducer(),
                 menuOptions = emptyArray(),
                 onMenuItemClick = {},

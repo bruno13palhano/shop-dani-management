@@ -75,7 +75,6 @@ fun ChartsScreen(
         viewModel.setItemsDaysRange(7)
     }
     val lastSalesEntry by viewModel.lastSalesEntry.collectAsStateWithLifecycle()
-    val shoppingVsSalesEntry by viewModel.chartEntry.collectAsStateWithLifecycle()
     val stockVsOrderEntry by viewModel.allSales.collectAsStateWithLifecycle()
 
     val menuOptions = arrayOf(
@@ -89,7 +88,6 @@ fun ChartsScreen(
     ChartsContent(
         bottomAxisTitle = chartTitle,
         lastSalesEntry = lastSalesEntry,
-        shoppingVsSalesEntry = shoppingVsSalesEntry,
         stockVsOrderEntry = stockVsOrderEntry,
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
@@ -119,7 +117,6 @@ fun ChartsScreen(
 fun ChartsContent(
     bottomAxisTitle: String,
     lastSalesEntry: ChartEntryModelProducer,
-    shoppingVsSalesEntry: ChartEntryModelProducer,
     stockVsOrderEntry: ComposedChartEntryModelProducer<ChartEntryModel>,
     menuOptions: Array<String>,
     onMenuItemClick: (index: Int) -> Unit,
@@ -209,65 +206,6 @@ fun ChartsContent(
                         title = stringResource(id = R.string.amount_of_sales_label)
                     ),
                     bottomAxis = if (lastSalesEntry.getModel().entries.isEmpty()) {
-                        bottomAxis()
-                    } else {
-                        bottomAxis(
-                            guideline = null,
-                            valueFormatter = axisValuesFormatter,
-                            titleComponent = textComponent(
-                                color = MaterialTheme.colorScheme.onBackground,
-                                background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
-                                padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                                margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
-                                typeface = Typeface.MONOSPACE
-                            ),
-                            title = bottomAxisTitle
-                        )
-                    },
-                    chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End)
-                )
-            }
-            ProvideChartStyle(
-                chartStyle = m3ChartStyle(
-                    entityColors = listOf(
-                        MaterialTheme.colorScheme.secondary,
-                        MaterialTheme.colorScheme.tertiary
-                    )
-                )
-            ) {
-                Chart(
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                        .fillMaxWidth()
-                        .height(280.dp),
-                    chart = lineChart(),
-                    runInitialAnimation = true,
-                    chartModelProducer = shoppingVsSalesEntry,
-                    marker = rememberMarker(),
-                    legend = rememberLegend(
-                        listOf(
-                            Pair(
-                                stringResource(id = R.string.sales_label),
-                                Color.toArgb(MaterialTheme.colorScheme.primary.value.toLong())
-                            ),
-                            Pair(
-                                stringResource(id = R.string.shopping_label),
-                                Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
-                            )
-                        )
-                    ),
-                    fadingEdges = rememberFadingEdges(),
-                    startAxis = startAxis(
-                        titleComponent = textComponent(
-                            color = MaterialTheme.colorScheme.onBackground,
-                            background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
-                            padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                            margins = dimensionsOf(end = 8.dp),
-                            typeface = Typeface.MONOSPACE
-                        ),
-                        title = stringResource(id = R.string.amount_of_items_sales_label)
-                    ),
-                    bottomAxis = if (shoppingVsSalesEntry.getModel().entries.isEmpty()) {
                         bottomAxis()
                     } else {
                         bottomAxis(
