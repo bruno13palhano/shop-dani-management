@@ -5,7 +5,6 @@
     <string name="insights_label">Insights</string>
     <string name="financial_label">Financial</string>
     <string name="stock_label">Stock</string>
-    <string name="shopping_label">Shopping</string>
     <string name="sales_label">Sales</string>
     <string name="orders_label">Orders</string>
     <string name="products_label">Products</string>
@@ -85,8 +84,6 @@
     <string name="is_ordered_by_customer_label">Is ordered by customer</string>
     <string name="new_stock_item_label">New Stock Item</string>
     <string name="new_order_item_label">New Order Item</string>
-    <string name="new_shopping_item_label">New Shopping Item</string>
-    <string name="edit_shopping_item_label">Edit Shopping Item</string>
     <string name="edit_stock_item_label">Edit Stock Item</string>
     <string name="edit_order_item_label">Edit Order Item</string>
     <string name="stock_list_label">Stock List</string>
@@ -126,7 +123,6 @@
     <string name="last_21_days_label">Last 21 days</string>
     <string name="last_31_days_label">Last 31 days</string>
     <string name="stock_vs_orders_label">Stock vs Orders</string>
-    <string name="shopping_vs_sales_label">Shopping vs Sales</string>
     <string name="company_sales_label">Sales by Company</string>
     <string name="avon_company_label">Avon</string>
     <string name="natura_company_label">Natura</string>
@@ -136,14 +132,12 @@
     <string name="amount_of_purchases_label">Amount of purchases</string>
     <string name="amount_of_money_label">Amount of money</string>
     <string name="stock_items_label">Stock Items</string>
-    <string name="shopping_items_label">Shopping Items</string>
     <string name="paid_label">Paid</string>
     <string name="owing_paid_label">Owing</string>
     <string name="profit_label">Profit</string>
     <string name="biggest_sale_label">Biggest sale</string>
     <string name="smallest_sale_label">Smallest sale</string>
     <string name="last_sale_label">Last sale</string>
-    <string name="last_shopping_label">Last shopping</string>
     <string name="out_of_stock_label">Out of stock</string>
     <string name="owing_tag">Owing, %sR$.</string>
     <string name="amount_of_all_purchases_tag">Amount of all purchases, %sR$.</string>
@@ -153,7 +147,6 @@
     <string name="orders_sales_tag">Orders sales, %.2fR$.</string>
     <string name="profit_tag">Profit, %.2fR$.</string>
     <string name="liquid_profit_tag">Liquid profit, %.2fR$.</string>
-    <string name="shopping_tag">Shopping, %.2fR$.</string>
     <string name="value_tag">R$ %.2f</string>
     <string name="product_price_tag">%s, R$ %.2f</string>
     <string name="total_sales_value_tag">Total sales value, R$ %.2f</string>

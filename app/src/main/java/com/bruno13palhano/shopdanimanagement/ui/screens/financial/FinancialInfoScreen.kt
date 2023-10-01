@@ -68,7 +68,6 @@ fun FinancialInfoScreen(
         stockSales = financialInfo.stockSales,
         ordersSales = financialInfo.ordersSales,
         profit = financialInfo.profit,
-        shopping = financialInfo.shopping,
         entry = entry,
         navigateUp = navigateUp
     )
@@ -81,7 +80,6 @@ fun FinancialInfoContent(
     stockSales: Float,
     ordersSales: Float,
     profit: Float,
-    shopping: Float,
     entry: ChartEntryModelProducer,
     navigateUp: () -> Unit
 ) {
@@ -136,12 +134,6 @@ fun FinancialInfoContent(
                         .fillMaxWidth(),
                     text = stringResource(id = R.string.profit_tag, profit)
                 )
-                Text(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                        .fillMaxWidth(),
-                    text = stringResource(id = R.string.shopping_tag, shopping)
-                )
             }
             val axisValuesFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
                 try {
@@ -156,8 +148,7 @@ fun FinancialInfoContent(
                         MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.secondary,
                         MaterialTheme.colorScheme.tertiary,
-                        MaterialTheme.colorScheme.outline,
-                        MaterialTheme.colorScheme.error
+                        MaterialTheme.colorScheme.outline
                     )
                 )
             ) {
@@ -194,10 +185,6 @@ fun FinancialInfoContent(
                             Pair(
                                 stringResource(id = R.string.profit_label),
                                 Color.toArgb(MaterialTheme.colorScheme.outline.value.toLong())
-                            ),
-                            Pair(
-                                stringResource(id = R.string.shopping_label),
-                                Color.toArgb(MaterialTheme.colorScheme.error.value.toLong())
                             )
                         )
                     ),

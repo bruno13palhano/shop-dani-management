@@ -26,7 +26,6 @@ fun FinancialInfoDynamicPreview() {
                 stockSales = 2543.44F,
                 ordersSales = 1456.55F,
                 profit = 3000.99F,
-                shopping = 1234.99F,
                 entry = ChartEntryModelProducer(),
                 navigateUp = {}
             )
@@ -50,7 +49,6 @@ fun FinancialInfoPreview() {
                 stockSales = 2543.44F,
                 ordersSales = 1456.55F,
                 profit = 3000.99F,
-                shopping = 1234.99F,
                 entry = ChartEntryModelProducer(),
                 navigateUp = {}
             )
