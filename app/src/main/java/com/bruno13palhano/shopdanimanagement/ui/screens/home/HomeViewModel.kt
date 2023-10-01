@@ -13,7 +13,6 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import java.time.Instant
@@ -29,10 +28,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val currentDay = LocalDate.now()
 
-    val homeInfo = combine(
-        saleRepository.getAll(),
-        stockRepository.getItems(isOrderedByCustomer = true)
-    ) { sales, shopping ->
+    val homeInfo = saleRepository.getAll().map { sales ->
         var salesPrice = 0F
         var purchasePrice = 0F
         var biggestSale = Info()
@@ -40,7 +36,6 @@ class HomeViewModel @Inject constructor(
         var smallestSale = Info()
         var smallestSaleValue = Float.MAX_VALUE
         var lastSale = Info()
-        var lastShopping = Info()
 
         sales.map { sale ->
             salesPrice += sale.salePrice
@@ -75,25 +70,13 @@ class HomeViewModel @Inject constructor(
                     date = dateFormat.format(last.dateOfSale)
                 )
             }
-
-            if (shopping.lastIndex != -1) {
-                val last = shopping.last()
-                lastShopping = Info(
-                    value = (last.quantity * last.purchasePrice),
-                    customer = "",
-                    item = last.name,
-                    quantity = last.quantity,
-                    date = dateFormat.format(last.date)
-                )
-            }
         }
         HomeInfo(
             sales = salesPrice,
             profit = salesPrice - purchasePrice,
             biggestSale = biggestSale,
             smallestSale = smallestSale,
-            lastSale = lastSale,
-            lastShopping = lastShopping
+            lastSale = lastSale
         )
     }
         .stateIn(
@@ -142,8 +125,7 @@ class HomeViewModel @Inject constructor(
         val sales: Float = 0F,
         val biggestSale: Info = Info(),
         val smallestSale: Info = Info(),
-        val lastSale: Info = Info(),
-        val lastShopping: Info = Info()
+        val lastSale: Info = Info()
     )
 
     data class Info(

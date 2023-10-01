@@ -175,22 +175,6 @@ fun HomeContent(
                     )
                     HorizontalDivider()
                 }
-                InfoItemList(
-                    modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
-                    contentPadding = PaddingValues(vertical = 12.dp),
-                    title = stringResource(id = R.string.last_shopping_label),
-                    subtitle = stringResource(
-                        id = R.string.product_price_tag,
-                        homeInfo.lastShopping.item,
-                        homeInfo.lastShopping.value
-                    ),
-                    description = pluralStringResource(
-                        id = R.plurals.simple_description_label,
-                        count = homeInfo.lastShopping.quantity,
-                        homeInfo.lastShopping.quantity,
-                        homeInfo.lastShopping.date
-                    )
-                )
             }
 
             ElevatedCard(
