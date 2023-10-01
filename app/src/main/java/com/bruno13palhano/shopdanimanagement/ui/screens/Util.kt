@@ -10,11 +10,14 @@ import android.icu.text.DateFormat
 import android.icu.text.DecimalFormat
 import android.icu.text.SimpleDateFormat
 import android.icu.util.TimeZone
+import android.net.Uri
 import com.bruno13palhano.shopdanimanagement.ui.notifications.ExpiredProductsNotification
 import com.bruno13palhano.shopdanimanagement.ui.notifications.receivers.ExpiredProductsReceiver
+import okio.IOException
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Locale
+import kotlin.jvm.Throws
 
 private const val NOTIFICATION_ACTION_PREFIX = "com.bruno13palhano.shopdanimanagement"
 
@@ -84,4 +87,11 @@ fun setAlarmNotification(
     )
 
     alarmNotification.setAlarmManager(notifyPendingIntent = notifyPendingIntent, date = date)
+}
+
+@Throws(IOException::class)
+fun getBytes(context: Context, uri: Uri): ByteArray? {
+    return context.contentResolver.openInputStream(uri)?.use {
+        return it.buffered().readBytes()
+    }
 }

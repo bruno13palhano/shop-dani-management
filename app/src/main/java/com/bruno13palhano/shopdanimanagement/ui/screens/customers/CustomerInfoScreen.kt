@@ -102,7 +102,7 @@ fun CustomerInfoScreen(
 fun CustomerInfoContent(
     name: String,
     address: String,
-    photo: String,
+    photo: ByteArray,
     owingValue: String,
     purchasesValue: String,
     lastPurchaseValue: String,

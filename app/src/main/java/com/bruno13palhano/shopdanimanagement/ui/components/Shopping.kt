@@ -64,7 +64,7 @@ fun ShoppingContent(
     purchasePrice: String,
     quantity: String,
     isPaid: Boolean,
-    photo: String,
+    photo: ByteArray,
     date: String,
     onPurchasePriceChange: (purchasePrice: String) -> Unit,
     onQuantityChange: (quantity: String) -> Unit,

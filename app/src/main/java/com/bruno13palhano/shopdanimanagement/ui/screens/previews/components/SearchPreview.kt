@@ -55,12 +55,12 @@ fun SearchPreview() {
 }
 
 private val items = listOf(
-    Stock(id= 1L, name = "Product 1", photo = "", purchasePrice = 120.45F, quantity = 12),
-    Stock(id= 2L, name = "Product 2", photo = "", purchasePrice = 40.33F, quantity = 2),
-    Stock(id= 3L, name = "Product 3", photo = "", purchasePrice = 99.99F, quantity = 7),
-    Stock(id= 4L, name = "Product 4", photo = "", purchasePrice = 12.39F, quantity = 2),
-    Stock(id= 5L, name = "Product 5", photo = "", purchasePrice = 56.78F, quantity = 1),
-    Stock(id= 6L, name = "Product 6", photo = "", purchasePrice = 12.12F, quantity = 2),
+    Stock(id= 1L, name = "Product 1", photo = byteArrayOf(), purchasePrice = 120.45F, quantity = 12),
+    Stock(id= 2L, name = "Product 2", photo = byteArrayOf(), purchasePrice = 40.33F, quantity = 2),
+    Stock(id= 3L, name = "Product 3", photo = byteArrayOf(), purchasePrice = 99.99F, quantity = 7),
+    Stock(id= 4L, name = "Product 4", photo = byteArrayOf(), purchasePrice = 12.39F, quantity = 2),
+    Stock(id= 5L, name = "Product 5", photo = byteArrayOf(), purchasePrice = 56.78F, quantity = 1),
+    Stock(id= 6L, name = "Product 6", photo = byteArrayOf(), purchasePrice = 12.12F, quantity = 2),
 )
 private val searchCacheList = listOf(
     SearchCache(search = "perfume"),

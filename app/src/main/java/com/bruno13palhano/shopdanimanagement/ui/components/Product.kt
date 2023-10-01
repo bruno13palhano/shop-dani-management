@@ -69,7 +69,7 @@ fun ProductContent(
     name: String,
     code: String,
     description: String,
-    photo: String,
+    photo: ByteArray,
     date: String,
     category: String,
     company: String,

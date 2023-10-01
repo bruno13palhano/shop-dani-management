@@ -122,11 +122,11 @@ fun CustomersDebitPreview() {
 }
 
 private val debits = listOf(
-    CommonItem(id = 1L, photo = "", title = "Bruno", subtitle = "R$12.50", description = "Feb 4, 2023"),
-    CommonItem(id = 2L, photo = "", title = "Daniela", subtitle = "R$170.90", description = "Feb 7, 2023"),
-    CommonItem(id = 3L, photo = "", title = "Josué", subtitle = "R$165.99", description = "Feb 8, 2023"),
-    CommonItem(id = 4L, photo = "", title = "Helena", subtitle = "R$9.90", description = "Feb 11, 2023"),
-    CommonItem(id = 5L, photo = "", title = "Fernando", subtitle = "R$160.50", description = "Feb 12, 2023"),
-    CommonItem(id = 6L, photo = "", title = "Socorro", subtitle = "R$122.50", description = "Feb 14, 2023"),
-    CommonItem(id = 7L, photo = "", title = "Brenda", subtitle = "R$282.99", description = "Feb 14, 2023"),
+    CommonItem(id = 1L, photo = byteArrayOf(), title = "Bruno", subtitle = "R$12.50", description = "Feb 4, 2023"),
+    CommonItem(id = 2L, photo = byteArrayOf(), title = "Daniela", subtitle = "R$170.90", description = "Feb 7, 2023"),
+    CommonItem(id = 3L, photo = byteArrayOf(), title = "Josué", subtitle = "R$165.99", description = "Feb 8, 2023"),
+    CommonItem(id = 4L, photo = byteArrayOf(), title = "Helena", subtitle = "R$9.90", description = "Feb 11, 2023"),
+    CommonItem(id = 5L, photo = byteArrayOf(), title = "Fernando", subtitle = "R$160.50", description = "Feb 12, 2023"),
+    CommonItem(id = 6L, photo = byteArrayOf(), title = "Socorro", subtitle = "R$122.50", description = "Feb 14, 2023"),
+    CommonItem(id = 7L, photo = byteArrayOf(), title = "Brenda", subtitle = "R$282.99", description = "Feb 14, 2023"),
 )

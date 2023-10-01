@@ -1,6 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +40,7 @@ import com.bruno13palhano.shopdanimanagement.R
 fun StockItem(
     modifier: Modifier,
     name: String,
-    photo: String,
+    photo: ByteArray,
     price: Float,
     quantity: Int,
     onClick: () -> Unit
@@ -73,7 +72,7 @@ fun StockItem(
                             .size(200.dp)
                             .padding(16.dp)
                             .clip(RoundedCornerShape(5)),
-                        painter = rememberAsyncImagePainter(model = Uri.parse(photo)),
+                        painter = rememberAsyncImagePainter(model = photo),
                         contentDescription = stringResource(id = R.string.product_image_label),
                         contentScale = ContentScale.Crop
                     )
@@ -205,7 +204,7 @@ fun CommonItemList(
 fun CommonPhotoItemList(
     title: String,
     subtitle: String,
-    photo: String,
+    photo: ByteArray,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
@@ -264,7 +263,7 @@ fun HorizontalItemList(
     title: String,
     subtitle: String,
     description: String,
-    photo: String,
+    photo: ByteArray,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {

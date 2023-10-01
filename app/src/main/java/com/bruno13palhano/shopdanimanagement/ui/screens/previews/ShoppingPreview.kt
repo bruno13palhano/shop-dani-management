@@ -52,13 +52,13 @@ fun ShoppingPreview() {
 }
 
 private val shoppingList = listOf(
-    CommonItem(id = 1L, photo = "", title = "Essencial", subtitle = "10", description = "Feb 4, 2023"),
-    CommonItem(id = 2L, photo = "", title = "Homem", subtitle = "10", description = "Feb 7, 2023"),
-    CommonItem(id = 3L, photo = "", title = "Luna", subtitle = "10", description = "Feb 9, 2023"),
-    CommonItem(id = 4L, photo = "", title = "Una", subtitle = "10", description = "Feb 9, 2023"),
-    CommonItem(id = 5L, photo = "", title = "Kaiak", subtitle = "10", description = "Feb 10, 2023"),
-    CommonItem(id = 6L, photo = "", title = "Essencial", subtitle = "10", description = "Feb 12, 2023"),
-    CommonItem(id = 7L, photo = "", title = "Homem", subtitle = "10", description = "Feb 12, 2023"),
-    CommonItem(id = 8L, photo = "", title = "Kaiak", subtitle = "10", description = "Feb 14, 2023"),
-    CommonItem(id = 10L, photo = "", title = "Essencial", subtitle = "10", description = "Feb 12, 2023"),
+    CommonItem(id = 1L, photo = byteArrayOf(), title = "Essencial", subtitle = "10", description = "Feb 4, 2023"),
+    CommonItem(id = 2L, photo = byteArrayOf(), title = "Homem", subtitle = "10", description = "Feb 7, 2023"),
+    CommonItem(id = 3L, photo = byteArrayOf(), title = "Luna", subtitle = "10", description = "Feb 9, 2023"),
+    CommonItem(id = 4L, photo = byteArrayOf(), title = "Una", subtitle = "10", description = "Feb 9, 2023"),
+    CommonItem(id = 5L, photo = byteArrayOf(), title = "Kaiak", subtitle = "10", description = "Feb 10, 2023"),
+    CommonItem(id = 6L, photo = byteArrayOf(), title = "Essencial", subtitle = "10", description = "Feb 12, 2023"),
+    CommonItem(id = 7L, photo = byteArrayOf(), title = "Homem", subtitle = "10", description = "Feb 12, 2023"),
+    CommonItem(id = 8L, photo = byteArrayOf(), title = "Kaiak", subtitle = "10", description = "Feb 14, 2023"),
+    CommonItem(id = 10L, photo = byteArrayOf(), title = "Essencial", subtitle = "10", description = "Feb 12, 2023"),
 )

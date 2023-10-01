@@ -54,15 +54,15 @@ fun CustomerPreview() {
 }
 
 private val customerList = listOf(
-    CommonItem(1L, "", "Bruno", "Rua 15 de novembro", description = ""),
-    CommonItem(2L, "", "Brenda",  "13 de maio", description = ""),
-    CommonItem(3L, "", "Daniela", "Rua do serrote", description = ""),
-    CommonItem(4L, "", "Josué", "Rua 15 de novembro", description = ""),
-    CommonItem(5L, "", "Helena", "Rua 13 de maio", description = ""),
-    CommonItem(6L, "","Socorro","Rua do serrote", description = ""),
-    CommonItem(7L, "","Fernando","Rua do serrote", description = ""),
-    CommonItem(8L, "","Henrique","Carão", description = ""),
-    CommonItem(9L, "", "Bruno","Rua 15 de novembro", description = ""),
+    CommonItem(1L, byteArrayOf(), "Bruno", "Rua 15 de novembro", description = ""),
+    CommonItem(2L, byteArrayOf(), "Brenda",  "13 de maio", description = ""),
+    CommonItem(3L, byteArrayOf(), "Daniela", "Rua do serrote", description = ""),
+    CommonItem(4L, byteArrayOf(), "Josué", "Rua 15 de novembro", description = ""),
+    CommonItem(5L, byteArrayOf(), "Helena", "Rua 13 de maio", description = ""),
+    CommonItem(6L, byteArrayOf(),"Socorro","Rua do serrote", description = ""),
+    CommonItem(7L, byteArrayOf(),"Fernando","Rua do serrote", description = ""),
+    CommonItem(8L, byteArrayOf(),"Henrique","Carão", description = ""),
+    CommonItem(9L, byteArrayOf(), "Bruno","Rua 15 de novembro", description = ""),
 )
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -77,7 +77,7 @@ fun CustomerInfoDynamicPreview() {
             CustomerInfoContent(
                 name = "",
                 address = "",
-                photo = "",
+                photo = byteArrayOf(),
                 owingValue = "120.99",
                 purchasesValue = "1590.99",
                 lastPurchaseValue = "77.99",
@@ -104,7 +104,7 @@ fun CustomerInfoPreview() {
             CustomerInfoContent(
                 name = "",
                 address = "",
-                photo = "",
+                photo = byteArrayOf(),
                 owingValue = "120.99",
                 purchasesValue = "1590.99",
                 lastPurchaseValue = "77.99",

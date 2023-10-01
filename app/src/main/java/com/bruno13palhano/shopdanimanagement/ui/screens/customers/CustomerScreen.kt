@@ -9,7 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -19,9 +18,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.CustomerViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CustomerScreen(
     screenTitle: String,
@@ -36,8 +35,9 @@ fun CustomerScreen(
         }
     }
 
+    val context = LocalContext.current
     val isCustomerNotEmpty by viewModel.isCustomerNotEmpty.collectAsStateWithLifecycle()
-    val contentResolver = LocalContext.current.contentResolver
+    val contentResolver = context.contentResolver
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let {
@@ -46,7 +46,9 @@ fun CustomerScreen(
                     Intent.FLAG_GRANT_READ_URI_PERMISSION or
                             Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 )
-                viewModel.updatePhoto(uri.toString())
+                getBytes(context, it)?.let { imageByteArray ->
+                    viewModel.updatePhoto(photo = imageByteArray)
+                }
             }
         }
     val focusManger = LocalFocusManager.current

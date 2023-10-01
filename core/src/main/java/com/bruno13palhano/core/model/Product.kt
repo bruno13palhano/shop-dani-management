@@ -18,7 +18,7 @@ data class Product(
     val name: String,
     val code: String,
     val description: String,
-    val photo: String,
+    val photo: ByteArray,
     val date: Long,
     val categories: List<Category>,
     val company: String

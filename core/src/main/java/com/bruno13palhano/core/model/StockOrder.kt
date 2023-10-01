@@ -4,7 +4,7 @@ data class StockOrder(
     val id: Long,
     val productId: Long,
     val name: String,
-    val photo: String,
+    val photo: ByteArray,
     val date: Long,
     val validity: Long,
     val quantity: Int,

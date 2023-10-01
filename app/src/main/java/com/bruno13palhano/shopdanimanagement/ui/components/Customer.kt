@@ -49,7 +49,7 @@ fun CustomerContent(
     screenTitle: String,
     snackbarHostState: SnackbarHostState,
     name: String,
-    photo: String,
+    photo: ByteArray,
     email: String,
     address: String,
     phoneNumber: String,

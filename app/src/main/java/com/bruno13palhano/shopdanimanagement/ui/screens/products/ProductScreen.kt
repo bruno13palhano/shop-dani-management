@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductContent
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductMenuItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
@@ -50,16 +51,19 @@ fun ProductScreen(
         viewModel.setCategoryChecked(categoryId)
     }
 
+    val context = LocalContext.current
     val isProductValid by viewModel.isProductValid.collectAsStateWithLifecycle()
 
     val takeFlags: Int = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
             Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-    val contentResolver = LocalContext.current.contentResolver
+    val contentResolver = context.contentResolver
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let {
                 contentResolver.takePersistableUriPermission(uri, takeFlags)
-                viewModel.updatePhoto(it.toString())
+                getBytes(context, it)?.let { imageByteArray ->
+                    viewModel.updatePhoto(photo = imageByteArray)
+                }
             }
         }
     val configuration = LocalConfiguration.current

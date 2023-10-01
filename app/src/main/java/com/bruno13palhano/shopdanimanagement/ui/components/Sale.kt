@@ -70,7 +70,7 @@ fun SaleContent(
     menuItems: Array<String>,
     productName: String,
     customerName: String,
-    photo: String,
+    photo: ByteArray,
     quantity: String,
     dateOfSale: String,
     dateOfPayment: String,

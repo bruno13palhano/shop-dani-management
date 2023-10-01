@@ -32,7 +32,7 @@ class CustomerInfoViewModel @Inject constructor(
     private val currentDay = LocalDate.now()
 
     private val _customerPurchases = MutableStateFlow(emptyList<Sale>())
-    private val _customer = MutableStateFlow(Customer(0L, "", "", "", "", ""))
+    private val _customer = MutableStateFlow(Customer(0L, "", byteArrayOf(), "", "", ""))
 
     val customerInfo = combine(_customerPurchases, _customer) { purchases, customer ->
         var owingValue = 0F
@@ -124,7 +124,7 @@ class CustomerInfoViewModel @Inject constructor(
     data class CustomerInfo(
         val name: String = "",
         val address: String = "",
-        val photo: String = "",
+        val photo: ByteArray = byteArrayOf(),
         val owingValue: String = "",
         val purchasesValue: String = "",
         val lastPurchaseValue: String = "",

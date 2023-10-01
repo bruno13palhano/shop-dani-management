@@ -40,7 +40,7 @@ class ProductViewModel @Inject constructor(
         private set
     var description by mutableStateOf("")
         private set
-    var photo by mutableStateOf("")
+    var photo by mutableStateOf(byteArrayOf())
         private set
     var dateInMillis by mutableLongStateOf(currentDate)
     var date: String by mutableStateOf(dateFormat.format(dateInMillis))
@@ -85,7 +85,7 @@ class ProductViewModel @Inject constructor(
         this.description = description
     }
 
-    fun updatePhoto(photo: String) {
+    fun updatePhoto(photo: ByteArray) {
         this.photo = photo
     }
 
@@ -201,6 +201,6 @@ class ProductViewModel @Inject constructor(
         categories = allCategories
             .filter { it.isChecked }
             .map { Category(id = it.id, name = it.category) },
-        company = company
+        company = company,
     )
 }

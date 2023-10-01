@@ -7,7 +7,7 @@ data class Sale(
     val customerId: Long,
     val name: String,
     val customerName: String,
-    val photo: String,
+    val photo: ByteArray,
     val quantity: Int,
     val purchasePrice: Float,
     val salePrice: Float,

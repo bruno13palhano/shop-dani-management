@@ -95,10 +95,10 @@ internal class ProductLight @Inject constructor(
         name: String,
         code: String,
         description: String,
-        photo: String,
+        photo: ByteArray,
         date: Long,
         categories: List<Category>,
-        company: String
+        company: String,
     ): Product {
         return Product(
             id = id,
@@ -108,7 +108,7 @@ internal class ProductLight @Inject constructor(
             photo = photo,
             date = date,
             categories = categories,
-            company = company
+            company = company,
         )
     }
 }

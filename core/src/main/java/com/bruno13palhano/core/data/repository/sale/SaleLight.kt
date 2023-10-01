@@ -222,7 +222,7 @@ internal class SaleLight @Inject constructor(
         stockOrderId: Long,
         name: String,
         customerName: String,
-        photo: String,
+        photo: ByteArray,
         quantity: Long,
         purchasePrice: Double,
         salePrice: Double,

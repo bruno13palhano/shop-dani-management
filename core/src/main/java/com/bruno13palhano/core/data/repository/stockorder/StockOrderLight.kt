@@ -137,7 +137,7 @@ class StockOrderLight @Inject constructor(
         id: Long,
         productId: Long,
         name: String,
-        photo: String,
+        photo: ByteArray,
         date: Long,
         validity: Long,
         quantity: Long,

@@ -66,7 +66,7 @@ fun ItemContent(
     snackbarHostState: SnackbarHostState,
     menuItems: Array<String>,
     name: String,
-    photo: String,
+    photo: ByteArray,
     quantity: String,
     date: String,
     purchasePrice: String,

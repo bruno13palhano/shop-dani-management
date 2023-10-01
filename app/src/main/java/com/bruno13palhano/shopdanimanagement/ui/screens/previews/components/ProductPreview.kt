@@ -34,7 +34,7 @@ fun ProductDynamicPreview() {
                 name = "",
                 code = "",
                 description = "",
-                photo = "",
+                photo = byteArrayOf(),
                 date = "",
                 category = "",
                 company = "",
@@ -75,7 +75,7 @@ fun ProductPreview() {
                 name = "",
                 code = "",
                 description = "",
-                photo = "",
+                photo = byteArrayOf(),
                 date = "",
                 category = "",
                 company = "",
@@ -114,7 +114,7 @@ fun ProductOrderedDynamicPreview() {
                 name = "",
                 code = "",
                 description = "",
-                photo = "",
+                photo = byteArrayOf(),
                 date = "",
                 category = "",
                 company = "",
@@ -155,7 +155,7 @@ fun ProductOrderedPreview() {
                 name = "",
                 code = "",
                 description = "",
-                photo = "",
+                photo = byteArrayOf(),
                 date = "",
                 category = "",
                 company = "",
@@ -235,12 +235,12 @@ private fun ProductListPreview() {
 }
 
 private val items = listOf(
-    CommonItem(id= 1L, title = "Essencial", photo = "", subtitle = "Natura", description = ""),
-    CommonItem(id= 2L, title = "Kaiak", photo = "", subtitle = "Natura", description = ""),
-    CommonItem(id= 3L, title = "Homem", photo = "", subtitle = "Natura", description = ""),
-    CommonItem(id= 4L, title = "Florata", photo = "", subtitle = "Avon", description = ""),
-    CommonItem(id= 5L, title = "Essential", photo = "", subtitle = "Avon", description = ""),
-    CommonItem(id= 6L, title = "Luna", photo = "", subtitle = "Natura", description = ""),
-    CommonItem(id= 7L, title = "Homem", photo = "", subtitle = "Natura", description = ""),
-    CommonItem(id= 8L, title = "Florata", photo = "", subtitle = "Avon", description = "")
+    CommonItem(id= 1L, title = "Essencial", photo = byteArrayOf(), subtitle = "Natura", description = ""),
+    CommonItem(id= 2L, title = "Kaiak", photo = byteArrayOf(), subtitle = "Natura", description = ""),
+    CommonItem(id= 3L, title = "Homem", photo = byteArrayOf(), subtitle = "Natura", description = ""),
+    CommonItem(id= 4L, title = "Florata", photo = byteArrayOf(), subtitle = "Avon", description = ""),
+    CommonItem(id= 5L, title = "Essential", photo = byteArrayOf(), subtitle = "Avon", description = ""),
+    CommonItem(id= 6L, title = "Luna", photo = byteArrayOf(), subtitle = "Natura", description = ""),
+    CommonItem(id= 7L, title = "Homem", photo = byteArrayOf(), subtitle = "Natura", description = ""),
+    CommonItem(id= 8L, title = "Florata", photo = byteArrayOf(), subtitle = "Avon", description = "")
 )

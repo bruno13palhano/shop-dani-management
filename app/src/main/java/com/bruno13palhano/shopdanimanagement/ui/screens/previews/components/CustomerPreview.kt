@@ -27,7 +27,7 @@ fun CustomerDynamicPreview() {
                 screenTitle = stringResource(id = R.string.new_customer_label),
                 snackbarHostState = remember { SnackbarHostState() },
                 name = "",
-                photo = "",
+                photo = byteArrayOf(),
                 email = "",
                 address = "",
                 phoneNumber = "",

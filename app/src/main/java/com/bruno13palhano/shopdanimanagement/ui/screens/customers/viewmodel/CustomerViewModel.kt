@@ -21,7 +21,7 @@ class CustomerViewModel @Inject constructor(
 ) : ViewModel() {
     var name by mutableStateOf("")
         private set
-    var photo by mutableStateOf("")
+    var photo by mutableStateOf(byteArrayOf())
         private set
     var email by mutableStateOf("")
         private set
@@ -43,7 +43,7 @@ class CustomerViewModel @Inject constructor(
         this.name = name
     }
 
-    fun updatePhoto(photo: String) {
+    fun updatePhoto(photo: ByteArray) {
         this.photo = photo
     }
 

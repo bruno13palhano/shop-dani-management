@@ -42,7 +42,7 @@ class ItemViewModel @Inject constructor(
     private var productId by mutableLongStateOf(0L)
     var name by mutableStateOf("")
         private set
-    var photo by mutableStateOf("")
+    var photo by mutableStateOf(byteArrayOf())
         private set
     var dateInMillis by mutableLongStateOf(0L)
         private set

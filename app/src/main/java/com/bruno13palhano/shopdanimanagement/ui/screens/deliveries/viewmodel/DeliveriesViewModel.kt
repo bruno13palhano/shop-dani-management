@@ -24,7 +24,7 @@ class DeliveriesViewModel @Inject constructor(
             it.map { delivery ->
                 CommonItem(
                     id = delivery.id,
-                    photo = "",
+                    photo = byteArrayOf(),
                     title = delivery.customerName,
                     subtitle = delivery.productName,
                     description = delivery.address

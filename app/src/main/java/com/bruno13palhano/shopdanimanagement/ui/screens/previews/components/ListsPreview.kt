@@ -32,7 +32,7 @@ private fun StockItemPreview() {
                 modifier = Modifier
                     .fillMaxSize(),
                 name = "Essencial",
-                photo = "",
+                photo = byteArrayOf(),
                 price = 178.99f,
                 quantity = 10,
                 onClick = {}
@@ -87,7 +87,7 @@ private fun PhotoItemPreview() {
             CommonPhotoItemList(
                 title = "Bruno",
                 subtitle = "Rua 15 de novembro",
-                photo = "",
+                photo = byteArrayOf(),
                 onClick = {}
             )
         }
@@ -106,7 +106,7 @@ private fun HorizontalItemListPreview() {
                 title = "Bruno",
                 subtitle = "Rua 15 de novembro",
                 description = "Test",
-                photo = "",
+                photo = byteArrayOf(),
                 onClick = {}
             )
         }

@@ -57,7 +57,7 @@ class SaleViewModel @Inject constructor(
         private set
     private var address by mutableStateOf("")
     private var phoneNumber by mutableStateOf("")
-    var photo by mutableStateOf("")
+    var photo by mutableStateOf(byteArrayOf())
         private set
     var quantity by mutableStateOf("")
         private set

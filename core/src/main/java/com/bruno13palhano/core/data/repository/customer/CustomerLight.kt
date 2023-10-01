@@ -64,7 +64,7 @@ internal class CustomerLight @Inject constructor(
     private fun mapCustomer(
         id: Long,
         name: String,
-        photo: String,
+        photo: ByteArray,
         email: String,
         address: String,
         phoneNumber: String

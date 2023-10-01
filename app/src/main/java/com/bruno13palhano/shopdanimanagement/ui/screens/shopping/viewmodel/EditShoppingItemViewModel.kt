@@ -33,7 +33,7 @@ class EditShoppingItemViewModel @Inject constructor(
 
     var name by mutableStateOf("")
         private set
-    var photo by mutableStateOf("")
+    var photo by mutableStateOf(byteArrayOf())
         private set
     var purchasePrice by mutableStateOf("")
         private set

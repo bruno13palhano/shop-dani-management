@@ -55,13 +55,13 @@ fun DeliveriesPreview() {
 }
 
 private val deliveries = listOf(
-    CommonItem(1L, "", "Bruno Barbosa", "Essencial", "Rua 15 de novembro"),
-    CommonItem(2L, "", "Josué Barbosa", "Essencial", "Rua 15 de novembro"),
-    CommonItem(3L, "", "Daniela Barbosa", "Homem", "Rua 15 de novembro"),
-    CommonItem(4L, "", "Brenda Barbosa", "Essencial", "Rua 15 de novembro"),
-    CommonItem(5L, "", "Helena Barbosa", "Una", "Rua 15 de novembro"),
-    CommonItem(6L, "", "Socorro Barbosa", "Luna", "Rua 15 de novembro"),
-    CommonItem(7L, "", "Fernando Barbosa", "Kaiak", "Rua 15 de novembro"),
+    CommonItem(1L, byteArrayOf(), "Bruno Barbosa", "Essencial", "Rua 15 de novembro"),
+    CommonItem(2L, byteArrayOf(), "Josué Barbosa", "Essencial", "Rua 15 de novembro"),
+    CommonItem(3L, byteArrayOf(), "Daniela Barbosa", "Homem", "Rua 15 de novembro"),
+    CommonItem(4L, byteArrayOf(), "Brenda Barbosa", "Essencial", "Rua 15 de novembro"),
+    CommonItem(5L, byteArrayOf(), "Helena Barbosa", "Una", "Rua 15 de novembro"),
+    CommonItem(6L, byteArrayOf(), "Socorro Barbosa", "Luna", "Rua 15 de novembro"),
+    CommonItem(7L, byteArrayOf(), "Fernando Barbosa", "Kaiak", "Rua 15 de novembro"),
  )
 
 @Preview(showBackground = true, showSystemUi = true)
