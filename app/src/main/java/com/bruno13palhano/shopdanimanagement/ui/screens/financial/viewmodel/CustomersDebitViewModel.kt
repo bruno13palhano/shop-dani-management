@@ -8,16 +8,19 @@ import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CustomersDebitViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleData<Sale>
+    @SaleRep private val saleRepository: SaleData<Sale>,
 ) : ViewModel() {
-    val debits = saleRepository.getDebitSales()
+    private val _debits = MutableStateFlow(emptyList<Sale>())
+    val debits = _debits
         .map {
             it.map { sale ->
                 CommonItem(
@@ -34,4 +37,28 @@ class CustomersDebitViewModel @Inject constructor(
             started = WhileSubscribed(5_000),
             initialValue = emptyList()
         )
+
+    fun getAllDebits() {
+        viewModelScope.launch {
+            saleRepository.getDebitSales().collect {
+                _debits.value = it
+            }
+        }
+    }
+
+    fun getDebitByCustomerNameDesc() {
+        viewModelScope.launch {
+            saleRepository.getDebitSalesByCustomerNameDesc().collect {
+                _debits.value = it
+            }
+        }
+    }
+
+    fun getDebitByCustomerNameAsc() {
+        viewModelScope.launch {
+            saleRepository.getDebitSalesByCustomerNameAsc().collect {
+                _debits.value = it
+            }
+        }
+    }
 }
