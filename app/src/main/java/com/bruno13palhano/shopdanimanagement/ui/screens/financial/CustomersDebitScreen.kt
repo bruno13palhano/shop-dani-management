@@ -47,7 +47,7 @@ fun CustomersDebitScreen(
     viewModel: CustomersDebitViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
-        viewModel.getAllDebits()
+        viewModel.getDebitByCustomerNameDesc()
     }
 
     val debits by viewModel.debits.collectAsStateWithLifecycle()
@@ -62,9 +62,8 @@ fun CustomersDebitScreen(
         onItemClick = onItemClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
-                0 -> { viewModel.getDebitByCustomerNameDesc() }
                 1 -> { viewModel.getDebitByCustomerNameAsc() }
-                else -> { viewModel.getAllDebits() }
+                else -> { viewModel.getDebitByCustomerNameDesc() }
             }
         },
         navigateUp = navigateUp

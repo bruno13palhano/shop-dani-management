@@ -38,14 +38,6 @@ class CustomersDebitViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun getAllDebits() {
-        viewModelScope.launch {
-            saleRepository.getDebitSales().collect {
-                _debits.value = it
-            }
-        }
-    }
-
     fun getDebitByCustomerNameDesc() {
         viewModelScope.launch {
             saleRepository.getDebitSalesByCustomerNameDesc().collect {
