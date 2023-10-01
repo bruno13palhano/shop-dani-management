@@ -71,6 +71,14 @@ internal class SaleRepository @Inject constructor(
         return saleData.getCanceledSales(offset = offset, limit = limit)
     }
 
+    override fun getDebitSalesByCustomerNameDesc(): Flow<List<Sale>> {
+        return saleData.getDebitSalesByCustomerNameDesc()
+    }
+
+    override fun getDebitSalesByCustomerNameAsc(): Flow<List<Sale>> {
+        return saleData.getDebitSalesByCustomerNameAsc()
+    }
+
     override fun getById(id: Long): Flow<Sale> {
         return saleData.getById(id = id)
     }
