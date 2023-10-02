@@ -50,7 +50,10 @@ class CustomersDebitViewModel @Inject constructor(
 
     fun getDebitByCustomerName(isOrderedAsc: Boolean) {
         viewModelScope.launch {
-            saleRepository.getDebitSalesByCustomerName(isOrderedAsc = isOrderedAsc).collect {
+            saleRepository.getSalesByCustomerName(
+                isPaidByCustomer = false,
+                isOrderedAsc = isOrderedAsc
+            ).collect {
                 _debits.value = it
             }
         }
@@ -58,7 +61,10 @@ class CustomersDebitViewModel @Inject constructor(
 
     fun getDebitBySalePrice(isOrderedAsc: Boolean) {
         viewModelScope.launch {
-            saleRepository.getDebitSalesBySalePrice(isOrderedAsc = isOrderedAsc).collect {
+            saleRepository.getSalesBySalePrice(
+                isPaidByCustomer = false,
+                isOrderedAsc = isOrderedAsc
+            ).collect {
                 _debits.value = it
             }
         }
