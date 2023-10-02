@@ -67,6 +67,14 @@ internal class StockOrderRepository @Inject constructor(
         return stockOrderData.getStockOrderItems(isOrderedByCustomer)
     }
 
+    override fun getDebitStockByPrice(isOrderedAsc: Boolean): Flow<List<StockOrder>> {
+        return stockOrderData.getDebitStockByPrice(isOrderedAsc = isOrderedAsc)
+    }
+
+    override fun getDebitStockByName(isOrderedAsc: Boolean): Flow<List<StockOrder>> {
+        return stockOrderData.getDebitStockByName(isOrderedAsc = isOrderedAsc)
+    }
+
     override fun getById(id: Long): Flow<StockOrder> {
         return stockOrderData.getById(id = id)
     }

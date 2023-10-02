@@ -121,6 +121,26 @@ class StockOrderLight @Inject constructor(
         ).asFlow().mapToList(ioDispatcher)
     }
 
+    override fun getDebitStockByPrice(isOrderedAsc: Boolean): Flow<List<StockOrder>> {
+        return if (isOrderedAsc) {
+            stockOrderQueries.getDebitStockByPriceAsc(mapper = ::mapStockOrder)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            stockOrderQueries.getDebitStockByPriceDesc(mapper = ::mapStockOrder)
+                .asFlow().mapToList(ioDispatcher)
+        }
+    }
+
+    override fun getDebitStockByName(isOrderedAsc: Boolean): Flow<List<StockOrder>> {
+        return if (isOrderedAsc) {
+            stockOrderQueries.getDebitStockByNameAsc(mapper = ::mapStockOrder)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            stockOrderQueries.getDebitStockByNameDesc(mapper = ::mapStockOrder)
+                .asFlow().mapToList(ioDispatcher)
+        }
+    }
+
     override fun getById(id: Long): Flow<StockOrder> {
         return stockOrderQueries.getById(id = id, mapper = ::mapStockOrder)
             .asFlow().mapToOne(ioDispatcher)
