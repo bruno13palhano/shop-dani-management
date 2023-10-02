@@ -92,7 +92,7 @@ INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE S.isOrderedByCustomer = 1 ORDER BY S.id DESC LIMIT :offset, :limit;
 
-getDebitSalesByCustomerNameDesc:
+getSalesByCustomerNameDesc:
 SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
     S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
     S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
@@ -101,7 +101,7 @@ INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE S.isPaidByCustomer = :isPaidByCustomer AND canceled = 0 ORDER BY C.name DESC;
 
-getDebitSalesByCustomerNameAsc:
+getSalesByCustomerNameAsc:
 SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
     S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
     S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
@@ -110,7 +110,7 @@ INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE isPaidByCustomer = :isPaidByCustomer AND canceled = 0 ORDER BY C.name ASC;
 
-getDebitSalesBySalePriceDesc:
+getSalesBySalePriceDesc:
 SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
     S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
     S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
@@ -119,7 +119,7 @@ INNER JOIN  CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE isPaidByCustomer = :isPaidByCustomer AND canceled = 0 ORDER BY S.salePrice DESC;
 
-getDebitSalesBySalePriceAsc:
+getSalesBySalePriceAsc:
 SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
     S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
     S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
