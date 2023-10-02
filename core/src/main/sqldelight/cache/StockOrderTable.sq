@@ -79,21 +79,21 @@ getDebitStockByPriceAsc:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer, S.isPaid
 FROM product P INNER JOIN StockOrderTable S INNER JOIN ProductCategoriesTable PC
-ON(P.categoryId = P.id AND P.id = S.productId AND S.isOrderedByCustomer = 0)
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.isOrderedByCustomer = 0)
 WHERE isPaid = 0 ORDER BY S.purchasePrice ASC;
 
 getDebitStockByNameDesc:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer, S.isPaid
 FROM product P INNER JOIN StockOrderTable S INNER JOIN ProductCategoriesTable PC
-ON(P.categoryId = P.id AND P.id = S.productId AND S.isOrderedByCustomer = 0)
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.isOrderedByCustomer = 0)
 WHERE isPaid = 0 ORDER BY P.name DESC;
 
 getDebitStockByNameAsc:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isOrderedByCustomer, S.isPaid
 FROM product P INNER JOIN StockOrderTable S INNER JOIN ProductCategoriesTable PC
-ON(P.categoryId = P.id AND P.id = S.productId AND S.isOrderedByCustomer = 0)
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.isOrderedByCustomer = 0)
 WHERE isPaid = 0 ORDER BY P.name ASC;
 
 search:
