@@ -51,7 +51,8 @@ fun SalesScreen(
     val saleList by viewModel.saleList.collectAsStateWithLifecycle()
     val menuItems = arrayOf(
         stringResource(id = R.string.ordered_by_name_label),
-        stringResource(id = R.string.ordered_by_price_label)
+        stringResource(id = R.string.ordered_by_price_label),
+        stringResource(id = R.string.ordered_by_last_label)
     )
 
     var orderedByName by remember { mutableStateOf(false) }
