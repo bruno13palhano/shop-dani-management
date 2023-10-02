@@ -12,4 +12,6 @@ interface StockOrderData<T> : DataOperations<T> {
     fun getStockOrderItems(isOrderedByCustomer: Boolean): Flow<List<T>>
     fun getDebitStock(): Flow<List<T>>
     fun getOutOfStock(): Flow<List<T>>
+    fun getDebitStockByPrice(isOrderedAsc: Boolean): Flow<List<T>>
+    fun getDebitStockByName(isOrderedAsc: Boolean): Flow<List<T>>
 }
