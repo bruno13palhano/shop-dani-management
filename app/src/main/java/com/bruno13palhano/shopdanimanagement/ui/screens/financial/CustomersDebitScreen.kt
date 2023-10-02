@@ -47,14 +47,17 @@ fun CustomersDebitScreen(
     viewModel: CustomersDebitViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
-        viewModel.getDebitByCustomerNameDesc()
+        viewModel.getDebits()
     }
 
     val debits by viewModel.debits.collectAsStateWithLifecycle()
     val menuItems = arrayOf(
-        stringResource(id = R.string.order_desc_label),
-        stringResource(id = R.string.order_asc_label)
+        stringResource(id = R.string.ordered_by_name_label),
+        stringResource(id = R.string.ordered_by_price_label)
     )
+
+    var orderedByName by remember { mutableStateOf(false) }
+    var orderedByPrice by remember { mutableStateOf(false) }
 
     CustomersDebitContent(
         debits = debits,
@@ -62,8 +65,15 @@ fun CustomersDebitScreen(
         onItemClick = onItemClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
-                1 -> { viewModel.getDebitByCustomerNameAsc() }
-                else -> { viewModel.getDebitByCustomerNameDesc() }
+                0 -> {
+                    viewModel.getDebitByCustomerName(orderedByName)
+                    orderedByName = !orderedByName
+                }
+                1 -> {
+                    viewModel.getDebitBySalePrice(orderedByPrice)
+                    orderedByPrice = !orderedByPrice
+                }
+                else -> { viewModel.getDebits() }
             }
         },
         navigateUp = navigateUp
