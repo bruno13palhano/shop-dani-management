@@ -198,14 +198,24 @@ internal class SaleLight @Inject constructor(
         ).asFlow().mapToList(ioDispatcher)
     }
 
-    override fun getDebitSalesByCustomerNameDesc(): Flow<List<Sale>> {
-        return saleQueries.getDebitSalesByCustomerNameDesc(mapper = ::mapSale)
-            .asFlow().mapToList(ioDispatcher)
+    override fun getDebitSalesByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return if (isOrderedAsc) {
+            saleQueries.getDebitSalesByCustomerNameAsc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            saleQueries.getDebitSalesByCustomerNameDesc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        }
     }
 
-    override fun getDebitSalesByCustomerNameAsc(): Flow<List<Sale>> {
-        return saleQueries.getDebitSalesByCustomerNameAsc(mapper = ::mapSale)
-            .asFlow().mapToList(ioDispatcher)
+    override fun getDebitSalesBySalePrice(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return if (isOrderedAsc) {
+            saleQueries.getDebitSalesBySalePriceAsc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            saleQueries.getDebitSalesBySalePriceDesc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        }
     }
 
     override fun getById(id: Long): Flow<Sale> {
