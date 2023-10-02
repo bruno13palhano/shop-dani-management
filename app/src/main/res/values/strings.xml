@@ -141,6 +141,8 @@
     <string name="out_of_stock_label">Out of stock</string>
     <string name="order_desc_label">Order desc</string>
     <string name="order_asc_label">Order asc</string>
+    <string name="ordered_by_name_label">Ordered by name</string>
+    <string name="ordered_by_price_label">Ordered by price</string>
     <string name="owing_tag">Owing, %sR$.</string>
     <string name="amount_of_all_purchases_tag">Amount of all purchases, %sR$.</string>
     <string name="last_purchase_tag">Last purchase, %sR$.</string>
