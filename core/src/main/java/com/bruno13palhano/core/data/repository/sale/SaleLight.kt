@@ -231,6 +231,26 @@ internal class SaleLight @Inject constructor(
         }
     }
 
+    override fun getAllSalesByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return if (isOrderedAsc) {
+            saleQueries.getAllSalesByCustomerNameAsc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            saleQueries.getAllSalesByCustomerNameDesc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        }
+    }
+
+    override fun getAllSalesBySalePrice(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return if (isOrderedAsc) {
+            saleQueries.getAllSalesBySalePriceAsc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            saleQueries.getAllSalesBySalePriceDesc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        }
+    }
+
     override fun getById(id: Long): Flow<Sale> {
         return saleQueries.getById(id = id, mapper = ::mapSale)
             .asFlow().mapToOne(ioDispatcher)

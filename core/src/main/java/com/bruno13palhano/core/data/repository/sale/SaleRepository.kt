@@ -91,6 +91,14 @@ internal class SaleRepository @Inject constructor(
         )
     }
 
+    override fun getAllSalesByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return saleData.getAllSalesByCustomerName(isOrderedAsc = isOrderedAsc)
+    }
+
+    override fun getAllSalesBySalePrice(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return saleData.getAllSalesBySalePrice(isOrderedAsc = isOrderedAsc)
+    }
+
     override fun getById(id: Long): Flow<Sale> {
         return saleData.getById(id = id)
     }
