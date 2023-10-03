@@ -7,16 +7,19 @@ import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CustomersViewModel @Inject constructor(
     @CustomerRep private val customersRepository: CustomerData<Customer>
 ): ViewModel() {
-    val customerList = customersRepository.getAll()
+    private val _customerList = MutableStateFlow(emptyList<Customer>())
+    val customerList = _customerList
         .map {
             it.map { customer ->
                 CommonItem(
@@ -33,4 +36,28 @@ class CustomersViewModel @Inject constructor(
             started = WhileSubscribed(5_000),
             initialValue = emptyList()
         )
+
+    fun getAllCustomers() {
+        viewModelScope.launch {
+            customersRepository.getAll().collect {
+                _customerList.value = it
+            }
+        }
+    }
+
+    fun getOrderedByName(isOrderedAsc: Boolean) {
+        viewModelScope.launch {
+            customersRepository.getOrderedByName(isOrderedAsc = isOrderedAsc).collect {
+                _customerList.value = it
+            }
+        }
+    }
+
+    fun getOrderedByAddress(isOrderedAsc: Boolean) {
+        viewModelScope.launch {
+            customersRepository.getOrderedByAddress(isOrderedAsc = isOrderedAsc).collect {
+                _customerList.value = it
+            }
+        }
+    }
 }
