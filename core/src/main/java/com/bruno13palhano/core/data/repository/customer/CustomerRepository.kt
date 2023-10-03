@@ -29,6 +29,14 @@ internal class CustomerRepository @Inject constructor(
         return customerData.getAll()
     }
 
+    override fun getOrderedByName(isOrderedAsc: Boolean): Flow<List<Customer>> {
+        return customerData.getOrderedByName(isOrderedAsc = isOrderedAsc)
+    }
+
+    override fun getOrderedByAddress(isOrderedAsc: Boolean): Flow<List<Customer>> {
+        return customerData.getOrderedByAddress(isOrderedAsc = isOrderedAsc)
+    }
+
     override fun getById(id: Long): Flow<Customer> {
         return customerData.getById(id = id)
     }

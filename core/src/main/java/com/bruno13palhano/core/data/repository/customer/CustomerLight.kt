@@ -51,6 +51,26 @@ internal class CustomerLight @Inject constructor(
             .asFlow().mapToList(ioDispatcher)
     }
 
+    override fun getOrderedByName(isOrderedAsc: Boolean): Flow<List<Customer>> {
+        return if (isOrderedAsc) {
+            customerQueries.getByNameAsc(mapper = ::mapCustomer)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            customerQueries.getByNameDesc(mapper = ::mapCustomer)
+                .asFlow().mapToList(ioDispatcher)
+        }
+    }
+
+    override fun getOrderedByAddress(isOrderedAsc: Boolean): Flow<List<Customer>> {
+        return if (isOrderedAsc) {
+            customerQueries.getByAddressAsc(mapper = ::mapCustomer)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            customerQueries.getByAddressDesc(mapper = ::mapCustomer)
+                .asFlow().mapToList(ioDispatcher)
+        }
+    }
+
     override fun getById(id: Long): Flow<Customer> {
         return customerQueries.getById(id, mapper = ::mapCustomer)
             .asFlow().mapToOne(ioDispatcher)
