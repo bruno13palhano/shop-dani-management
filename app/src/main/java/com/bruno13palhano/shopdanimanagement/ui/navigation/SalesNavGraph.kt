@@ -10,6 +10,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrdersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesOptionsScreen
 
@@ -83,9 +84,29 @@ fun NavGraphBuilder.salesNavGraph(
                 isEditable = false,
                 categoryId = 0L,
                 onItemClick = { productId ->
-                    navController.navigate(route = "${SalesDestinations.SALES_NEW_SALE_ORDERS_ROUTE}$productId")
+                    navController.navigate(
+                        route = "${SalesDestinations.SALES_NEW_SALE_ORDERS_ROUTE}$productId"
+                    )
+                },
+                onSearchClick = {
+                    navController.navigate(
+                        route = SalesDestinations.SALES_SEARCH_PRODUCT_ROUTE
+                    )
                 },
                 onAddButtonClick = {},
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+        composable(route = SalesDestinations.SALES_SEARCH_PRODUCT_ROUTE) {
+            showBottomMenu(true)
+            SearchProductScreen(
+                isEditable = false,
+                categoryId = 0L,
+                onItemClick = { productId ->
+                    navController.navigate(
+                        route = "${SalesDestinations.SALES_NEW_SALE_ORDERS_ROUTE}$productId"
+                    )
+                },
                 navigateUp = { navController.navigateUp() }
             )
         }
@@ -137,6 +158,7 @@ object SalesDestinations {
     const val SALES_STOCK_LIST_ROUTE = "sales_stock_list_route"
     const val SALES_SEARCH_STOCK_ROUTE = "sales_search_stock_route"
     const val SALES_PRODUCTS_LIST_ROUTE = "sales_products_list_route"
+    const val SALES_SEARCH_PRODUCT_ROUTE = "sales_search_product_route"
     const val SALES_NEW_SALE_ORDERS_ROUTE = "sales_new_sale_orders_route"
     const val SALES_NEW_SALE_ORDERS_WITH_ID_ROUTE = "$SALES_NEW_SALE_ORDERS_ROUTE{$ITEM_ID}"
     const val SALES_NEW_SALE_STOCK_ROUTE = "sales_new_sale_stock_route"
