@@ -29,6 +29,10 @@ internal class CustomerRepository @Inject constructor(
         return customerData.getAll()
     }
 
+    override fun search(search: String): Flow<List<Customer>> {
+        return customerData.search(search = search)
+    }
+
     override fun getOrderedByName(isOrderedAsc: Boolean): Flow<List<Customer>> {
         return customerData.getOrderedByName(isOrderedAsc = isOrderedAsc)
     }
