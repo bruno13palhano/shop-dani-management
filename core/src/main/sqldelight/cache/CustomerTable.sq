@@ -20,6 +20,18 @@ DELETE FROM CustomerTable WHERE id = ?;
 getAll:
 SELECT CustomerTable. * FROM CustomerTable;
 
+getByNameDesc:
+SELECT CustomerTable. * FROM CustomerTable ORDER BY name DESC;
+
+getByNameAsc:
+SELECT CustomerTable. * FROM CustomerTable ORDER BY name ASC;
+
+getByAddressDesc:
+SELECT CustomerTable. * FROM CustomerTable ORDER BY address DESC;
+
+getByAddressAsc:
+SELECT CustomerTable. * FROM CustomerTable ORDER BY address ASC;
+
 getById:
 SELECT CustomerTable. * FROM CustomerTable WHERE id = ?;
 
