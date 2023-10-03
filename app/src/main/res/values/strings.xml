@@ -94,6 +94,7 @@
     <string name="new_customer_label">New Customer</string>
     <string name="edit_customer_label">Edit Customer</string>
     <string name="customer_photo_label">Customer photo</string>
+    <string name="canceled_sales_label">Canceled Sales</string>
     <string name="delivery_label">Delivery</string>
     <string name="all_deliveries_label">All deliveries</string>
     <string name="not_delivered_label">Not delivered</string>
