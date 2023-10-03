@@ -18,6 +18,7 @@ fun ProductListScreen(
     isEditable: Boolean,
     categoryId: Long,
     onItemClick: (id: Long) -> Unit,
+    onSearchClick: () -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit,
     viewModel: ProductListViewModel = hiltViewModel()
@@ -51,6 +52,7 @@ fun ProductListScreen(
         onOkClick = { viewModel.updateCategory(categoryId) },
         onDismissRequest = { showCategoryDialog = false },
         onItemClick = onItemClick,
+        onSearchClick = onSearchClick,
         onEditItemClick = { showCategoryDialog = true },
         onMenuItemClick = { index ->
             if (index == 0) {
