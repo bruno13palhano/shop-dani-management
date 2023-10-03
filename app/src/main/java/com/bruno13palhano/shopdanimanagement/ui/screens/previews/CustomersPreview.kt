@@ -24,7 +24,10 @@ fun CustomerDynamicPreview() {
         ) {
             CustomersContent(
                 customerList = customerList,
+                menuItems = arrayOf(),
                 onItemClick = {},
+                onSearchClick = {},
+                onMoreOptionsItemClick = {},
                 onAddButtonClick = {},
                 onIconMenuClick = {}
             )
@@ -45,7 +48,10 @@ fun CustomerPreview() {
         ) {
             CustomersContent(
                 customerList = customerList,
+                menuItems = arrayOf(),
                 onItemClick = {},
+                onSearchClick = {},
+                onMoreOptionsItemClick = {},
                 onAddButtonClick = {},
                 onIconMenuClick = {}
             )
