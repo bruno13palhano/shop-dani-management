@@ -8,7 +8,7 @@ import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SearchCacheRep
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -30,8 +30,8 @@ class SearchProductsViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    private val _stockProducts = MutableStateFlow(emptyList<Stock>())
-    val stockProducts = _stockProducts.asStateFlow()
+    private val _products = MutableStateFlow(emptyList<CommonItem>())
+    val products = _products.asStateFlow()
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(),
@@ -42,13 +42,34 @@ class SearchProductsViewModel @Inject constructor(
         if (search.trim().isNotEmpty()) {
             viewModelScope.launch {
                 productRepository.search(search).collect {
-                    _stockProducts.value = it.map { product ->
-                        Stock(
+                    _products.value = it.map { product ->
+                        CommonItem(
                             id = product.id,
-                            name = product.name,
+                            title = product.name,
+                            subtitle = product.company,
+                            description = product.description,
                             photo = product.photo,
-                            purchasePrice = 0F,
-                            quantity = 0
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun searchPerCategory(search: String, categoryId: Long) {
+        if (search.trim().isNotEmpty()) {
+            viewModelScope.launch {
+                productRepository.searchPerCategory(
+                    value = search,
+                    categoryId = categoryId
+                ).collect {
+                    _products.value = it.map { product ->
+                        CommonItem(
+                            id = product.id,
+                            title = product.name,
+                            subtitle = product.company,
+                            description = product.description,
+                            photo = product.photo
                         )
                     }
                 }
