@@ -36,9 +36,17 @@ WHERE P.id = last_insert_rowid();
 
 search:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
-FROM product P INNER JOIN ProductCategoriesTable PC WHERE PC.categories LIKE '%' || :category || '%'
-    OR P.name LIKE '%' || :name || '%' OR P.description LIKE '%' || :description || '%'
-    OR P.company LIKE '%' || :company || '%';
+FROM product P INNER JOIN ProductCategoriesTable PC
+ON(PC.categories LIKE '%' || :category || '%' OR P.name LIKE '%' || :name || '%'
+    OR P.description LIKE '%' || :description || '%' OR P.company LIKE '%' || :company || '%')
+WHERE P.categoryId = PC.id;
+
+searchPerCategory:
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
+FROM product P INNER JOIN ProductCategoriesTable PC
+ON(P.name LIKE '%' || :name || '%' OR P.description LIKE '%' || :description || '%'
+    OR P.company LIKE '%' || :company || '%')
+WHERE P.categoryId = PC.id  AND P.categoryId = :categoryId;
 
 getByCategory:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
