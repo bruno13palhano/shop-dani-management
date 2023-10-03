@@ -11,6 +11,8 @@ interface ProductData<T> : DataOperations<T> {
      */
     fun search(value: String): Flow<List<T>>
 
+    fun searchPerCategory(value: String ,categoryId: Long): Flow<List<T>>
+
     /**
      * Gets products by category.
      * @param category the category name.

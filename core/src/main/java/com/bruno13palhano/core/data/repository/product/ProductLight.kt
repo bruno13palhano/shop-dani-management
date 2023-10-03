@@ -67,6 +67,16 @@ internal class ProductLight @Inject constructor(
         ).asFlow().mapToList(ioDispatcher)
     }
 
+    override fun searchPerCategory(value: String, categoryId: Long): Flow<List<Product>> {
+        return productQueries.searchPerCategory(
+            name = value,
+            description = value,
+            company = value,
+            categoryId = categoryId,
+            mapper = ::mapProduct
+        ).asFlow().mapToList(ioDispatcher)
+    }
+
     override fun getByCategory(category: String): Flow<List<Product>> {
         return productQueries.getByCategory(category = category, mapper = ::mapProduct)
             .asFlow().mapToList(ioDispatcher)

@@ -25,6 +25,10 @@ internal class ProductRepository @Inject constructor(
         return productData.search(value = value)
     }
 
+    override fun searchPerCategory(value: String, categoryId: Long): Flow<List<Product>> {
+        return productData.searchPerCategory(value = value, categoryId = categoryId)
+    }
+
     override fun getByCategory(category: String): Flow<List<Product>> {
         return productData.getByCategory(category = category)
     }
