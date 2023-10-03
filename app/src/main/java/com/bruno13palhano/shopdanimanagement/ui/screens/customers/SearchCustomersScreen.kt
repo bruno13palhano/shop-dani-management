@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,22 +24,41 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.SearchCustomersViewModel
 
 @Composable
 fun SearchCustomersScreen(
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,
+    viewModel: SearchCustomersViewModel = hiltViewModel()
 ) {
+    val customers by viewModel.customers.collectAsStateWithLifecycle()
+    val searchCacheList by viewModel.searchCache.collectAsStateWithLifecycle()
 
+    SearchCustomersContent(
+        customers = customers,
+        searchCacheList = searchCacheList,
+        onSearchClick = { search ->
+            viewModel.search(search = search)
+            viewModel.insertCache(search = search)
+        },
+        onItemClick = onItemClick,
+        navigateUp = navigateUp
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchCustomersContent(
     customers: List<CommonItem>,
+    searchCacheList: List<SearchCache>,
     onSearchClick: (search: String) -> Unit,
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit
@@ -53,7 +73,7 @@ fun SearchCustomersContent(
             onQueryChange = { searchValue -> search = searchValue },
             onSearch = { searchValue ->
                 active = false
-                onSearchClick(search)
+                onSearchClick(searchValue)
             },
             active = active,
             onActiveChange = { isActive -> active = isActive },
@@ -81,18 +101,38 @@ fun SearchCustomersContent(
             placeholder = { Text(text = stringResource(id = R.string.search_customers_label)) }
         ) {
             LazyColumn(
-                modifier = Modifier.padding(it),
-                contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
+                modifier = Modifier.fillMaxWidth(),
+                reverseLayout = true
             ) {
-                items(items = customers, key = { customer -> customer.id }) { customer ->
-                    HorizontalItemList(
-                        title = customer.title,
-                        subtitle = customer.subtitle,
-                        description = customer.description,
-                        photo = customer.photo,
-                        onClick = { onItemClick(customer.id) }
+                items(
+                    items = searchCacheList,
+                    key = { searchCache -> searchCache.search }
+                ) { searchCache ->
+                    SimpleItemList(
+                        modifier = Modifier.padding(1.dp),
+                        itemName = searchCache.search,
+                        imageVector = Icons.Filled.Close,
+                        onClick = {
+                            active = false
+                            onSearchClick(searchCache.search)
+                        }
                     )
                 }
+            }
+        }
+
+        LazyColumn(
+            modifier = Modifier.padding(it),
+            contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
+        ) {
+            items(items = customers, key = { customer -> customer.id }) { customer ->
+                HorizontalItemList(
+                    title = customer.title,
+                    subtitle = customer.subtitle,
+                    description = customer.description,
+                    photo = customer.photo,
+                    onClick = { onItemClick(customer.id) }
+                )
             }
         }
     }
