@@ -9,6 +9,7 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerInfoScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.customers.SearchCustomersScreen
 
 private const val ITEM_ID = "item_id"
 
@@ -25,12 +26,32 @@ fun NavGraphBuilder.customersNavGraph(
             showBottomMenu(true)
             CustomersScreen(
                 onItemClick = { customerId ->
-                    navController.navigate(route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_INFO_ROUTE}$customerId")
+                    navController.navigate(
+                        route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_INFO_ROUTE}$customerId"
+                    )
+                },
+                onSearchClick = {
+                    navController.navigate(
+                        route = CustomersDestinations.CUSTOMERS_SEARCH_ROUTE
+                    )
                 },
                 onAddButtonClick = {
-                    navController.navigate(route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE)
+                    navController.navigate(
+                        route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE
+                    )
                 },
                 onIconMenuClick = onIconMenuClick
+            )
+        }
+        composable(route = CustomersDestinations.CUSTOMERS_SEARCH_ROUTE) {
+            showBottomMenu(true)
+            SearchCustomersScreen(
+                onItemClick = { customerId ->
+                    navController.navigate(
+                        route = "${CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_ROUTE}$customerId"
+                    )
+                },
+                navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE) {
@@ -72,6 +93,7 @@ fun NavGraphBuilder.customersNavGraph(
 
 object CustomersDestinations {
     const val MAIN_CUSTOMERS_ROUTE = "customers_main_route"
+    const val CUSTOMERS_SEARCH_ROUTE = "customers_search_route"
     const val CUSTOMERS_NEW_CUSTOMER_ROUTE = "customers_new_customer_route"
     const val CUSTOMERS_CUSTOMER_INFO_ROUTE = "customers_customer_info_route"
     const val CUSTOMERS_CUSTOMER_INFO_WITH_ID_ROUTE = "$CUSTOMERS_CUSTOMER_INFO_ROUTE{$ITEM_ID}"
