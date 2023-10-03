@@ -17,7 +17,10 @@ interface SaleData<T> : DataOperations<T> {
     fun getLastSales(offset: Int, limit: Int): Flow<List<T>>
     fun getAllStockSales(offset: Int, limit: Int): Flow<List<T>>
     fun getAllOrdersSales(offset: Int, limit: Int): Flow<List<T>>
-    fun getCanceledSales(offset: Int, limit: Int): Flow<List<T>>
+    fun getAllCanceledSales(): Flow<List<T>>
+    fun getCanceledByName(isOrderedAsc: Boolean): Flow<List<T>>
+    fun getCanceledByCustomerName(isOrderedAsc: Boolean): Flow<List<T>>
+    fun getCanceledByPrice(isOrderedAsc: Boolean): Flow<List<T>>
     suspend fun cancelSale(saleId: Long)
     fun getDebitSales(): Flow<List<T>>
     fun getSalesByCustomerName(isPaidByCustomer: Boolean, isOrderedAsc: Boolean): Flow<List<T>>

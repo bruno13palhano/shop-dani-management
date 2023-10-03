@@ -190,12 +190,38 @@ internal class SaleLight @Inject constructor(
             .asFlow().mapToList(ioDispatcher)
     }
 
-    override fun getCanceledSales(offset: Int, limit: Int): Flow<List<Sale>> {
-        return saleQueries.getCanceledSales(
-            offset = offset.toLong(),
-            limit = limit.toLong(),
-            mapper = ::mapSale
-        ).asFlow().mapToList(ioDispatcher)
+    override fun getAllCanceledSales(): Flow<List<Sale>> {
+        return saleQueries.getAllCanceledSales(mapper = ::mapSale).asFlow().mapToList(ioDispatcher)
+    }
+
+    override fun getCanceledByName(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return if (isOrderedAsc) {
+            saleQueries.getCanceledByNameAsc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            saleQueries.getCanceledByNameDesc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        }
+    }
+
+    override fun getCanceledByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return if (isOrderedAsc) {
+            saleQueries.getCanceledByCustomerNameAsc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            saleQueries.getCanceledByCustomerNameDesc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        }
+    }
+
+    override fun getCanceledByPrice(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return if (isOrderedAsc) {
+            saleQueries.getCanceledByPriceAsc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            saleQueries.getCanceledByPriceDesc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        }
     }
 
     override fun getSalesByCustomerName(

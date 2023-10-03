@@ -67,8 +67,20 @@ internal class SaleRepository @Inject constructor(
         return saleData.getAll()
     }
 
-    override fun getCanceledSales(offset: Int, limit: Int): Flow<List<Sale>> {
-        return saleData.getCanceledSales(offset = offset, limit = limit)
+    override fun getAllCanceledSales(): Flow<List<Sale>> {
+        return saleData.getAllCanceledSales()
+    }
+
+    override fun getCanceledByName(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return saleData.getCanceledByName(isOrderedAsc = isOrderedAsc)
+    }
+
+    override fun getCanceledByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return saleData.getCanceledByCustomerName(isOrderedAsc = isOrderedAsc)
+    }
+
+    override fun getCanceledByPrice(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return saleData.getCanceledByPrice(isOrderedAsc = isOrderedAsc)
     }
 
     override fun getSalesByCustomerName(
