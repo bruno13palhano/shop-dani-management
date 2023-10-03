@@ -173,6 +173,69 @@ INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
 ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
 WHERE S.canceled = 1 ORDER BY S.id DESC LIMIT :offset, :limit;
 
+getAllCanceledSales:
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
+WHERE S.canceled = 1 ORDER BY S.id DESC;
+
+getCanceledByNameDesc:
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
+WHERE S.canceled = 1 ORDER BY P.name DESC;
+
+getCanceledByNameAsc:
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
+WHERE S.canceled = 1 ORDER BY P.name ASC;
+
+getCanceledByCustomerNameDesc:
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
+WHERE S.canceled = 1 ORDER BY C.name DESC;
+
+getCanceledByCustomerNameAsc:
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
+WHERE S.canceled = 1 ORDER BY C.name ASC;
+
+getCanceledByPriceDesc:
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
+WHERE S.canceled = 1 ORDER BY S.salePrice DESC;
+
+getCanceledByPriceAsc:
+SELECT S.id, S.productId, S.customerId, S.stockOrderId, P.name, C.name, P.photo, S.quantity,
+    S.purchasePrice, S.salePrice, D.deliveryPrice, PC.categories, P.company, S.dateOfSale,
+    S.dateOfPayment, S.isOrderedByCustomer, S.isPaidByCustomer, S.canceled
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C INNER JOIN DeliveryTable D
+ON(P.categoryId = PC.id AND P.id = S.productId AND S.customerId = C.id AND D.saleId = S.id)
+WHERE S.canceled = 1 ORDER BY S.salePrice ASC;
+
 setCanceledSale:
 UPDATE SaleTable SET canceled = 1 WHERE id = ?;
 
