@@ -20,6 +20,11 @@ DELETE FROM CustomerTable WHERE id = ?;
 getAll:
 SELECT CustomerTable. * FROM CustomerTable;
 
+search:
+SELECT CustomerTable. * FROM CustomerTable
+WHERE(name LIKE '%' || :name || '%' OR email LIKE '%' || :email || '%'
+    OR address LIKE '%' || :address || '%' OR phoneNumber LIKE '%' || :phoneNumber || '%');
+
 getByNameDesc:
 SELECT CustomerTable. * FROM CustomerTable ORDER BY name DESC;
 
