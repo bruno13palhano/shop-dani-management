@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -44,6 +45,7 @@ fun ProductListContent(
     onOkClick: () -> Unit,
     onDismissRequest: () -> Unit,
     onItemClick: (id: Long) -> Unit,
+    onSearchClick: () -> Unit,
     onEditItemClick: () -> Unit,
     onMenuItemClick: (index: Int) -> Unit,
     onAddButtonClick: () -> Unit,
@@ -64,6 +66,12 @@ fun ProductListContent(
                     }
                 },
                 actions = {
+                    IconButton(onClick = onSearchClick) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = stringResource(id = R.string.search_label)
+                        )
+                    }
                     if (isEditable) {
                         IconButton(onClick = onEditItemClick) {
                             Icon(
