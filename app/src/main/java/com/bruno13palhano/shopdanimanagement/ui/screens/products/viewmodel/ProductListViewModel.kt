@@ -71,7 +71,6 @@ class ProductListViewModel @Inject constructor(
         viewModelScope.launch {
             productRepository.getAll().collect {
                 _orders.value = it.map { product ->
-                    println(product)
                     CommonItem(
                         id = product.id,
                         photo = product.photo,
