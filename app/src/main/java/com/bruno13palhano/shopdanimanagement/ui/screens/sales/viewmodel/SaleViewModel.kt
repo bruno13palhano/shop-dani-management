@@ -8,25 +8,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.StockOrderData
-import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
-import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
-import com.bruno13palhano.shopdanimanagement.ui.components.CompanyCheck
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerCheck
 import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
@@ -41,16 +36,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaleViewModel @Inject constructor(
-    @CategoryRep private val categoryRepository: CategoryData<Category>,
     @SaleRep private val saleRepository: SaleData<Sale>,
     @StockOrderRep private val stockOrderRepository: StockOrderData<StockOrder>,
     @ProductRep private val productRepository: ProductData<Product>,
     @CustomerRep private val customerRepository: CustomerData<Customer>,
 ) : ViewModel() {
-    private val companiesCheck = listOf(
-        CompanyCheck(Company.AVON, true),
-        CompanyCheck(Company.NATURA, false)
-    )
     private var stockOrderId by mutableLongStateOf(0L)
     private var productId by mutableLongStateOf(0L)
     private var customerId by mutableLongStateOf(0L)
@@ -83,11 +73,8 @@ class SaleViewModel @Inject constructor(
         private set
     var category by mutableStateOf("")
         private set
-    var company by mutableStateOf(companiesCheck[0].name.company)
+    var company by mutableStateOf("")
         private set
-    private var categories by mutableStateOf(listOf<Category>())
-    private var allCategories by mutableStateOf(listOf<CategoryCheck>())
-    private var allCompanies by mutableStateOf(listOf<CompanyCheck>())
     var allCustomers by mutableStateOf(listOf<CustomerCheck>())
         private set
     var isPaidByCustomer by mutableStateOf(false)
@@ -104,11 +91,6 @@ class SaleViewModel @Inject constructor(
         )
 
     init {
-        viewModelScope.launch {
-            categoryRepository.getAll().map {
-                it.map { category -> CategoryCheck(category.id, category.name, false) }
-            }.collect { allCategories = it }
-        }
         viewModelScope.launch {
             customerRepository.getAll().map {
                 it.map { customer ->
@@ -154,30 +136,18 @@ class SaleViewModel @Inject constructor(
         this.isPaidByCustomer = isPaidByCustomer
     }
 
-    private fun updateCategories(categories: List<CategoryCheck>) {
-        val catList = mutableListOf<Category>()
-        categories
-            .filter { it.isChecked }
-            .map { catList.add(Category(it.id, it.category)) }
-        this.categories = catList
-        category = this.categories.joinToString(", ") { it.name }
-    }
-
     fun updateCustomerName(customerName: String) {
         this.customerName = customerName
-        allCustomers
-            .map {
-                it.isChecked = false
-                it
+        allCustomers.map { customer -> customer.isChecked = false }
+        for (customer in allCustomers) {
+            if (customer.name == customerName) {
+                address = customer.address
+                phoneNumber = customer.phoneNumber
+                customerId = customer.id
+                customer.isChecked = true
+                break
             }
-            .filter { it.name == customerName }
-            .map {
-                address = it.address
-                phoneNumber = it.phoneNumber
-                customerId = it.id
-                it.isChecked = true
-                it
-            }
+        }
     }
 
     fun getProduct(id: Long) {
@@ -186,10 +156,8 @@ class SaleViewModel @Inject constructor(
                 productId = it.id
                 productName = it.name
                 photo = it.photo
-                categories = it.categories
+                category = setCategories(it.categories)
                 company = it.company
-                setCategoriesChecked(it.categories)
-                setCompanyChecked(it.company)
             }
         }
     }
@@ -203,43 +171,23 @@ class SaleViewModel @Inject constructor(
                 photo = it.photo
                 purchasePrice = it.purchasePrice.toString()
                 salePrice = it.salePrice.toString()
-                categories = it.categories
+                category = setCategories(it.categories)
                 company = it.company
                 stockQuantity = it.quantity
-                setCategoriesChecked(it.categories)
-                setCompanyChecked(it.company)
                 isPaid = it.isPaid
             }
         }
     }
 
-    //Sets all current categories
-    private fun setCategoriesChecked(allCategories: List<Category>) {
-        this.allCategories.forEach { categoryCheck ->
-            allCategories.forEach {
-                if (categoryCheck.id == it.id) {
-                    categoryCheck.isChecked = true
-                }
-            }
-        }
-        updateCategories(this.allCategories)
-    }
-
-    //Sets the current company
-    private fun setCompanyChecked(company: String) {
-        companiesCheck.forEach { companyCheck ->
-            if (companyCheck.name.company == company) {
-                companyCheck.isChecked = true
-            }
-        }
-        allCompanies = companiesCheck
-    }
+    private fun setCategories(categories: List<Category>) =
+        categories.joinToString(", ") { category -> category.name }
 
     //Sets the current customer
     private fun setCustomerChecked(customerId: Long) {
-        allCustomers.forEach {
-            if (customerId == it.id) {
-                it.isChecked = true
+        for (customer in allCustomers) {
+            if (customer.id == customerId) {
+                customer.isChecked = true
+                break
             }
         }
     }
@@ -273,14 +221,12 @@ class SaleViewModel @Inject constructor(
                 purchasePrice = it.purchasePrice.toString()
                 salePrice = it.salePrice.toString()
                 deliveryPrice = it.deliveryPrice.toString()
-                categories = it.categories
+                category = setCategories(it.categories)
                 company = it.company
                 isPaidByCustomer = it.isPaidByCustomer
                 isOrderedByCustomer = it.isOrderedByCustomer
                 updateDateOfSale(it.dateOfSale)
                 updateDateOfPayment(it.dateOfPayment)
-                setCategoriesChecked(it.categories)
-                setCompanyChecked(it.company)
                 setCustomerChecked(it.customerId)
             }
         }
@@ -318,7 +264,7 @@ class SaleViewModel @Inject constructor(
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
         deliveryPrice = stringToFloat(deliveryPrice),
-        categories = categories,
+        categories = emptyList(),
         company = company,
         dateOfSale = dateOfSaleInMillis,
         dateOfPayment = dateOfPaymentInMillis,
@@ -335,7 +281,7 @@ class SaleViewModel @Inject constructor(
         date = currentDate,
         validity = currentDate,
         quantity = stockQuantity,
-        categories = categories,
+        categories = emptyList(),
         company = company,
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
