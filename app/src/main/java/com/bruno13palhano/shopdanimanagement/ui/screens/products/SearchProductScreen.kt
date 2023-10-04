@@ -100,10 +100,12 @@ fun SearchProductContent(
                 }
             },
             trailingIcon = {
-                IconButton(onClick = {
-                    active = false
-                    onSearchClick(search)
-                }) {
+                IconButton(
+                    onClick = {
+                        active = false
+                        onSearchClick(search)
+                    }
+                ) {
                     Icon(
                         imageVector = Icons.Filled.Search,
                         contentDescription = stringResource(id = R.string.search_label)
