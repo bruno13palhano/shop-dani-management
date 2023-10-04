@@ -62,17 +62,19 @@ fun StockDebitsScreen(
             when (index) {
                 0 -> {
                     viewModel.getStockByName(isOrderedAsc = orderedByName)
-                    orderedByName = !orderedByName
+                    orderedByName = toggleOrdered(orderedByName)
                 }
                 else -> {
                     viewModel.getStockByPrice(isOrderedAsc = orderedByPrice)
-                    orderedByPrice = !orderedByPrice
+                    orderedByPrice = toggleOrdered(orderedByPrice)
                 }
             }
         },
         navigateUp = navigateUp
     )
 }
+
+private fun toggleOrdered(ordered: Boolean) = !ordered
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
