@@ -7,6 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CanceledSalesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CustomersDebitScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialInfoScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialScreen
@@ -46,6 +47,12 @@ fun NavGraphBuilder.financialNavGraph(
         composable(route = FinancialDestinations.FINANCIAL_INFO_ROUTE) {
             showBottomMenu(false)
             FinancialInfoScreen(
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+        composable(route = FinancialDestinations.FINANCIAL_CANCELED_SALES_ROUTE) {
+            showBottomMenu(false)
+            CanceledSalesScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }
@@ -103,6 +110,7 @@ fun NavGraphBuilder.financialNavGraph(
 object FinancialDestinations {
     const val FINANCIAL_MAIN_ROUTE = "financial_main_route"
     const val FINANCIAL_INFO_ROUTE = "financial_info_route"
+    const val FINANCIAL_CANCELED_SALES_ROUTE = "financial_canceled_sales_route"
     const val FINANCIAL_CUSTOMERS_DEBITS_ROUTE = "financial_customers_debit_route"
     const val FINANCIAL_STOCK_DEBITS_ROUTE = "financial_stock_debits_route"
     const val FINANCIAL_SALE_ITEM_ROUTE = "financial_sale_item_route"
