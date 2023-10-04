@@ -40,6 +40,9 @@ fun NavGraphBuilder.homeNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu
         )
+        composable(route = HomeDestinations.HOME_CATALOG_ROUTE) {
+            showBottomMenu(true)
+        }
     }
 }
 
@@ -49,4 +52,5 @@ object HomeDestinations {
     const val HOME_SALES_ROUTE = "home_sales_route"
     const val HOME_ORDERS_ROUTE = "home_orders_route"
     const val HOME_DELIVERIES_ROUTE = "home_deliveries_route"
+    const val HOME_CATALOG_ROUTE = "home_catalog_route"
 }
