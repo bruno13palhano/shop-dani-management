@@ -1,4 +1,4 @@
-CREATE TABLE Catalog (
+CREATE TABLE CatalogTable (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     productId INTEGER NOT NULL,
     title TEXT NOT NULL,
@@ -9,23 +9,23 @@ CREATE TABLE Catalog (
 );
 
 insert:
-INSERT OR REPLACE INTO Catalog(productId, title, description, discount, price)
+INSERT OR REPLACE INTO CatalogTable(productId, title, description, discount, price)
 VALUES(?,?,?,?,?);
 
 update:
-UPDATE Catalog SET title = ?, description = ?, discount = ?, price = ? WHERE id = ?;
+UPDATE CatalogTable SET title = ?, description = ?, discount = ?, price = ? WHERE id = ?;
 
 delete:
-DELETE FROM Catalog WHERE id = ?;
+DELETE FROM CatalogTable WHERE id = ?;
 
 getAll:
 SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
-FROM product P INNER JOIN Catalog C ON(P.id = C.productId);
+FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId);
 
 getById:
 SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
-FROM product P INNER JOIN Catalog C ON(P.id = C.productId) WHERE C.id = ?;
+FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) WHERE C.id = ?;
 
 getLast:
 SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
-FROM product P INNER JOIN Catalog C ON(P.id = C.productId) WHERE C.id = last_insert_rowid();
+FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) WHERE C.id = last_insert_rowid();
