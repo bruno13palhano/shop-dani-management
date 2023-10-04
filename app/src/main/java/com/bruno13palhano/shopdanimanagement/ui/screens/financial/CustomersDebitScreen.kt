@@ -63,11 +63,11 @@ fun CustomersDebitScreen(
             when (index) {
                 0 -> {
                     viewModel.getDebitByCustomerName(orderedByName)
-                    orderedByName = !orderedByName
+                    orderedByName = toggleOrdered(orderedByName)
                 }
                 1 -> {
                     viewModel.getDebitBySalePrice(orderedByPrice)
-                    orderedByPrice = !orderedByPrice
+                    orderedByPrice = toggleOrdered(orderedByPrice)
                 }
                 else -> { viewModel.getDebits() }
             }
@@ -75,6 +75,8 @@ fun CustomersDebitScreen(
         navigateUp = navigateUp
     )
 }
+
+private fun toggleOrdered(ordered: Boolean) = !ordered
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
