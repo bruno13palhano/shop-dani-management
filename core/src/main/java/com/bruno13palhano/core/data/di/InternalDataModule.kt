@@ -1,5 +1,6 @@
 package com.bruno13palhano.core.data.di
 
+import com.bruno13palhano.core.data.CatalogData
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.DeliveryData
@@ -7,6 +8,7 @@ import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.SearchCacheData
 import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.repository.catalog.CatalogLight
 import com.bruno13palhano.core.data.repository.category.CategoryLight
 import com.bruno13palhano.core.data.repository.customer.CustomerLight
 import com.bruno13palhano.core.data.repository.delivery.DeliveryLight
@@ -14,6 +16,7 @@ import com.bruno13palhano.core.data.repository.product.ProductLight
 import com.bruno13palhano.core.data.repository.sale.SaleLight
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheLight
 import com.bruno13palhano.core.data.repository.stockorder.StockOrderLight
+import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Delivery
@@ -48,6 +51,9 @@ internal annotation class InternalSearchCacheLight
 
 @Qualifier
 internal annotation class InternalStockOrderLight
+
+@Qualifier
+internal annotation class InternalCatalogLight
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -88,5 +94,14 @@ internal abstract class InternalDataModule {
     @InternalStockOrderLight
     @Singleton
     @Binds
-    abstract fun bindInternalStockOrderLight(repository: StockOrderLight): StockOrderData<StockOrder>
+    abstract fun bindInternalStockOrderLight(
+        repository: StockOrderLight
+    ): StockOrderData<StockOrder>
+
+    @InternalCatalogLight
+    @Singleton
+    @Binds
+    abstract fun bindInternalCatalogLight(
+        repository: CatalogLight
+    ): CatalogData<Catalog>
 }
