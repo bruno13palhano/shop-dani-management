@@ -25,3 +25,7 @@ FROM product P INNER JOIN Catalog C ON(P.id = C.productId);
 getById:
 SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
 FROM product P INNER JOIN Catalog C ON(P.id = C.productId) WHERE C.id = ?;
+
+getLast:
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+FROM product P INNER JOIN Catalog C ON(P.id = C.productId) WHERE C.id = last_insert_rowid();
