@@ -1,0 +1,27 @@
+CREATE TABLE Catalog (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    productId INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    discount INTEGER NOT NULL,
+    price REAL NOT NULL,
+    FOREIGN KEY (productId) REFERENCES product(id) ON DELETE CASCADE
+);
+
+insert:
+INSERT OR REPLACE INTO Catalog(productId, title, description, discount, price)
+VALUES(?,?,?,?,?);
+
+update:
+UPDATE Catalog SET title = ?, description = ?, discount = ?, price = ? WHERE id = ?;
+
+delete:
+DELETE FROM Catalog WHERE id = ?;
+
+getAll:
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+FROM product P INNER JOIN Catalog C ON(P.id = C.productId);
+
+getById:
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+FROM product P INNER JOIN Catalog C ON(P.id = C.productId) WHERE C.id = ?;
