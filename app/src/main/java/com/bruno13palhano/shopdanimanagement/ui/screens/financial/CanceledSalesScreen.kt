@@ -63,15 +63,15 @@ fun CanceledSalesScreen(
             when (index) {
                 0 -> {
                     viewModel.getCanceledSalesByName(isOrderedAsc = orderedByName)
-                    orderedByName = !orderedByName
+                    orderedByName = toggleOrdered(orderedByName)
                 }
                 1 -> {
                     viewModel.getCanceledSalesByCustomerName(isOrderedAsc = orderedByCustomerName)
-                    orderedByCustomerName = !orderedByCustomerName
+                    orderedByCustomerName = toggleOrdered(orderedByCustomerName)
                 }
                 2 -> {
                     viewModel.getCanceledSalesByPrice(isOrderedAsc = orderedByPrice)
-                    orderedByPrice = !orderedByPrice
+                    orderedByPrice = toggleOrdered(orderedByPrice)
                 }
                 else -> { viewModel.getAllCanceledSales() }
             }
@@ -79,6 +79,8 @@ fun CanceledSalesScreen(
         navigateUp = navigateUp
     )
 }
+
+private fun toggleOrdered(ordered: Boolean) = !ordered
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
