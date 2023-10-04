@@ -44,7 +44,11 @@ fun SaleScreen(
         if (isEdit) {
             viewModel.getSale(saleId)
         } else {
-            viewModel.getStockItem(stockOrderId)
+            if (isOrderedByCustomer) {
+                viewModel.getProduct(stockOrderId)
+            } else {
+                viewModel.getStockItem(stockOrderId)
+            }
         }
     }
     val isSaleNotEmpty by viewModel.isSaleNotEmpty.collectAsStateWithLifecycle()

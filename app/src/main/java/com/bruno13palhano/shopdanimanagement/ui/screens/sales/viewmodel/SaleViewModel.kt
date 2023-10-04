@@ -10,16 +10,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.CustomerData
+import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.CustomerRep
+import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Delivery
+import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
@@ -41,6 +44,7 @@ class SaleViewModel @Inject constructor(
     @CategoryRep private val categoryRepository: CategoryData<Category>,
     @SaleRep private val saleRepository: SaleData<Sale>,
     @StockOrderRep private val stockOrderRepository: StockOrderData<StockOrder>,
+    @ProductRep private val productRepository: ProductData<Product>,
     @CustomerRep private val customerRepository: CustomerData<Customer>,
 ) : ViewModel() {
     private val companiesCheck = listOf(
@@ -88,8 +92,7 @@ class SaleViewModel @Inject constructor(
         private set
     var isPaidByCustomer by mutableStateOf(false)
         private set
-    var isPaid by mutableStateOf(false)
-        private set
+    private var isPaid by mutableStateOf(false)
 
     val isSaleNotEmpty = snapshotFlow {
         productName.isNotEmpty() && quantity.isNotEmpty() && purchasePrice.isNotEmpty() && salePrice.isNotEmpty()
@@ -175,6 +178,20 @@ class SaleViewModel @Inject constructor(
                 it.isChecked = true
                 it
             }
+    }
+
+    fun getProduct(id: Long) {
+        viewModelScope.launch {
+            productRepository.getById(id).collect {
+                productId = it.id
+                productName = it.name
+                photo = it.photo
+                categories = it.categories
+                company = it.company
+                setCategoriesChecked(it.categories)
+                setCompanyChecked(it.company)
+            }
+        }
     }
 
     fun getStockItem(stockId: Long) {
