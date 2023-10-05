@@ -42,6 +42,7 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun CatalogScreen(
+    onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,
     viewModel: CatalogViewModel = hiltViewModel()
 ) {
@@ -63,7 +64,7 @@ fun CatalogScreen(
     CatalogContent(
         catalogItems = catalogItems,
         menuOptions = menuOptions,
-        onItemClick = {},
+        onItemClick = onItemClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
                 0 -> {
