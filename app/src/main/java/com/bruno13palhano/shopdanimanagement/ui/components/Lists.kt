@@ -390,3 +390,80 @@ fun InfoItemList(
         )
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CatalogItemList(
+    modifier: Modifier = Modifier,
+    photo: ByteArray,
+    title: String,
+    firstSubtitle: String,
+    secondSubtitle: String,
+    description: String,
+    footer: String,
+    onClick: () -> Unit
+) {
+    ElevatedCard(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        if (photo.isEmpty()) {
+            Image(
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                    .size(144.dp)
+                    .clip(RoundedCornerShape(5)),
+                imageVector = Icons.Filled.Image,
+                contentDescription = stringResource(id = R.string.item_image),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Image(
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                    .size(64.dp)
+                    .clip(RoundedCornerShape(5)),
+                painter = rememberAsyncImagePainter(model = photo),
+                contentDescription = stringResource(id = R.string.item_image),
+                contentScale = ContentScale.Crop
+            )
+        }
+        Text(
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+            text = title,
+            maxLines = 1,
+            style = MaterialTheme.typography.titleMedium,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            text = firstSubtitle,
+            maxLines = 1,
+            style = MaterialTheme.typography.titleSmall,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            text = secondSubtitle,
+            maxLines = 1,
+            style = MaterialTheme.typography.bodyMedium,
+            fontStyle = FontStyle.Italic,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            text = description,
+            maxLines = 1,
+            style = MaterialTheme.typography.bodyMedium,
+            fontStyle = FontStyle.Italic,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            text = footer,
+            maxLines = 1,
+            style = MaterialTheme.typography.bodySmall,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
