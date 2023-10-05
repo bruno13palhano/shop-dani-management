@@ -40,9 +40,10 @@ fun NavGraphBuilder.homeNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu
         )
-        composable(route = HomeDestinations.HOME_CATALOG_ROUTE) {
-            showBottomMenu(true)
-        }
+        catalogNavGraph(
+            navController = navController,
+            showBottomMenu = showBottomMenu
+        )
     }
 }
 
