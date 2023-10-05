@@ -21,6 +21,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CatalogItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
+import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.viewmodel.CatalogViewModel
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -43,6 +45,10 @@ fun CatalogScreen(
     navigateUp: () -> Unit,
     viewModel: CatalogViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getAll()
+    }
+
     val catalogItems by viewModel.catalogItems.collectAsStateWithLifecycle()
 
     val menuOptions = arrayOf(
