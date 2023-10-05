@@ -26,7 +26,7 @@ internal class CatalogLight @Inject constructor(
             price = model.price.toDouble()
         )
 
-        return catalogQueries.getLastId().executeAsOne();
+        return catalogQueries.getLastId().executeAsOne()
     }
 
     override suspend fun update(model: Catalog) {
@@ -50,6 +50,26 @@ internal class CatalogLight @Inject constructor(
     override fun getAll(): Flow<List<Catalog>> {
         return catalogQueries.getAll(mapper = ::mapCatalog)
             .asFlow().mapToList(ioDispatcher)
+    }
+
+    override fun getOrderedByName(isOrderedAsc: Boolean): Flow<List<Catalog>> {
+        return if (isOrderedAsc) {
+            catalogQueries.getByNameAsc(mapper = ::mapCatalog)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            catalogQueries.getByNameDesc(mapper = ::mapCatalog)
+                .asFlow().mapToList(ioDispatcher)
+        }
+    }
+
+    override fun getOrderedByPrice(isOrderedAsc: Boolean): Flow<List<Catalog>> {
+        return if (isOrderedAsc) {
+            catalogQueries.getByPriceAsc(mapper = ::mapCatalog)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            catalogQueries.getByPriceDesc(mapper = ::mapCatalog)
+                .asFlow().mapToList(ioDispatcher)
+        }
     }
 
     override fun getById(id: Long): Flow<Catalog> {

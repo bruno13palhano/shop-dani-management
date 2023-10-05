@@ -29,6 +29,14 @@ class CatalogRepository @Inject constructor(
         return catalogData.getAll()
     }
 
+    override fun getOrderedByName(isOrderedAsc: Boolean): Flow<List<Catalog>> {
+        return catalogData.getOrderedByName(isOrderedAsc = isOrderedAsc)
+    }
+
+    override fun getOrderedByPrice(isOrderedAsc: Boolean): Flow<List<Catalog>> {
+        return catalogData.getOrderedByPrice(isOrderedAsc = isOrderedAsc)
+    }
+
     override fun getById(id: Long): Flow<Catalog> {
         return catalogData.getById(id = id)
     }
