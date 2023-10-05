@@ -22,6 +22,22 @@ getAll:
 SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
 FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId);
 
+getByNameDesc:
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) ORDER BY P.name DESC;
+
+getByNameAsc:
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) ORDER BY P.name ASC;
+
+getByPriceDesc:
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) ORDER BY C.price DESC;
+
+getByPriceAsc:
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) ORDER BY C.price ASC;
+
 getById:
 SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
 FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) WHERE C.id = ?;
