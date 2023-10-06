@@ -10,7 +10,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.CatalogItemScree
 import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.CatalogScreen
 
 private const val ITEM_ID = "item_id"
-private const val ITEM_EDITABLE = "item_editable"
+private const val EDITABLE = "editable"
 
 fun NavGraphBuilder.catalogNavGraph(
     navController: NavController,
@@ -24,22 +24,22 @@ fun NavGraphBuilder.catalogNavGraph(
             CatalogScreen(
                 onItemClick = { id ->
                     navController.navigate(
-                        route = "${CatalogDestination.CATALOG_ITEM_ROUTE}${id}${true}"
+                        route = "${CatalogDestination.CATALOG_ITEM_ROUTE}/${id}/${true}"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(
-            route = CatalogDestination.CATALOG_ITEM_WITH_ID_ROUTE,
+            route = "${CatalogDestination.CATALOG_ITEM_ROUTE}/{$ITEM_ID}/{$EDITABLE}",
             arguments = listOf(
                 navArgument(ITEM_ID) { type = NavType.LongType },
-                navArgument(ITEM_EDITABLE) { type = NavType.BoolType }
+                navArgument(EDITABLE) { type = NavType.BoolType }
             )
         ) { backStackEntry ->
             showBottomMenu(true)
             val id = backStackEntry.arguments?.getLong(ITEM_ID)
-            val editable = backStackEntry.arguments?.getBoolean(ITEM_EDITABLE)
+            val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
             if (id != null && editable != null) {
                 CatalogItemScreen(
                     productId = if (editable) 0L else id,
@@ -54,5 +54,4 @@ fun NavGraphBuilder.catalogNavGraph(
 object CatalogDestination {
     const val CATALOG_MAIN_ROUTE = "catalog_main_route"
     const val CATALOG_ITEM_ROUTE = "catalog_item_route"
-    const val CATALOG_ITEM_WITH_ID_ROUTE = "$CATALOG_ITEM_ROUTE{$ITEM_ID}{$ITEM_EDITABLE}"
 }
