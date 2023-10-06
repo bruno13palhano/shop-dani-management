@@ -24,14 +24,14 @@ fun NavGraphBuilder.deliveriesNAvGraph(
             DeliveriesScreen(
                 onItemClick = { deliveryId ->
                     navController.navigate(
-                        route = "${DeliveriesDestinations.DELIVERIES_EDIT_DELIVERY_ROUTE}$deliveryId"
+                        route = "${DeliveriesDestinations.DELIVERIES_DELIVERY_ROUTE}$deliveryId"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(
-            route = DeliveriesDestinations.DELIVERIES_EDIT_DELIVERY_WITH_ID_ROUTE,
+            route = "${DeliveriesDestinations.DELIVERIES_DELIVERY_ROUTE}{$ITEM_ID}",
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
             showBottomMenu(true)
@@ -47,6 +47,5 @@ fun NavGraphBuilder.deliveriesNAvGraph(
 
 object DeliveriesDestinations {
     const val DELIVERIES_MAIN_ROUTE = "deliveries_main_route"
-    const val DELIVERIES_EDIT_DELIVERY_ROUTE = "deliveries_edit_delivery_route"
-    const val DELIVERIES_EDIT_DELIVERY_WITH_ID_ROUTE = "$DELIVERIES_EDIT_DELIVERY_ROUTE{$ITEM_ID}"
+    const val DELIVERIES_DELIVERY_ROUTE = "deliveries_delivery_route"
 }
