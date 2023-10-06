@@ -3,7 +3,9 @@ package com.bruno13palhano.shopdanimanagement.ui.navigation
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesScreen
@@ -15,6 +17,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesOptionsScreen
 
 private const val ITEM_ID = "item_Id"
+private const val EDITABLE = "item_editable"
+private const val IS_ORDERED = "is_ordered"
 
 fun NavGraphBuilder.salesNavGraph(
     navController: NavController,
@@ -27,8 +31,10 @@ fun NavGraphBuilder.salesNavGraph(
         composable(route = SalesDestinations.MAIN_SALES_ROUTE) {
             showBottomMenu(true)
             SalesScreen(
-                onItemClick = { saleItemId ->
-                    navController.navigate(route = "${SalesDestinations.SALES_EDIT_SALE_ROUTE}$saleItemId")
+                onItemClick = { saleId ->
+                    navController.navigate(
+                        route = "${SalesDestinations.SALES_SALE_ROUTE}/$saleId/${true}/${false}"
+                    )
                 },
                 onAddButtonClick = {
                     navController.navigate(route = SalesDestinations.SALES_OPTIONS_ROUTE)
@@ -54,7 +60,7 @@ fun NavGraphBuilder.salesNavGraph(
                 isOrderedByCustomer = false,
                 onItemClick = { stockItem ->
                     navController.navigate(
-                        route = "${SalesDestinations.SALES_EDIT_SALE_ROUTE}$stockItem"
+                        route = "${SalesDestinations.SALES_SALE_ROUTE}/$stockItem/${true}/${false}"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
@@ -66,9 +72,9 @@ fun NavGraphBuilder.salesNavGraph(
                 isOrderedByCustomer = false,
                 isAddButtonEnabled = false,
                 screenTitle = stringResource(id = R.string.stock_list_label),
-                onItemClick = { stockItemId ->
+                onItemClick = { itemId ->
                     navController.navigate(
-                        route = "${SalesDestinations.SALES_NEW_SALE_STOCK_ROUTE}$stockItemId"
+                        route = "${SalesDestinations.SALES_SALE_ROUTE}/$itemId/${false}/${false}"
                     )
                 },
                 onSearchClick = {
@@ -85,7 +91,7 @@ fun NavGraphBuilder.salesNavGraph(
                 categoryId = 0L,
                 onItemClick = { productId ->
                     navController.navigate(
-                        route = "${SalesDestinations.SALES_NEW_SALE_ORDERS_ROUTE}$productId"
+                        route = "${SalesDestinations.SALES_SALE_ROUTE}/$productId/${false}/${true}"
                     )
                 },
                 onSearchClick = {
@@ -104,47 +110,36 @@ fun NavGraphBuilder.salesNavGraph(
                 categoryId = 0L,
                 onItemClick = { productId ->
                     navController.navigate(
-                        route = "${SalesDestinations.SALES_NEW_SALE_ORDERS_ROUTE}$productId"
+                        route = "${SalesDestinations.SALES_SALE_ROUTE}/$productId/${false}/${true}"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = SalesDestinations.SALES_NEW_SALE_ORDERS_WITH_ID_ROUTE) { backStackEntry ->
+        composable(
+            route = "${SalesDestinations.SALES_SALE_ROUTE}/{$ITEM_ID}/{$EDITABLE}/{$IS_ORDERED}",
+            arguments = listOf(
+                navArgument(ITEM_ID) { type = NavType.LongType },
+                navArgument(EDITABLE) { type = NavType.BoolType },
+                navArgument(IS_ORDERED) { type = NavType.BoolType }
+            )
+        ) { backStackEntry ->
             showBottomMenu(true)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { orderItemId ->
+            val id = backStackEntry.arguments?.getLong(ITEM_ID)
+            val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
+            val isOrdered = backStackEntry.arguments?.getBoolean(IS_ORDERED)
+
+            if (id != null && editable != null && isOrdered != null) {
                 SaleScreen(
-                    isEdit = false,
-                    screenTitle = stringResource(id = R.string.new_sale_label),
-                    isOrderedByCustomer = true,
-                    stockOrderId = orderItemId.toLong(),
-                    saleId = 0L,
-                    navigateUp = { navController.navigateUp() }
-                )
-            }
-        }
-        composable(route = SalesDestinations.SALES_NEW_SALE_STOCK_WITH_ID_ROUTE) { backStackEntry ->
-            showBottomMenu(true)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { stockItemId ->
-                SaleScreen(
-                    isEdit = false,
-                    screenTitle = stringResource(id = R.string.new_sale_label),
-                    isOrderedByCustomer = false,
-                    stockOrderId = stockItemId.toLong(),
-                    saleId = 0L,
-                    navigateUp = { navController.navigateUp() }
-                )
-            }
-        }
-        composable(route = SalesDestinations.SALES_EDIT_SALE_WITH_ID_ROUTE) { backStackEntry ->
-            showBottomMenu(true)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { saleItemId ->
-                SaleScreen(
-                    isEdit = true,
-                    screenTitle = stringResource(id = R.string.edit_sale_label),
-                    isOrderedByCustomer = true,
-                    stockOrderId = 0L,
-                    saleId = saleItemId.toLong(),
+                    isEdit = editable,
+                    screenTitle = if (editable) {
+                        stringResource(id = R.string.edit_sale_label)
+                    } else {
+                        stringResource(id = R.string.new_sale_label)
+                    },
+                    isOrderedByCustomer = isOrdered,
+                    stockOrderId = if (editable) 0L else id,
+                    saleId = if (editable) id else 0L,
                     navigateUp = { navController.navigateUp() }
                 )
             }
@@ -159,10 +154,5 @@ object SalesDestinations {
     const val SALES_SEARCH_STOCK_ROUTE = "sales_search_stock_route"
     const val SALES_PRODUCTS_LIST_ROUTE = "sales_products_list_route"
     const val SALES_SEARCH_PRODUCT_ROUTE = "sales_search_product_route"
-    const val SALES_NEW_SALE_ORDERS_ROUTE = "sales_new_sale_orders_route"
-    const val SALES_NEW_SALE_ORDERS_WITH_ID_ROUTE = "$SALES_NEW_SALE_ORDERS_ROUTE{$ITEM_ID}"
-    const val SALES_NEW_SALE_STOCK_ROUTE = "sales_new_sale_stock_route"
-    const val SALES_NEW_SALE_STOCK_WITH_ID_ROUTE = "$SALES_NEW_SALE_STOCK_ROUTE{$ITEM_ID}"
-    const val SALES_EDIT_SALE_ROUTE = "sales_edit_sale_route"
-    const val SALES_EDIT_SALE_WITH_ID_ROUTE = "$SALES_EDIT_SALE_ROUTE{$ITEM_ID}"
+    const val SALES_SALE_ROUTE = "sales_sale_route"
 }
