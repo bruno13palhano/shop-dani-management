@@ -3,7 +3,9 @@ package com.bruno13palhano.shopdanimanagement.ui.navigation
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerInfoScreen
@@ -12,6 +14,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.SearchCustomersScreen
 
 private const val ITEM_ID = "item_id"
+private const val EDITABLE = "item_editable"
 
 fun NavGraphBuilder.customersNavGraph(
     navController: NavController,
@@ -27,7 +30,7 @@ fun NavGraphBuilder.customersNavGraph(
             CustomersScreen(
                 onItemClick = { customerId ->
                     navController.navigate(
-                        route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_INFO_ROUTE}$customerId"
+                        route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_INFO_ROUTE}/$customerId"
                     )
                 },
                 onSearchClick = {
@@ -37,7 +40,7 @@ fun NavGraphBuilder.customersNavGraph(
                 },
                 onAddButtonClick = {
                     navController.navigate(
-                        route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE
+                        route = CustomersDestinations.CUSTOMERS_CUSTOMER_ROUTE
                     )
                 },
                 onIconMenuClick = onIconMenuClick
@@ -46,44 +49,54 @@ fun NavGraphBuilder.customersNavGraph(
         composable(route = CustomersDestinations.CUSTOMERS_SEARCH_ROUTE) {
             showBottomMenu(true)
             SearchCustomersScreen(
-                onItemClick = { customerId ->
+                onItemClick = { id ->
                     navController.navigate(
-                        route = "${CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_ROUTE}$customerId"
+                        route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_ROUTE}/$id/${true}"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = CustomersDestinations.CUSTOMERS_NEW_CUSTOMER_ROUTE) {
-            showBottomMenu(true)
-            CustomerScreen(
-                screenTitle = stringResource(id = R.string.new_customer_label),
-                isEditable = false,
-                customerId = 0L,
-                navigateUp = { navController.navigateUp() }
+        composable(
+            route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_ROUTE}/{$ITEM_ID}/{$EDITABLE}",
+            arguments = listOf(
+                navArgument(ITEM_ID) { type = NavType.LongType },
+                navArgument(EDITABLE) { type = NavType.BoolType }
             )
-        }
-        composable(route = CustomersDestinations.CUSTOMERS_CUSTOMER_INFO_WITH_ID_ROUTE) { backStackEntry ->
+        ) { backStackEntry ->
             showBottomMenu(true)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { customerId ->
-                CustomerInfoScreen(
-                    customerId = customerId.toLong(),
-                    onEditIconClick = {
-                        navController.navigate(
-                            route = "${CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_ROUTE}$customerId"
-                        )
+            val id = backStackEntry.arguments?.getLong(ITEM_ID)
+            val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
+
+            if (id != null && editable != null) {
+                CustomerScreen(
+                    screenTitle = if (editable) {
+                        stringResource(id = R.string.edit_customer_label)
+                    }
+                    else {
+                        stringResource(id = R.string.new_customer_label)
                     },
+                    isEditable = editable,
+                    customerId = if (editable) id else 0L,
                     navigateUp = { navController.navigateUp() }
                 )
             }
         }
-        composable(route = CustomersDestinations.CUSTOMERS_EDIT_CUSTOMER_WITH_ID_ROUTE) { backStackEntry ->
+        composable(
+            route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_INFO_ROUTE}/{$ITEM_ID}",
+            arguments = listOf(
+                navArgument(ITEM_ID) { type = NavType.LongType }
+            )
+        ) { backStackEntry ->
             showBottomMenu(true)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { customerId ->
-                CustomerScreen(
-                    screenTitle = stringResource(id = R.string.edit_customer_label),
-                    isEditable = true,
-                    customerId = customerId.toLong(),
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { id ->
+                CustomerInfoScreen(
+                    customerId = id,
+                    onEditIconClick = {
+                        navController.navigate(
+                            route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_ROUTE}/$id/${true}"
+                        )
+                    },
                     navigateUp = { navController.navigateUp() }
                 )
             }
@@ -94,9 +107,6 @@ fun NavGraphBuilder.customersNavGraph(
 object CustomersDestinations {
     const val MAIN_CUSTOMERS_ROUTE = "customers_main_route"
     const val CUSTOMERS_SEARCH_ROUTE = "customers_search_route"
-    const val CUSTOMERS_NEW_CUSTOMER_ROUTE = "customers_new_customer_route"
+    const val CUSTOMERS_CUSTOMER_ROUTE = "customers_customer_route"
     const val CUSTOMERS_CUSTOMER_INFO_ROUTE = "customers_customer_info_route"
-    const val CUSTOMERS_CUSTOMER_INFO_WITH_ID_ROUTE = "$CUSTOMERS_CUSTOMER_INFO_ROUTE{$ITEM_ID}"
-    const val CUSTOMERS_EDIT_CUSTOMER_ROUTE = "customers_edit_customers_route"
-    const val CUSTOMERS_EDIT_CUSTOMER_WITH_ID_ROUTE = "$CUSTOMERS_EDIT_CUSTOMER_ROUTE{$ITEM_ID}"
 }
