@@ -3,15 +3,19 @@ package com.bruno13palhano.shopdanimanagement.ui.navigation
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.CatalogItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductCategoriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 
 private const val ITEM_ID = "item_Id"
+private const val ITEM_EDITABLE = "item_editable"
 
 fun NavGraphBuilder.productsNavGraph(
     navController: NavController,
@@ -81,6 +85,25 @@ fun NavGraphBuilder.productsNavGraph(
                     screenTitle = stringResource(id = R.string.new_product_label),
                     categoryId = categoryId.toLong(),
                     productId = 0L,
+                    onAddToCatalogClick = {},
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
+        }
+        composable(
+            route = ProductsDestinations.PRODUCTS_CATALOG_ITEM_WITH_ID_ROUTE,
+            arguments = listOf(
+                navArgument(ITEM_ID) { type = NavType.LongType },
+                navArgument(ITEM_EDITABLE) { type = NavType.BoolType }
+            )
+        ) { backStackEntry ->
+            showBottomMenu(true)
+            val id = backStackEntry.arguments?.getLong(ITEM_ID)
+            val editable = backStackEntry.arguments?.getBoolean(ITEM_EDITABLE)
+            if (id != null && editable != null) {
+                CatalogItemScreen(
+                    productId = id,
+                    catalogId = 0L,
                     navigateUp = { navController.navigateUp() }
                 )
             }
@@ -93,6 +116,11 @@ fun NavGraphBuilder.productsNavGraph(
                     screenTitle = stringResource(id = R.string.edit_product_label),
                     categoryId = 0L,
                     productId = productId.toLong(),
+                    onAddToCatalogClick = {
+                        navController.navigate(
+                            route = "${ProductsDestinations.PRODUCTS_CATALOG_ITEM_ROUTE}${productId}${false}"
+                        )
+                    },
                     navigateUp = { navController.navigateUp() }
                 )
             }
@@ -110,4 +138,6 @@ object ProductsDestinations {
     const val PRODUCTS_NEW_PRODUCT_WITH_ID_ROUTE = "$PRODUCTS_NEW_PRODUCT_ROUTE{$ITEM_ID}"
     const val PRODUCTS_EDIT_PRODUCT_ROUTE = "products_edit_product_route"
     const val PRODUCTS_EDIT_PRODUCT_WITH_ID_ROUTE = "$PRODUCTS_EDIT_PRODUCT_ROUTE{$ITEM_ID}"
+    const val PRODUCTS_CATALOG_ITEM_ROUTE = "products_catalog_item_route"
+    const val PRODUCTS_CATALOG_ITEM_WITH_ID_ROUTE = "$PRODUCTS_CATALOG_ITEM_ROUTE{$ITEM_ID}{$ITEM_EDITABLE}"
 }
