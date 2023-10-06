@@ -135,15 +135,17 @@ fun CatalogContent(
             columns = StaggeredGridCells.Adaptive(144.dp),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
         ) {
-            items(items = catalogItems, key = { item -> item.id}) { item ->
+            items(items = catalogItems, key = { item -> item.id }) { item ->
                 CatalogItemList(
                     modifier = Modifier.padding(8.dp),
                     photo = item.photo,
                     title = item.title,
                     firstSubtitle = item.firstSubtitle,
-                    secondSubtitle = item.secondSubtitle,
+                    secondSubtitle = stringResource(
+                        id = R.string.price_text_tag, item.secondSubtitle
+                    ),
                     description = item.description,
-                    footer = item.footer,
+                    footer = stringResource(id = R.string.discount_tag, item.footer),
                     onClick = { onItemClick(item.id) }
                 )
             }
@@ -194,10 +196,10 @@ fun CatalogPreview() {
 }
 
 private val fakeCatalogItems = listOf(
-    ExtendedItem(1L, byteArrayOf(), "Homem Del Parfum", "25% off", "Perfume masculino", "The most sale Parfum", "Sale off"),
-    ExtendedItem(2L, byteArrayOf(), "Essencial", "15% off", "Perfume masculino", "Top 10 requested", "Sale off"),
-    ExtendedItem(3L, byteArrayOf(), "Kaiak", "15% off", "Perfume masculino", "Top 10 requested", "Sale off"),
-    ExtendedItem(4L, byteArrayOf(), "Luna", "30% off", "Perfume feminino", "Light fragrance", "Sale off"),
-    ExtendedItem(5L, byteArrayOf(), "Una", "20% off", "Perfume feminino", "Light fragrance", "Out of stock"),
-    ExtendedItem(6L, byteArrayOf(), "Homem", "5% off", "Perfume masculino", "New fragrance", "Sale off"),
+    ExtendedItem(1L, byteArrayOf(), "Homem Del Parfum", "High quality", "98.99", "The most sale Parfum", "10"),
+    ExtendedItem(2L, byteArrayOf(), "Essencial", "High quality", "154.90", "Top 10 requested", "25"),
+    ExtendedItem(3L, byteArrayOf(), "Kaiak", "High quality", "122.44", "Top 10 requested", "5"),
+    ExtendedItem(4L, byteArrayOf(), "Luna", "High quality", "100.99", "Light fragrance", "5"),
+    ExtendedItem(5L, byteArrayOf(), "Una", "High quality", "88.99", "Light fragrance", "20"),
+    ExtendedItem(6L, byteArrayOf(), "Homem", "High quality", "110.90", "New fragrance", "15"),
 )
