@@ -2,7 +2,9 @@ package com.bruno13palhano.shopdanimanagement.ui.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveryScreen
@@ -21,16 +23,21 @@ fun NavGraphBuilder.deliveriesNAvGraph(
             showBottomMenu(true)
             DeliveriesScreen(
                 onItemClick = { deliveryId ->
-                    navController.navigate(route = "${DeliveriesDestinations.DELIVERIES_EDIT_DELIVERY_ROUTE}$deliveryId")
+                    navController.navigate(
+                        route = "${DeliveriesDestinations.DELIVERIES_EDIT_DELIVERY_ROUTE}$deliveryId"
+                    )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = DeliveriesDestinations.DELIVERIES_EDIT_DELIVERY_WITH_ID_ROUTE) { backStackEntry ->
+        composable(
+            route = DeliveriesDestinations.DELIVERIES_EDIT_DELIVERY_WITH_ID_ROUTE,
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
+        ) { backStackEntry ->
             showBottomMenu(true)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { deliveryId ->
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { deliveryId ->
                 DeliveryScreen(
-                    deliveryId = deliveryId.toLong(),
+                    deliveryId = deliveryId,
                     navigateUp = { navController.navigateUp() }
                 )
             }
