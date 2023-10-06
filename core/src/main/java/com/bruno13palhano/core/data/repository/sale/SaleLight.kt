@@ -103,10 +103,10 @@ internal class SaleLight @Inject constructor(
                     delivered = delivery.delivered
                 )
                 stockOrderQueries.insert(
-                    productId = saleQueries.getLastId().executeAsOne(),
+                    productId = stockOrder.productId,
                     date = stockOrder.date,
                     validity = stockOrder.validity,
-                    quantity = stockOrder.quantity.toLong(),
+                    quantity = sale.quantity.toLong(),
                     purchasePrice = stockOrder.purchasePrice.toDouble(),
                     salePrice = stockOrder.salePrice.toDouble(),
                     isOrderedByCustomer = true,
