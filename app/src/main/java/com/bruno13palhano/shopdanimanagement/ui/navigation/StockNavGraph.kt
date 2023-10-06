@@ -84,7 +84,7 @@ fun NavGraphBuilder.stockNavGraph(
                 categoryId = 0L,
                 onItemClick = { productId ->
                     navController.navigate(
-                        route = "${StockDestinations.STOCK_ITEM_ROUTE}$productId/${false}/${false}"
+                        route = "${StockDestinations.STOCK_ITEM_ROUTE}/$productId/${false}/${false}"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
