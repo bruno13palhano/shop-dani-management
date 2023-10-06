@@ -4,7 +4,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CanceledSalesScreen
@@ -78,27 +80,33 @@ fun NavGraphBuilder.financialNavGraph(
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = FinancialDestinations.FINANCIAL_SALE_ITEM_WITH_ID_ROUTE) { backStackEntry ->
+        composable(
+            route = FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE,
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
+        ) { backStackEntry ->
             showBottomMenu(false)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { saleId ->
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { saleId ->
                 SaleScreen(
                     isEdit = true,
                     screenTitle = stringResource(id = R.string.edit_sale_label),
                     isOrderedByCustomer = false,
                     stockOrderId = 0L,
-                    saleId = saleId.toLong(),
+                    saleId = saleId,
                     navigateUp = { navController.navigateUp() }
                 )
             }
         }
-        composable(route = FinancialDestinations.FINANCIAL_STOCK_ITEM_WITH_ID_ROUTE) { backStackEntry ->
+        composable(
+            route = "${FinancialDestinations.FINANCIAL_STOCK_ITEM_ROUTE}{$ITEM_ID}",
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
+        ) { backStackEntry ->
             showBottomMenu(false)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { stockItemId ->
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { stockItemId ->
                 ItemScreen(
                     isEditable = true,
                     isOrderedByCustomer = false,
                     productId = 0L,
-                    stockOrderItemId = stockItemId.toLong(),
+                    stockOrderItemId = stockItemId,
                     screenTitle = stringResource(id = R.string.edit_stock_item_label),
                     navigateUp = { navController.navigateUp() }
                 )
@@ -114,7 +122,5 @@ object FinancialDestinations {
     const val FINANCIAL_CUSTOMERS_DEBITS_ROUTE = "financial_customers_debit_route"
     const val FINANCIAL_STOCK_DEBITS_ROUTE = "financial_stock_debits_route"
     const val FINANCIAL_SALE_ITEM_ROUTE = "financial_sale_item_route"
-    const val FINANCIAL_SALE_ITEM_WITH_ID_ROUTE = "$FINANCIAL_SALE_ITEM_ROUTE{$ITEM_ID}"
     const val FINANCIAL_STOCK_ITEM_ROUTE = "financial_stock_item_route"
-    const val FINANCIAL_STOCK_ITEM_WITH_ID_ROUTE = "$FINANCIAL_STOCK_ITEM_ROUTE{$ITEM_ID}"
 }
