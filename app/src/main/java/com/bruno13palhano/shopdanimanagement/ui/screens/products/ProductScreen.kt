@@ -40,6 +40,7 @@ fun ProductScreen(
     screenTitle: String,
     productId: Long,
     categoryId: Long,
+    onAddToCatalogClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,
     viewModel: ProductViewModel = hiltViewModel()
 ) {
@@ -136,7 +137,7 @@ fun ProductScreen(
         onMoreOptionsItemClick = { index ->
             when (index) {
                 ProductMenuItem.addToCatalog -> {
-
+                    onAddToCatalogClick(productId)
                 }
                 ProductMenuItem.delete -> {
                     navigateUp()
