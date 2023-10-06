@@ -410,9 +410,10 @@ fun CatalogItemList(
         if (photo.isEmpty()) {
             Image(
                 modifier = Modifier
-                    .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                    .padding(16.dp)
                     .size(144.dp)
-                    .clip(RoundedCornerShape(5)),
+                    .clip(RoundedCornerShape(5))
+                    .align(Alignment.CenterHorizontally),
                 imageVector = Icons.Filled.Image,
                 contentDescription = stringResource(id = R.string.item_image),
                 contentScale = ContentScale.Crop
@@ -420,9 +421,10 @@ fun CatalogItemList(
         } else {
             Image(
                 modifier = Modifier
-                    .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                    .size(64.dp)
-                    .clip(RoundedCornerShape(5)),
+                    .padding(16.dp)
+                    .size(144.dp)
+                    .clip(RoundedCornerShape(5))
+                    .align(Alignment.CenterHorizontally),
                 painter = rememberAsyncImagePainter(model = photo),
                 contentDescription = stringResource(id = R.string.item_image),
                 contentScale = ContentScale.Crop
