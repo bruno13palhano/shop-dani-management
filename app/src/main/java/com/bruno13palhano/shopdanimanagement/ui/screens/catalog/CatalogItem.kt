@@ -16,10 +16,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Discount
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Label
 import androidx.compose.material.icons.filled.MoreVert
@@ -71,9 +71,9 @@ fun CatalogItemScreen(
     val editable = catalogId != 0L
     LaunchedEffect(key1 = Unit) {
         if (editable) {
-            viewModel.getProduct(id = productId)
-        } else {
             viewModel.getCatalogItem(id = catalogId)
+        } else {
+            viewModel.getProduct(id = productId)
         }
     }
 
@@ -177,8 +177,8 @@ fun CatalogItemContent(
         floatingActionButton = {
             FloatingActionButton(onClick = onDoneButtonClick) {
                 Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(id = R.string.add_label)
+                    imageVector = Icons.Filled.Done,
+                    contentDescription = stringResource(id = R.string.done_label)
                 )
             }
         }
