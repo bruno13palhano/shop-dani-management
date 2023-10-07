@@ -15,7 +15,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductCategori
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 
 private const val ITEM_ID = "item_Id"
-private const val ITEM_EDITABLE = "item_editable"
+private const val EDITABLE = "item_editable"
 
 fun NavGraphBuilder.productsNavGraph(
     navController: NavController,
@@ -31,75 +31,68 @@ fun NavGraphBuilder.productsNavGraph(
             ProductCategoriesScreen(
                 onItemClick = { categoryId ->
                     navController.navigate(
-                        route = "${ProductsDestinations.PRODUCTS_LIST_ROUTE}$categoryId"
+                        route = "${ProductsDestinations.PRODUCTS_LIST_ROUTE}/$categoryId"
                     )
                 },
                 onIconMenuClick = onIconMenuClick
             )
         }
-        composable(route = ProductsDestinations.PRODUCTS_LIST_WITH_ID_ROUTE) { backStackEntry ->
+        composable(
+            route = "${ProductsDestinations.PRODUCTS_LIST_ROUTE}/{$ITEM_ID}",
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
+        ) { backStackEntry ->
             showBottomMenu(true)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { categoryId ->
                 ProductListScreen(
                     isEditable = true,
-                    categoryId = categoryId.toLong(),
+                    categoryId = categoryId,
                     onItemClick = { productId ->
                         navController.navigate(
-                            route = "${ProductsDestinations.PRODUCTS_EDIT_PRODUCT_ROUTE}$productId"
+                            route = "${ProductsDestinations.PRODUCTS_PRODUCT_ROUTE}/$productId/${true}"
                         )
                     },
                     onSearchClick = {
                         navController.navigate(
-                            route = "${ProductsDestinations.PRODUCTS_SEARCH_ROUTE}$categoryId"
+                            route = "${ProductsDestinations.PRODUCTS_SEARCH_ROUTE}/$categoryId"
                         )
                     },
                     onAddButtonClick = {
                         navController.navigate(
-                            route = "${ProductsDestinations.PRODUCTS_NEW_PRODUCT_ROUTE}$categoryId"
+                            route = "${ProductsDestinations.PRODUCTS_PRODUCT_ROUTE}/$categoryId/${false}"
                         )
                     },
-                    navigateUp = { navController.navigateUp() }
-                )
-            }
-        }
-        composable(route = ProductsDestinations.PRODUCTS_SEARCH_WITH_ID_ROUTE) { backStackEntry ->
-            showBottomMenu(true)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
-                SearchProductScreen(
-                    isEditable = true,
-                    categoryId = categoryId.toLong(),
-                    onItemClick = { productId ->
-                        navController.navigate(
-                            route = "${ProductsDestinations.PRODUCTS_EDIT_PRODUCT_ROUTE}$productId"
-                        )
-                    },
-                    navigateUp = { navController.navigateUp() }
-                )
-            }
-        }
-        composable(route = ProductsDestinations.PRODUCTS_NEW_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
-            showBottomMenu(true)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { categoryId ->
-                ProductScreen(
-                    isEditable = false,
-                    screenTitle = stringResource(id = R.string.new_product_label),
-                    categoryId = categoryId.toLong(),
-                    productId = 0L,
-                    onAddToCatalogClick = {},
                     navigateUp = { navController.navigateUp() }
                 )
             }
         }
         composable(
-            route = ProductsDestinations.PRODUCTS_CATALOG_ITEM_WITH_ID_ROUTE,
+            route = "${ProductsDestinations.PRODUCTS_SEARCH_ROUTE}/{$ITEM_ID}",
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
+        ) { backStackEntry ->
+            showBottomMenu(true)
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { categoryId ->
+                SearchProductScreen(
+                    isEditable = true,
+                    categoryId = categoryId,
+                    onItemClick = { productId ->
+                        navController.navigate(
+                            route = "${ProductsDestinations.PRODUCTS_PRODUCT_ROUTE}/$productId/${true}"
+                        )
+                    },
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
+        }
+        composable(
+            route = "${ProductsDestinations.PRODUCTS_CATALOG_ITEM_ROUTE}/{$ITEM_ID}/{$EDITABLE}",
             arguments = listOf(
                 navArgument(ITEM_ID) { type = NavType.LongType },
-                navArgument(ITEM_EDITABLE) { type = NavType.BoolType }
+                navArgument(EDITABLE) { type = NavType.BoolType }
             )
         ) { backStackEntry ->
             showBottomMenu(true)
             val id = backStackEntry.arguments?.getLong(ITEM_ID)
-            val editable = backStackEntry.arguments?.getBoolean(ITEM_EDITABLE)
+            val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
             if (id != null && editable != null) {
                 CatalogItemScreen(
                     productId = id,
@@ -108,17 +101,30 @@ fun NavGraphBuilder.productsNavGraph(
                 )
             }
         }
-        composable(route = ProductsDestinations.PRODUCTS_EDIT_PRODUCT_WITH_ID_ROUTE) { backStackEntry ->
+        composable(
+            route = "${ProductsDestinations.PRODUCTS_PRODUCT_ROUTE}/{$ITEM_ID}/{$EDITABLE}",
+            arguments = listOf(
+                navArgument(ITEM_ID) { type = NavType.LongType },
+                navArgument(EDITABLE) { type = NavType.BoolType }
+            )
+        ) { backStackEntry ->
             showBottomMenu(true)
-            backStackEntry.arguments?.getString(ITEM_ID)?.let { productId ->
+            val id = backStackEntry.arguments?.getLong(ITEM_ID)
+            val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
+
+            if (id != null && editable != null) {
                 ProductScreen(
-                    isEditable = true,
-                    screenTitle = stringResource(id = R.string.edit_product_label),
-                    categoryId = 0L,
-                    productId = productId.toLong(),
+                    isEditable = editable,
+                    screenTitle = if (editable) {
+                        stringResource(id = R.string.edit_product_label)
+                    } else {
+                        stringResource(id = R.string.new_product_label)
+                    },
+                    categoryId = if (editable) 0L else id,
+                    productId = if (editable) id else 0L,
                     onAddToCatalogClick = {
                         navController.navigate(
-                            route = "${ProductsDestinations.PRODUCTS_CATALOG_ITEM_ROUTE}${productId}${false}"
+                            route = "${ProductsDestinations.PRODUCTS_CATALOG_ITEM_ROUTE}/${id}/${false}"
                         )
                     },
                     navigateUp = { navController.navigateUp() }
@@ -132,12 +138,6 @@ object ProductsDestinations {
     const val MAIN_PRODUCTS_ROUTE = "main_products_route"
     const val PRODUCTS_LIST_ROUTE = "products_list_route"
     const val PRODUCTS_SEARCH_ROUTE = "products_search_route"
-    const val PRODUCTS_SEARCH_WITH_ID_ROUTE = "$PRODUCTS_SEARCH_ROUTE{${ITEM_ID}}"
-    const val PRODUCTS_LIST_WITH_ID_ROUTE = "$PRODUCTS_LIST_ROUTE{$ITEM_ID}"
-    const val PRODUCTS_NEW_PRODUCT_ROUTE = "products_new_product_route"
-    const val PRODUCTS_NEW_PRODUCT_WITH_ID_ROUTE = "$PRODUCTS_NEW_PRODUCT_ROUTE{$ITEM_ID}"
-    const val PRODUCTS_EDIT_PRODUCT_ROUTE = "products_edit_product_route"
-    const val PRODUCTS_EDIT_PRODUCT_WITH_ID_ROUTE = "$PRODUCTS_EDIT_PRODUCT_ROUTE{$ITEM_ID}"
+    const val PRODUCTS_PRODUCT_ROUTE = "products_product_route"
     const val PRODUCTS_CATALOG_ITEM_ROUTE = "products_catalog_item_route"
-    const val PRODUCTS_CATALOG_ITEM_WITH_ID_ROUTE = "$PRODUCTS_CATALOG_ITEM_ROUTE{$ITEM_ID}{$ITEM_EDITABLE}"
 }
