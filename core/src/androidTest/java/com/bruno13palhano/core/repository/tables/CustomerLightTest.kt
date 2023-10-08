@@ -163,7 +163,7 @@ class CustomerLightTest {
     }
 
     @Test
-    fun shouldDoNothingInTheDatabase_ifCustomerNotExists() = runBlocking {
+    fun shouldNotDeleteCustomerInTheDatabase_ifCustomerNotExists() = runBlocking {
         val latch = CountDownLatch(1)
         customerRepository.insert(firstCustomer)
         customerRepository.insert(secondCustomer)
@@ -205,7 +205,7 @@ class CustomerLightTest {
     }
 
     @Test
-    fun shouldDoNothingInTheDatabase_ifCustomerWithThisIdNotExists() = runBlocking {
+    fun shouldNotDeleteCustomerInTheDatabase_ifCustomerWithThisIdNotExists() = runBlocking {
         val latch = CountDownLatch(1)
         customerRepository.insert(firstCustomer)
         customerRepository.insert(thirdCustomer)
@@ -232,8 +232,6 @@ class CustomerLightTest {
         customerRepository.insert(currentCustomer)
         customerRepository.insert(secondCustomer)
         customerRepository.insert(thirdCustomer)
-
-        customerRepository.deleteById(zeroIdCustomer.id)
 
         val job = async(Dispatchers.IO) {
             customerRepository.search(search = currentCustomer.name).take(3).collect { value ->
