@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.repository
+package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.CustomerData
@@ -23,7 +23,7 @@ import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 @HiltAndroidTest
-class CustomerRepositoryTest {
+class CustomerLightTest {
     @Inject lateinit var database: ShopDatabase
     private lateinit var customerRepository: CustomerData<Customer>
     private lateinit var zeroIdCustomer: Customer
