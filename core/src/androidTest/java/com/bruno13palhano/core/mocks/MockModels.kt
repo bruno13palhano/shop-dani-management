@@ -34,7 +34,7 @@ fun makeRandomCatalog(
     price = price
 )
 
-fun makeRandomCategory(id: Long) = Category(id = id, name = getRandomString())
+fun makeRandomCategory(id: Long, name: String = getRandomString()) = Category(id = id, name = name)
 
 fun makeRandomCustomer(
     id: Long,
