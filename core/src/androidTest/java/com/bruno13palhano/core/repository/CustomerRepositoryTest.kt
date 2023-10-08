@@ -30,8 +30,6 @@ class CustomerRepositoryTest {
     private lateinit var firstCustomer: Customer
     private lateinit var secondCustomer: Customer
     private lateinit var thirdCustomer: Customer
-    private lateinit var updateCustomer: Customer
-    private lateinit var mockCustomers: List<Customer>
 
     @get:Rule
     val hiltTestRule = HiltAndroidRule(this)
@@ -47,13 +45,6 @@ class CustomerRepositoryTest {
         firstCustomer = makeRandomCustomer(id = 1L)
         secondCustomer = makeRandomCustomer(id = 2L)
         thirdCustomer = makeRandomCustomer(id = 3L)
-        updateCustomer = makeRandomCustomer(id = 1L)
-
-        mockCustomers = listOf(
-            firstCustomer,
-            secondCustomer,
-            thirdCustomer,
-        )
     }
 
     @Test
@@ -114,6 +105,7 @@ class CustomerRepositoryTest {
     @Test
     fun shouldUpdateCustomerInTheDatabase_IfCustomerExists() = runBlocking {
         val latch = CountDownLatch(1)
+        val updateCustomer = makeRandomCustomer(id = 1L)
         customerRepository.insert(firstCustomer)
         customerRepository.update(updateCustomer)
 
