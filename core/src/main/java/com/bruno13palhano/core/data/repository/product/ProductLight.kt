@@ -12,6 +12,7 @@ import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import javax.inject.Inject
 
 internal class ProductLight @Inject constructor(
@@ -93,11 +94,13 @@ internal class ProductLight @Inject constructor(
     override fun getById(id: Long): Flow<Product> {
         return productQueries.getById(produtId = id, mapper = ::mapProduct)
             .asFlow().mapToOne(ioDispatcher)
+            .catch { it.printStackTrace() }
     }
 
     override fun getLast(): Flow<Product> {
         return productQueries.getLast(mapper = ::mapProduct)
             .asFlow().mapToOne(ioDispatcher)
+            .catch { it.printStackTrace() }
     }
 
     private fun mapProduct(
