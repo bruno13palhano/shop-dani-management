@@ -10,6 +10,7 @@ import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import javax.inject.Inject
 
 internal class CategoryLight @Inject constructor(
@@ -44,11 +45,13 @@ internal class CategoryLight @Inject constructor(
     override fun getById(id: Long): Flow<Category> {
         return categoryQueries.getById(id = id, mapper = ::mapCategory)
             .asFlow().mapToOne(ioDispatcher)
+            .catch { it.printStackTrace() }
     }
 
     override fun getLast(): Flow<Category> {
         return categoryQueries.getLast(mapper = ::mapCategory)
             .asFlow().mapToOne(ioDispatcher)
+            .catch { it.printStackTrace() }
     }
 
     override fun search(value: String): Flow<List<Category>> {
