@@ -46,23 +46,6 @@ class StockOrderLight @Inject constructor(
         )
     }
 
-    override suspend fun delete(model: StockOrder) {
-        stockOrderQueries.delete(id = model.id)
-    }
-
-    override suspend fun insertItems(stockOrder: StockOrder, isPaid: Boolean) {
-        stockOrderQueries.insert(
-            productId = stockOrder.productId,
-            date = stockOrder.date,
-            purchasePrice = stockOrder.purchasePrice.toDouble(),
-            validity = stockOrder.validity,
-            quantity = stockOrder.quantity.toLong(),
-            salePrice = stockOrder.salePrice.toDouble(),
-            isOrderedByCustomer = stockOrder.isOrderedByCustomer,
-            isPaid = stockOrder.isPaid
-        )
-    }
-
     override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
         return stockOrderQueries.getItems(
             isOrderedByCustomer = isOrderedByCustomer,
