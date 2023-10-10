@@ -107,10 +107,7 @@ class ItemViewModel @Inject constructor(
 
     fun insertItems(productId: Long, isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
-            stockRepository.insertItems(
-                stockOrder = createStockOrder(productId, isOrderedByCustomer),
-                isPaid = isPaid
-            )
+            stockRepository.insert(createStockOrder(productId, isOrderedByCustomer))
         }
     }
 
