@@ -182,6 +182,32 @@ fun makeRandomStockOrder(
     isPaid = isPaid
 )
 
+fun makeRandomStockOrder(
+    id: Long,
+    product: Product = makeRandomProduct(id = id),
+    date: Long = getRandomLong(),
+    validity: Long = getRandomLong(),
+    quantity: Int = getRandomInt(),
+    purchasePrice: Float = getRandomFloat(),
+    salePrice: Float = getRandomFloat(),
+    isOrderedByCustomer: Boolean = getRandomBoolean(),
+    isPaid: Boolean = getRandomBoolean()
+) = StockOrder(
+    id = id,
+    productId = product.id,
+    name = product.name,
+    photo = product.photo,
+    date = date,
+    validity = validity,
+    quantity = quantity,
+    categories = product.categories,
+    company = product.company,
+    purchasePrice = purchasePrice,
+    salePrice = salePrice,
+    isOrderedByCustomer = isOrderedByCustomer,
+    isPaid = isPaid
+)
+
 private fun getRandomString() = (1..LENGTH)
     .map { Random.nextInt(0, charPool.size).let { charPool[it] } }
     .joinToString("")
