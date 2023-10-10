@@ -12,15 +12,13 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -61,26 +59,21 @@ class CatalogLightTest {
     }
 
     @Test
-    fun shouldInsertCatalogItemInTheDatabase() = runBlocking {
-        val latch = CountDownLatch(1)
+    fun shouldInsertCatalogItemInTheDatabase() = runTest {
         catalogRepository.insert(firstItem)
+        catalogRepository.insert(secondItem)
+        catalogRepository.insert(thirdItem)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(1).collect { items ->
-                latch.countDown()
-                assertThat(items).contains(firstItem)
+        launch(Dispatchers.IO) {
+            catalogRepository.getAll().collect { items ->
+                assertThat(items).containsExactly(firstItem, secondItem, thirdItem)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldUpdateCatalogItemInTheDatabase_ifCatalogItemExists() = runBlocking {
-        val latch = CountDownLatch(1)
+    fun shouldUpdateCatalogItemInTheDatabase_ifCatalogItemExists() = runTest {
         val updatedItem = makeRandomCatalog(
             id = firstItem.id,
             productId = firstItem.productId,
@@ -92,293 +85,196 @@ class CatalogLightTest {
         catalogRepository.insert(thirdItem)
         catalogRepository.update(updatedItem)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(1).collect { items ->
-                latch.countDown()
-                assertThat(items).contains(updatedItem)
+        launch(Dispatchers.IO) {
+            catalogRepository.getAll().collect { items ->
+                assertThat(items).containsExactly(updatedItem, secondItem, thirdItem)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldNotUpdateCatalogItemInTheDatabase_ifCatalogItemNotExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldNotUpdateCatalogItemInTheDatabase_ifCatalogItemNotExists() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
         catalogRepository.update(zeroIdItem)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(1).collect { items ->
-                latch.countDown()
+        launch {
+            catalogRepository.getAll().collect { items ->
                 assertThat(items).doesNotContain(zeroIdItem)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldDeleteCatalogItemInTheDatabase_ifCatalogItemExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldDeleteCatalogItemInTheDatabase_ifCatalogItemExists() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)
         catalogRepository.insert(thirdItem)
 
         catalogRepository.delete(firstItem)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(1).collect { items ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            catalogRepository.getAll().collect { items ->
                 assertThat(items).doesNotContain(firstItem)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldNotDeleteCatalogItemInTheDatabase_ifCatalogItemNotExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldNotDeleteCatalogItemInTheDatabase_ifCatalogItemNotExists() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)
         catalogRepository.insert(thirdItem)
 
         catalogRepository.delete(zeroIdItem)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(1).collect { items ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            catalogRepository.getAll().collect { items ->
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldDeleteCatalogItemWithThisIdInTheDatabase_ifCatalogItemExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldDeleteCatalogItemWithThisIdInTheDatabase_ifCatalogItemExists() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)
         catalogRepository.insert(thirdItem)
 
         catalogRepository.deleteById(firstItem.id)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(1).collect { items ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            catalogRepository.getAll().collect { items ->
                 assertThat(items).doesNotContain(firstItem)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldNotDeleteCatalogItemWithThisIdInTheDatabase_ifCatalogItemNotExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldNotDeleteCatalogItemWithThisIdInTheDatabase_ifCatalogItemNotExists() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)
         catalogRepository.insert(thirdItem)
 
         catalogRepository.deleteById(zeroIdItem.id)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(1).collect { items ->
-                latch.countDown()
-                assertThat(items).contains(firstItem)
-            }
-        }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
-    }
-
-    @Test
-    fun shouldReturnAllCatalogItemsInTheDatabase_ifDatabaseIsNotEmpty() = runBlocking {
-        val latch = CountDownLatch(1)
-
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(1).collect { items ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            catalogRepository.getAll().collect { items ->
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runBlocking {
-        val latch = CountDownLatch(1)
+    fun shouldReturnAllCatalogItemsInTheDatabase_ifDatabaseIsNotEmpty() = runTest {
+        catalogRepository.insert(firstItem)
+        catalogRepository.insert(secondItem)
+        catalogRepository.insert(thirdItem)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(1).collect { items ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            catalogRepository.getAll().collect { items ->
+                assertThat(items).containsExactly(firstItem, secondItem, thirdItem)
+                cancel()
+            }
+        }
+    }
+
+    @Test
+    fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runTest {
+        launch(Dispatchers.IO) {
+            catalogRepository.getAll().collect { items ->
                 assertThat(items).isEmpty()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCatalogItemsOrderedByNameDesc() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldReturnCatalogItemsOrderedByNameDesc() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)
         catalogRepository.insert(thirdItem)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getOrderedByName(isOrderedAsc = false).take(1).collect { items ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            catalogRepository.getOrderedByName(isOrderedAsc = false).collect { items ->
                 assertThat(items).containsExactly(thirdItem, secondItem, firstItem).inOrder()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCatalogItemsOrderedByNameAsc() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldReturnCatalogItemsOrderedByNameAsc() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)
         catalogRepository.insert(thirdItem)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getOrderedByName(isOrderedAsc = true).take(1).collect { items ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            catalogRepository.getOrderedByName(isOrderedAsc = true).collect { items ->
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem).inOrder()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCatalogItemsOrderedByPriceDesc() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldReturnCatalogItemsOrderedByPriceDesc() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)
         catalogRepository.insert(thirdItem)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getOrderedByPrice(isOrderedAsc = false).take(1).collect { items ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            catalogRepository.getOrderedByPrice(isOrderedAsc = false).collect { items ->
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem).inOrder()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCatalogItemsOrderedByPriceAsc() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldReturnCatalogItemsOrderedByPriceAsc() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)
         catalogRepository.insert(thirdItem)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getOrderedByPrice(isOrderedAsc = true).take(1).collect { items ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            catalogRepository.getOrderedByPrice(isOrderedAsc = true).collect { items ->
                 assertThat(items).containsExactly(thirdItem, secondItem, firstItem).inOrder()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCatalogItemWithThisId_ifExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldReturnCatalogItemWithThisId_ifExists() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)
         catalogRepository.insert(thirdItem)
 
-        val job = async(Dispatchers.IO) {
-            catalogRepository.getById(thirdItem.id).collect { item ->
-                latch.countDown()
-                assertThat(item).isEqualTo(thirdItem)
+        launch(Dispatchers.IO) {
+            catalogRepository.getById(firstItem.id).collect { item ->
+                assertThat(item).isEqualTo(firstItem)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnLastCatalogItem_ifNotEmpty() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldReturnLastCatalogItem_ifNotEmpty() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)
 
-        val job = async(Dispatchers.IO) {
+        launch(Dispatchers.IO) {
             catalogRepository.getLast().collect { item ->
-                latch.countDown()
                 assertThat(item).isEqualTo(secondItem)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 }
