@@ -66,7 +66,7 @@ class CatalogLightTest {
         catalogRepository.insert(firstItem)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(3).collect { items ->
+            catalogRepository.getAll().take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).contains(firstItem)
             }
@@ -93,7 +93,7 @@ class CatalogLightTest {
         catalogRepository.update(updatedItem)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(3).collect { items ->
+            catalogRepository.getAll().take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).contains(updatedItem)
             }
@@ -115,7 +115,7 @@ class CatalogLightTest {
         catalogRepository.update(zeroIdItem)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(3).collect { items ->
+            catalogRepository.getAll().take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).doesNotContain(zeroIdItem)
             }
@@ -138,7 +138,7 @@ class CatalogLightTest {
         catalogRepository.delete(firstItem)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(3).collect { items ->
+            catalogRepository.getAll().take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).doesNotContain(firstItem)
             }
@@ -161,7 +161,7 @@ class CatalogLightTest {
         catalogRepository.delete(zeroIdItem)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(3).collect { items ->
+            catalogRepository.getAll().take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem)
             }
@@ -184,7 +184,7 @@ class CatalogLightTest {
         catalogRepository.deleteById(firstItem.id)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(3).collect { items ->
+            catalogRepository.getAll().take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).doesNotContain(firstItem)
             }
@@ -207,7 +207,7 @@ class CatalogLightTest {
         catalogRepository.deleteById(zeroIdItem.id)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(3).collect { items ->
+            catalogRepository.getAll().take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).contains(firstItem)
             }
@@ -228,7 +228,7 @@ class CatalogLightTest {
         catalogRepository.insert(thirdItem)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(3).collect { items ->
+            catalogRepository.getAll().take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem)
             }
@@ -245,7 +245,7 @@ class CatalogLightTest {
         val latch = CountDownLatch(1)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getAll().take(3).collect { items ->
+            catalogRepository.getAll().take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).isEmpty()
             }
@@ -266,7 +266,7 @@ class CatalogLightTest {
         catalogRepository.insert(thirdItem)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getOrderedByName(isOrderedAsc = false).take(3).collect { items ->
+            catalogRepository.getOrderedByName(isOrderedAsc = false).take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).containsExactly(thirdItem, secondItem, firstItem).inOrder()
             }
@@ -287,7 +287,7 @@ class CatalogLightTest {
         catalogRepository.insert(thirdItem)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getOrderedByName(isOrderedAsc = true).take(3).collect { items ->
+            catalogRepository.getOrderedByName(isOrderedAsc = true).take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem).inOrder()
             }
@@ -308,7 +308,7 @@ class CatalogLightTest {
         catalogRepository.insert(thirdItem)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getOrderedByPrice(isOrderedAsc = false).take(3).collect { items ->
+            catalogRepository.getOrderedByPrice(isOrderedAsc = false).take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem).inOrder()
             }
@@ -329,7 +329,7 @@ class CatalogLightTest {
         catalogRepository.insert(thirdItem)
 
         val job = async(Dispatchers.IO) {
-            catalogRepository.getOrderedByPrice(isOrderedAsc = true).take(3).collect { items ->
+            catalogRepository.getOrderedByPrice(isOrderedAsc = true).take(1).collect { items ->
                 latch.countDown()
                 assertThat(items).containsExactly(thirdItem, secondItem, firstItem).inOrder()
             }
