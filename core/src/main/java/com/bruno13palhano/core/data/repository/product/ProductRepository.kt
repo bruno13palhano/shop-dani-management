@@ -17,10 +17,6 @@ internal class ProductRepository @Inject constructor(
         productData.update(model = model)
     }
 
-    override suspend fun delete(model: Product) {
-        productData.delete(model = model)
-    }
-
     override fun search(value: String): Flow<List<Product>> {
         return productData.search(value = value)
     }

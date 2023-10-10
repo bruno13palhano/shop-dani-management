@@ -54,10 +54,6 @@ internal class ProductLight @Inject constructor(
         )
     }
 
-    override suspend fun delete(model: Product) {
-        productQueries.delete(productId = model.id)
-    }
-
     override fun search(value: String): Flow<List<Product>> {
         return productQueries.search(
             category = value,

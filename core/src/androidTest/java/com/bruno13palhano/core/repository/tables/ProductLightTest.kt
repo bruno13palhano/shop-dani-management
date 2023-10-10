@@ -84,36 +84,6 @@ class ProductLightTest {
     }
 
     @Test
-    fun shouldDeleteProductInTheDatabase_ifProductExists() = runTest {
-        productRepository.insert(firstProduct)
-        productRepository.insert(secondProduct)
-        productRepository.insert(thirdProduct)
-
-        productRepository.delete(firstProduct)
-
-        launch(Dispatchers.IO) {
-            productRepository.getAll().collect { products ->
-                assertThat(products).doesNotContain(firstProduct)
-                cancel()
-            }
-        }
-    }
-
-    @Test
-    fun shouldNotDeleteProductInTheDatabase_ifProductNotExists() = runTest {
-        productRepository.insert(firstProduct)
-
-        productRepository.delete(zeroIdProduct)
-
-        launch(Dispatchers.IO) {
-            productRepository.getAll().collect { products ->
-                assertThat(products).contains(firstProduct)
-                cancel()
-            }
-        }
-    }
-
-    @Test
     fun shouldDeleteProductWithThisIdInTheDatabase_ifProductExists() = runTest {
         productRepository.insert(firstProduct)
         productRepository.insert(secondProduct)

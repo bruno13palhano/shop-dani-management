@@ -142,48 +142,6 @@ class CustomerLightTest {
     }
 
     @Test
-    fun shouldDeleteCustomerInTheDatabase_ifCustomerExists() = runBlocking {
-        val latch = CountDownLatch(1)
-        customerRepository.insert(firstCustomer)
-        customerRepository.insert(secondCustomer)
-
-        customerRepository.delete(firstCustomer)
-
-        val job1 = async(Dispatchers.IO) {
-            customerRepository.getAll().take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).doesNotContain(firstCustomer)
-            }
-        }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job1.cancelAndJoin()
-    }
-
-    @Test
-    fun shouldNotDeleteCustomerInTheDatabase_ifCustomerNotExists() = runBlocking {
-        val latch = CountDownLatch(1)
-        customerRepository.insert(firstCustomer)
-        customerRepository.insert(secondCustomer)
-
-        customerRepository.delete(zeroIdCustomer)
-
-        val job1 = async(Dispatchers.IO) {
-            customerRepository.getAll().take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).containsAnyOf(firstCustomer, secondCustomer)
-            }
-        }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job1.cancelAndJoin()
-    }
-
-    @Test
     fun shouldDeleteCustomerWhitThisIdInTheDatabase_ifCustomerExists() = runBlocking {
         val latch = CountDownLatch(1)
         customerRepository.insert(firstCustomer)

@@ -17,10 +17,6 @@ internal class CustomerRepository @Inject constructor(
         customerData.update(model = model)
     }
 
-    override suspend fun delete(model: Customer) {
-        customerData.delete(model = model)
-    }
-
     override suspend fun deleteById(id: Long) {
         customerData.deleteById(id = id)
     }

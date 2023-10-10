@@ -29,10 +29,6 @@ internal class CategoryRepository @Inject constructor(
         return categoryData.getLast()
     }
 
-    override suspend fun delete(model: Category) {
-        return categoryData.delete(model = model)
-    }
-
     override suspend fun update(model: Category) {
         return categoryData.update(model = model)
     }

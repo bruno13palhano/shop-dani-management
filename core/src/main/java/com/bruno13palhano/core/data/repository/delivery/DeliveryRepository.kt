@@ -17,10 +17,6 @@ internal class DeliveryRepository @Inject constructor(
         deliveryData.update(model = model)
     }
 
-    override suspend fun delete(model: Delivery) {
-        deliveryData.delete(model = model)
-    }
-
     override suspend fun updateDeliveryPrice(id: Long, deliveryPrice: Float) {
         deliveryData.updateDeliveryPrice(id = id, deliveryPrice = deliveryPrice)
     }

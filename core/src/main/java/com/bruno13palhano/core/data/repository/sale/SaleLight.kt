@@ -69,10 +69,6 @@ internal class SaleLight @Inject constructor(
         )
     }
 
-    override suspend fun delete(model: Sale) {
-        saleQueries.delete(id = model.id)
-    }
-
     override suspend fun insertItems(
         sale: Sale,
         stockOrder: StockOrder,

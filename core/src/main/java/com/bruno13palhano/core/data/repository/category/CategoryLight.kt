@@ -29,10 +29,6 @@ internal class CategoryLight @Inject constructor(
         )
     }
 
-    override suspend fun delete(model: Category) {
-        categoryQueries.delete(model.id)
-    }
-
     override suspend fun deleteById(id: Long) {
         categoryQueries.delete(id)
     }

@@ -17,10 +17,6 @@ class CatalogRepository @Inject constructor(
         catalogData.update(model = model)
     }
 
-    override suspend fun delete(model: Catalog) {
-        catalogData.delete(model = model)
-    }
-
     override suspend fun deleteById(id: Long) {
         catalogData.deleteById(id = id)
     }

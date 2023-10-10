@@ -108,38 +108,6 @@ class CatalogLightTest {
     }
 
     @Test
-    fun shouldDeleteCatalogItemInTheDatabase_ifCatalogItemExists() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
-        catalogRepository.delete(firstItem)
-
-        launch(Dispatchers.IO) {
-            catalogRepository.getAll().collect { items ->
-                assertThat(items).doesNotContain(firstItem)
-                cancel()
-            }
-        }
-    }
-
-    @Test
-    fun shouldNotDeleteCatalogItemInTheDatabase_ifCatalogItemNotExists() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
-        catalogRepository.delete(zeroIdItem)
-
-        launch(Dispatchers.IO) {
-            catalogRepository.getAll().collect { items ->
-                assertThat(items).containsExactly(firstItem, secondItem, thirdItem)
-                cancel()
-            }
-        }
-    }
-
-    @Test
     fun shouldDeleteCatalogItemWithThisIdInTheDatabase_ifCatalogItemExists() = runTest {
         catalogRepository.insert(firstItem)
         catalogRepository.insert(secondItem)

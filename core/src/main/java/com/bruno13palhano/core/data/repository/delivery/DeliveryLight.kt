@@ -39,10 +39,6 @@ class DeliveryLight @Inject constructor(
         )
     }
 
-    override suspend fun delete(model: Delivery) {
-        deliveryQueries.delete(id = model.id)
-    }
-
     override suspend fun updateDeliveryPrice(id: Long, deliveryPrice: Float) {
         deliveryQueries.updateDeliveryPrice(id = id, deliveryPrice = deliveryPrice.toDouble())
     }

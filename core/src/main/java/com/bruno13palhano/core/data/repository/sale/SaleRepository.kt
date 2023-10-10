@@ -23,10 +23,6 @@ internal class SaleRepository @Inject constructor(
         saleData.cancelSale(saleId = saleId)
     }
 
-    override suspend fun delete(model: Sale) {
-        saleData.delete(model = model)
-    }
-
     override suspend fun insertItems(
         sale: Sale,
         stockOrder: StockOrder,

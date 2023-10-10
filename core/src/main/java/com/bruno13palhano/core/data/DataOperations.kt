@@ -22,12 +22,6 @@ interface DataOperations<T> {
     suspend fun update(model: T)
 
     /**
-     * Deletes the [model] of type [T].
-     * @param model the [model] to be deleted.
-     */
-    suspend fun delete(model: T)
-
-    /**
      * Deletes the model of type [T] specified by this [id].
      * @param id the [id] of the model to be deleted.
      */

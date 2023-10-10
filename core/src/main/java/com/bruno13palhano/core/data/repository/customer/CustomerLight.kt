@@ -39,10 +39,6 @@ internal class CustomerLight @Inject constructor(
         )
     }
 
-    override suspend fun delete(model: Customer) {
-        customerQueries.delete(model.id)
-    }
-
     override suspend fun deleteById(id: Long) {
         customerQueries.delete(id)
     }

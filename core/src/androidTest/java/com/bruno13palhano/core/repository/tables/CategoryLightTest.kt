@@ -107,50 +107,6 @@ class CategoryLightTest {
     }
 
     @Test
-    fun shouldDeleteCategoryInTheDatabase_ifCategoryExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
-        categoryRepository.insert(firstCategory)
-        categoryRepository.insert(secondCategory)
-
-        categoryRepository.delete(firstCategory)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.getAll().take(3).collect { categories ->
-                latch.countDown()
-                assertThat(categories).doesNotContain(firstCategory)
-            }
-        }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
-    }
-
-    @Test
-    fun shouldNotDeleteInTheDatabase_ifCategoryNotExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
-        categoryRepository.insert(firstCategory)
-        categoryRepository.insert(secondCategory)
-
-        categoryRepository.delete(zeroIdCategory)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.getAll().take(3).collect { categories ->
-                latch.countDown()
-                assertThat(categories).containsExactly(firstCategory, secondCategory)
-            }
-        }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
-    }
-
-    @Test
     fun shouldDeleteCategoryWithThisIdInTheDatabase_ifCategoryExists() = runBlocking {
         val latch = CountDownLatch(1)
 

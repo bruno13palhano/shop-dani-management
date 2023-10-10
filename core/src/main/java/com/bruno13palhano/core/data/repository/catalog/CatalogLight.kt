@@ -39,10 +39,6 @@ internal class CatalogLight @Inject constructor(
         )
     }
 
-    override suspend fun delete(model: Catalog) {
-        catalogQueries.delete(id = model.id)
-    }
-
     override suspend fun deleteById(id: Long) {
         catalogQueries.delete(id = id)
     }
