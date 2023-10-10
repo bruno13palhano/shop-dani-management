@@ -10,15 +10,13 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -45,103 +43,68 @@ class SearchCacheLightTest {
     }
 
     @Test
-    fun shouldInsertSearchCacheInDatabase() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldInsertSearchCacheInDatabase() = runTest {
         searchCacheRepository.insert(firstCache)
 
-        val job = async(Dispatchers.IO) {
-            searchCacheRepository.getAll().take(3).collect { searchCaches ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            searchCacheRepository.getAll().collect { searchCaches ->
                 assertThat(searchCaches).contains(firstCache)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldDeleteSearchCacheWithThisIdInDatabase_ifSearchCacheExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldDeleteSearchCacheWithThisIdInDatabase_ifSearchCacheExists() = runTest {
         searchCacheRepository.insert(firstCache)
         searchCacheRepository.insert(secondCache)
 
         searchCacheRepository.deleteById(firstCache.search)
 
-        val job = async(Dispatchers.IO) {
-            searchCacheRepository.getAll().take(3).collect { searchCaches ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            searchCacheRepository.getAll().collect { searchCaches ->
                 assertThat(searchCaches).doesNotContain(firstCache)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldNotDeleteSearchCacheInDatabase_ifSearchCacheWithThisIdNotExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldNotDeleteSearchCacheInDatabase_ifSearchCacheWithThisIdNotExists() = runTest {
         searchCacheRepository.insert(firstCache)
         searchCacheRepository.insert(secondCache)
 
         searchCacheRepository.deleteById(thirdCache.search)
 
-        val job = async(Dispatchers.IO) {
+        launch(Dispatchers.IO) {
             searchCacheRepository.getAll().take(3).collect { searchCaches ->
-                latch.countDown()
                 assertThat(searchCaches).containsExactly(firstCache, secondCache)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnAllSearchCachesInTheDatabase_ifDatabaseIsNotEmpty() = runBlocking {
-        val latch = CountDownLatch(1)
-
+    fun shouldReturnAllSearchCachesInTheDatabase_ifDatabaseIsNotEmpty() = runTest {
         searchCacheRepository.insert(firstCache)
         searchCacheRepository.insert(secondCache)
         searchCacheRepository.insert(thirdCache)
 
-        val job = async(Dispatchers.IO) {
-            searchCacheRepository.getAll().take(3).collect { searchCaches ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            searchCacheRepository.getAll().collect { searchCaches ->
                 assertThat(searchCaches).containsExactly(firstCache, secondCache, thirdCache)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runBlocking {
-        val latch = CountDownLatch(1)
-
-        val job = async(Dispatchers.IO) {
-            searchCacheRepository.getAll().take(3).collect { searchCaches ->
-                latch.countDown()
+    fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runTest {
+        launch(Dispatchers.IO) {
+            searchCacheRepository.getAll().collect { searchCaches ->
                 assertThat(searchCaches).isEmpty()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 }
