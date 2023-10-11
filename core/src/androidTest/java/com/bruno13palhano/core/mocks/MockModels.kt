@@ -2,7 +2,6 @@ package com.bruno13palhano.core.mocks
 
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Product
@@ -102,85 +101,7 @@ fun makeRandomProduct(
     company = company
 )
 
-fun makeRandomSale(
-    id: Long,
-    productId: Long = getRandomLong(),
-    stockOrderId: Long = getRandomLong(),
-    customerId: Long = getRandomLong(),
-    name: String = getRandomString(),
-    customerName: String = getRandomString(),
-    photo: ByteArray = byteArrayOf(),
-    quantity: Int = getRandomInt(),
-    purchasePrice: Float = getRandomFloat(),
-    salePrice: Float = getRandomFloat(),
-    deliveryPrice: Float = getRandomFloat(),
-    categories: List<Category> = listOf(
-        makeRandomCategory(1L),
-        makeRandomCategory(2L),
-        makeRandomCategory(3L)
-    ),
-    company: String = getRandomString(),
-    dateOfSale: Long = getRandomLong(),
-    dateOfPayment: Long = getRandomLong(),
-    isOrderedByCustomer: Boolean = getRandomBoolean(),
-    isPaidByCustomer: Boolean = getRandomBoolean(),
-    canceled: Boolean = getRandomBoolean()
-) = Sale(
-    id = id,
-    productId = productId,
-    stockOrderId = stockOrderId,
-    customerId = customerId,
-    name = name,
-    customerName = customerName,
-    photo = photo,
-    quantity = quantity,
-    purchasePrice = purchasePrice,
-    salePrice = salePrice,
-    deliveryPrice = deliveryPrice,
-    categories = categories,
-    company = company,
-    dateOfSale = dateOfSale,
-    dateOfPayment = dateOfPayment,
-    isOrderedByCustomer = isOrderedByCustomer,
-    isPaidByCustomer = isPaidByCustomer,
-    canceled = canceled
-)
-
 fun makeRandomSearchCache(search: String = getRandomString()) = SearchCache(search = search)
-
-fun makeRandomStockOrder(
-    id: Long,
-    productId: Long = getRandomLong(),
-    name: String = getRandomString(),
-    photo: ByteArray = byteArrayOf(),
-    date: Long = getRandomLong(),
-    validity: Long = getRandomLong(),
-    quantity: Int = getRandomInt(),
-    categories: List<Category> = listOf(
-        makeRandomCategory(1L),
-        makeRandomCategory(2L),
-        makeRandomCategory(3L)
-    ),
-    company: String = getRandomString(),
-    purchasePrice: Float = getRandomFloat(),
-    salePrice: Float = getRandomFloat(),
-    isOrderedByCustomer: Boolean = getRandomBoolean(),
-    isPaid: Boolean = getRandomBoolean()
-) = StockOrder(
-    id = id,
-    productId = productId,
-    name = name,
-    photo = photo,
-    date = date,
-    validity = validity,
-    quantity = quantity,
-    categories = categories,
-    company = company,
-    purchasePrice = purchasePrice,
-    salePrice = salePrice,
-    isOrderedByCustomer = isOrderedByCustomer,
-    isPaid = isPaid
-)
 
 fun makeRandomStockOrder(
     id: Long,
@@ -206,6 +127,38 @@ fun makeRandomStockOrder(
     salePrice = salePrice,
     isOrderedByCustomer = isOrderedByCustomer,
     isPaid = isPaid
+)
+
+fun makeRandomSale(
+    id: Long,
+    stockOrder: StockOrder = makeRandomStockOrder(id = id),
+    delivery: Delivery = makeRandomDelivery(id = id, saleId = id),
+    customerId: Long = getRandomLong(),
+    customerName: String = getRandomString(),
+    quantity: Int = getRandomInt(),
+    dateOfSale: Long = getRandomLong(),
+    dateOfPayment: Long = getRandomLong(),
+    isPaidByCustomer: Boolean = getRandomBoolean(),
+    canceled: Boolean = getRandomBoolean()
+) = Sale(
+    id = id,
+    productId = stockOrder.productId,
+    stockOrderId = stockOrder.id,
+    customerId = customerId,
+    name = stockOrder.name,
+    customerName = customerName,
+    photo = stockOrder.photo,
+    quantity = quantity,
+    purchasePrice = stockOrder.purchasePrice,
+    salePrice = stockOrder.salePrice,
+    deliveryPrice = delivery.deliveryPrice,
+    categories = stockOrder.categories,
+    company = stockOrder.company,
+    dateOfSale = dateOfSale,
+    dateOfPayment = dateOfPayment,
+    isOrderedByCustomer = stockOrder.isOrderedByCustomer,
+    isPaidByCustomer = isPaidByCustomer,
+    canceled = canceled
 )
 
 private fun getRandomString() = (1..LENGTH)
