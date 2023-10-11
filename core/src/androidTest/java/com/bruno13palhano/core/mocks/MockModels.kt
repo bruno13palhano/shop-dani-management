@@ -77,6 +77,30 @@ fun makeRandomDelivery(
     delivered = delivered
 )
 
+fun makeRandomDelivery(
+    id: Long,
+    saleId: Long = getRandomLong(),
+    customer: Customer = makeRandomCustomer(id = id),
+    productName: String = getRandomString(),
+    price: Float = getRandomFloat(),
+    deliveryPrice: Float = getRandomFloat(),
+    shippingDate: Long = getRandomLong(),
+    deliveryDate: Long = getRandomLong(),
+    delivered: Boolean = getRandomBoolean()
+) = Delivery(
+    id = id,
+    saleId = saleId,
+    customerName = customer.name,
+    address = customer.address,
+    phoneNumber = customer.phoneNumber,
+    productName = productName,
+    price = price,
+    deliveryPrice = deliveryPrice,
+    shippingDate = shippingDate,
+    deliveryDate = deliveryDate,
+    delivered = delivered
+)
+
 fun makeRandomProduct(
     id: Long,
     name: String = getRandomString(),
@@ -133,8 +157,7 @@ fun makeRandomSale(
     id: Long,
     stockOrder: StockOrder = makeRandomStockOrder(id = id),
     delivery: Delivery = makeRandomDelivery(id = id, saleId = id),
-    customerId: Long = getRandomLong(),
-    customerName: String = getRandomString(),
+    customer: Customer = makeRandomCustomer(id = id),
     quantity: Int = getRandomInt(),
     dateOfSale: Long = getRandomLong(),
     dateOfPayment: Long = getRandomLong(),
@@ -144,9 +167,9 @@ fun makeRandomSale(
     id = id,
     productId = stockOrder.productId,
     stockOrderId = stockOrder.id,
-    customerId = customerId,
+    customerId = customer.id,
     name = stockOrder.name,
-    customerName = customerName,
+    customerName = customer.name,
     photo = stockOrder.photo,
     quantity = quantity,
     purchasePrice = stockOrder.purchasePrice,
