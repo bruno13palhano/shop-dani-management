@@ -3,7 +3,6 @@ package com.bruno13palhano.core.repository.tables
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.CatalogData
 import com.bruno13palhano.core.data.repository.catalog.CatalogLight
-import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
 import com.bruno13palhano.core.data.repository.product.ProductLight
 import com.bruno13palhano.core.mocks.makeRandomCatalog
 import com.bruno13palhano.core.mocks.makeRandomProduct
@@ -24,8 +23,7 @@ import javax.inject.Inject
 @HiltAndroidTest
 class CatalogLightTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var catalogRepository: CatalogData<Catalog>
-    private lateinit var zeroIdItem: Catalog
+    private lateinit var catalogTable: CatalogData<Catalog>
     private lateinit var firstItem: Catalog
     private lateinit var secondItem: Catalog
     private lateinit var thirdItem: Catalog
@@ -37,22 +35,20 @@ class CatalogLightTest {
     fun before() = runBlocking {
         hiltTestRule.inject()
 
-        val catalogData = CatalogLight(database.catalogTableQueries, Dispatchers.IO)
-        val productRepository = ProductLight(
+        val productTable = ProductLight(
             database.shopDatabaseQueries,
             database.productCategoriesTableQueries,
             Dispatchers.IO
         )
-        catalogRepository = CatalogRepository(catalogData)
+        catalogTable = CatalogLight(database.catalogTableQueries, Dispatchers.IO)
 
         val product1 = makeRandomProduct(id = 1L, name = "Homem")
         val product2 = makeRandomProduct(id = 2L, name = "Kaiak")
         val product3 = makeRandomProduct(id = 3L, name = "Luna")
-        productRepository.insert(product1)
-        productRepository.insert(product2)
-        productRepository.insert(product3)
+        productTable.insert(product1)
+        productTable.insert(product2)
+        productTable.insert(product3)
 
-        zeroIdItem = makeRandomCatalog(id = 0L, productId = 1L, name = product1.name, price = 10F)
         firstItem = makeRandomCatalog(id = 1L, productId = 1L, name = product1.name, price = 100F)
         secondItem = makeRandomCatalog(id = 2L, productId = 2L, name = product2.name, price = 50F)
         thirdItem = makeRandomCatalog(id = 3L, productId = 3L, name = product3.name, price = 25F)
@@ -60,12 +56,9 @@ class CatalogLightTest {
 
     @Test
     fun shouldInsertCatalogItemInTheDatabase() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
+        insertAllCatalogs()
         launch(Dispatchers.IO) {
-            catalogRepository.getAll().collect { items ->
+            catalogTable.getAll().collect { items ->
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem)
                 cancel()
             }
@@ -80,13 +73,11 @@ class CatalogLightTest {
             name = firstItem.name
         )
 
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-        catalogRepository.update(updatedItem)
+        insertAllCatalogs()
+        catalogTable.update(updatedItem)
 
         launch(Dispatchers.IO) {
-            catalogRepository.getAll().collect { items ->
+            catalogTable.getAll().collect { items ->
                 assertThat(items).containsExactly(updatedItem, secondItem, thirdItem)
                 cancel()
             }
@@ -95,13 +86,11 @@ class CatalogLightTest {
 
     @Test
     fun shouldNotUpdateCatalogItemInTheDatabase_ifCatalogItemNotExists() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.update(zeroIdItem)
-
+        insertTwoCatalogs()
+        catalogTable.update(thirdItem)
         launch {
-            catalogRepository.getAll().collect { items ->
-                assertThat(items).doesNotContain(zeroIdItem)
+            catalogTable.getAll().collect { items ->
+                assertThat(items).doesNotContain(thirdItem)
                 cancel()
             }
         }
@@ -109,14 +98,11 @@ class CatalogLightTest {
 
     @Test
     fun shouldDeleteCatalogItemWithThisIdInTheDatabase_ifCatalogItemExists() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
-        catalogRepository.deleteById(firstItem.id)
+        insertAllCatalogs()
+        catalogTable.deleteById(firstItem.id)
 
         launch(Dispatchers.IO) {
-            catalogRepository.getAll().collect { items ->
+            catalogTable.getAll().collect { items ->
                 assertThat(items).doesNotContain(firstItem)
                 cancel()
             }
@@ -125,15 +111,12 @@ class CatalogLightTest {
 
     @Test
     fun shouldNotDeleteCatalogItemWithThisIdInTheDatabase_ifCatalogItemNotExists() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
-        catalogRepository.deleteById(zeroIdItem.id)
+        insertTwoCatalogs()
+        catalogTable.deleteById(thirdItem.id)
 
         launch(Dispatchers.IO) {
-            catalogRepository.getAll().collect { items ->
-                assertThat(items).containsExactly(firstItem, secondItem, thirdItem)
+            catalogTable.getAll().collect { items ->
+                assertThat(items).containsExactly(firstItem, secondItem)
                 cancel()
             }
         }
@@ -141,12 +124,9 @@ class CatalogLightTest {
 
     @Test
     fun shouldReturnAllCatalogItemsInTheDatabase_ifDatabaseIsNotEmpty() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
+        insertAllCatalogs()
         launch(Dispatchers.IO) {
-            catalogRepository.getAll().collect { items ->
+            catalogTable.getAll().collect { items ->
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem)
                 cancel()
             }
@@ -156,7 +136,7 @@ class CatalogLightTest {
     @Test
     fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runTest {
         launch(Dispatchers.IO) {
-            catalogRepository.getAll().collect { items ->
+            catalogTable.getAll().collect { items ->
                 assertThat(items).isEmpty()
                 cancel()
             }
@@ -165,12 +145,9 @@ class CatalogLightTest {
 
     @Test
     fun shouldReturnCatalogItemsOrderedByNameDesc() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
+        insertAllCatalogs()
         launch(Dispatchers.IO) {
-            catalogRepository.getOrderedByName(isOrderedAsc = false).collect { items ->
+            catalogTable.getOrderedByName(isOrderedAsc = false).collect { items ->
                 assertThat(items).containsExactly(thirdItem, secondItem, firstItem).inOrder()
                 cancel()
             }
@@ -179,12 +156,9 @@ class CatalogLightTest {
 
     @Test
     fun shouldReturnCatalogItemsOrderedByNameAsc() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
+        insertAllCatalogs()
         launch(Dispatchers.IO) {
-            catalogRepository.getOrderedByName(isOrderedAsc = true).collect { items ->
+            catalogTable.getOrderedByName(isOrderedAsc = true).collect { items ->
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem).inOrder()
                 cancel()
             }
@@ -193,12 +167,9 @@ class CatalogLightTest {
 
     @Test
     fun shouldReturnCatalogItemsOrderedByPriceDesc() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
+        insertAllCatalogs()
         launch(Dispatchers.IO) {
-            catalogRepository.getOrderedByPrice(isOrderedAsc = false).collect { items ->
+            catalogTable.getOrderedByPrice(isOrderedAsc = false).collect { items ->
                 assertThat(items).containsExactly(firstItem, secondItem, thirdItem).inOrder()
                 cancel()
             }
@@ -207,12 +178,9 @@ class CatalogLightTest {
 
     @Test
     fun shouldReturnCatalogItemsOrderedByPriceAsc() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
+        insertAllCatalogs()
         launch(Dispatchers.IO) {
-            catalogRepository.getOrderedByPrice(isOrderedAsc = true).collect { items ->
+            catalogTable.getOrderedByPrice(isOrderedAsc = true).collect { items ->
                 assertThat(items).containsExactly(thirdItem, secondItem, firstItem).inOrder()
                 cancel()
             }
@@ -221,12 +189,9 @@ class CatalogLightTest {
 
     @Test
     fun shouldReturnCatalogItemWithThisId_ifExists() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-        catalogRepository.insert(thirdItem)
-
+        insertAllCatalogs()
         launch(Dispatchers.IO) {
-            catalogRepository.getById(firstItem.id).collect { item ->
+            catalogTable.getById(firstItem.id).collect { item ->
                 assertThat(item).isEqualTo(firstItem)
                 cancel()
             }
@@ -235,14 +200,23 @@ class CatalogLightTest {
 
     @Test
     fun shouldReturnLastCatalogItem_ifNotEmpty() = runTest {
-        catalogRepository.insert(firstItem)
-        catalogRepository.insert(secondItem)
-
+        insertTwoCatalogs()
         launch(Dispatchers.IO) {
-            catalogRepository.getLast().collect { item ->
+            catalogTable.getLast().collect { item ->
                 assertThat(item).isEqualTo(secondItem)
                 cancel()
             }
         }
+    }
+
+    private suspend fun insertTwoCatalogs() {
+        catalogTable.insert(firstItem)
+        catalogTable.insert(secondItem)
+    }
+
+    private suspend fun insertAllCatalogs() {
+        catalogTable.insert(firstItem)
+        catalogTable.insert(secondItem)
+        catalogTable.insert(thirdItem)
     }
 }
