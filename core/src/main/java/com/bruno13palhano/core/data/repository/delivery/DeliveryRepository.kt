@@ -52,4 +52,8 @@ internal class DeliveryRepository @Inject constructor(
     override fun getLast(): Flow<Delivery> {
         return deliveryData.getLast()
     }
+
+    override fun getCanceledDeliveries(): Flow<List<Delivery>> {
+        return deliveryData.getCanceledDeliveries()
+    }
 }

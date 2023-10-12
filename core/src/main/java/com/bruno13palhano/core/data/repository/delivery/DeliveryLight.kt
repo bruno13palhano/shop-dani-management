@@ -81,6 +81,11 @@ class DeliveryLight @Inject constructor(
             .catch { it.printStackTrace() }
     }
 
+    override fun getCanceledDeliveries(): Flow<List<Delivery>> {
+        return deliveryQueries.getCanceledDeliveries(mapper = ::mapDelivery)
+            .asFlow().mapToList(ioDispatcher)
+    }
+
     private fun mapDelivery(
         id: Long,
         saleId: Long,

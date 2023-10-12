@@ -8,4 +8,5 @@ interface DeliveryData<T> : DataOperations<T> {
     suspend fun updateDeliveryDate(id: Long, deliveryDate: Long)
     suspend fun updateDelivered(id: Long, delivered: Boolean)
     fun getDeliveries(delivered: Boolean): Flow<List<T>>
+    fun getCanceledDeliveries(): Flow<List<T>>
 }
