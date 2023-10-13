@@ -3,30 +3,24 @@ package com.bruno13palhano.core.repository.tables
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.repository.customer.CustomerLight
-import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.mocks.makeRandomCustomer
 import com.bruno13palhano.core.model.Customer
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import org.junit.Assert
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 @HiltAndroidTest
 class CustomerLightTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var customerRepository: CustomerData<Customer>
-    private lateinit var zeroIdCustomer: Customer
+    private lateinit var customerTable: CustomerData<Customer>
     private lateinit var firstCustomer: Customer
     private lateinit var secondCustomer: Customer
     private lateinit var thirdCustomer: Customer
@@ -38,339 +32,210 @@ class CustomerLightTest {
     fun before() {
         hiltTestRule.inject()
 
-        val customerData = CustomerLight(database.customerTableQueries, Dispatchers.IO)
-        customerRepository = CustomerRepository(customerData)
+        customerTable = CustomerLight(database.customerTableQueries, Dispatchers.IO)
 
-        zeroIdCustomer = makeRandomCustomer(id = 0L)
-        firstCustomer = makeRandomCustomer(id = 1L)
-        secondCustomer = makeRandomCustomer(id = 2L)
-        thirdCustomer = makeRandomCustomer(id = 3L)
+        firstCustomer = makeRandomCustomer(id = 1L, name = "Alan", address = "Rua 15 de Novembro")
+        secondCustomer = makeRandomCustomer(id = 2L, name = "Bruno", address = "Rua 13 de Maio")
+        thirdCustomer = makeRandomCustomer(id = 3L, name = "Carlos", address = "Rua Walter Rodrigues")
     }
 
     @Test
-    fun shouldInsertCustomerInTheDatabase() = runBlocking {
-        val latch = CountDownLatch(1)
-        customerRepository.insert(firstCustomer)
+    fun shouldInsertCustomerInTheDatabase() = runTest {
+        customerTable.insert(firstCustomer)
 
-        val job = async(Dispatchers.IO) {
-            customerRepository.getAll().take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).contains(firstCustomer)
+        launch(Dispatchers.IO) {
+            customerTable.getAll().collect {
+                assertThat(it).contains(firstCustomer)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnAllCustomersInTheDatabase_ifDatabaseIsNotEmpty() = runBlocking {
-        val latch = CountDownLatch(1)
-        customerRepository.insert(firstCustomer)
-        customerRepository.insert(secondCustomer)
-        customerRepository.insert(thirdCustomer)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.getAll().take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).containsAnyOf(firstCustomer, secondCustomer, thirdCustomer)
+    fun shouldReturnAllCustomersInTheDatabase_ifDatabaseIsNotEmpty() = runTest {
+        insertAllCustomers()
+        launch(Dispatchers.IO) {
+            customerTable.getAll().collect {
+                assertThat(it).containsAnyOf(firstCustomer, secondCustomer, thirdCustomer)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runBlocking {
-        val latch = CountDownLatch(1)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.getAll().take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).isEmpty()
+    fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runTest {
+        launch(Dispatchers.IO) {
+            customerTable.getAll().collect {
+                assertThat(it).isEmpty()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldUpdateCustomerInTheDatabase_IfCustomerExists() = runBlocking {
-        val latch = CountDownLatch(1)
+    fun shouldUpdateCustomerInTheDatabase_IfCustomerExists() = runTest {
         val updateCustomer = makeRandomCustomer(id = 1L)
-        customerRepository.insert(firstCustomer)
-        customerRepository.update(updateCustomer)
+        customerTable.insert(firstCustomer)
+        customerTable.update(updateCustomer)
 
-        val job = async(Dispatchers.IO) {
-            customerRepository.getAll().take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).contains(updateCustomer)
+        launch(Dispatchers.IO) {
+            customerTable.getAll().collect {
+                assertThat(it).contains(updateCustomer)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldDoNotUpdateCustomerInTheDatabase_IfCustomerNotExists() = runBlocking {
-        val latch = CountDownLatch(1)
-        customerRepository.insert(firstCustomer)
-        customerRepository.update(zeroIdCustomer)
+    fun shouldDoNotUpdateCustomerInTheDatabase_IfCustomerNotExists() = runTest {
+        customerTable.insert(firstCustomer)
+        customerTable.update(secondCustomer)
 
-        val job = async(Dispatchers.IO) {
-            customerRepository.getAll().take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).doesNotContain(zeroIdCustomer)
+        launch(Dispatchers.IO) {
+            customerTable.getAll().collect {
+                assertThat(it).doesNotContain(secondCustomer)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldDeleteCustomerWhitThisIdInTheDatabase_ifCustomerExists() = runBlocking {
-        val latch = CountDownLatch(1)
-        customerRepository.insert(firstCustomer)
-        customerRepository.insert(thirdCustomer)
+    fun shouldDeleteCustomerWhitThisIdInTheDatabase_ifCustomerExists() = runTest {
+        insertTwoCustomers()
+        customerTable.deleteById(firstCustomer.id)
 
-        customerRepository.deleteById(firstCustomer.id)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.getAll().take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).doesNotContain(firstCustomer)
+        launch(Dispatchers.IO) {
+            customerTable.getAll().collect {
+                assertThat(it).doesNotContain(firstCustomer)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldNotDeleteCustomerInTheDatabase_ifCustomerWithThisIdNotExists() = runBlocking {
-        val latch = CountDownLatch(1)
-        customerRepository.insert(firstCustomer)
-        customerRepository.insert(thirdCustomer)
+    fun shouldNotDeleteCustomerInTheDatabase_ifCustomerWithThisIdNotExists() = runTest {
+        insertTwoCustomers()
+        customerTable.deleteById(thirdCustomer.id)
 
-        customerRepository.deleteById(zeroIdCustomer.id)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.getAll().take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).containsAnyOf(firstCustomer, thirdCustomer)
+        launch(Dispatchers.IO) {
+            customerTable.getAll().collect {
+                assertThat(it).containsAnyOf(firstCustomer, secondCustomer)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCustomersThatMatchesWithThisSearch() = runBlocking {
-        val latch = CountDownLatch(1)
+    fun shouldReturnCustomersThatMatchesWithThisSearch() = runTest {
         val currentCustomer = makeRandomCustomer(id = 1L, "Bruno")
-        customerRepository.insert(currentCustomer)
-        customerRepository.insert(secondCustomer)
-        customerRepository.insert(thirdCustomer)
+        customerTable.insert(currentCustomer)
+        customerTable.insert(secondCustomer)
+        customerTable.insert(thirdCustomer)
 
-        val job = async(Dispatchers.IO) {
-            customerRepository.search(search = currentCustomer.name).take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).contains(currentCustomer)
+        launch(Dispatchers.IO) {
+            customerTable.search(search = currentCustomer.name).collect {
+                assertThat(it).contains(currentCustomer)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnEmptyList_ifThereIsNothingThatMatchesThisSearch() = runBlocking {
-        val latch = CountDownLatch(1)
-        customerRepository.insert(firstCustomer)
-        customerRepository.insert(secondCustomer)
-        customerRepository.insert(thirdCustomer)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.search(search = " ").take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).containsNoneOf(firstCustomer, secondCustomer, thirdCustomer)
+    fun shouldReturnEmptyList_ifThereIsNothingThatMatchesThisSearch() = runTest {
+        insertAllCustomers()
+        launch(Dispatchers.IO) {
+            customerTable.search(search = "*").collect {
+                assertThat(it).containsNoneOf(firstCustomer, secondCustomer, thirdCustomer)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnAllCustomers_ifThisSearchIsEmpty() = runBlocking {
-        val latch = CountDownLatch(1)
-        customerRepository.insert(firstCustomer)
-        customerRepository.insert(secondCustomer)
-        customerRepository.insert(thirdCustomer)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.search(search = "").take(3).collect { value ->
-                latch.countDown()
+    fun shouldReturnAllCustomers_ifThisSearchIsEmpty() = runTest {
+        insertAllCustomers()
+        launch(Dispatchers.IO) {
+            customerTable.search(search = "").collect { value ->
                 assertThat(value).containsExactly(firstCustomer, secondCustomer, thirdCustomer)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCustomersOrderedByNameDesc() = runBlocking {
-        val latch = CountDownLatch(1)
-        val customer1 = makeRandomCustomer(id = 1L, name = "Alan")
-        val customer2 = makeRandomCustomer(id = 2L, name = "Bruno")
-        val customer3 = makeRandomCustomer(id = 3L, "Carlos")
-        customerRepository.insert(customer1)
-        customerRepository.insert(customer2)
-        customerRepository.insert(customer3)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.getOrderedByName(isOrderedAsc = false).take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).containsExactly(customer3, customer2, customer1).inOrder()
+    fun shouldReturnCustomersOrderedByNameDesc() = runTest {
+        insertAllCustomers()
+        launch(Dispatchers.IO) {
+            customerTable.getOrderedByName(isOrderedAsc = false).collect {
+                assertThat(it).containsExactly(thirdCustomer, secondCustomer, firstCustomer).inOrder()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCustomersOrderedByNameAsc() = runBlocking {
-        val latch = CountDownLatch(1)
-        val customer1 = makeRandomCustomer(id = 1L, name = "Alan")
-        val customer2 = makeRandomCustomer(id = 2L, name = "Bruno")
-        val customer3 = makeRandomCustomer(id = 3L, "Carlos")
-        customerRepository.insert(customer1)
-        customerRepository.insert(customer2)
-        customerRepository.insert(customer3)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.getOrderedByName(isOrderedAsc = true).take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).containsExactly(customer1, customer2, customer3).inOrder()
+    fun shouldReturnCustomersOrderedByNameAsc() = runTest {
+        insertAllCustomers()
+        launch(Dispatchers.IO) {
+            customerTable.getOrderedByName(isOrderedAsc = true).collect {
+                assertThat(it).containsExactly(firstCustomer, secondCustomer, thirdCustomer).inOrder()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCustomersOrderedByAddressDesc() = runBlocking {
-        val latch = CountDownLatch(1)
-        val customer1 = makeRandomCustomer(id = 1L, address = "Rua 15 de Novembro")
-        val customer2 = makeRandomCustomer(id = 2L, address = "Rua 13 de Maio")
-        val customer3 = makeRandomCustomer(id = 3L, address = "Rua Walter Rodrigues")
-        customerRepository.insert(customer1)
-        customerRepository.insert(customer2)
-        customerRepository.insert(customer3)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.getOrderedByAddress(isOrderedAsc = false).take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).containsExactly(customer3, customer1, customer2).inOrder()
+    fun shouldReturnCustomersOrderedByAddressDesc() = runTest {
+        insertAllCustomers()
+        launch(Dispatchers.IO) {
+            customerTable.getOrderedByAddress(isOrderedAsc = false).collect {
+                assertThat(it).containsExactly(thirdCustomer, firstCustomer, secondCustomer).inOrder()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCustomersOrderedByAddressAsc() = runBlocking {
-        val latch = CountDownLatch(1)
-        val customer1 = makeRandomCustomer(id = 1L, address = "Rua 15 de Novembro")
-        val customer2 = makeRandomCustomer(id = 2L, address = "Rua 13 de Maio")
-        val customer3 = makeRandomCustomer(id = 3L, address = "Rua Walter Rodrigues")
-        customerRepository.insert(customer1)
-        customerRepository.insert(customer2)
-        customerRepository.insert(customer3)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.getOrderedByAddress(isOrderedAsc = true).take(3).collect { value ->
-                latch.countDown()
-                assertThat(value).containsExactly(customer2, customer1, customer3).inOrder()
+    fun shouldReturnCustomersOrderedByAddressAsc() = runTest {
+        insertAllCustomers()
+        launch(Dispatchers.IO) {
+            customerTable.getOrderedByAddress(isOrderedAsc = true).collect {
+                assertThat(it).containsExactly(secondCustomer, firstCustomer, thirdCustomer).inOrder()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCustomerWithThisId_ifExists() = runBlocking {
-        val latch = CountDownLatch(1)
-        customerRepository.insert(firstCustomer)
-        customerRepository.insert(secondCustomer)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.getById(secondCustomer.id).collect { value ->
-                latch.countDown()
-                Assert.assertEquals(value, secondCustomer)
+    fun shouldReturnCustomerWithThisId_ifExists() = runTest {
+        insertTwoCustomers()
+        launch(Dispatchers.IO) {
+            customerTable.getById(secondCustomer.id).collect {
+                assertThat(it).isEqualTo(secondCustomer)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnLastCustomer_ifExists() = runBlocking {
-        val latch = CountDownLatch(1)
-        customerRepository.insert(firstCustomer)
-        customerRepository.insert(secondCustomer)
-
-        val job = async(Dispatchers.IO) {
-            customerRepository.getLast().collect { value ->
-                latch.countDown()
-                Assert.assertEquals(value, secondCustomer)
+    fun shouldReturnLastCustomer_ifExists() = runTest {
+        insertTwoCustomers()
+        launch(Dispatchers.IO) {
+            customerTable.getLast().collect {
+                assertThat(it).isEqualTo(secondCustomer)
+                cancel()
             }
         }
+    }
 
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
+    private suspend fun insertTwoCustomers() {
+        customerTable.insert(firstCustomer)
+        customerTable.insert(secondCustomer)
+    }
+
+    private suspend fun insertAllCustomers() {
+        customerTable.insert(firstCustomer)
+        customerTable.insert(secondCustomer)
+        customerTable.insert(thirdCustomer)
     }
 }
