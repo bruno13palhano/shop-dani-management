@@ -53,6 +53,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel.DeliveryViewModel
 import java.util.Locale
 
@@ -95,7 +96,7 @@ fun DeliveryScreen(
             }
         ) {
             shippingDatePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.shippingDateInMillis,
+                initialSelectedDateMillis = viewModel.shippingDate,
                 initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     DisplayMode.Picker
                 } else {
@@ -130,7 +131,7 @@ fun DeliveryScreen(
             }
         ) {
             deliveryDatePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.deliveryDateInMillis,
+                initialSelectedDateMillis = viewModel.deliveryDate,
                 initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     DisplayMode.Picker
                 } else {
@@ -151,8 +152,8 @@ fun DeliveryScreen(
         productName = viewModel.productName,
         price = viewModel.price,
         deliveryPrice = viewModel.deliveryPrice,
-        shippingDate = viewModel.shippingDate,
-        deliveryDate = viewModel.deliveryDate,
+        shippingDate = dateFormat.format(viewModel.shippingDate),
+        deliveryDate = dateFormat.format(viewModel.deliveryDate),
         delivered = viewModel.delivered,
         onDeliveryPriceChange = viewModel::updateDeliveryPrice,
         onDeliveredChange = viewModel::updateDelivered,
