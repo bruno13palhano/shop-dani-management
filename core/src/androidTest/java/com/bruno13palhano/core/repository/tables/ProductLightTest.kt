@@ -25,7 +25,6 @@ import javax.inject.Inject
 class ProductLightTest {
     @Inject lateinit var database: ShopDatabase
     private lateinit var productRepository: ProductData<Product>
-    private lateinit var zeroIdProduct: Product
     private lateinit var firstProduct: Product
     private lateinit var secondProduct: Product
     private lateinit var thirdProduct: Product
@@ -44,16 +43,32 @@ class ProductLightTest {
         )
         productRepository = ProductRepository(productData)
 
-        zeroIdProduct = makeRandomProduct(id = 0L)
-        firstProduct = makeRandomProduct(id = 1L)
-        secondProduct = makeRandomProduct(id = 2L)
-        thirdProduct = makeRandomProduct(id = 3L)
+        firstProduct = makeRandomProduct(
+            id = 1L,
+            categories = listOf(Category(id = 1L, "Perfumes")),
+            company = "Natura",
+            description = "Top 10"
+        )
+        secondProduct = makeRandomProduct(
+            id = 2L,
+            categories = listOf(
+                Category(id = 1L, name = "Perfumes"),
+                Category(id = 2L, name = "Soaps")
+            ),
+            company = "Natura",
+            description = "Most sale"
+        )
+        thirdProduct = makeRandomProduct(
+            id = 3L,
+            categories = listOf(Category(id = 1L, "Others")),
+            company = "Avon",
+            description = "Light fragrance"
+        )
     }
 
     @Test
     fun shouldInsertProductInTheDatabase() = runTest {
         productRepository.insert(firstProduct)
-
         launch {
             productRepository.getAll().collect { products ->
                 assertThat(products).contains(firstProduct)
@@ -66,7 +81,6 @@ class ProductLightTest {
     fun shouldUpdateProductInTheDatabase_ifProductExists() = runTest {
         val updatedProduct = makeRandomProduct(id =1L)
         productRepository.insert(firstProduct)
-
         productRepository.update(updatedProduct)
 
         launch(Dispatchers.IO) {
@@ -80,15 +94,12 @@ class ProductLightTest {
     @Test(expected = NullPointerException::class)
     fun shouldThrowNullPointerException_ifProductNotExists() = runTest {
         productRepository.insert(firstProduct)
-        productRepository.update(zeroIdProduct)
+        productRepository.update(secondProduct)
     }
 
     @Test
     fun shouldDeleteProductWithThisIdInTheDatabase_ifProductExists() = runTest {
-        productRepository.insert(firstProduct)
-        productRepository.insert(secondProduct)
-        productRepository.insert(thirdProduct)
-
+        insertAllProducts()
         productRepository.deleteById(firstProduct.id)
 
         launch(Dispatchers.IO) {
@@ -116,10 +127,7 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnAllProductsInTheDatabase_ifDatabaseIsNotEmpty() = runTest {
-        productRepository.insert(firstProduct)
-        productRepository.insert(secondProduct)
-        productRepository.insert(thirdProduct)
-
+        insertAllProducts()
         launch(Dispatchers.IO) {
             productRepository.getAll().collect { products ->
                 assertThat(products).containsExactly(firstProduct, secondProduct, thirdProduct)
@@ -141,7 +149,6 @@ class ProductLightTest {
     @Test
     fun shouldReturnProductWithThisId_ifExists() = runTest {
         productRepository.insert(firstProduct)
-
         launch(Dispatchers.IO) {
             productRepository.getById(id = firstProduct.id).collect { product ->
                 Assert.assertEquals(product, firstProduct)
@@ -152,10 +159,7 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnLastProduct_ifNotEmpty() = runTest {
-        productRepository.insert(firstProduct)
-        productRepository.insert(secondProduct)
-        productRepository.insert(thirdProduct)
-
+        insertAllProducts()
         launch(Dispatchers.IO) {
             productRepository.getLast().collect { product ->
                 Assert.assertEquals(product, thirdProduct)
@@ -166,32 +170,12 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnProductsThatMatchesWithCategorySearch() = runTest {
-        val product1 = makeRandomProduct(
-            id = 1L,
-            categories = listOf(Category(id = 1L, name = "Perfumes"))
-        )
-        val product2 = makeRandomProduct(id = 2L,
-            categories = listOf(
-                Category(id = 2L, name = "Soaps"),
-                Category(id = 1L, name = "Perfumes")
-            )
-        )
-        val product3 = makeRandomProduct(
-            id = 3L,
-            categories = listOf(
-                Category(id = 3L, name = "Others")
-            )
-        )
-
-        productRepository.insert(product1)
-        productRepository.insert(product2)
-        productRepository.insert(product3)
-
-        val search = product3.categories[0].name
+        val search = thirdProduct.categories[0].name
+        insertAllProducts()
 
         launch(Dispatchers.IO) {
             productRepository.search(value = search).collect { products ->
-                assertThat(products).containsExactly(product3)
+                assertThat(products).containsExactly(thirdProduct)
                 cancel()
             }
         }
@@ -199,19 +183,12 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnProductsThatMatchesWithNameSearch() = runTest {
-        val product1 = makeRandomProduct(id = 1L, name = "Homem")
-        val product2 = makeRandomProduct(id = 2L, name = "Kaiak")
-        val product3 = makeRandomProduct(id = 3L, name = "Luna")
-
-        productRepository.insert(product1)
-        productRepository.insert(product2)
-        productRepository.insert(product3)
-
-        val search = product3.name
+        val search = thirdProduct.name
+        insertAllProducts()
 
         launch(Dispatchers.IO) {
             productRepository.search(value = search).collect { products ->
-                assertThat(products).containsExactly(product3)
+                assertThat(products).containsExactly(thirdProduct)
                 cancel()
             }
         }
@@ -219,19 +196,12 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnProductsThatMatchesWithDescriptionSearch() = runTest {
-        val product1 = makeRandomProduct(id = 1L, description = "Top 10")
-        val product2 = makeRandomProduct(id = 2L, description = "Most sale")
-        val product3 = makeRandomProduct(id = 3L, description = "Light fragrance")
-
-        productRepository.insert(product1)
-        productRepository.insert(product2)
-        productRepository.insert(product3)
-
-        val search = product3.description
+        val search = thirdProduct.description
+        insertAllProducts()
 
         launch(Dispatchers.IO) {
             productRepository.search(value = search).collect { products ->
-                assertThat(products).containsExactly(product3)
+                assertThat(products).containsExactly(thirdProduct)
                 cancel()
             }
         }
@@ -239,19 +209,12 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnProductsThatMatchesWithCompanySearch() = runTest {
-        val product1 = makeRandomProduct(id = 1L, company = "Natura")
-        val product2 = makeRandomProduct(id = 2L, company = "Natura")
-        val product3 = makeRandomProduct(id = 3L, company = "Avon")
-
-        productRepository.insert(product1)
-        productRepository.insert(product2)
-        productRepository.insert(product3)
-
-        val search = product1.company
+        val search = firstProduct.company
+        insertAllProducts()
 
         launch(Dispatchers.IO) {
             productRepository.search(value = search).collect { products ->
-                assertThat(products).containsExactly(product1, product2)
+                assertThat(products).containsExactly(firstProduct, secondProduct)
                 cancel()
             }
         }
@@ -259,12 +222,9 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnEmptyList_ifThereIsNothingThatMatchesWithThisSearch() = runTest {
-        productRepository.insert(firstProduct)
-        productRepository.insert(secondProduct)
-        productRepository.insert(thirdProduct)
-
+        insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.search(value = " ").collect { products ->
+            productRepository.search(value = "*").collect { products ->
                 assertThat(products).isEmpty()
                 cancel()
             }
@@ -273,10 +233,7 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnAllProducts_ifThisSearchIsEmpty() = runTest {
-        productRepository.insert(firstProduct)
-        productRepository.insert(secondProduct)
-        productRepository.insert(thirdProduct)
-
+        insertAllProducts()
         launch(Dispatchers.IO) {
             productRepository.search(value = "").collect { products ->
                 assertThat(products).containsExactly(firstProduct, secondProduct, thirdProduct)
@@ -287,20 +244,13 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnProductsInThisCategoryThatMatchesWithNameSearch() = runTest {
-        val product1 = makeRandomProduct(id = 1L, name = "Homem")
-        val product2 = makeRandomProduct(id = 2L, name = "Kaiak")
-        val product3 = makeRandomProduct(id = 3L, name = "Luna")
-
-        productRepository.insert(product1)
-        productRepository.insert(product2)
-        productRepository.insert(product3)
-
+        insertAllProducts()
         launch(Dispatchers.IO) {
             productRepository.searchPerCategory(
-                value = product1.name,
-                categoryId = product1.id
+                value = firstProduct.name,
+                categoryId = firstProduct.id
             ).collect { products ->
-                assertThat(products).containsExactly(product1)
+                assertThat(products).containsExactly(firstProduct)
                 cancel()
             }
         }
@@ -308,20 +258,13 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnProductsInThisCategoryThatMatchesWithDescriptionSearch() = runTest {
-        val product1 = makeRandomProduct(id = 1L, description = "Homem")
-        val product2 = makeRandomProduct(id = 2L, description = "Kaiak")
-        val product3 = makeRandomProduct(id = 3L, description = "Luna")
-
-        productRepository.insert(product1)
-        productRepository.insert(product2)
-        productRepository.insert(product3)
-
+        insertAllProducts()
         launch(Dispatchers.IO) {
             productRepository.searchPerCategory(
-                value = product1.description,
-                categoryId = product1.id
+                value = firstProduct.description,
+                categoryId = firstProduct.id
             ).collect { products ->
-                assertThat(products).containsExactly(product1)
+                assertThat(products).containsExactly(firstProduct)
                 cancel()
             }
         }
@@ -329,20 +272,13 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnProductsInThisCategoryThatMatchesWithCompanySearch() = runTest {
-        val product1 = makeRandomProduct(id = 1L, company = "Natura")
-        val product2 = makeRandomProduct(id = 2L, company = "Natura")
-        val product3 = makeRandomProduct(id = 3L, company = "Avon")
-
-        productRepository.insert(product1)
-        productRepository.insert(product2)
-        productRepository.insert(product3)
-
+        insertAllProducts()
         launch(Dispatchers.IO) {
             productRepository.searchPerCategory(
-                value = product1.company,
-                categoryId = product1.id
+                value = firstProduct.company,
+                categoryId = firstProduct.id
             ).collect { products ->
-                assertThat(products).containsExactly(product1)
+                assertThat(products).containsExactly(firstProduct)
                 cancel()
             }
         }
@@ -350,13 +286,10 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnEmptyList_ifThereIsNothingThatMatchesWithThisSearchInThisCategory() = runTest {
-        productRepository.insert(firstProduct)
-        productRepository.insert(secondProduct)
-        productRepository.insert(thirdProduct)
-
+        insertAllProducts()
         launch(Dispatchers.IO) {
             productRepository.searchPerCategory(
-                value = " ",
+                value = "*",
                 categoryId = firstProduct.id
             ).collect { products ->
                 assertThat(products).isEmpty()
@@ -367,10 +300,7 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnAllProductsInThisCategory_ifThisSearchIsEmpty() = runTest {
-        productRepository.insert(firstProduct)
-        productRepository.insert(secondProduct)
-        productRepository.insert(thirdProduct)
-
+        insertAllProducts()
         launch(Dispatchers.IO) {
             productRepository.searchPerCategory(
                 value = "",
@@ -384,17 +314,10 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnAllProductsInThisCategory_ifNotEmpty() = runTest {
-        val product1 = makeRandomProduct(id = 1L, categories = listOf(Category(id = 1L, "Perfumes")))
-        val product2 = makeRandomProduct(id = 2L, categories = listOf(Category(id = 2L, name = "Soaps")))
-        val product3 = makeRandomProduct(id = 3L, categories = listOf(Category(id = 1L, "Perfumes")))
-
-        productRepository.insert(product1)
-        productRepository.insert(product2)
-        productRepository.insert(product3)
-
+        insertAllProducts()
         launch(Dispatchers.IO) {
             productRepository.getByCategory(category = "Perfumes").collect { products ->
-                assertThat(products).containsExactly(product1, product3)
+                assertThat(products).containsExactly(firstProduct, secondProduct)
                 cancel()
             }
         }
@@ -402,19 +325,18 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnEmptyList_ifThisCategoryIsEmpty() = runTest {
-        val product1 = makeRandomProduct(id = 1L, categories = listOf(Category(id = 1L, "Perfumes")))
-        val product2 = makeRandomProduct(id = 2L, categories = listOf(Category(id = 2L, name = "Soaps")))
-        val product3 = makeRandomProduct(id = 3L, categories = listOf(Category(id = 1L, "Perfumes")))
-
-        productRepository.insert(product1)
-        productRepository.insert(product2)
-        productRepository.insert(product3)
-
+        insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.getByCategory(category = "Others").collect { products ->
+            productRepository.getByCategory(category = "Make").collect { products ->
                 assertThat(products).isEmpty()
                 cancel()
             }
         }
+    }
+
+    private suspend fun insertAllProducts() {
+        productRepository.insert(firstProduct)
+        productRepository.insert(secondProduct)
+        productRepository.insert(thirdProduct)
     }
 }
