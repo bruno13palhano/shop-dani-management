@@ -23,8 +23,6 @@ import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerCheck
-import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
-import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToInt
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,13 +55,9 @@ class SaleViewModel @Inject constructor(
         private set
     var stockQuantity by mutableIntStateOf(0)
         private set
-    var dateOfSaleInMillis by mutableLongStateOf(currentDate)
+    var dateOfSale by mutableLongStateOf(0L)
         private set
-    var dateOfSale: String by mutableStateOf(dateFormat.format(dateOfSaleInMillis))
-        private set
-    var dateOfPaymentInMillis by mutableLongStateOf(currentDate)
-        private set
-    var dateOfPayment: String by mutableStateOf(dateFormat.format(dateOfPaymentInMillis))
+    var dateOfPayment by mutableLongStateOf(0L)
         private set
     var purchasePrice by mutableStateOf("")
         private set
@@ -82,7 +76,8 @@ class SaleViewModel @Inject constructor(
     private var isPaid by mutableStateOf(false)
 
     val isSaleNotEmpty = snapshotFlow {
-        productName.isNotEmpty() && quantity.isNotEmpty() && purchasePrice.isNotEmpty() && salePrice.isNotEmpty()
+        productName.isNotEmpty() && quantity.isNotEmpty() && purchasePrice.isNotEmpty()
+                && salePrice.isNotEmpty()
     }
         .stateIn(
             scope = viewModelScope,
@@ -111,13 +106,11 @@ class SaleViewModel @Inject constructor(
     }
 
     fun updateDateOfSale(dateOfSale: Long) {
-        dateOfSaleInMillis = dateOfSale
-        this.dateOfSale = dateFormat.format(dateOfSaleInMillis)
+        this.dateOfSale = dateOfSale
     }
 
     fun updateDateOfPayment(dateOfPayment: Long) {
-        dateOfPaymentInMillis = dateOfPayment
-        this.dateOfPayment = dateFormat.format(dateOfPaymentInMillis)
+        this.dateOfPayment = dateOfPayment
     }
 
     fun updatePurchasePrice(purchasePrice: String) {
@@ -194,13 +187,22 @@ class SaleViewModel @Inject constructor(
 
     fun insertSale(
         isOrderedByCustomer: Boolean,
+        currentDate: Long,
         onSuccess: () -> Unit,
         onError: () -> Unit
     ) {
         viewModelScope.launch {
             saleRepository.insertItems(
-                sale = createSale(id = 0L, productId = productId, isOrderedByCustomer = isOrderedByCustomer),
-                stockOrder = createStockOrder(productId = productId, isOrderedByCustomer = isOrderedByCustomer),
+                sale = createSale(
+                    id = 0L,
+                    productId = productId,
+                    isOrderedByCustomer = isOrderedByCustomer
+                ),
+                stockOrder = createStockOrder(
+                    productId = productId,
+                    currentDate = currentDate,
+                    isOrderedByCustomer = isOrderedByCustomer
+                ),
                 delivery = createDelivery(),
                 onSuccess = onSuccess,
                 onError = onError
@@ -266,14 +268,18 @@ class SaleViewModel @Inject constructor(
         deliveryPrice = stringToFloat(deliveryPrice),
         categories = emptyList(),
         company = company,
-        dateOfSale = dateOfSaleInMillis,
-        dateOfPayment = dateOfPaymentInMillis,
+        dateOfSale = dateOfSale,
+        dateOfPayment = dateOfPayment,
         isOrderedByCustomer = isOrderedByCustomer,
         isPaidByCustomer = isPaidByCustomer,
         canceled = false
     )
 
-    private fun createStockOrder(productId: Long, isOrderedByCustomer: Boolean) = StockOrder(
+    private fun createStockOrder(
+        productId: Long,
+        currentDate: Long,
+        isOrderedByCustomer: Boolean
+    ) = StockOrder(
         id = stockOrderId,
         productId = productId,
         name = productName,
@@ -298,8 +304,8 @@ class SaleViewModel @Inject constructor(
         productName = productName,
         price = stringToFloat(salePrice),
         deliveryPrice = stringToFloat(deliveryPrice),
-        shippingDate = dateOfSaleInMillis,
-        deliveryDate = dateOfSaleInMillis,
+        shippingDate = dateOfSale,
+        deliveryDate = dateOfSale,
         delivered = false
     )
 }

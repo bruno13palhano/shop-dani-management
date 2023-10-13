@@ -25,6 +25,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SaleContent
+import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SaleViewModel
 import com.bruno13palhano.shopdanimanagement.ui.screens.setAlarmNotification
 import kotlinx.coroutines.launch
@@ -41,6 +43,9 @@ fun SaleScreen(
     viewModel: SaleViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
+        viewModel.updateDateOfPayment(currentDate)
+        viewModel.updateDateOfSale(currentDate)
+
         if (isEdit) {
             viewModel.getSale(saleId)
         } else {
@@ -82,7 +87,7 @@ fun SaleScreen(
             }
         ) {
             dateOfSalePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.dateOfSaleInMillis,
+                initialSelectedDateMillis = viewModel.dateOfSale,
                 initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     DisplayMode.Picker
                 } else {
@@ -117,7 +122,7 @@ fun SaleScreen(
             }
         ) {
             dateOfPaymentPickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.dateOfPaymentInMillis,
+                initialSelectedDateMillis = viewModel.dateOfPayment,
                 initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     DisplayMode.Picker
                 } else {
@@ -150,8 +155,8 @@ fun SaleScreen(
         customerName = viewModel.customerName,
         photo = viewModel.photo,
         quantity = viewModel.quantity,
-        dateOfSale = viewModel.dateOfSale,
-        dateOfPayment = viewModel.dateOfPayment,
+        dateOfSale = dateFormat.format(viewModel.dateOfSale),
+        dateOfPayment = dateFormat.format(viewModel.dateOfPayment),
         purchasePrice = viewModel.purchasePrice,
         salePrice = viewModel.salePrice,
         deliveryPrice = viewModel.deliveryPrice,
@@ -192,12 +197,13 @@ fun SaleScreen(
                 } else {
                     viewModel.insertSale(
                         isOrderedByCustomer = isOrderedByCustomer,
+                        currentDate = currentDate,
                         onSuccess = {
                             navigateUp()
                             setAlarmNotification(
                                 id = stockOrderId,
                                 title = viewModel.customerName,
-                                date = viewModel.dateOfPaymentInMillis,
+                                date = viewModel.dateOfPayment,
                                 description = viewModel.company,
                                 context = context
                             )
