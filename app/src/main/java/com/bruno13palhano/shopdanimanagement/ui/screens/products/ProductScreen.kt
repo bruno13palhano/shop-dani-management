@@ -29,6 +29,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductContent
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductMenuItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
@@ -44,6 +46,11 @@ fun ProductScreen(
     navigateUp: () -> Unit,
     viewModel: ProductViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getAllCategories()
+        viewModel.updateDate(date = currentDate)
+    }
+
     if (isEditable) {
         LaunchedEffect(key1 = Unit) {
             viewModel.getProduct(productId)
@@ -92,7 +99,7 @@ fun ProductScreen(
             }
         ) {
             datePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.dateInMillis,
+                initialSelectedDateMillis = viewModel.date,
                 initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     DisplayMode.Picker
                 } else {
@@ -120,7 +127,7 @@ fun ProductScreen(
         code = viewModel.code,
         description = viewModel.description,
         photo = viewModel.photo,
-        date = viewModel.date,
+        date = dateFormat.format(viewModel.date),
         category = viewModel.category,
         company = viewModel.company,
         onNameChange = viewModel::updateName,

@@ -16,8 +16,6 @@ import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
 import com.bruno13palhano.shopdanimanagement.ui.components.CompanyCheck
-import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
-import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
@@ -42,8 +40,7 @@ class ProductViewModel @Inject constructor(
         private set
     var photo by mutableStateOf(byteArrayOf())
         private set
-    var dateInMillis by mutableLongStateOf(currentDate)
-    var date: String by mutableStateOf(dateFormat.format(dateInMillis))
+    var date by mutableLongStateOf(0L)
         private set
     var category by mutableStateOf("")
         private set
@@ -62,7 +59,7 @@ class ProductViewModel @Inject constructor(
             initialValue = false
         )
 
-    init {
+    fun getAllCategories() {
         viewModelScope.launch {
             categoryRepository.getAll()
                 .map {
@@ -90,8 +87,7 @@ class ProductViewModel @Inject constructor(
     }
 
     fun updateDate(date: Long) {
-        dateInMillis = date
-        this.date = dateFormat.format(dateInMillis)
+        this.date = date
     }
 
     fun updateCategories(categories: List<CategoryCheck>) {
@@ -147,7 +143,7 @@ class ProductViewModel @Inject constructor(
                 code = it.code
                 description = it.description
                 photo = it.photo
-                updateDate(it.date)
+                date = it.date
                 categories = it.categories
                 company = it.company
                 setCategoriesChecked(it.categories)
@@ -197,7 +193,7 @@ class ProductViewModel @Inject constructor(
         code = code,
         description = description,
         photo = photo,
-        date = dateInMillis,
+        date = date,
         categories = allCategories
             .filter { it.isChecked }
             .map { Category(id = it.id, name = it.category) },
