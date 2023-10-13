@@ -42,6 +42,7 @@ import com.bruno13palhano.shopdanimanagement.ui.components.InfoItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -170,7 +171,7 @@ fun HomeContent(
                             count = info.first.quantity,
                             info.first.customer,
                             info.first.quantity,
-                            info.first.date
+                            dateFormat.format(info.first.date)
                         )
                     )
                     HorizontalDivider()

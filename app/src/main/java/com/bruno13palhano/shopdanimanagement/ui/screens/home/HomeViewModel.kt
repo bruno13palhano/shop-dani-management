@@ -6,7 +6,6 @@ import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
-import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -43,7 +42,7 @@ class HomeViewModel @Inject constructor(
                     customer = sale.customerName,
                     item = sale.name,
                     quantity = sale.quantity,
-                    date = dateFormat.format(sale.dateOfSale)
+                    date = sale.dateOfSale
                 )
             }
             if (smallestSaleValue >= sale.salePrice) {
@@ -53,7 +52,7 @@ class HomeViewModel @Inject constructor(
                     customer = sale.customerName,
                     item = sale.name,
                     quantity = sale.quantity,
-                    date = dateFormat.format(sale.dateOfSale)
+                    date = sale.dateOfSale
                 )
             }
             if (sales.lastIndex != -1) {
@@ -63,7 +62,7 @@ class HomeViewModel @Inject constructor(
                     customer = last.customerName,
                     item = last.name,
                     quantity = last.quantity,
-                    date = dateFormat.format(last.dateOfSale)
+                    date = last.dateOfSale
                 )
             }
         }
@@ -129,6 +128,6 @@ class HomeViewModel @Inject constructor(
         val customer: String = "",
         val item: String = "",
         val quantity: Int = 0,
-        val date: String = ""
+        val date: Long = 0L
     )
 }
