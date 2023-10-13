@@ -63,7 +63,7 @@ fun NavGraphBuilder.financialNavGraph(
             StockDebitsScreen(
                 onItemClick = { stockItemId ->
                     navController.navigate(
-                        route = "${FinancialDestinations.FINANCIAL_STOCK_ITEM_ROUTE}$stockItemId"
+                        route = "${FinancialDestinations.FINANCIAL_STOCK_ITEM_ROUTE}/$stockItemId"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
@@ -74,14 +74,14 @@ fun NavGraphBuilder.financialNavGraph(
             CustomersDebitScreen(
                 onItemClick = { saleId ->
                     navController.navigate(
-                        route = "${FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE}$saleId"
+                        route = "${FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE}/$saleId"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(
-            route = FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE,
+            route = "${FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE}/{$ITEM_ID}",
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
             showBottomMenu(false)
@@ -97,7 +97,7 @@ fun NavGraphBuilder.financialNavGraph(
             }
         }
         composable(
-            route = "${FinancialDestinations.FINANCIAL_STOCK_ITEM_ROUTE}{$ITEM_ID}",
+            route = "${FinancialDestinations.FINANCIAL_STOCK_ITEM_ROUTE}/{$ITEM_ID}",
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
             showBottomMenu(false)
