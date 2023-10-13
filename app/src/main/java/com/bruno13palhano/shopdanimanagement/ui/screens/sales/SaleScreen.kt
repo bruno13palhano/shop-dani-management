@@ -43,12 +43,12 @@ fun SaleScreen(
     viewModel: SaleViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
-        viewModel.updateDateOfPayment(currentDate)
-        viewModel.updateDateOfSale(currentDate)
-
         if (isEdit) {
             viewModel.getSale(saleId)
         } else {
+            viewModel.updateDateOfPayment(currentDate)
+            viewModel.updateDateOfSale(currentDate)
+
             if (isOrderedByCustomer) {
                 viewModel.getProduct(stockOrderId)
             } else {
