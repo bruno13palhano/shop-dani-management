@@ -33,6 +33,7 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CommonItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel.CustomersDebitViewModel
 
 @Composable
@@ -135,7 +136,10 @@ fun CustomersDebitContent(
                     modifier = Modifier.padding(vertical = 4.dp),
                     title = item.title,
                     subtitle = stringResource(id = R.string.customer_debit_tag, item.subtitle),
-                    description = stringResource(id = R.string.date_of_payment_tag , item.description),
+                    description = stringResource(
+                        id = R.string.date_of_payment_tag ,
+                        dateFormat.format(item.description.toLong())
+                    ),
                     onClick = { onItemClick(item.id) }
                 )
             }
