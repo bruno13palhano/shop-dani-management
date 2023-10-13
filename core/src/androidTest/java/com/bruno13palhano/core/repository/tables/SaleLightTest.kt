@@ -15,7 +15,6 @@ import com.bruno13palhano.core.mocks.makeRandomStockOrder
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Delivery
-import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import com.google.common.truth.Truth.assertThat
@@ -44,15 +43,7 @@ class SaleLightTest {
     private lateinit var updatedSale: Sale
     private lateinit var delivery4: Delivery
     private lateinit var customer4: Customer
-    private lateinit var firstItem: StockOrder
-    private lateinit var secondItem: StockOrder
-    private lateinit var thirdItem: StockOrder
     private lateinit var fourthOrder: StockOrder
-    private lateinit var fifthOrder: StockOrder
-    private lateinit var sixthOrder: StockOrder
-    private lateinit var product1: Product
-    private lateinit var product2: Product
-    private lateinit var product3: Product
 
     @get:Rule
     val hiltTestRule = HiltAndroidRule(this)
@@ -507,17 +498,17 @@ class SaleLightTest {
             database.productCategoriesTableQueries,
             Dispatchers.IO
         )
-        product1 = makeRandomProduct(
+        val product1 = makeRandomProduct(
             id = 1L,
             name = "Homem",
             categories = listOf(Category(id = 1L, name = "Perfumes"))
         )
-        product2 = makeRandomProduct(
+        val product2 = makeRandomProduct(
             id = 2L,
             name = "Kaiak",
             categories = listOf(Category(id = 2L, name = "Soaps"), Category(id = 1L, name = "Perfumes"))
         )
-        product3 = makeRandomProduct(
+        val product3 = makeRandomProduct(
             id = 3L,
             name = "Luna",
             categories = listOf(Category(id = 3L, name = "Others"))
@@ -526,21 +517,21 @@ class SaleLightTest {
         productTable.insert(product2)
         productTable.insert(product3)
 
-        firstItem = makeRandomStockOrder(
+        val firstItem = makeRandomStockOrder(
             id = 1L,
             product = product1,
             salePrice = 120.90F,
             isOrderedByCustomer = false,
             isPaid = false
         )
-        secondItem = makeRandomStockOrder(
+        val secondItem = makeRandomStockOrder(
             id = 2L,
             product = product2,
             salePrice = 150.99F,
             isOrderedByCustomer = false,
             isPaid = false
         )
-        thirdItem = makeRandomStockOrder(
+        val thirdItem = makeRandomStockOrder(
             id = 3L,
             product = product3,
             salePrice = 188.80F,
@@ -553,13 +544,13 @@ class SaleLightTest {
             salePrice = 200.99F,
             isOrderedByCustomer = true
         )
-        fifthOrder = makeRandomStockOrder(
+        val fifthOrder = makeRandomStockOrder(
             id = 5L,
             product = product2,
             salePrice = 210.99F,
             isOrderedByCustomer = true
         )
-        sixthOrder = makeRandomStockOrder(
+        val sixthOrder = makeRandomStockOrder(
             id = 6L,
             product = product1,
             salePrice = 220.77F,
