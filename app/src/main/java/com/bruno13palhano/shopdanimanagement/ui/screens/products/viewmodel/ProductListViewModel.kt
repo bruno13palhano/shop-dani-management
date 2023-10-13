@@ -12,7 +12,6 @@ import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
-import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -76,7 +75,7 @@ class ProductListViewModel @Inject constructor(
                         photo = product.photo,
                         title = product.name,
                         subtitle = product.company,
-                        description = dateFormat.format(product.date)
+                        description = product.date.toString()
                     )
                 }
             }
@@ -92,7 +91,7 @@ class ProductListViewModel @Inject constructor(
                         photo = product.photo,
                         title = product.name,
                         subtitle = product.company,
-                        description = dateFormat.format(product.date)
+                        description = product.date.toString()
                     )
                 }
             }
