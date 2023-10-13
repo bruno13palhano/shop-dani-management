@@ -115,7 +115,6 @@ class StockOrderLightTest {
     @Test
     fun shouldNotUpdateStockOrderInTheDatabase_ifStockOrderNotExists() = runTest {
         stockOrderTable.insert(firstItem)
-
         stockOrderTable.update(secondItem)
 
         launch(Dispatchers.IO) {
@@ -128,10 +127,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnAllStockItems_ifDatabaseNotEmpty() = runTest {
-        stockOrderTable.insert(firstItem)
-        stockOrderTable.insert(secondItem)
-        stockOrderTable.insert(thirdItem)
-
+        insertAllItems()
         launch(Dispatchers.IO) {
             stockOrderTable.getItems(isOrderedByCustomer = false).collect {
                 assertThat(it).containsExactly(firstItem, secondItem, thirdItem)
@@ -142,10 +138,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnEmptyList_ifThereAreNoStockItemsInTheDatabase() = runTest {
-        stockOrderTable.insert(firstOrder)
-        stockOrderTable.insert(secondOrder)
-        stockOrderTable.insert(thirdOrder)
-
+        insertAllOrders()
         launch(Dispatchers.IO) {
             stockOrderTable.getItems(isOrderedByCustomer = false).collect {
                 assertThat(it).isEmpty()
@@ -156,10 +149,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnAllOrders_ifDatabaseNotEmpty() = runTest {
-        stockOrderTable.insert(firstOrder)
-        stockOrderTable.insert(secondOrder)
-        stockOrderTable.insert(thirdOrder)
-
+        insertAllOrders()
         launch(Dispatchers.IO) {
             stockOrderTable.getItems(isOrderedByCustomer = true).collect {
                 assertThat(it).containsExactly(firstOrder, secondOrder, thirdOrder)
@@ -170,10 +160,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnEmptyList_ifThereAreNoOrdersInTheDatabase() = runTest {
-        stockOrderTable.insert(firstItem)
-        stockOrderTable.insert(secondItem)
-        stockOrderTable.insert(thirdItem)
-
+        insertAllItems()
         launch(Dispatchers.IO) {
             stockOrderTable.getItems(isOrderedByCustomer = true).collect {
                 assertThat(it).isEmpty()
@@ -254,10 +241,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnAllStockItems_matchesWithThisCategory_ifDatabaseNotEmpty() = runTest {
-        stockOrderTable.insert(firstItem)
-        stockOrderTable.insert(secondItem)
-        stockOrderTable.insert(thirdItem)
-
+        insertAllItems()
         launch(Dispatchers.IO) {
             stockOrderTable.getByCategory(isOrderedByCustomer = false, category = "Perfumes").collect {
                 assertThat(it).containsExactly(firstItem, secondItem)
@@ -268,10 +252,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnEmptyList_ifThereAreNoItemsInThisCategory() = runTest {
-        stockOrderTable.insert(firstItem)
-        stockOrderTable.insert(secondItem)
-        stockOrderTable.insert(thirdItem)
-
+        insertAllItems()
         launch(Dispatchers.IO) {
             stockOrderTable.getByCategory(isOrderedByCustomer = false, category = "test").collect {
                 assertThat(it).isEmpty()
@@ -310,10 +291,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnEmptyList_ifThereAreNoOrdersInThisCategory() = runTest {
-        stockOrderTable.insert(firstOrder)
-        stockOrderTable.insert(secondOrder)
-        stockOrderTable.insert(thirdOrder)
-
+        insertAllOrders()
         launch(Dispatchers.IO) {
             stockOrderTable.getByCategory(isOrderedByCustomer = true, category = "test").collect {
                 assertThat(it).isEmpty()
@@ -324,10 +302,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnAllOrders_ifThisCategoryValueIsEmpty() = runTest {
-        stockOrderTable.insert(firstOrder)
-        stockOrderTable.insert(secondOrder)
-        stockOrderTable.insert(thirdOrder)
-
+        insertAllOrders()
         launch(Dispatchers.IO) {
             stockOrderTable.getByCategory(isOrderedByCustomer = true, category = "").collect {
                 assertThat(it).containsExactly(firstOrder, secondOrder, thirdOrder)
@@ -467,10 +442,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnEmptyList_ifThereAreNoItemsOutOfStockInDatabase() = runTest {
-        stockOrderTable.insert(firstItem)
-        stockOrderTable.insert(secondItem)
-        stockOrderTable.insert(thirdItem)
-
+        insertAllItems()
         launch(Dispatchers.IO) {
             stockOrderTable.getOutOfStock().collect {
                 assertThat(it).isEmpty()
@@ -525,10 +497,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnAllDebitItemOrderedByPriceDesc_ifNotEmpty() = runTest {
-        stockOrderTable.insert(firstItem)
-        stockOrderTable.insert(secondItem)
-        stockOrderTable.insert(thirdItem)
-
+        insertAllItems()
         launch(Dispatchers.IO) {
             stockOrderTable.getDebitStockByPrice(isOrderedAsc = false).collect {
                 assertThat(it).containsExactly(secondItem, firstItem)
@@ -539,10 +508,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnAllDebitItemOrderedByPriceAsc_ifNotEmpty() = runTest {
-        stockOrderTable.insert(firstItem)
-        stockOrderTable.insert(secondItem)
-        stockOrderTable.insert(thirdItem)
-
+        insertAllItems()
         launch(Dispatchers.IO) {
             stockOrderTable.getDebitStockByPrice(isOrderedAsc = true).collect {
                 assertThat(it).containsExactly(firstItem, secondItem)
@@ -553,10 +519,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnAllDebitItemOrderedByNameDesc_ifNotEmpty() = runTest {
-        stockOrderTable.insert(firstItem)
-        stockOrderTable.insert(secondItem)
-        stockOrderTable.insert(thirdItem)
-
+        insertAllItems()
         launch(Dispatchers.IO) {
             stockOrderTable.getDebitStockByName(isOrderedAsc = false).collect {
                 assertThat(it).containsExactly(firstItem, secondItem)
@@ -567,10 +530,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnAllDebitItemOrderedByNameAsc_ifNotEmpty() = runTest {
-        stockOrderTable.insert(firstItem)
-        stockOrderTable.insert(secondItem)
-        stockOrderTable.insert(thirdItem)
-
+        insertAllItems()
         launch(Dispatchers.IO) {
             stockOrderTable.getDebitStockByName(isOrderedAsc = true).collect {
                 assertThat(it).containsExactly(secondItem, firstItem)
@@ -581,9 +541,7 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnStockOrderWithThisId() = runTest {
-        stockOrderTable.insert(firstOrder)
-        stockOrderTable.insert(secondOrder)
-
+        insertAllOrders()
         launch(Dispatchers.IO) {
             stockOrderTable.getById(id = secondOrder.id).collect {
                 assertThat(it).isEqualTo(secondOrder)
@@ -594,15 +552,24 @@ class StockOrderLightTest {
 
     @Test
     fun shouldReturnLastItemInsertedInDatabase() = runTest {
-        stockOrderTable.insert(firstItem)
-        stockOrderTable.insert(secondOrder)
-        stockOrderTable.insert(thirdOrder)
-
+        insertAllOrders()
         launch(Dispatchers.IO) {
             stockOrderTable.getLast().collect {
                 assertThat(it).isEqualTo(thirdOrder)
                 cancel()
             }
         }
+    }
+
+    private suspend fun insertAllItems() {
+        stockOrderTable.insert(firstItem)
+        stockOrderTable.insert(secondItem)
+        stockOrderTable.insert(thirdItem)
+    }
+
+    private suspend fun insertAllOrders() {
+        stockOrderTable.insert(firstOrder)
+        stockOrderTable.insert(secondOrder)
+        stockOrderTable.insert(thirdOrder)
     }
 }
