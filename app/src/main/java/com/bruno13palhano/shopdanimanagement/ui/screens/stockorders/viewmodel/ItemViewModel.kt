@@ -14,8 +14,6 @@ import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.StockOrder
-import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
-import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -33,15 +31,11 @@ class ItemViewModel @Inject constructor(
         private set
     var photo by mutableStateOf(byteArrayOf())
         private set
-    var dateInMillis by mutableLongStateOf(0L)
+    var date by mutableLongStateOf(0L)
         private set
     var quantity by mutableStateOf("")
         private set
-    var date by mutableStateOf("")
-        private set
-    var validityInMillis by mutableLongStateOf(currentDate)
-        private set
-    var validity: String by mutableStateOf(dateFormat.format(validityInMillis))
+    var validity by mutableLongStateOf(0L)
         private set
     var purchasePrice by mutableStateOf("")
         private set
@@ -55,7 +49,8 @@ class ItemViewModel @Inject constructor(
         private set
 
     val isItemNotEmpty = snapshotFlow {
-        name.isNotEmpty() && quantity.isNotEmpty() && purchasePrice.isNotEmpty() && salePrice.isNotEmpty()
+        name.isNotEmpty() && quantity.isNotEmpty() && purchasePrice.isNotEmpty()
+                && salePrice.isNotEmpty()
     }
         .stateIn(
             scope = viewModelScope,
@@ -68,13 +63,11 @@ class ItemViewModel @Inject constructor(
     }
 
     fun updateDate(date: Long) {
-        dateInMillis = date
-        this.date = dateFormat.format(dateInMillis)
+        this.date = date
     }
 
     fun updateValidity(validity: Long) {
-        validityInMillis = validity
-        this.validity = dateFormat.format(validityInMillis)
+        this.validity = validity
     }
 
     fun updatePurchasePrice(purchasePrice: String) {
@@ -119,8 +112,8 @@ class ItemViewModel @Inject constructor(
                 photo = it.photo
                 quantity = it.quantity.toString()
                 company = it.company
-                updateDate(it.date)
-                updateValidity(it.validity)
+                date = it.date
+                validity = it.validity
                 category = setCategories(it.categories)
                 company = it.company
                 purchasePrice = it.purchasePrice.toString()
@@ -148,8 +141,8 @@ class ItemViewModel @Inject constructor(
         name = name,
         photo = photo,
         quantity = quantity.toInt(),
-        date = dateInMillis,
-        validity = validityInMillis,
+        date = date,
+        validity = validity,
         categories = emptyList(),
         company = company,
         purchasePrice = stringToFloat(purchasePrice),
@@ -164,8 +157,8 @@ class ItemViewModel @Inject constructor(
         name = name,
         photo = photo,
         quantity = quantity.toInt(),
-        date = dateInMillis,
-        validity = validityInMillis,
+        date = date,
+        validity = validity,
         categories = emptyList(),
         company = company,
         purchasePrice = stringToFloat(purchasePrice),

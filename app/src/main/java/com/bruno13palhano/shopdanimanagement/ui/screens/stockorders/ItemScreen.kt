@@ -25,6 +25,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ItemContent
+import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.setAlarmNotification
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.ItemViewModel
 import kotlinx.coroutines.launch
@@ -44,6 +46,8 @@ fun ItemScreen(
         if (isEditable) {
             viewModel.getStockOrder(stockOrderItemId)
         } else {
+            viewModel.updateDate(currentDate)
+            viewModel.updateValidity(currentDate)
             viewModel.getProduct(productId)
         }
     }
@@ -80,7 +84,7 @@ fun ItemScreen(
             }
         ) {
             datePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.dateInMillis,
+                initialSelectedDateMillis = viewModel.date,
                 initialDisplayMode = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                     DisplayMode.Picker
                 } else {
@@ -115,7 +119,7 @@ fun ItemScreen(
             }
         ) {
             validityPickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.validityInMillis,
+                initialSelectedDateMillis = viewModel.validity,
                 initialDisplayMode = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                     DisplayMode.Picker
                 } else {
@@ -143,10 +147,10 @@ fun ItemScreen(
         name = viewModel.name,
         photo = viewModel.photo,
         quantity = viewModel.quantity,
-        date = viewModel.date,
+        date = dateFormat.format(viewModel.date),
         purchasePrice = viewModel.purchasePrice,
         salePrice = viewModel.salePrice,
-        validity = viewModel.validity,
+        validity = dateFormat.format(viewModel.validity),
         category = viewModel.category,
         company = viewModel.company,
         isPaid = viewModel.isPaid,
@@ -175,7 +179,7 @@ fun ItemScreen(
                     setAlarmNotification(
                         id = stockOrderItemId,
                         title = viewModel.name,
-                        date = viewModel.validityInMillis,
+                        date = viewModel.validity,
                         description = viewModel.company,
                         context = context
                     )
@@ -184,7 +188,7 @@ fun ItemScreen(
                     setAlarmNotification(
                         id = productId,
                         title = viewModel.name,
-                        date = viewModel.validityInMillis,
+                        date = viewModel.validity,
                         description = viewModel.company,
                         context = context
                     )
