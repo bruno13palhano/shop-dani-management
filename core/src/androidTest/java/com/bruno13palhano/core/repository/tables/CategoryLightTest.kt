@@ -3,30 +3,25 @@ package com.bruno13palhano.core.repository.tables
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.repository.category.CategoryLight
-import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.mocks.makeRandomCategory
 import com.bruno13palhano.core.model.Category
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 @HiltAndroidTest
 class CategoryLightTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var categoryRepository: CategoryData<Category>
-    private lateinit var zeroIdCategory: Category
+    private lateinit var categoryTable: CategoryData<Category>
     private lateinit var firstCategory: Category
     private lateinit var secondCategory: Category
     private lateinit var thirdCategory: Category
@@ -38,258 +33,169 @@ class CategoryLightTest {
     fun before() {
         hiltTestRule.inject()
 
-        val categoryData = CategoryLight(database.categoryTableQueries, Dispatchers.IO)
-        categoryRepository = CategoryRepository(categoryData)
+        categoryTable = CategoryLight(database.categoryTableQueries, Dispatchers.IO)
 
-        zeroIdCategory = makeRandomCategory(id = 0L)
         firstCategory = makeRandomCategory(id = 1L)
         secondCategory = makeRandomCategory(id = 2L)
         thirdCategory = makeRandomCategory(id = 3L)
     }
 
     @Test
-    fun shouldInsertCategoryInTheDatabase() = runBlocking {
-        val latch = CountDownLatch(1)
-        categoryRepository.insert(firstCategory)
+    fun shouldInsertCategoryInTheDatabase() = runTest {
+        categoryTable.insert(firstCategory)
 
-        val job = async(Dispatchers.IO) {
-            categoryRepository.getAll().take(3).collect { categories ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            categoryTable.getAll().collect { categories ->
                 assertThat(categories).contains(firstCategory)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldUpdateCategoryInTheDatabase_IfCategoryExists() = runBlocking {
-        val latch = CountDownLatch(1)
+    fun shouldUpdateCategoryInTheDatabase_IfCategoryExists() = runTest {
         val updateCategory = makeRandomCategory(id = 1L)
+        categoryTable.insert(firstCategory)
+        categoryTable.update(updateCategory)
 
-        categoryRepository.insert(firstCategory)
-        categoryRepository.update(updateCategory)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.getAll().take(3).collect { categories ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            categoryTable.getAll().collect { categories ->
                 assertThat(categories).contains(updateCategory)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldDoNotUpdateCategoryInTheDatabase_IfCategoryNotExists() = runBlocking {
-        val latch = CountDownLatch(1)
+    fun shouldDoNotUpdateCategoryInTheDatabase_IfCategoryNotExists() = runTest {
+        categoryTable.insert(firstCategory)
+        categoryTable.update(secondCategory)
 
-        categoryRepository.insert(firstCategory)
-        categoryRepository.update(zeroIdCategory)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.getAll().take(3).collect { categories ->
-                latch.countDown()
-                assertThat(categories).doesNotContain(zeroIdCategory)
+        launch(Dispatchers.IO) {
+            categoryTable.getAll().collect { categories ->
+                assertThat(categories).doesNotContain(secondCategory)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldDeleteCategoryWithThisIdInTheDatabase_ifCategoryExists() = runBlocking {
-        val latch = CountDownLatch(1)
+    fun shouldDeleteCategoryWithThisIdInTheDatabase_ifCategoryExists() = runTest {
+        insertTwoCategories()
+        categoryTable.deleteById(firstCategory.id)
 
-        categoryRepository.insert(firstCategory)
-        categoryRepository.insert(secondCategory)
-
-        categoryRepository.deleteById(firstCategory.id)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.getAll().take(3).collect { categories ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            categoryTable.getAll().collect { categories ->
                 assertThat(categories).doesNotContain(firstCategory)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldNotDeleteCategoryInTheDatabase_ifCategoryWithThisIdNotExists() = runBlocking {
-        val latch = CountDownLatch(1)
+    fun shouldNotDeleteCategoryInTheDatabase_ifCategoryWithThisIdNotExists() = runTest {
+        insertTwoCategories()
+        categoryTable.deleteById(thirdCategory.id)
 
-        categoryRepository.insert(firstCategory)
-        categoryRepository.insert(secondCategory)
-
-        categoryRepository.deleteById(thirdCategory.id)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.getAll().take(3).collect { categories ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            categoryTable.getAll().collect { categories ->
                 assertThat(categories).containsExactly(firstCategory, secondCategory)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnAllCategoriesInTheDatabase_ifDatabaseIsNotEmpty() = runBlocking {
-        val latch = CountDownLatch(1)
-        categoryRepository.insert(firstCategory)
-        categoryRepository.insert(secondCategory)
-        categoryRepository.insert(thirdCategory)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.getAll().take(3).collect { categories ->
-                latch.countDown()
+    fun shouldReturnAllCategoriesInTheDatabase_ifDatabaseIsNotEmpty() = runTest {
+        insertAllCategories()
+        launch(Dispatchers.IO) {
+            categoryTable.getAll().collect { categories ->
                 assertThat(categories).containsExactly(firstCategory, secondCategory, thirdCategory)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runBlocking {
-        val latch = CountDownLatch(1)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.getAll().take(3).collect { categories ->
-                latch.countDown()
+    fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runTest {
+        launch(Dispatchers.IO) {
+            categoryTable.getAll().collect { categories ->
                 assertThat(categories).isEmpty()
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCategoryWithThisId_ifExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
-        categoryRepository.insert(firstCategory)
-        categoryRepository.insert(secondCategory)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.getById(secondCategory.id).collect { category ->
-                latch.countDown()
+    fun shouldReturnCategoryWithThisId_ifExists() = runTest {
+        insertTwoCategories()
+        launch(Dispatchers.IO) {
+            categoryTable.getById(secondCategory.id).collect { category ->
                 Assert.assertEquals(category, secondCategory)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnLastCategory_ifExists() = runBlocking {
-        val latch = CountDownLatch(1)
-
-        categoryRepository.insert(firstCategory)
-        categoryRepository.insert(secondCategory)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.getLast().collect { category ->
-                latch.countDown()
+    fun shouldReturnLastCategory_ifExists() = runTest {
+        insertTwoCategories()
+        launch(Dispatchers.IO) {
+            categoryTable.getLast().collect { category ->
                 Assert.assertEquals(category, secondCategory)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnCategoriesThatMatchesWithThisSearch() = runBlocking {
-        val latch = CountDownLatch(1)
+    fun shouldReturnCategoriesThatMatchesWithThisSearch() = runTest {
         val category1 = makeRandomCategory(id = 1L, name = "Others")
         val category2 = makeRandomCategory(id = 2L, name = "Perfumes")
         val category3 = makeRandomCategory(id = 3L, "Soaps")
 
-        categoryRepository.insert(category1)
-        categoryRepository.insert(category2)
-        categoryRepository.insert(category3)
+        categoryTable.insert(category1)
+        categoryTable.insert(category2)
+        categoryTable.insert(category3)
 
-        val job = async(Dispatchers.IO) {
-            categoryRepository.search(value = category1.name).take(3).collect { categories ->
-                latch.countDown()
+        launch(Dispatchers.IO) {
+            categoryTable.search(value = category1.name).collect { categories ->
                 assertThat(categories).contains(category1)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnEmptyList_ifThereIsNothingThatMatchesThisSearch() = runBlocking {
-        val latch = CountDownLatch(1)
-
-        categoryRepository.insert(firstCategory)
-        categoryRepository.insert(secondCategory)
-        categoryRepository.insert(thirdCategory)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.search(value = " ").take(3).collect { categories ->
-                latch.countDown()
+    fun shouldReturnEmptyList_ifThereIsNothingThatMatchesThisSearch() = runTest {
+        insertAllCategories()
+        launch(Dispatchers.IO) {
+            categoryTable.search(value = " ").collect { categories ->
                 assertThat(categories).containsNoneOf(firstCategory, secondCategory, thirdCategory)
+                cancel()
             }
         }
-
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
     }
 
     @Test
-    fun shouldReturnAllCategories_ifThisSearchIsEmpty() = runBlocking {
-        val latch = CountDownLatch(1)
-
-        categoryRepository.insert(firstCategory)
-        categoryRepository.insert(secondCategory)
-        categoryRepository.insert(thirdCategory)
-
-        val job = async(Dispatchers.IO) {
-            categoryRepository.search(value = "").take(3).collect { categories ->
-                latch.countDown()
+    fun shouldReturnAllCategories_ifThisSearchIsEmpty() = runTest {
+        insertAllCategories()
+        launch(Dispatchers.IO) {
+            categoryTable.search(value = "").collect { categories ->
                 assertThat(categories).containsExactly(firstCategory, secondCategory, thirdCategory)
+                cancel()
             }
         }
+    }
 
-        withContext(Dispatchers.IO) {
-            latch.await()
-        }
-        job.cancelAndJoin()
+    private suspend fun insertTwoCategories() {
+        categoryTable.insert(firstCategory)
+        categoryTable.insert(secondCategory)
+    }
+
+    private suspend fun insertAllCategories() {
+        categoryTable.insert(firstCategory)
+        categoryTable.insert(secondCategory)
+        categoryTable.insert(thirdCategory)
     }
 }
