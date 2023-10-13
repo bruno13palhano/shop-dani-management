@@ -35,6 +35,7 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
 
 @Composable
@@ -149,7 +150,10 @@ fun SalesContent(
                     photo = item.photo,
                     title = item.title,
                     subtitle = item.subtitle,
-                    description = stringResource(id = R.string.date_of_sale_tag, item.description),
+                    description = stringResource(
+                        id = R.string.date_of_sale_tag,
+                        dateFormat.format(item.description.toLong())
+                    ),
                     onClick = { onItemClick(item.id) }
                 )
             }
