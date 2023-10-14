@@ -140,6 +140,17 @@ class ProductViewModelTest {
     }
 
     @Test
+    fun setCategoryChecked_shouldChangeCategoryProperty() = runTest {
+        `when`(categoryRepository.getAll()).thenReturn(flow { emit(categories) })
+        sut.getAllCategories()
+
+        advanceUntilIdle()
+
+        sut.setCategoryChecked(3L)
+        assertEquals(categories[2].name, sut.category)
+    }
+
+    @Test
     fun updateCompany_shouldChangeCompanyProperty() {
         sut.updateCompany(company)
         assertEquals(company, sut.company)
