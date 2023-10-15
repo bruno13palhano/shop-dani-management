@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class CategoryTestRepository :  CategoryData<Category> {
+class TestCategoryRepository :  CategoryData<Category> {
     val categories = mutableListOf(
         makeRandomCategory(id = 1L),
         makeRandomCategory(id = 2L),
