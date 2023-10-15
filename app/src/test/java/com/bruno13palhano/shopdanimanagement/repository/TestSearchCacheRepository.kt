@@ -1,17 +1,12 @@
-package com.bruno13palhano.shopdanimanagement.products.repository
+package com.bruno13palhano.shopdanimanagement.repository
 
 import com.bruno13palhano.core.data.SearchCacheData
 import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.shopdanimanagement.makeRandomSearchCache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class TestSearchCacheRepository : SearchCacheData<SearchCache> {
-    val searchCacheList = mutableListOf(
-        makeRandomSearchCache(search = "test"),
-        makeRandomSearchCache(search = "homem"),
-        makeRandomSearchCache(search = "soaps")
-    )
+    private val searchCacheList = mutableListOf<SearchCache>()
 
     override suspend fun insert(model: SearchCache): Long {
         searchCacheList.add(model)
@@ -19,13 +14,13 @@ class TestSearchCacheRepository : SearchCacheData<SearchCache> {
     }
 
     override suspend fun deleteById(search: String) {
-        var index = 1000
-        for (i in 0 .. searchCacheList.size) {
+        var index = -1
+        for (i in 0 until searchCacheList.size) {
             if (searchCacheList[i].search == search)
                 index = i
         }
 
-        if (index < 1000)
+        if (index != -1)
             searchCacheList.removeAt(index)
     }
 
