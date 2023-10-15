@@ -1,9 +1,10 @@
-package com.bruno13palhano.shopdanimanagement
+package com.bruno13palhano.shopdanimanagement.products
 
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
+import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.ProductViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -95,7 +96,7 @@ class ProductViewModelTest {
         sut.getProduct(id = 1L)
 
         advanceUntilIdle()
-        propertiesTest()
+        assertProperties()
     }
 
     @Test
@@ -162,7 +163,7 @@ class ProductViewModelTest {
         sut.insertProduct()
 
         advanceUntilIdle()
-        propertiesTest()
+        assertProperties()
     }
 
     @Test
@@ -171,7 +172,7 @@ class ProductViewModelTest {
         sut.updateProduct(id = 1L)
 
         advanceUntilIdle()
-        propertiesTest()
+        assertProperties()
     }
 
     @Test
@@ -180,7 +181,7 @@ class ProductViewModelTest {
         sut.deleteProduct(id = 1L)
 
         advanceUntilIdle()
-        propertiesTest()
+        assertProperties()
     }
 
     private fun setProperties() {
@@ -192,7 +193,7 @@ class ProductViewModelTest {
         sut.updateCompany(company)
     }
 
-    private fun propertiesTest() {
+    private fun assertProperties() {
         assertEquals(name, sut.name)
         assertEquals(code, sut.code)
         assertEquals(description, sut.description)
