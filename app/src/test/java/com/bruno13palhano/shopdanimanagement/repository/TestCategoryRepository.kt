@@ -3,6 +3,7 @@ package com.bruno13palhano.shopdanimanagement.repository
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.model.Category
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
@@ -16,13 +17,13 @@ class TestCategoryRepository :  CategoryData<Category> {
     }
 
     override suspend fun deleteById(id: Long) {
-        var index = 1000
+        var index = -1
         for(i in 0 until categories.size) {
             if (categories[i].id == id)
                 index = i
         }
 
-        if (index < 1000)
+        if (index != -1)
             categories.removeAt(index)
     }
 
@@ -31,13 +32,13 @@ class TestCategoryRepository :  CategoryData<Category> {
     }
 
     override fun getById(id: Long): Flow<Category> {
-        var index = 1000
+        var index = -1
         for(i in 0 until categories.size) {
             if (categories[i].id == id)
                 index = i
         }
 
-        return flowOf(categories[index])
+        return if (index != -1) flowOf(categories[index]) else emptyFlow()
     }
 
     override fun getLast(): Flow<Category> {
@@ -45,13 +46,14 @@ class TestCategoryRepository :  CategoryData<Category> {
     }
 
     override suspend fun update(model: Category) {
-        var index = 1000
+        var index = -1
         for(i in 0 until categories.size) {
             if (categories[i].id == model.id)
                 index = i
         }
 
-        categories[index] = model
+        if (index != -1)
+            categories[index] = model
     }
 
     override suspend fun insert(model: Category): Long {
