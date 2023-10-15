@@ -1,18 +1,13 @@
-package com.bruno13palhano.shopdanimanagement.products.repository
+package com.bruno13palhano.shopdanimanagement.repository
 
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.shopdanimanagement.makeRandomCategory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class TestCategoryRepository :  CategoryData<Category> {
-    val categories = mutableListOf(
-        makeRandomCategory(id = 1L),
-        makeRandomCategory(id = 2L),
-        makeRandomCategory(id = 3L)
-    )
+    private val categories = mutableListOf<Category>()
 
     override fun search(value: String): Flow<List<Category>> {
         return flowOf(categories).map {
@@ -22,7 +17,7 @@ class TestCategoryRepository :  CategoryData<Category> {
 
     override suspend fun deleteById(id: Long) {
         var index = 1000
-        for(i in 0 .. categories.size) {
+        for(i in 0 until categories.size) {
             if (categories[i].id == id)
                 index = i
         }
@@ -37,7 +32,7 @@ class TestCategoryRepository :  CategoryData<Category> {
 
     override fun getById(id: Long): Flow<Category> {
         var index = 1000
-        for(i in 0 .. categories.size) {
+        for(i in 0 until categories.size) {
             if (categories[i].id == id)
                 index = i
         }
@@ -51,7 +46,7 @@ class TestCategoryRepository :  CategoryData<Category> {
 
     override suspend fun update(model: Category) {
         var index = 1000
-        for(i in 0 .. categories.size) {
+        for(i in 0 until categories.size) {
             if (categories[i].id == model.id)
                 index = i
         }
