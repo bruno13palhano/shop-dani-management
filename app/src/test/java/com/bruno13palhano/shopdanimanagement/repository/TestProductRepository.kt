@@ -50,7 +50,7 @@ class TestProductRepository : ProductData<Product> {
             it.filter { product ->
                 product.categories.joinToString(", ") { category ->
                     category.name
-                } == category
+                }.contains(category)
             }
         }
     }
