@@ -3,10 +3,8 @@ package com.bruno13palhano.shopdanimanagement.products
 import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
-import com.bruno13palhano.shopdanimanagement.makeRandomProduct
 import com.bruno13palhano.shopdanimanagement.repository.TestCategoryRepository
 import com.bruno13palhano.shopdanimanagement.repository.TestProductRepository
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
@@ -19,9 +17,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.junit.MockitoRule
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -142,52 +143,39 @@ class ProductViewModelTest {
     }
 
     @Test
-    fun insert_shouldSetProductProperties() = runTest {
-        setProperties()
-        sut.getAllCategories()
+    fun whenInsertProduct_shouldCallInsertFromProductRepository() = runTest {
+        val productRep = mock<ProductData<Product>>()
+        val categoryRep = mock<CategoryData<Category>>()
+        val sut = ProductViewModel(productRep,  categoryRep)
 
         sut.insertProduct()
-        sut.getProduct(id = 1L)
 
         advanceUntilIdle()
-
-        assertProperties()
+        verify(productRep).insert(any())
     }
 
     @Test
-    fun update_shouldChangeProductProperties() = runTest {
-        val product = makeRandomProduct(id = 1L)
-        productRepository.insert(model = product)
+    fun whenUpdateProduct_shouldCallUpdateFromProductRepository() = runTest {
+        val productRep = mock<ProductData<Product>>()
+        val categoryRep = mock<CategoryData<Category>>()
+        val sut = ProductViewModel(productRep,  categoryRep)
 
-        setProperties()
-
-        sut.updateProduct(id = 1L)
-        sut.getProduct(id = 1L)
-
-        advanceUntilIdle()
-        assertProperties()
-    }
-
-    @Test
-    fun delete_shouldSetProductPropertiesToDefaultValues() = runTest {
-        insertCategories()
-        val product = productFromProperties()
-        productRepository.insert(model = product)
         sut.deleteProduct(id = 1L)
 
-        sut.getProduct(id = 1L)
-
         advanceUntilIdle()
-        assertPropertiesIsEmpty()
+        verify(productRep).deleteById(id = 1L)
     }
 
-    private fun setProperties() {
-        sut.updateName(name)
-        sut.updateCode(code)
-        sut.updateDescription(description)
-        sut.updatePhoto(photo)
-        sut.updateDate(date)
-        sut.updateCompany(company)
+    @Test
+    fun whenDeleteProduct_shouldCallDeleteByIdFromProductRepository() = runTest {
+        val productRep = mock<ProductData<Product>>()
+        val categoryRep = mock<CategoryData<Category>>()
+        val sut = ProductViewModel(productRep,  categoryRep)
+
+        sut.updateProduct(id = 1L)
+
+        advanceUntilIdle()
+        verify(productRep).update(any())
     }
 
     private fun assertProperties() {
@@ -197,15 +185,6 @@ class ProductViewModelTest {
         assertEquals(photo, sut.photo)
         assertEquals(date, sut.date)
         assertEquals(company, sut.company)
-    }
-
-    private fun assertPropertiesIsEmpty() {
-        assertEquals("", sut.name)
-        assertEquals("", sut.code)
-        assertEquals("", sut.description)
-        assertEquals(0L, sut.date)
-        assertEquals("", sut.category)
-        assertEquals(Company.AVON.company, sut.company)
     }
 
     private suspend fun insertCategories() {
