@@ -12,7 +12,7 @@ class TestProductRepository : ProductData<Product> {
 
     override suspend fun insert(model: Product): Long {
         productList.add(model)
-        return model.id;
+        return model.id
     }
 
     override suspend fun update(model: Product) {
