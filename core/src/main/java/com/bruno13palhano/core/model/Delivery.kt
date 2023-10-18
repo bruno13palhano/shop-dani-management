@@ -1,7 +1,7 @@
 package com.bruno13palhano.core.model
 
 data class Delivery(
-    val id: Long,
+    override val id: Long,
     val saleId: Long,
     val customerName: String,
     val address: String,
@@ -12,4 +12,4 @@ data class Delivery(
     val shippingDate: Long,
     val deliveryDate: Long,
     val delivered: Boolean,
-)
+) : Model(id = id)

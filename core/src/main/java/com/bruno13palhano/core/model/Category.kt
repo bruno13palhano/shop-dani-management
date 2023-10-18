@@ -6,6 +6,6 @@ package com.bruno13palhano.core.model
  * All categories for products.
  */
 data class Category(
-    val id: Long,
+    override val id: Long,
     val name: String
-)
+) : Model(id = id)

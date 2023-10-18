@@ -1,7 +1,7 @@
 package com.bruno13palhano.core.model
 
 data class Catalog(
-    val id: Long,
+    override val id: Long,
     val productId: Long,
     val name: String,
     val photo: ByteArray,
@@ -9,7 +9,7 @@ data class Catalog(
     val description: String,
     val discount: Long,
     val price: Float
-) {
+) : Model(id = id) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

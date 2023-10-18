@@ -1,7 +1,7 @@
 package com.bruno13palhano.core.model
 
 data class Sale(
-    val id: Long,
+    override val id: Long,
     val productId: Long,
     val stockOrderId: Long,
     val customerId: Long,
@@ -19,7 +19,7 @@ data class Sale(
     val isOrderedByCustomer: Boolean,
     val isPaidByCustomer: Boolean,
     val canceled: Boolean
-) {
+) : Model(id = id) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

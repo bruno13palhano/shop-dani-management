@@ -14,7 +14,7 @@ package com.bruno13palhano.core.model
 * @property company the company that produces the product.
 */
 data class Product(
-    val id: Long,
+    override val id: Long,
     val name: String,
     val code: String,
     val description: String,
@@ -22,7 +22,7 @@ data class Product(
     val date: Long,
     val categories: List<Category>,
     val company: String
-) {
+) : Model(id = id) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

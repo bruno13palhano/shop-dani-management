@@ -1,13 +1,13 @@
 package com.bruno13palhano.core.model
 
 data class Customer(
-    val id: Long,
+    override val id: Long,
     val name: String,
     val photo: ByteArray,
     val email: String,
     val address: String,
     val phoneNumber: String,
-) {
+) : Model(id = id) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
