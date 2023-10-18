@@ -11,7 +11,6 @@ import com.bruno13palhano.core.data.di.CatalogRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -102,7 +101,14 @@ class CatalogItemViewModel @Inject constructor(
         photo = photo,
         title = title,
         description = description,
-        discount = discount.toLong(),
+        discount = stringToLong(discount),
         price = stringToFloat(price)
     )
+
+    private fun stringToLong(value: String) = try { value.toLong() } catch (ignored: Exception) { 0L }
+    private fun stringToFloat(value: String): Float {
+        return try {
+            value.replace(",", ".").toFloat()
+        } catch (ignored: Exception) { 0F }
+    }
 }
