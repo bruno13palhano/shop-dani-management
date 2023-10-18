@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.di.DeliveryRep
 import com.bruno13palhano.core.model.Delivery
-import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -99,5 +98,11 @@ class DeliveryViewModel @Inject constructor(
                 deliveryRepository.updateDelivered(deliveryId, delivered)
             }
         }
+    }
+
+    private fun stringToFloat(value: String): Float {
+        return try {
+            value.replace(",", ".").toFloat()
+        } catch (ignored: Exception) { 0F }
     }
 }
