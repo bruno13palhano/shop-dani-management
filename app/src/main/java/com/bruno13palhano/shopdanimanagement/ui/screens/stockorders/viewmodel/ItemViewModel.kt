@@ -48,8 +48,7 @@ class ItemViewModel @Inject constructor(
         private set
 
     val isItemNotEmpty = snapshotFlow {
-        name.isNotEmpty() && quantity.isNotEmpty() && purchasePrice.isNotEmpty()
-                && salePrice.isNotEmpty()
+        quantity.isNotEmpty() && purchasePrice.isNotEmpty() && salePrice.isNotEmpty()
     }
         .stateIn(
             scope = viewModelScope,
