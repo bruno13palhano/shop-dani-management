@@ -14,7 +14,6 @@ import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.StockOrder
-import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
@@ -90,7 +89,6 @@ class ItemViewModel @Inject constructor(
                 updateDate(it.date)
                 company = it.company
                 category = setCategories(it.categories)
-                company = it.company
             }
         }
     }
@@ -111,7 +109,6 @@ class ItemViewModel @Inject constructor(
                 name = it.name
                 photo = it.photo
                 quantity = it.quantity.toString()
-                company = it.company
                 date = it.date
                 validity = it.validity
                 category = setCategories(it.categories)
@@ -140,7 +137,7 @@ class ItemViewModel @Inject constructor(
         productId = productId,
         name = name,
         photo = photo,
-        quantity = quantity.toInt(),
+        quantity = stringToInt(quantity),
         date = date,
         validity = validity,
         categories = emptyList(),
@@ -156,7 +153,7 @@ class ItemViewModel @Inject constructor(
         productId = productId,
         name = name,
         photo = photo,
-        quantity = quantity.toInt(),
+        quantity = stringToInt(quantity),
         date = date,
         validity = validity,
         categories = emptyList(),
@@ -166,4 +163,16 @@ class ItemViewModel @Inject constructor(
         isOrderedByCustomer = isOrderedByCustomer,
         isPaid = isPaid
     )
+
+    private fun stringToFloat(value: String): Float {
+        return try {
+            value.replace(",", ".").toFloat()
+        } catch (ignored: Exception) { 0F }
+    }
+
+    private fun stringToInt(value: String): Int {
+        return try {
+            value.toInt()
+        } catch (ignored: Exception) { 0 }
+    }
 }
