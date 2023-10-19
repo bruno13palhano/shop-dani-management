@@ -26,46 +26,22 @@ class TestCatalogRepository : CatalogData<Catalog> {
     }
 
     override suspend fun deleteById(id: Long) {
-        var index = -1
-
-        for (i in 0 until catalogList.size) {
-            if (catalogList[i].id == id)
-                index = i
-        }
-
-        if (index != -1)
-            catalogList.removeAt(index)
+        val index = getIndex(id = id, list = catalogList)
+        if (isIndexValid(index = index)) catalogList.removeAt(index)
     }
 
-    override fun getAll(): Flow<List<Catalog>> {
-        return flowOf(catalogList)
-    }
+    override fun getAll(): Flow<List<Catalog>> = flowOf(catalogList)
 
     override fun getById(id: Long): Flow<Catalog> {
-        var index = -1
-
-        for (i in 0 until catalogList.size) {
-            if (catalogList[i].id == id)
-                index = i
-        }
-
-        return if (index != -1) flowOf(catalogList[index]) else emptyFlow()
+        val index = getIndex(id = id, list = catalogList)
+        return if (isIndexValid(index = index)) flowOf(catalogList[index]) else emptyFlow()
     }
 
-    override fun getLast(): Flow<Catalog> {
-        return flowOf(catalogList.last())
-    }
+    override fun getLast(): Flow<Catalog> = flowOf(catalogList.last())
 
     override suspend fun update(model: Catalog) {
-        var index = -1
-
-        for (i in 0 until catalogList.size) {
-            if (catalogList[i].id == model.id)
-                index = i
-        }
-
-        if (index != -1)
-            catalogList[index] = model
+        val index = getIndex(id = model.id, list = catalogList)
+        if (isIndexValid(index = index)) catalogList[index] = model
     }
 
     override suspend fun insert(model: Catalog): Long {

@@ -14,14 +14,12 @@ class TestDeliveryRepository : DeliveryData<Delivery> {
     }
 
     override suspend fun update(model: Delivery) {
-        val index = getIndex(id = model.id)
-
-        if (isIndexValid(index = index))
-            deliveries[index] = model
+        val index = getIndex(id = model.id, list = deliveries)
+        if (isIndexValid(index = index)) deliveries[index] = model
     }
 
     override suspend fun updateDeliveryPrice(id: Long, deliveryPrice: Float) {
-        val index = getIndex(id = id)
+        val index = getIndex(id = id, list = deliveries)
 
         if (isIndexValid(index = index)) {
             val delivery = Delivery(
@@ -43,7 +41,7 @@ class TestDeliveryRepository : DeliveryData<Delivery> {
     }
 
     override suspend fun updateShippingDate(id: Long, shippingDate: Long) {
-        val index = getIndex(id = id)
+        val index = getIndex(id = id, list = deliveries)
 
         if (isIndexValid(index = index)) {
             val delivery = Delivery(
@@ -65,7 +63,7 @@ class TestDeliveryRepository : DeliveryData<Delivery> {
     }
 
     override suspend fun updateDeliveryDate(id: Long, deliveryDate: Long) {
-        val index = getIndex(id = id)
+        val index = getIndex(id = id, list = deliveries)
 
         if (isIndexValid(index = index)) {
             val delivery = Delivery(
@@ -87,7 +85,7 @@ class TestDeliveryRepository : DeliveryData<Delivery> {
     }
 
     override suspend fun updateDelivered(id: Long, delivered: Boolean) {
-        val index = getIndex(id = id)
+        val index = getIndex(id = id, list = deliveries)
 
         if (isIndexValid(index = index)) {
             val delivery = Delivery(
@@ -116,41 +114,19 @@ class TestDeliveryRepository : DeliveryData<Delivery> {
         }
     }
 
-    override fun getCanceledDeliveries(): Flow<List<Delivery>> {
-        return flowOf(deliveries)
-    }
+    override fun getCanceledDeliveries(): Flow<List<Delivery>> = flowOf(deliveries)
 
     override suspend fun deleteById(id: Long) {
-        val index = getIndex(id = id)
-
-        if (isIndexValid(index = index))
-            deliveries.removeAt(index)
+        val index = getIndex(id = id, list = deliveries)
+        if (isIndexValid(index = index)) deliveries.removeAt(index)
     }
 
-    override fun getAll(): Flow<List<Delivery>> {
-        return flowOf(deliveries)
-    }
+    override fun getAll(): Flow<List<Delivery>> = flowOf(deliveries)
 
     override fun getById(id: Long): Flow<Delivery> {
-        val index = getIndex(id = id)
-
+        val index = getIndex(id = id, list = deliveries)
         return if (isIndexValid(index = index)) flowOf(deliveries[index]) else flowOf()
     }
 
-    override fun getLast(): Flow<Delivery> {
-        return flowOf(deliveries.last())
-    }
-
-    private fun getIndex(id: Long): Int {
-        var index = -1
-
-        for (i in 0 until deliveries.size) {
-            if (deliveries[i].id == id)
-                index = i
-        }
-
-        return index
-    }
-
-    private fun isIndexValid(index: Int): Boolean = index != -1
+    override fun getLast(): Flow<Delivery> = flowOf(deliveries.last())
 }

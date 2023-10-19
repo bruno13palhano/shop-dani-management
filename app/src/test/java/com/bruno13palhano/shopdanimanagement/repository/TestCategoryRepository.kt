@@ -17,43 +17,22 @@ class TestCategoryRepository :  CategoryData<Category> {
     }
 
     override suspend fun deleteById(id: Long) {
-        var index = -1
-        for(i in 0 until categories.size) {
-            if (categories[i].id == id)
-                index = i
-        }
-
-        if (index != -1)
-            categories.removeAt(index)
+        val index = getIndex(id = id, list = categories)
+        if (isIndexValid(index = index)) categories.removeAt(index)
     }
 
-    override fun getAll(): Flow<List<Category>> {
-        return flowOf(categories)
-    }
+    override fun getAll(): Flow<List<Category>> = flowOf(categories)
 
     override fun getById(id: Long): Flow<Category> {
-        var index = -1
-        for(i in 0 until categories.size) {
-            if (categories[i].id == id)
-                index = i
-        }
-
-        return if (index != -1) flowOf(categories[index]) else emptyFlow()
+        val index = getIndex(id = id, list = categories)
+        return if (isIndexValid(index = index)) flowOf(categories[index]) else emptyFlow()
     }
 
-    override fun getLast(): Flow<Category> {
-        return flowOf(categories.last())
-    }
+    override fun getLast(): Flow<Category> = flowOf(categories.last())
 
     override suspend fun update(model: Category) {
-        var index = -1
-        for(i in 0 until categories.size) {
-            if (categories[i].id == model.id)
-                index = i
-        }
-
-        if (index != -1)
-            categories[index] = model
+        val index = getIndex(id = model.id, list = categories)
+        if (isIndexValid(index = index)) categories[index] = model
     }
 
     override suspend fun insert(model: Category): Long {

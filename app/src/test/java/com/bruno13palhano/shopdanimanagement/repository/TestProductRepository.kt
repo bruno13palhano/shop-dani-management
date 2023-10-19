@@ -16,15 +16,8 @@ class TestProductRepository : ProductData<Product> {
     }
 
     override suspend fun update(model: Product) {
-        var index = -1
-
-        for (i in 0 until productList.size) {
-            if (productList[i].id == model.id)
-                index = i
-        }
-
-        if (index != -1)
-            productList[index] = model
+        val index = getIndex(id = model.id, list = productList)
+        if (isIndexValid(index = index)) productList[index] = model
     }
 
     override fun search(value: String): Flow<List<Product>> {
@@ -56,33 +49,16 @@ class TestProductRepository : ProductData<Product> {
     }
 
     override suspend fun deleteById(id: Long) {
-        var index = -1
-
-        for (i in 0 until productList.size) {
-            if (productList[i].id == id)
-                index = i
-        }
-
-        if (index != -1)
-            productList.removeAt(index)
+        val index = getIndex(id = id, list = productList)
+        if (isIndexValid(index = index)) productList.removeAt(index)
     }
 
-    override fun getAll(): Flow<List<Product>> {
-        return flowOf(productList)
-    }
+    override fun getAll(): Flow<List<Product>> = flowOf(productList)
 
     override fun getById(id: Long): Flow<Product> {
-        var index = -1
-
-        for (i in 0 until productList.size) {
-            if (productList[i].id == id)
-                index = i
-        }
-
-        return if (index != -1) flowOf(productList[index]) else emptyFlow()
+        val index = getIndex(id = id, list = productList)
+        return if (isIndexValid(index = index)) flowOf(productList[index]) else emptyFlow()
     }
 
-    override fun getLast(): Flow<Product> {
-        return flowOf(productList.last())
-    }
+    override fun getLast(): Flow<Product> = flowOf(productList.last())
 }
