@@ -23,8 +23,6 @@ import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerCheck
-import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
-import com.bruno13palhano.shopdanimanagement.ui.screens.stringToInt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
@@ -306,4 +304,16 @@ class SaleViewModel @Inject constructor(
         deliveryDate = dateOfSale,
         delivered = false
     )
+
+    private fun stringToFloat(value: String): Float {
+        return try {
+            value.replace(",", ".").toFloat()
+        } catch (ignored: Exception) { 0F }
+    }
+
+    private fun stringToInt(value: String): Int {
+        return try {
+            value.toInt()
+        } catch (ignored: Exception) { 0 }
+    }
 }
