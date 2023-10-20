@@ -113,15 +113,19 @@ class TestSaleRepository : SaleData<Sale> {
     ): Flow<List<Sale>> {
         return if (isOrderedAsc) {
             if (isPaidByCustomer) {
-                flowOf(sales.filter { it.isPaidByCustomer }.sortedBy { it.customerName })
+                flowOf(sales.filter { it.isPaidByCustomer && !it.canceled }
+                    .sortedBy { it.customerName })
             } else {
-                flowOf(sales.filter { !it.isPaidByCustomer }.sortedBy { it.customerName })
+                flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled }
+                    .sortedBy { it.customerName })
             }
         } else {
             if (isPaidByCustomer) {
-                flowOf(sales.filter { it.isPaidByCustomer }.sortedByDescending { it.customerName })
+                flowOf(sales.filter { it.isPaidByCustomer && !it.canceled }
+                    .sortedByDescending { it.customerName })
             } else {
-                flowOf(sales.filter { !it.isPaidByCustomer }.sortedByDescending { it.customerName })
+                flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled }
+                    .sortedByDescending { it.customerName })
             }
         }
     }
@@ -132,15 +136,19 @@ class TestSaleRepository : SaleData<Sale> {
     ): Flow<List<Sale>> {
         return if (isOrderedAsc) {
             if (isPaidByCustomer) {
-                flowOf(sales.filter { it.isPaidByCustomer }.sortedBy { it.salePrice })
+                flowOf(sales.filter { it.isPaidByCustomer && !it.canceled }
+                    .sortedBy { it.salePrice })
             } else {
-                flowOf(sales.filter { !it.isPaidByCustomer }.sortedBy { it.salePrice })
+                flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled }
+                    .sortedBy { it.salePrice })
             }
         } else {
             if (isPaidByCustomer) {
-                flowOf(sales.filter { it.isPaidByCustomer }.sortedByDescending { it.salePrice })
+                flowOf(sales.filter { it.isPaidByCustomer && !it.canceled}
+                    .sortedByDescending { it.salePrice })
             } else {
-                flowOf(sales.filter { !it.isPaidByCustomer }.sortedByDescending { it.salePrice })
+                flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled}
+                    .sortedByDescending { it.salePrice })
             }
         }
     }
@@ -166,7 +174,7 @@ class TestSaleRepository : SaleData<Sale> {
         if(isIndexValid(index = index)) sales.removeAt(index)
     }
 
-    override fun getAll(): Flow<List<Sale>> = flowOf(sales)
+    override fun getAll(): Flow<List<Sale>> = flowOf(sales.filter { !it.canceled })
 
     override fun getById(id: Long): Flow<Sale> {
         val index = getIndex(id = id, list = sales)
