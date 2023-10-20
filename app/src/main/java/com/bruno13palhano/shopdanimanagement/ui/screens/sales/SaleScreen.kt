@@ -43,6 +43,8 @@ fun SaleScreen(
     viewModel: SaleViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
+        viewModel.getAllCustomers()
+
         if (isEdit) {
             viewModel.getSale(saleId)
         } else {
@@ -56,6 +58,7 @@ fun SaleScreen(
             }
         }
     }
+
     val isSaleNotEmpty by viewModel.isSaleNotEmpty.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val configuration = LocalConfiguration.current

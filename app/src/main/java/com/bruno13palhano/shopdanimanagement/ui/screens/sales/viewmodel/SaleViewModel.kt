@@ -76,8 +76,7 @@ class SaleViewModel @Inject constructor(
     private var isPaid by mutableStateOf(false)
 
     val isSaleNotEmpty = snapshotFlow {
-        productName.isNotEmpty() && quantity.isNotEmpty() && purchasePrice.isNotEmpty()
-                && salePrice.isNotEmpty()
+        quantity.isNotEmpty() && purchasePrice.isNotEmpty() && salePrice.isNotEmpty()
     }
         .stateIn(
             scope = viewModelScope,
@@ -85,7 +84,7 @@ class SaleViewModel @Inject constructor(
             initialValue = false
         )
 
-    init {
+    fun getAllCustomers() = viewModelScope.launch {
         viewModelScope.launch {
             customerRepository.getAll().map {
                 it.map { customer ->
@@ -97,8 +96,7 @@ class SaleViewModel @Inject constructor(
                         isChecked = false
                     )
                 }
-            }.collect { allCustomers = it }
-        }
+            }.collect { allCustomers = it } }
     }
 
     fun updateQuantity(quantity: String) {
