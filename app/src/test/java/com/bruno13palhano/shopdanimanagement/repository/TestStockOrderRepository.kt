@@ -109,23 +109,24 @@ class TestStockOrderRepository : StockOrderData<StockOrder> {
     override fun getDebitStockByPrice(isOrderedAsc: Boolean): Flow<List<StockOrder>> {
         return if (isOrderedAsc) {
             flowOf(
-                stockOrderList.filter { !it.isPaid && it.isOrderedByCustomer}
+                stockOrderList.filter { !it.isPaid && !it.isOrderedByCustomer}
                     .sortedBy { it.salePrice }
             )
         } else {
-            flowOf(stockOrderList.filter { !it.isPaid && it.isOrderedByCustomer}
-                .sortedBy { it.salePrice })
+            flowOf(stockOrderList.filter { !it.isPaid && !it.isOrderedByCustomer}
+                .sortedByDescending { it.salePrice })
         }
     }
 
     override fun getDebitStockByName(isOrderedAsc: Boolean): Flow<List<StockOrder>> {
         return if (isOrderedAsc) {
             flowOf(
-                stockOrderList.filter { !it.isPaid && it.isOrderedByCustomer}.sortedBy { it.name }
+                stockOrderList.filter { !it.isPaid && !it.isOrderedByCustomer}.sortedBy { it.name }
             )
         } else {
             flowOf(
-                stockOrderList.filter { !it.isPaid && it.isOrderedByCustomer}.sortedBy { it.name }
+                stockOrderList.filter { !it.isPaid && !it.isOrderedByCustomer}
+                    .sortedByDescending { it.name }
             )
         }
     }
