@@ -110,11 +110,11 @@ class TestStockOrderRepository : StockOrderData<StockOrder> {
         return if (isOrderedAsc) {
             flowOf(
                 stockOrderList.filter { !it.isPaid && !it.isOrderedByCustomer}
-                    .sortedBy { it.salePrice }
+                    .sortedBy { it.purchasePrice }
             )
         } else {
             flowOf(stockOrderList.filter { !it.isPaid && !it.isOrderedByCustomer}
-                .sortedByDescending { it.salePrice })
+                .sortedByDescending { it.purchasePrice })
         }
     }
 
