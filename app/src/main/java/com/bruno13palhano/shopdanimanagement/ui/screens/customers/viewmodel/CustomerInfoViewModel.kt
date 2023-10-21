@@ -128,5 +128,31 @@ class CustomerInfoViewModel @Inject constructor(
         val owingValue: String = "",
         val purchasesValue: String = "",
         val lastPurchaseValue: String = "",
-    )
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as CustomerInfo
+
+            if (name != other.name) return false
+            if (address != other.address) return false
+            if (!photo.contentEquals(other.photo)) return false
+            if (owingValue != other.owingValue) return false
+            if (purchasesValue != other.purchasesValue) return false
+            if (lastPurchaseValue != other.lastPurchaseValue) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = name.hashCode()
+            result = 31 * result + address.hashCode()
+            result = 31 * result + photo.contentHashCode()
+            result = 31 * result + owingValue.hashCode()
+            result = 31 * result + purchasesValue.hashCode()
+            result = 31 * result + lastPurchaseValue.hashCode()
+            return result
+        }
+    }
 }
