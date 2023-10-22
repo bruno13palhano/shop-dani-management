@@ -5,6 +5,7 @@ import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 class TestSaleRepository : SaleData<Sale> {
@@ -175,7 +176,9 @@ class TestSaleRepository : SaleData<Sale> {
         if(isIndexValid(index = index)) sales.removeAt(index)
     }
 
-    override fun getAll(): Flow<List<Sale>> = flowOf(sales.filter { !it.canceled })
+    override fun getAll(): Flow<List<Sale>> = flow {
+        emit(sales.filter { !it.canceled })
+    }
 
     override fun getById(id: Long): Flow<Sale> {
         val index = getIndex(id = id, list = sales)
