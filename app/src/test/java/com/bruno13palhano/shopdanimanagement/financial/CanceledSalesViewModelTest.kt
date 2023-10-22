@@ -51,7 +51,7 @@ class CanceledSalesViewModelTest {
                 product = makeRandomProduct(id =1L, name = "A"),
                 salePrice = 25F
             ),
-            customer = makeRandomCustomer(id = 1L),
+            customer = makeRandomCustomer(id = 1L, name = "A"),
             canceled = true
         ),
         makeRandomSale(
@@ -61,6 +61,7 @@ class CanceledSalesViewModelTest {
                 product = makeRandomProduct(id =2L, name = "B"),
                 salePrice = 50F
             ),
+            customer = makeRandomCustomer(id = 1L, name = "B"),
             canceled = true
         ),
         makeRandomSale(id = 3L, canceled = false)
@@ -144,7 +145,7 @@ class CanceledSalesViewModelTest {
     @Test
     fun getCanceledSalesByCustomerName_shouldSetCanceledSaleProperty() = runTest {
         insertCanceledSales()
-        val expected = mapToItem(listOf(canceledSales[0], canceledSales[1]))
+        val expected = mapToItem(listOf(canceledSales[1], canceledSales[0]))
 
         val collectJob = launch { sut.canceledSales.collect() }
 
