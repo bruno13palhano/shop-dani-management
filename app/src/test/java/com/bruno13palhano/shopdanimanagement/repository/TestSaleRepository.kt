@@ -105,7 +105,8 @@ class TestSaleRepository : SaleData<Sale> {
         }
     }
 
-    override fun getDebitSales(): Flow<List<Sale>> = flowOf(sales.filter { !it.isPaidByCustomer })
+    override fun getDebitSales(): Flow<List<Sale>> =
+        flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled})
 
     override fun getSalesByCustomerName(
         isPaidByCustomer: Boolean,
