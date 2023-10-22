@@ -69,7 +69,11 @@ fun HomeScreen(
 
     HomeContent(
         homeInfo = homeInfo,
-        lastSalesEntry = lastSalesEntry,
+        lastSalesEntry = ChartEntryModelProducer(
+            lastSalesEntry.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            }
+        ),
         onOptionsItemClick = onOptionsItemClick,
         onMenuClick = onMenuClick
     )

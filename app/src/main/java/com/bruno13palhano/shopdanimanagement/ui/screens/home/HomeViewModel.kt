@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
@@ -88,16 +86,12 @@ class HomeViewModel @Inject constructor(
             it.map { sale -> setDay(days, sale.dateOfSale, sale.quantity) }
             setChartEntries(chart, days)
 
-            ChartEntryModelProducer(
-                chart.mapIndexed { index, (date, y) ->
-                    DateChartEntry(date, index.toFloat(), y)
-                }
-            )
+            chart
         }
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
-            initialValue = ChartEntryModelProducer()
+            initialValue = listOf()
         )
 
     private fun setDay(days: Array<Int>, date: Long, quantity: Int) {
