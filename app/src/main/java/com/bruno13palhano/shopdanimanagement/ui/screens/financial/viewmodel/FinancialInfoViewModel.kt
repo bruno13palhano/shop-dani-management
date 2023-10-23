@@ -8,8 +8,6 @@ import com.bruno13palhano.core.data.di.DeliveryRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.entry.FloatEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.combine
@@ -62,19 +60,17 @@ class FinancialInfoViewModel @Inject constructor(
 
     val entry = financial
         .map {
-            ChartEntryModelProducer(
-                listOf(
-                    listOf(FloatEntry(0F, it.allSales)),
-                    listOf(FloatEntry(0F, it.stockSales)),
-                    listOf(FloatEntry(0F, it.ordersSales)),
-                    listOf(FloatEntry(0F, it.profit))
-                )
+            FinancialChartEntries(
+                allSalesEntries = Pair(0F, it.allSales),
+                stockSalesEntries = Pair(0F, it.stockSales),
+                ordersSalesEntries = Pair(0F, it.ordersSales),
+                profitEntries = Pair(0F, it.profit)
             )
         }
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
-            initialValue = ChartEntryModelProducer()
+            initialValue = FinancialChartEntries()
         )
 
     data class FinancialInfo(
@@ -82,5 +78,12 @@ class FinancialInfoViewModel @Inject constructor(
         val stockSales: Float = 0F,
         val ordersSales: Float = 0F,
         val profit: Float = 0F,
+    )
+
+    data class FinancialChartEntries(
+        val allSalesEntries: Pair<Float, Float> = Pair(0F, 0F),
+        val stockSalesEntries: Pair<Float, Float> = Pair(0F, 0F),
+        val ordersSalesEntries: Pair<Float, Float> = Pair(0F, 0F),
+        val profitEntries: Pair<Float, Float> = Pair(0F, 0F)
     )
 }

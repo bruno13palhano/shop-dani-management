@@ -21,7 +21,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -52,6 +55,7 @@ import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.component.shape.ShapeComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
+import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.legend.VerticalLegend
 import com.patrykandpatrick.vico.core.scroll.InitialScroll
 
@@ -61,14 +65,47 @@ fun FinancialInfoScreen(
     viewModel: FinancialInfoViewModel = hiltViewModel()
 ) {
     val financialInfo by viewModel.financial.collectAsStateWithLifecycle()
-    val entry by viewModel.entry.collectAsStateWithLifecycle()
+    val infoEntries by viewModel.entry.collectAsStateWithLifecycle()
+
+    val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
+
+    LaunchedEffect(key1 = infoEntries) {
+        chart.setEntries(
+            listOf(
+                listOf(
+                    FloatEntry(
+                        infoEntries.allSalesEntries.first,
+                        infoEntries.allSalesEntries.second
+                    )
+                ),
+                listOf(
+                    FloatEntry(
+                        infoEntries.stockSalesEntries.first,
+                        infoEntries.stockSalesEntries.second
+                    )
+                ),
+                listOf(
+                    FloatEntry(
+                        infoEntries.ordersSalesEntries.first,
+                        infoEntries.ordersSalesEntries.second
+                    )
+                ),
+                listOf(
+                    FloatEntry(
+                        infoEntries.profitEntries.first,
+                        infoEntries.profitEntries.second
+                    )
+                )
+            )
+        )
+    }
 
     FinancialInfoContent(
         allSales = financialInfo.allSales,
         stockSales = financialInfo.stockSales,
         ordersSales = financialInfo.ordersSales,
         profit = financialInfo.profit,
-        entry = entry,
+        entry = chart,
         navigateUp = navigateUp
     )
 }
