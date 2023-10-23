@@ -29,6 +29,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -70,8 +72,18 @@ fun CustomerInfoScreen(
     navigateUp: () -> Unit,
     viewModel: CustomerInfoViewModel = hiltViewModel()
 ) {
-    val entry by viewModel.entry.collectAsStateWithLifecycle()
+    val entries by viewModel.entry.collectAsStateWithLifecycle()
     val customerInfo by viewModel.customerInfo.collectAsStateWithLifecycle()
+
+    val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
+
+    LaunchedEffect(key1 = entries) {
+        chart.setEntries(
+            entries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            }
+        )
+    }
 
     LaunchedEffect(key1 = Unit) {
         viewModel.getCustomerInfo(customerId)
@@ -90,7 +102,7 @@ fun CustomerInfoScreen(
         owingValue = customerInfo.owingValue,
         purchasesValue = customerInfo.purchasesValue,
         lastPurchaseValue = customerInfo.lastPurchaseValue,
-        entry = entry,
+        entry = chart,
         onEditIconClick = onEditIconClick,
         onOutsideClick = { focusManager.clearFocus(force = true) },
         navigateUp = navigateUp

@@ -8,8 +8,6 @@ import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -57,12 +55,12 @@ class CustomerInfoViewModel @Inject constructor(
             initialValue = CustomerInfo()
         )
 
-    private val _entry = MutableStateFlow(ChartEntryModelProducer())
+    private val _entry = MutableStateFlow(listOf<Pair<String, Float>>())
     val entry = _entry
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
-            initialValue = ChartEntryModelProducer()
+            initialValue = listOf()
         )
 
     fun getCustomerInfo(customerId: Long) {
@@ -89,11 +87,7 @@ class CustomerInfoViewModel @Inject constructor(
                     it.map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
                     setChartEntries(chartEntries, days)
 
-                    ChartEntryModelProducer(
-                        chartEntries.mapIndexed { index, (date, y) ->
-                            DateChartEntry(date, index.toFloat(), y)
-                        }
-                    )
+                    chartEntries
                 }
                 .collect {
                     _entry.value = it
