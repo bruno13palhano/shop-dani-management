@@ -28,7 +28,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
@@ -67,13 +70,19 @@ fun HomeScreen(
     val lastSalesEntry by viewModel.lastSales.collectAsStateWithLifecycle()
     val homeInfo by viewModel.homeInfo.collectAsStateWithLifecycle()
 
-    HomeContent(
-        homeInfo = homeInfo,
-        lastSalesEntry = ChartEntryModelProducer(
+    val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
+
+    LaunchedEffect(key1 = lastSalesEntry) {
+        chart.setEntries(
             lastSalesEntry.mapIndexed { index, (date, y) ->
                 DateChartEntry(date, index.toFloat(), y)
             }
-        ),
+        )
+    }
+
+    HomeContent(
+        homeInfo = homeInfo,
+        lastSalesEntry = chart,
         onOptionsItemClick = onOptionsItemClick,
         onMenuClick = onMenuClick
     )
