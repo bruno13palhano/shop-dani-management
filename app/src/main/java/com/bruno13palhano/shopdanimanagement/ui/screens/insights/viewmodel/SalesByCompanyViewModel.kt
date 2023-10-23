@@ -6,8 +6,6 @@ import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -27,37 +25,33 @@ class SalesByCompanyViewModel @Inject constructor(
     private var days = arrayOf(0)
     private val currentDay = LocalDate.now()
 
-    private val _chartEntry = MutableStateFlow(ChartEntryModelProducer())
+    private val _chartEntry = MutableStateFlow(SalesCompanyEntries())
     val chartEntry = _chartEntry
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
-            initialValue = ChartEntryModelProducer()
+            initialValue = SalesCompanyEntries()
         )
 
     fun getChartByRange(rangeOfDays: Int) {
         viewModelScope.launch {
             saleRepository.getAll().collect {
-                val avonChart = mutableListOf<Pair<String, Float>>()
-                val naturaChart = mutableListOf<Pair<String, Float>>()
+                val avonEntries = mutableListOf<Pair<String, Float>>()
+                val naturaEntries = mutableListOf<Pair<String, Float>>()
 
                 days = Array(rangeOfDays) { 0 }
                 it.filter { sale -> sale.company == Company.AVON.company }
                     .map { sale -> setDay(days, sale.dateOfSale, sale.quantity) }
-                setChartEntries(avonChart, days)
+                setChartEntries(avonEntries, days)
 
                 days = Array(rangeOfDays) { 0 }
                 it.filter { sale -> sale.company == Company.NATURA.company }
                     .map { sale -> setDay(days, sale.dateOfSale, sale.quantity) }
-                setChartEntries(naturaChart, days)
+                setChartEntries(naturaEntries, days)
 
-                _chartEntry.value = ChartEntryModelProducer(
-                    avonChart.mapIndexed { index, (date, y) ->
-                        DateChartEntry(date, index.toFloat(), y)
-                    },
-                    naturaChart.mapIndexed { index, (date, y) ->
-                        DateChartEntry(date, index.toFloat(), y)
-                    }
+                _chartEntry.value = SalesCompanyEntries(
+                    avonEntries = avonEntries,
+                    naturaEntries = naturaEntries
                 )
             }
         }
@@ -82,4 +76,9 @@ class SalesByCompanyViewModel @Inject constructor(
             )
         }
     }
+
+    data class SalesCompanyEntries(
+        val avonEntries: List<Pair<String, Float>> = listOf(),
+        val naturaEntries: List<Pair<String, Float>> = listOf()
+    )
 }

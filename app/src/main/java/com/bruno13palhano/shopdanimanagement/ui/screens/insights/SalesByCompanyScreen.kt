@@ -13,7 +13,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleChart
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.SalesByCompanyViewModel
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @Composable
 fun SalesByCompanyScreen(
@@ -23,7 +25,7 @@ fun SalesByCompanyScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.getChartByRange(7)
     }
-    val chartEntry by viewModel.chartEntry.collectAsStateWithLifecycle()
+    val salesByCompanyEntries by viewModel.chartEntry.collectAsStateWithLifecycle()
     val menuOptions = arrayOf(
         stringResource(id = R.string.last_7_days_label),
         stringResource(id = R.string.last_21_days_label),
@@ -31,6 +33,18 @@ fun SalesByCompanyScreen(
     )
 
     var chartTitle by remember { mutableStateOf(menuOptions[0]) }
+    val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
+
+    LaunchedEffect(key1 = salesByCompanyEntries) {
+        chart.setEntries(
+            salesByCompanyEntries.avonEntries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            },
+            salesByCompanyEntries.naturaEntries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            }
+        )
+    }
 
     SimpleChart(
         screenTitle = stringResource(id = R.string.company_sales_label),
@@ -40,7 +54,7 @@ fun SalesByCompanyScreen(
             MaterialTheme.colorScheme.secondary,
             MaterialTheme.colorScheme.tertiary
         ),
-        entry = chartEntry,
+        entry = chart,
         legends = listOf(
             Pair(
                 stringResource(id = R.string.avon_company_label),
