@@ -12,7 +12,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleChart
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.LastSalesViewModel
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @Composable
 fun LastSalesScreen(
@@ -30,6 +32,15 @@ fun LastSalesScreen(
     )
 
     var chartTitle by remember { mutableStateOf(menuOptions[0]) }
+    val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
+
+    LaunchedEffect(key1 = lastSalesEntry) {
+        chart.setEntries(
+            lastSalesEntry.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            }
+        )
+    }
 
     SimpleChart(
         screenTitle = stringResource(id = R.string.last_sales_label),
@@ -38,7 +49,7 @@ fun LastSalesScreen(
         entityColors = listOf(
             MaterialTheme.colorScheme.primary
         ),
-        entry = lastSalesEntry,
+        entry = chart,
         legends = listOf(),
         menuOptions = menuOptions,
         onMenuItemClick = { index ->

@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -26,12 +24,12 @@ class LastSalesViewModel @Inject constructor(
     private var days = arrayOf(0)
     private val currentDay = LocalDate.now()
 
-    private val _lastSalesEntry = MutableStateFlow(ChartEntryModelProducer())
+    private val _lastSalesEntry = MutableStateFlow(listOf<Pair<String, Float>>())
     val lastSalesEntry = _lastSalesEntry
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
-            initialValue = ChartEntryModelProducer()
+            initialValue = listOf()
         )
 
     fun setLastSalesEntryByRange(rangeOfDays: Int) {
@@ -43,11 +41,7 @@ class LastSalesViewModel @Inject constructor(
                 it.map { sale -> setDay(days, sale.dateOfSale, sale.quantity) }
                 setChartEntries(chart, days)
 
-                _lastSalesEntry.value = ChartEntryModelProducer(
-                    chart.mapIndexed { index, (date, y) ->
-                        DateChartEntry(date, index.toFloat(), y)
-                    }
-                )
+                _lastSalesEntry.value = chart
             }
         }
     }
