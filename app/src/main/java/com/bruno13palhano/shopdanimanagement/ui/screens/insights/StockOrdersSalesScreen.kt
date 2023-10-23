@@ -13,7 +13,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ComposedChart
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.StockOrdersSalesViewModel
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
+import com.patrykandpatrick.vico.core.entry.composed.plus
 
 @Composable
 fun StockOrdersSalesScreen(
@@ -31,6 +34,22 @@ fun StockOrdersSalesScreen(
     )
 
     var chartTitle by remember { mutableStateOf(menuOptions[0]) }
+    val stockChart by remember { mutableStateOf(ChartEntryModelProducer()) }
+    val ordersChart by remember { mutableStateOf(ChartEntryModelProducer()) }
+    val chart by remember { mutableStateOf(stockChart + ordersChart) }
+
+    LaunchedEffect(key1 = stockVsOrdersEntries) {
+        stockChart.setEntries(
+            stockVsOrdersEntries.stockEntries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            }
+        )
+        ordersChart.setEntries(
+            stockVsOrdersEntries.ordersEntries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            }
+        )
+    }
 
     ComposedChart(
         screenTitle = stringResource(id = R.string.stock_vs_orders_label),
@@ -38,7 +57,7 @@ fun StockOrdersSalesScreen(
         bottomAxisTitle = chartTitle,
         firstChartEntityColor = MaterialTheme.colorScheme.secondary,
         secondChartEntityColor = MaterialTheme.colorScheme.tertiary,
-        entry = stockVsOrdersEntries,
+        entry = chart,
         legends = listOf(
             Pair(
                 stringResource(id = R.string.stock_label),

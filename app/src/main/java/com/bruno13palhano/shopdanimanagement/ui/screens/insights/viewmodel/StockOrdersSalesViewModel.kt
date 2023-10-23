@@ -5,9 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.entry.composed.plus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -28,17 +25,17 @@ class StockOrdersSalesViewModel @Inject constructor(
     private var days = arrayOf(0)
     private val currentDay = LocalDate.now()
 
-    private val _allSales = MutableStateFlow(ChartEntryModelProducer() + ChartEntryModelProducer())
+    private val _allSales = MutableStateFlow(ItemsSalesEntries())
     val allSales = _allSales
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
-            initialValue = ChartEntryModelProducer() + ChartEntryModelProducer()
+            initialValue = ItemsSalesEntries()
         )
 
     fun setStockOrdersSalesRange(rangeOfDays: Int) {
-        val stockChart = mutableListOf<Pair<String, Float>>()
-        val ordersChart = mutableListOf<Pair<String, Float>>()
+        val stockEntries = mutableListOf<Pair<String, Float>>()
+        val ordersEntries = mutableListOf<Pair<String, Float>>()
 
         days = Array(rangeOfDays) { 0 }
 
@@ -47,17 +44,15 @@ class StockOrdersSalesViewModel @Inject constructor(
                 .map {
                     it.filter { sale -> !sale.isOrderedByCustomer }
                         .map { sale -> setQuantityOfSalesInTheDay(days, sale.dateOfSale, sale.quantity) }
-                    setChartEntries(stockChart, days)
+                    setChartEntries(stockEntries, days)
 
                     it.filter { sale -> sale.isOrderedByCustomer }
                         .map { sale -> setQuantityOfSalesInTheDay(days, sale.dateOfSale, sale.quantity) }
-                    setChartEntries(ordersChart, days)
+                    setChartEntries(ordersEntries, days)
 
-                    ChartEntryModelProducer(stockChart.mapIndexed { index, (date, y) ->
-                        DateChartEntry(date, index.toFloat(), y) }
-                    ) +
-                    ChartEntryModelProducer(ordersChart.mapIndexed { index, (date, y) ->
-                        DateChartEntry(date, index.toFloat(), y) }
+                    ItemsSalesEntries(
+                        stockEntries = stockEntries,
+                        ordersEntries = ordersEntries
                     )
                 }
             .collect {
@@ -85,4 +80,9 @@ class StockOrdersSalesViewModel @Inject constructor(
             )
         }
     }
+
+    data class ItemsSalesEntries(
+        val stockEntries: List<Pair<String, Float>> = listOf(),
+        val ordersEntries: List<Pair<String, Float>> = listOf()
+    )
 }
