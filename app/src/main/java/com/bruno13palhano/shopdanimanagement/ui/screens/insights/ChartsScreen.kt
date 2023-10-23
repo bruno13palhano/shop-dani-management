@@ -63,6 +63,7 @@ import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.composed.ComposedChartEntryModelProducer
+import com.patrykandpatrick.vico.core.entry.composed.plus
 import com.patrykandpatrick.vico.core.legend.VerticalLegend
 import com.patrykandpatrick.vico.core.scroll.InitialScroll
 
@@ -74,8 +75,7 @@ fun ChartsScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.setItemsDaysRange(7)
     }
-    val lastSalesEntry by viewModel.lastSalesEntry.collectAsStateWithLifecycle()
-    val stockVsOrderEntry by viewModel.allSales.collectAsStateWithLifecycle()
+    val lastSalesEntry by viewModel.lastSalesEntries.collectAsStateWithLifecycle()
 
     val menuOptions = arrayOf(
         stringResource(id = R.string.last_7_days_label),
@@ -84,11 +84,35 @@ fun ChartsScreen(
     )
 
     var chartTitle by remember { mutableStateOf(menuOptions[0]) }
+    val lastSalesChart by remember { mutableStateOf(ChartEntryModelProducer()) }
+    val stockChart by remember { mutableStateOf(ChartEntryModelProducer()) }
+    val ordersChart by remember { mutableStateOf(ChartEntryModelProducer()) }
+    val stockOrdersChart by remember {
+        mutableStateOf(stockChart + ordersChart)
+    }
+
+    LaunchedEffect(key1 = lastSalesEntry) {
+        lastSalesChart.setEntries(
+            lastSalesEntry.lastSalesEntries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            }
+        )
+        stockChart.setEntries(
+            lastSalesEntry.stockEntries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            }
+        )
+        ordersChart.setEntries(
+            lastSalesEntry.orderEntries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            }
+        )
+    }
 
     ChartsContent(
         bottomAxisTitle = chartTitle,
-        lastSalesEntry = lastSalesEntry,
-        stockVsOrderEntry = stockVsOrderEntry,
+        lastSalesEntry = lastSalesChart,
+        stockVsOrderEntry = stockOrdersChart,
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
             chartTitle = when (index) {
