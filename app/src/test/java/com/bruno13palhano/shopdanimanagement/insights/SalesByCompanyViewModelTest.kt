@@ -1,14 +1,22 @@
 package com.bruno13palhano.shopdanimanagement.insights
 
 import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
+import com.bruno13palhano.shopdanimanagement.makeRandomSale
+import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
 import com.bruno13palhano.shopdanimanagement.repository.TestSaleRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.SalesByCompanyViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.setChartEntries
+import com.bruno13palhano.shopdanimanagement.ui.screens.setQuantity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -34,6 +42,29 @@ class SalesByCompanyViewModelTest {
     private lateinit var saleRepository: SaleData<Sale>
     private lateinit var sut: SalesByCompanyViewModel
 
+    private val sales = listOf(
+        makeRandomSale(
+            id = 1L,
+            stockOrder = makeRandomStockOrder(id = 1L, isOrderedByCustomer = true),
+            canceled = false
+        ),
+        makeRandomSale(
+            id = 2L,
+            stockOrder = makeRandomStockOrder(id = 2L, isOrderedByCustomer = true),
+            canceled = false
+        ),
+        makeRandomSale(
+            id = 3L,
+            stockOrder = makeRandomStockOrder(id = 3L, isOrderedByCustomer = false),
+            canceled = false
+        ),
+        makeRandomSale(
+            id = 4L,
+            stockOrder = makeRandomStockOrder(id = 4L, isOrderedByCustomer = false),
+            canceled = false
+        )
+    )
+
     @Before
     fun setup() {
         saleRepository = TestSaleRepository()
@@ -51,5 +82,41 @@ class SalesByCompanyViewModelTest {
         advanceUntilIdle()
 
         verify(saleRepository).getAll()
+    }
+
+    @Test
+    fun getChartByRange_shouldSetChartEntryProperty() = runTest {
+        insertSales()
+
+        val collectJob = launch { sut.chartEntry.collect() }
+
+        sut.getChartByRange(7)
+        advanceUntilIdle()
+
+        assertEquals(mapToEntries(sales), sut.chartEntry.value)
+
+        collectJob.cancel()
+    }
+
+    private suspend fun insertSales() = sales.forEach { saleRepository.insert(it) }
+
+    private fun mapToEntries(sales: List<Sale>): SalesByCompanyViewModel.SalesCompanyEntries {
+        val avonEntries = mutableListOf<Pair<String, Float>>()
+        val naturaEntries = mutableListOf<Pair<String, Float>>()
+        var days = Array(7) { 0 }
+
+        sales.filter { sale -> sale.company == Company.AVON.company }
+            .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
+        setChartEntries(avonEntries, days)
+
+        days = Array(7) { 0 }
+        sales.filter { sale -> sale.company == Company.NATURA.company }
+            .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
+        setChartEntries(naturaEntries, days)
+
+        return SalesByCompanyViewModel.SalesCompanyEntries(
+            avonEntries = avonEntries,
+            naturaEntries = naturaEntries
+        )
     }
 }
