@@ -11,8 +11,6 @@ import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
 import com.bruno13palhano.shopdanimanagement.repository.TestDeliveryRepository
 import com.bruno13palhano.shopdanimanagement.repository.TestSaleRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel.FinancialInfoViewModel
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.entry.FloatEntry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -108,16 +106,13 @@ class FinancialInfoViewModelTest {
         advanceUntilIdle()
 
         val info = mapToInfo(sales, deliveries)
-        val expected = ChartEntryModelProducer(
-            listOf(
-                listOf(FloatEntry(0F, info.allSales)),
-                listOf(FloatEntry(0F, info.stockSales)),
-                listOf(FloatEntry(0F, info.ordersSales)),
-                listOf(FloatEntry(0F, info.profit))
-            )
-        ).getModel().entries
-
-        assertEquals(expected, sut.entry.value.getModel().entries)
+        val expected = FinancialInfoViewModel.FinancialChartEntries(
+            allSalesEntries = Pair(0F, info.allSales),
+            stockSalesEntries = Pair(0F, info.stockSales),
+            ordersSalesEntries = Pair(0F, info.ordersSales),
+            profitEntries = Pair(0F, info.profit)
+        )
+        assertEquals(expected, sut.entry.value)
 
         collectJob.cancel()
     }
