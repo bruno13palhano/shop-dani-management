@@ -6,16 +6,13 @@ import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Sale
+import com.bruno13palhano.shopdanimanagement.ui.screens.setChartEntries
+import com.bruno13palhano.shopdanimanagement.ui.screens.setQuantity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +20,6 @@ class SalesByCompanyViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleData<Sale>
 ) : ViewModel() {
     private var days = arrayOf(0)
-    private val currentDay = LocalDate.now()
 
     private val _chartEntry = MutableStateFlow(SalesCompanyEntries())
     val chartEntry = _chartEntry
@@ -41,12 +37,12 @@ class SalesByCompanyViewModel @Inject constructor(
 
                 days = Array(rangeOfDays) { 0 }
                 it.filter { sale -> sale.company == Company.AVON.company }
-                    .map { sale -> setDay(days, sale.dateOfSale, sale.quantity) }
+                    .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
                 setChartEntries(avonEntries, days)
 
                 days = Array(rangeOfDays) { 0 }
                 it.filter { sale -> sale.company == Company.NATURA.company }
-                    .map { sale -> setDay(days, sale.dateOfSale, sale.quantity) }
+                    .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
                 setChartEntries(naturaEntries, days)
 
                 _chartEntry.value = SalesCompanyEntries(
@@ -54,26 +50,6 @@ class SalesByCompanyViewModel @Inject constructor(
                     naturaEntries = naturaEntries
                 )
             }
-        }
-    }
-
-    private fun setDay(days: Array<Int>, date: Long, quantity: Int) {
-        for (i in days.indices) {
-            if (LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.of("UTC")).toLocalDate()
-                == currentDay.minusDays(i.toLong())) {
-                days[i] += quantity
-            }
-        }
-    }
-
-    private fun setChartEntries(chart: MutableList<Pair<String, Float>>, days: Array<Int>) {
-        for (i in days.size-1 downTo 0) {
-            chart.add(
-                Pair(
-                    DateTimeFormatter.ofPattern("dd/MM").format(currentDay.minusDays(i.toLong())),
-                    days[i].toFloat()
-                )
-            )
         }
     }
 

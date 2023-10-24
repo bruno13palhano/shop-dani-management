@@ -14,8 +14,12 @@ import android.net.Uri
 import com.bruno13palhano.shopdanimanagement.ui.notifications.ExpiredProductsNotification
 import com.bruno13palhano.shopdanimanagement.ui.notifications.receivers.ExpiredProductsReceiver
 import okio.IOException
+import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.jvm.Throws
 
@@ -36,17 +40,28 @@ fun formatWithLocalDecimal(value: String): String {
     }
 }
 
+fun setQuantity(days: Array<Int>, date: Long, quantity: Int) {
+    val currentDay = LocalDate.now()
 
-fun stringToFloat(value: String): Float {
-    return try {
-        value.replace(",", ".").toFloat()
-    } catch (ignored: Exception) { 0F }
+    for (i in days.indices) {
+        if (LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.of("UTC")).toLocalDate()
+            == currentDay.minusDays(i.toLong())) {
+            days[i] += quantity
+        }
+    }
 }
 
-fun stringToInt(value: String): Int {
-    return try {
-        value.toInt()
-    } catch (ignored: Exception) { 0 }
+fun setChartEntries(chart: MutableList<Pair<String, Float>>, days: Array<Int>) {
+    val currentDay = LocalDate.now()
+
+    for (i in days.size-1 downTo 0) {
+        chart.add(
+            Pair(
+                DateTimeFormatter.ofPattern("dd/MM").format(currentDay.minusDays(i.toLong())),
+                days[i].toFloat()
+            )
+        )
+    }
 }
 
 val currentDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
