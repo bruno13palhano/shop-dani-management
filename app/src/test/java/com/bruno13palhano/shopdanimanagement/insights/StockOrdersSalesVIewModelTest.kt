@@ -4,7 +4,6 @@ import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomSale
-import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
 import com.bruno13palhano.shopdanimanagement.repository.TestSaleRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.StockOrdersSalesViewModel
 import com.bruno13palhano.shopdanimanagement.ui.screens.setChartEntries
