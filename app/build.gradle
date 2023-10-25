@@ -71,6 +71,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44'
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
     kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.44'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
