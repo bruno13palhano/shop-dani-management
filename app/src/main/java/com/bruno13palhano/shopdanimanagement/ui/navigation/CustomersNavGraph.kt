@@ -40,7 +40,7 @@ fun NavGraphBuilder.customersNavGraph(
                 },
                 onAddButtonClick = {
                     navController.navigate(
-                        route = CustomersDestinations.CUSTOMERS_CUSTOMER_ROUTE
+                        route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_ROUTE}/${0L}/${false}"
                     )
                 },
                 onIconMenuClick = onIconMenuClick
