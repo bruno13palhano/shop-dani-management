@@ -23,6 +23,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -68,7 +70,9 @@ fun SearchCustomersContent(
 
     Scaffold(topBar = { TopAppBar(title = {})}) {
         SearchBar(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .semantics { contentDescription = "Search bar" }
+                .fillMaxWidth(),
             query = search,
             onQueryChange = { searchValue -> search = searchValue },
             onSearch = { searchValue ->
@@ -101,7 +105,9 @@ fun SearchCustomersContent(
             placeholder = { Text(text = stringResource(id = R.string.search_customers_label)) }
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .semantics { contentDescription = "List of search" }
+                    .fillMaxWidth(),
                 reverseLayout = true
             ) {
                 items(
@@ -122,7 +128,9 @@ fun SearchCustomersContent(
         }
 
         LazyColumn(
-            modifier = Modifier.padding(it),
+            modifier = Modifier
+                .semantics { contentDescription = "List of customers" }
+                .padding(it),
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
             items(items = customers, key = { customer -> customer.id }) { customer ->
