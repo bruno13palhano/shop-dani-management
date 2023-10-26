@@ -107,7 +107,7 @@ class HomeNavGraphTest {
     fun onCatalogItemClick_shouldNavigateToCatalog() = runTest {
         val expected = CatalogDestination.CATALOG_MAIN_ROUTE
 
-        composeTestRule.onNodeWithContentDescription("Lista")
+        composeTestRule.onNodeWithContentDescription("Options")
             .performScrollToNode(hasText("Catalog"))
         composeTestRule.onNodeWithText("Catalog")
             .onParent()
