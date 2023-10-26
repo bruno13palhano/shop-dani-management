@@ -36,6 +36,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -120,7 +122,7 @@ fun HomeContent(
             HomeInnerScreen.Sales,
             HomeInnerScreen.Stock,
             HomeInnerScreen.Orders,
-            HomeInnerScreen.Shipping,
+            HomeInnerScreen.Deliveries,
             HomeInnerScreen.Catalog
         )
         val axisValuesFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
@@ -153,11 +155,17 @@ fun HomeContent(
             )
 
             LazyRow(
+                modifier = Modifier.semantics { contentDescription = "Options" },
                 contentPadding = PaddingValues(vertical = 16.dp, horizontal = 4.dp)
             ) {
                 items(items = options, key = { option -> option.route } ) { option ->
+                    val description = stringResource(id = option.resourceId)
                     CircularItemList(
-                        modifier = Modifier.padding(horizontal = 4.dp),
+                        modifier = Modifier
+                            .semantics {
+                                contentDescription = description
+                            }
+                            .padding(horizontal = 4.dp),
                         title = stringResource(id = option.resourceId),
                         icon = option.icon,
                         onClick = { onOptionsItemClick(option.route) }
@@ -247,6 +255,6 @@ sealed class HomeInnerScreen(val route: String, val icon: ImageVector, @StringRe
     object Stock: HomeInnerScreen(HomeDestinations.HOME_STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
     object Sales: HomeInnerScreen(HomeDestinations.HOME_SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
     object Orders: HomeInnerScreen(HomeDestinations.HOME_ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
-    object Shipping: HomeInnerScreen(HomeDestinations.HOME_DELIVERIES_ROUTE, Icons.Filled.LocalShipping, R.string.deliveries_label)
+    object Deliveries: HomeInnerScreen(HomeDestinations.HOME_DELIVERIES_ROUTE, Icons.Filled.LocalShipping, R.string.deliveries_label)
     object Catalog: HomeInnerScreen(HomeDestinations.HOME_CATALOG_ROUTE, Icons.Filled.ListAlt, R.string.catalog_label)
 }
