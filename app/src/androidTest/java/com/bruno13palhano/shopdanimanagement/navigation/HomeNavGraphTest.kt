@@ -1,27 +1,15 @@
 package com.bruno13palhano.shopdanimanagement.navigation
 
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.test.assertAny
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasAnyChild
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onAllNodesWithContentDescription
-import androidx.compose.ui.test.onAllNodesWithText
-import androidx.compose.ui.test.onChild
-import androidx.compose.ui.test.onChildAt
-import androidx.compose.ui.test.onChildren
-import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onParent
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
-import androidx.compose.ui.test.performScrollToIndex
-import androidx.compose.ui.test.performScrollToKey
-import androidx.compose.ui.test.printToLog
+import androidx.compose.ui.test.performScrollToNode
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import com.bruno13palhano.shopdanimanagement.MainActivity
@@ -33,6 +21,7 @@ import com.bruno13palhano.shopdanimanagement.ui.navigation.SalesDestinations
 import com.bruno13palhano.shopdanimanagement.ui.navigation.StockDestinations
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -115,17 +104,16 @@ class HomeNavGraphTest {
     }
 
     @Test
-    fun onCatalogItemClick_shouldNavigateToCatalog() {
+    fun onCatalogItemClick_shouldNavigateToCatalog() = runTest {
         val expected = CatalogDestination.CATALOG_MAIN_ROUTE
 
-        val a = composeTestRule.onNodeWithContentDescription("Lista")
-            .performScrollToKey(5).performScrollTo()
+        composeTestRule.onNodeWithContentDescription("Lista")
+            .performScrollToNode(hasText("Catalog"))
+        composeTestRule.onNodeWithText("Catalog")
+            .onParent()
+            .performClick()
 
-        a.performClick()
-
-        composeTestRule.onRoot().printToLog("Tag")
-
-//        val route = navController.currentBackStackEntry?.destination?.route
-//        assertEquals(expected, route)
+        val route = navController.currentBackStackEntry?.destination?.route
+        assertEquals(expected, route)
     }
 }
