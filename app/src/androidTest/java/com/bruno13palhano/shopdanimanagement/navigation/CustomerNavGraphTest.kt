@@ -72,6 +72,22 @@ class CustomerNavGraphTest {
     }
 
     @Test
+    fun onNavigateUp_fromCustomerInfoScreen_shouldNavigateToCustomerScreen() {
+        val expected = CustomersDestinations.MAIN_CUSTOMERS_ROUTE
+
+        composeTestRule.onNodeWithContentDescription("List of customers")
+            .onChildren()
+            .onFirst()
+            .performClick()
+
+        composeTestRule.onNodeWithContentDescription("Up button").performClick()
+
+        val route = navController.currentBackStackEntry?.destination?.route
+
+        assertEquals(expected, route)
+    }
+
+    @Test
     fun onSearchClick_fromCustomersScreen_shouldNavigateToSearchCustomerScreen() {
         val expected = CustomersDestinations.CUSTOMERS_SEARCH_ROUTE
 
@@ -83,10 +99,36 @@ class CustomerNavGraphTest {
     }
 
     @Test
+    fun onNavigateUp_fromSearchCustomerScreen_shouldNavigateToCustomersScreen() {
+        val expected = CustomersDestinations.MAIN_CUSTOMERS_ROUTE
+
+        composeTestRule.onNodeWithContentDescription("Search").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Up button").performClick()
+
+        val route = navController.currentBackStackEntry?.destination?.route
+
+        assertEquals(expected, route)
+    }
+
+    @Test
     fun onAddButtonClick_fromCustomersScreen_shouldNavigateToCustomerScreen() {
         val expected = "${CustomersDestinations.CUSTOMERS_CUSTOMER_ROUTE}/{$ITEM_ID}/{$EDITABLE}"
 
         composeTestRule.onNodeWithContentDescription("Add").performClick()
+
+        val route = navController.currentBackStackEntry?.destination?.route
+
+        assertEquals(expected, route)
+    }
+
+    @Test
+    fun onNavigateUp_fromCustomerScreen_shouldNavigateToCustomersScreen() {
+        val expected = CustomersDestinations.MAIN_CUSTOMERS_ROUTE
+
+        composeTestRule.onNodeWithContentDescription("Add").performClick()
+
+        composeTestRule.onNodeWithContentDescription("Up button").performClick()
 
         val route = navController.currentBackStackEntry?.destination?.route
 
@@ -125,6 +167,40 @@ class CustomerNavGraphTest {
     }
 
     @Test
+    fun onItemClick_FromCustomerScreen_shouldNavigateToSearchCustomersScreen() {
+        val expected = CustomersDestinations.CUSTOMERS_SEARCH_ROUTE
+
+        composeTestRule.activity.setContent {
+            navController = TestNavHostController(LocalContext.current)
+            navController.navigatorProvider.addNavigator(ComposeNavigator())
+            MainNavGraph(
+                navController = navController,
+            ) {}
+            navController.navigate(CustomersDestinations.CUSTOMERS_SEARCH_ROUTE)
+        }
+
+        composeTestRule.onNodeWithContentDescription("Search bar")
+            .performClick()
+
+        composeTestRule.onNodeWithContentDescription("List of search")
+            .onChildren()
+            .onLast()
+            .performClick()
+        Espresso.closeSoftKeyboard()
+
+        composeTestRule.onNodeWithContentDescription("List of customers")
+            .onChildren()
+            .onFirst()
+            .performClick()
+
+        composeTestRule.onNodeWithContentDescription("Up button").performClick()
+
+        val route = navController.currentBackStackEntry?.destination?.route
+
+        assertEquals(expected, route)
+    }
+
+    @Test
     fun onEditIconClick_FromCustomerInfoScreen_shouldNavigateToCustomerScreen() {
         val expected = "${CustomersDestinations.CUSTOMERS_CUSTOMER_ROUTE}/{$ITEM_ID}/{$EDITABLE}"
 
@@ -134,6 +210,23 @@ class CustomerNavGraphTest {
             .performClick()
 
         composeTestRule.onNodeWithContentDescription("Edit").performClick()
+
+        val route = navController.currentBackStackEntry?.destination?.route
+
+        assertEquals(expected, route)
+    }
+
+    @Test
+    fun onNavigateUp_FromCustomerScreen_shouldNavigateToCustomerInfoScreen() {
+        val expected = "${CustomersDestinations.CUSTOMERS_CUSTOMER_INFO_ROUTE}/{$ITEM_ID}"
+
+        composeTestRule.onNodeWithContentDescription("List of customers")
+            .onChildren()
+            .onFirst()
+            .performClick()
+
+        composeTestRule.onNodeWithContentDescription("Edit").performClick()
+        composeTestRule.onNodeWithContentDescription("Up button").performClick()
 
         val route = navController.currentBackStackEntry?.destination?.route
 
