@@ -2,10 +2,12 @@ package com.bruno13palhano.shopdanimanagement.navigation
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
@@ -43,6 +45,18 @@ class DeliveriesNavGraphTest {
             MainNavGraph(navController = navController) { }
             navController.navigate(DeliveriesDestinations.DELIVERIES_MAIN_ROUTE)
         }
+    }
+
+    @Test
+    fun verifyDeliveriesNavGraphStartDestination() {
+        val expected = DeliveriesDestinations.DELIVERIES_MAIN_ROUTE
+
+        composeRule.onNodeWithText("Deliveries")
+            .assertIsDisplayed()
+
+        val route = navController.currentBackStackEntry?.destination?.route
+
+        assertEquals(expected, route)
     }
 
     @Test
