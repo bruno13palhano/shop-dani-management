@@ -24,14 +24,14 @@ fun NavGraphBuilder.deliveriesNAvGraph(
             DeliveriesScreen(
                 onItemClick = { deliveryId ->
                     navController.navigate(
-                        route = "${DeliveriesDestinations.DELIVERIES_DELIVERY_ROUTE}$deliveryId"
+                        route = "${DeliveriesDestinations.DELIVERIES_DELIVERY_ROUTE}/$deliveryId"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(
-            route = "${DeliveriesDestinations.DELIVERIES_DELIVERY_ROUTE}{$ITEM_ID}",
+            route = "${DeliveriesDestinations.DELIVERIES_DELIVERY_ROUTE}/{$ITEM_ID}",
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
             showBottomMenu(true)
