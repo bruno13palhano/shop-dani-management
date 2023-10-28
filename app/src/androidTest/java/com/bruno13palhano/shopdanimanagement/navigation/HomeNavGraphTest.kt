@@ -28,7 +28,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
-class MainNavGraphTest {
+class HomeNavGraphTest {
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
