@@ -22,6 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
@@ -71,6 +73,7 @@ fun InsightsContent(
         )
         Column(
             modifier = Modifier
+                .semantics { contentDescription = "List of items" }
                 .padding(it)
                 .padding(horizontal = 8.dp, vertical = 4.dp)
                 .verticalScroll(rememberScrollState())
