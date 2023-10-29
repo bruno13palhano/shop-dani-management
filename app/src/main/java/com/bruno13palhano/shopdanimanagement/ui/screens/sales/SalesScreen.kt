@@ -28,6 +28,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -141,7 +143,9 @@ fun SalesContent(
         }
     ) {
         LazyColumn(
-            modifier = Modifier.padding(it),
+            modifier = Modifier
+                .semantics { contentDescription = "List of items" }
+                .padding(it),
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
             items(items = saleList, key = { item -> item.id }) { item ->
