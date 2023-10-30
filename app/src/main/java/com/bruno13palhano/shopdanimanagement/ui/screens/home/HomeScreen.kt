@@ -101,6 +101,7 @@ fun HomeContent(
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.semantics { contentDescription = "Home screen" },
                 title = { Text(text = stringResource(id = R.string.home_label)) },
                 navigationIcon = {
                     IconButton(onClick = onMenuClick) {
