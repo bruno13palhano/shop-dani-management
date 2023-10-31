@@ -15,6 +15,7 @@ import com.bruno13palhano.shopdanimanagement.MainActivity
 import com.bruno13palhano.shopdanimanagement.ui.navigation.CatalogDestination
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
+import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertEquals
@@ -43,7 +44,10 @@ class CatalogNavGraphTest {
         composeTestRule.activity.setContent {
             navController = TestNavHostController(LocalContext.current)
             navController.navigatorProvider.addNavigator(ComposeNavigator())
-            MainNavGraph(navController = navController) { }
+
+            ShopDaniManagementTheme {
+                MainNavGraph(navController = navController) { }
+            }
             navController.navigate(CatalogDestination.CATALOG_MAIN_ROUTE)
         }
     }

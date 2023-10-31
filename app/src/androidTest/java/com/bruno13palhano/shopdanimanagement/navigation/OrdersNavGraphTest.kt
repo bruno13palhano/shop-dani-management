@@ -1,6 +1,10 @@
 package com.bruno13palhano.shopdanimanagement.navigation
 
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -16,6 +20,7 @@ import androidx.test.espresso.Espresso
 import com.bruno13palhano.shopdanimanagement.MainActivity
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.navigation.OrdersDestinations
+import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertEquals
@@ -43,7 +48,14 @@ class OrdersNavGraphTest {
         composeRule.activity.setContent {
             navController = TestNavHostController(LocalContext.current)
             navController.navigatorProvider.addNavigator(ComposeNavigator())
-            MainNavGraph(navController = navController) { }
+            ShopDaniManagementTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    MainNavGraph(navController = navController) { }
+                }
+            }
             navController.navigate(OrdersDestinations.ORDERS_MAIN_ROUTE)
         }
     }

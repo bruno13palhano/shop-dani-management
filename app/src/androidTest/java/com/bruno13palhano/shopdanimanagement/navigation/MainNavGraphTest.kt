@@ -1,9 +1,12 @@
 package com.bruno13palhano.shopdanimanagement.navigation
 
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,22 +62,26 @@ class MainNavGraphTest {
             ShopDaniManagementTheme {
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 var showBottomBar by rememberSaveable { mutableStateOf(true) }
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    DrawerMenu(drawerState = drawerState, navController = navController) {
+                        val coroutineScope = rememberCoroutineScope()
 
-                DrawerMenu(drawerState = drawerState, navController = navController) {
-                    val coroutineScope = rememberCoroutineScope()
-
-                    Scaffold(
-                        bottomBar = { if (showBottomBar) BottomMenu(navController = navController) }
-                    ) {
-                        MainNavGraph(
-                            modifier = Modifier.padding(it),
-                            navController = navController,
-                            showBottomMenu = {show ->
-                                showBottomBar = show
-                            }
+                        Scaffold(
+                            bottomBar = { if (showBottomBar) BottomMenu(navController = navController) }
                         ) {
-                            coroutineScope.launch {
-                                drawerState.open()
+                            MainNavGraph(
+                                modifier = Modifier.padding(it),
+                                navController = navController,
+                                showBottomMenu = { show ->
+                                    showBottomBar = show
+                                }
+                            ) {
+                                coroutineScope.launch {
+                                    drawerState.open()
+                                }
                             }
                         }
                     }
