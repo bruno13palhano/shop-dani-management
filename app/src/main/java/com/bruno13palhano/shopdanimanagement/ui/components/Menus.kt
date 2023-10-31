@@ -1,5 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
+import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -48,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -77,6 +79,7 @@ fun DrawerMenu(
         Screen.Financial,
         Screen.Insights
     )
+    val orientation = LocalConfiguration.current.orientation
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     var selectedItem by remember { mutableStateOf(items[0]) }
@@ -94,14 +97,16 @@ fun DrawerMenu(
                             modifier = Modifier.padding(bottom = 16.dp),
                             shape = RectangleShape
                         ) {
-                            Image(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth()
-                                    .sizeIn(minHeight = 208.dp),
-                                imageVector = Icons.Filled.Image,
-                                contentDescription = stringResource(id = R.string.app_logo_label)
-                            )
+                            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                Image(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .fillMaxWidth()
+                                        .sizeIn(minHeight = 208.dp),
+                                    imageVector = Icons.Filled.Image,
+                                    contentDescription = stringResource(id = R.string.app_logo_label)
+                                )
+                            }
                             Text(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp)
