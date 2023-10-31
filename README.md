@@ -1,6 +1,9 @@
 # ShopDani Management System
 
-## Some Screens
+## Some Screenshots
 <p align="center">
-    <img alt="Home screen" src="images/home_dark.png">
+    <img alt="Home screen" src="images/home_print.png" width="200"> <img alt="Products screen" src="images/products_print.png" width="200"> <img alt="Customers screen" src="images/customers_print.png" width="200">
+</p>
+<p align="center">
+    <img alt="Drawer menu" src="images/drawer_menu_print.png" width="200"> <img alt="Customer screen" src="images/customer_print.png" width="200"> <img alt="Sales by Company chart screen" src="images/sales_by_company_chart_print.png" width="200">
 </p>
