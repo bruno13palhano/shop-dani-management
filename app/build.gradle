@@ -96,4 +96,6 @@ dependencies {
     implementation "androidx.work:work-runtime:$versions_work"
 
     implementation "com.patrykandpatrick.vico:compose-m3:1.6.5"
+
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }
