@@ -1,5 +1,5 @@
 # ShopDani Management System
-<p>Manage ShopDani stock, orders, sales and customers with informative charts and financial insghts. Get notifications when products are out of stock, expired and when the customer is due to make a payment.
+<p>Manage ShopDani stock, orders, sales and customers with informative charts and financial insights. Get notifications when products are out of stock, expired and when the customer is due to make a payment.
 </p>
 
 ## Some Screenshots
