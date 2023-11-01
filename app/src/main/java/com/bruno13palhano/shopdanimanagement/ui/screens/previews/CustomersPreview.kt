@@ -14,8 +14,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CustomersDebit
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CustomerDynamicPreview() {
     ShopDaniManagementTheme {
@@ -36,8 +36,8 @@ fun CustomerDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CustomerPreview() {
     ShopDaniManagementTheme(
@@ -72,8 +72,8 @@ private val customerList = listOf(
     CommonItem(9L, byteArrayOf(), "Bruno","Rua 15 de novembro", ""),
 )
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CustomerInfoDynamicPreview() {
     ShopDaniManagementTheme {
@@ -97,8 +97,8 @@ fun CustomerInfoDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CustomerInfoPreview() {
     ShopDaniManagementTheme(
@@ -124,8 +124,8 @@ fun CustomerInfoPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CustomersDebitDynamicPreview() {
     ShopDaniManagementTheme {
@@ -144,8 +144,8 @@ fun CustomersDebitDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CustomersDebitPreview() {
     ShopDaniManagementTheme(

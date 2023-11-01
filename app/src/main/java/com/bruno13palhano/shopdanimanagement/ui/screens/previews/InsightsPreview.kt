@@ -13,8 +13,8 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.composed.ComposedChartEntryModelProducer
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun InsightsDynamicPreview() {
     ShopDaniManagementTheme {
@@ -51,8 +51,8 @@ fun InsightsPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ChartsDynamicPreview() {
     ShopDaniManagementTheme {
@@ -72,8 +72,8 @@ fun ChartsDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ChartsPreview() {
     ShopDaniManagementTheme(

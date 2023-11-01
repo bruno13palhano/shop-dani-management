@@ -12,8 +12,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveriesCon
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveryContent
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun DeliveriesDynamicPreview() {
     ShopDaniManagementTheme {
@@ -32,8 +32,8 @@ fun DeliveriesDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun DeliveriesPreview() {
     ShopDaniManagementTheme(
@@ -64,8 +64,8 @@ private val deliveries = listOf(
     CommonItem(7L, byteArrayOf(), "Fernando Barbosa", "Kaiak", "Rua 15 de novembro"),
  )
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun DeliveryDynamicPreview() {
     ShopDaniManagementTheme {
@@ -95,8 +95,8 @@ private fun DeliveryDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun DeliveryPreview() {
     ShopDaniManagementTheme(

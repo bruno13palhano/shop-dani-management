@@ -12,8 +12,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.home.HomeViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun HomeDynamicPreview() {
     ShopDaniManagementTheme {
@@ -32,8 +32,8 @@ fun HomeDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun HomePreview() {
     ShopDaniManagementTheme(

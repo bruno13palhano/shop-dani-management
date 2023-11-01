@@ -14,8 +14,8 @@ import com.bruno13palhano.shopdanimanagement.ui.components.StockOrderListContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsContent
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun StockOrderListDynamicPreview() {
     ShopDaniManagementTheme {
@@ -38,8 +38,8 @@ fun StockOrderListDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun StockOrderListItemPreview() {
     ShopDaniManagementTheme(
@@ -64,8 +64,8 @@ fun StockOrderListItemPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun StockDebitsDynamicPreview() {
     ShopDaniManagementTheme {
@@ -84,8 +84,8 @@ private fun StockDebitsDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun StockDebitsPreview() {
     ShopDaniManagementTheme(

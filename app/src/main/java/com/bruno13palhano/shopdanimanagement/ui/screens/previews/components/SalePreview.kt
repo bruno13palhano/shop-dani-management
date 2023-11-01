@@ -14,8 +14,8 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SaleContent
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun SaleDynamicPreview() {
     ShopDaniManagementTheme {
@@ -59,8 +59,8 @@ fun SaleDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun SalePreview() {
     ShopDaniManagementTheme(

@@ -12,8 +12,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.shopdanimanagement.ui.components.SearchContent
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
-@Preview(showBackground = true,  showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun SearchDynamicPreview() {
     ShopDaniManagementTheme {
@@ -32,8 +32,8 @@ fun SearchDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true,  showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun SearchPreview() {
     ShopDaniManagementTheme(

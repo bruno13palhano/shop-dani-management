@@ -12,8 +12,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialInfoC
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun FinancialInfoDynamicPreview() {
     ShopDaniManagementTheme {
@@ -33,8 +33,8 @@ fun FinancialInfoDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun FinancialInfoPreview() {
     ShopDaniManagementTheme(
@@ -56,8 +56,8 @@ fun FinancialInfoPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun FinancialDynamicPreview() {
     ShopDaniManagementTheme {
@@ -74,8 +74,8 @@ fun FinancialDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun FinancialPreview() {
     ShopDaniManagementTheme(
