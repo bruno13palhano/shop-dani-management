@@ -179,6 +179,7 @@ fun HomeContent(
 
             ElevatedCard(
                 modifier = Modifier
+                    .semantics { contentDescription = "List of sales" }
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             ) {
                 infoSaleList.forEach { info ->
