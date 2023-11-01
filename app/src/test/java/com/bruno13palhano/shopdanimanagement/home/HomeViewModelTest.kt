@@ -120,6 +120,8 @@ class HomeViewModelTest {
             if (biggestSaleValue <= sale.salePrice) {
                 biggestSaleValue = sale.salePrice
                 biggestSale = HomeViewModel.Info(
+                    id = sale.id,
+                    isOrderedByCustomer = sale.isOrderedByCustomer,
                     value = (sale.quantity * sale.salePrice),
                     customer = sale.customerName,
                     item = sale.name,
@@ -130,6 +132,8 @@ class HomeViewModelTest {
             if (smallestSaleValue >= sale.salePrice) {
                 smallestSaleValue = sale.salePrice
                 smallestSale = HomeViewModel.Info(
+                    id = sale.id,
+                    isOrderedByCustomer = sale.isOrderedByCustomer,
                     value = (sale.quantity * sale.salePrice),
                     customer = sale.customerName,
                     item = sale.name,
@@ -140,6 +144,8 @@ class HomeViewModelTest {
             if (sales.lastIndex != -1) {
                 val last = sales.last()
                 lastSale = HomeViewModel.Info(
+                    id = last.id,
+                    isOrderedByCustomer = last.isOrderedByCustomer,
                     value = (last.quantity * last.salePrice),
                     customer = last.customerName,
                     item = last.name,
