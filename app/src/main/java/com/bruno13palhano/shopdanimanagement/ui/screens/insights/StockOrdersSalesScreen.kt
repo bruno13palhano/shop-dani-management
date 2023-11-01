@@ -55,7 +55,7 @@ fun StockOrdersSalesScreen(
         screenTitle = stringResource(id = R.string.stock_vs_orders_label),
         startAxisTitle = stringResource(id = R.string.amount_of_sales_label),
         bottomAxisTitle = chartTitle,
-        firstChartEntityColor = MaterialTheme.colorScheme.secondary,
+        firstChartEntityColor = MaterialTheme.colorScheme.primary,
         secondChartEntityColor = MaterialTheme.colorScheme.tertiary,
         entry = chart,
         legends = listOf(

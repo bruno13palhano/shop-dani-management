@@ -51,7 +51,7 @@ fun SalesByCompanyScreen(
         startAxisTitle = stringResource(id = R.string.amount_of_money_label),
         bottomAxisTitle = chartTitle,
         entityColors = listOf(
-            MaterialTheme.colorScheme.secondary,
+            MaterialTheme.colorScheme.primary,
             MaterialTheme.colorScheme.tertiary
         ),
         entry = chart,
