@@ -102,11 +102,13 @@ class StockOrdersSalesVIewModelTest {
     private fun mapToSalesEntries(sales: List<Sale>): StockOrdersSalesViewModel.ItemsSalesEntries {
         val stockEntries = mutableListOf<Pair<String, Float>>()
         val ordersEntries = mutableListOf<Pair<String, Float>>()
-        val days = Array(7) { 0 }
+        var days = Array(7) { 0 }
 
         sales.filter { sale -> !sale.isOrderedByCustomer }
             .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
         setChartEntries(stockEntries, days)
+
+        days = Array(7) { 0 }
 
         sales.filter { sale -> sale.isOrderedByCustomer }
             .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }

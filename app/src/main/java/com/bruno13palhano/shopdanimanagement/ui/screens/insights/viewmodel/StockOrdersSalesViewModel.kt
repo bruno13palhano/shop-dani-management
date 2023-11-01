@@ -42,6 +42,8 @@ class StockOrdersSalesViewModel @Inject constructor(
                         .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
                     setChartEntries(stockEntries, days)
 
+                    days = Array(rangeOfDays) { 0 }
+
                     it.filter { sale -> sale.isOrderedByCustomer }
                         .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
                     setChartEntries(ordersEntries, days)
