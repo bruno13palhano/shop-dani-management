@@ -7,38 +7,17 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.icu.text.DateFormat
-import android.icu.text.DecimalFormat
 import android.icu.text.SimpleDateFormat
 import android.icu.util.TimeZone
 import android.net.Uri
 import com.bruno13palhano.shopdanimanagement.ui.notifications.ExpiredProductsNotification
 import com.bruno13palhano.shopdanimanagement.ui.notifications.receivers.ExpiredProductsReceiver
 import okio.IOException
-import java.time.Instant
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 import kotlin.jvm.Throws
 
 private const val NOTIFICATION_ACTION_PREFIX = "com.bruno13palhano.shopdanimanagement"
-
-/**
- * Formats the string with local decimal separator.
- * @param value the string to be formatted.
- * @return the new string formatted.
- */
-fun formatWithLocalDecimal(value: String): String {
-    val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
-    val decimalSeparator = decimalFormat.decimalFormatSymbols.decimalSeparator
-    return if (decimalSeparator == ',') {
-        value.replace(".", ",")
-    } else {
-        value.replace(",", ".")
-    }
-}
 
 val currentDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
 
