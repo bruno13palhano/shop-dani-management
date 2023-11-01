@@ -109,6 +109,8 @@ class ChartsViewModelTest {
             .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
         setChartEntries(stockEntries, days)
 
+        days = Array(7) { 0 }
+
         sales.filter { sale -> sale.isOrderedByCustomer }
             .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
         setChartEntries(ordersEntries, days)
