@@ -11,9 +11,6 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.home.HomeScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 
-private const val ITEM_ID = "item_Id"
-private const val IS_ORDERED = "is_ordered"
-
 fun NavGraphBuilder.homeNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,

@@ -18,7 +18,10 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.espresso.Espresso
 import com.bruno13palhano.shopdanimanagement.MainActivity
+import com.bruno13palhano.shopdanimanagement.ui.navigation.EDITABLE
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.IS_ORDERED
+import com.bruno13palhano.shopdanimanagement.ui.navigation.ITEM_ID
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.navigation.StockDestinations
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
@@ -28,10 +31,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-
-private const val ITEM_ID = "item_Id"
-private const val EDITABLE = "item_editable"
-private const val IS_ORDERED = "is_ordered"
 
 @HiltAndroidTest
 class StockNavGraphTest {

@@ -14,9 +14,6 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScre
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductCategoriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 
-private const val ITEM_ID = "item_Id"
-private const val EDITABLE = "item_editable"
-
 fun NavGraphBuilder.productsNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,

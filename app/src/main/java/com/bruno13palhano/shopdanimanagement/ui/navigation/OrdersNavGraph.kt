@@ -12,8 +12,6 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.ItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrdersScreen
 
-private const val ITEM_ID = "item_Id"
-
 fun NavGraphBuilder.ordersNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit

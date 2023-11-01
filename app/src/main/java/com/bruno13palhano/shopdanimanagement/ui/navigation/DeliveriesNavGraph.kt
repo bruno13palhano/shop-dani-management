@@ -9,8 +9,6 @@ import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveriesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveryScreen
 
-private const val ITEM_ID = "item_Id"
-
 fun NavGraphBuilder.deliveriesNAvGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit

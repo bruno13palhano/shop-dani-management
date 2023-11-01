@@ -17,8 +17,6 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsScr
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.ItemScreen
 
-private const val ITEM_ID = "item_Id"
-
 fun NavGraphBuilder.financialNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,

@@ -23,6 +23,8 @@ import com.bruno13palhano.shopdanimanagement.MainActivity
 import com.bruno13palhano.shopdanimanagement.ui.navigation.CatalogDestination
 import com.bruno13palhano.shopdanimanagement.ui.navigation.DeliveriesDestinations
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.IS_ORDERED
+import com.bruno13palhano.shopdanimanagement.ui.navigation.ITEM_ID
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.navigation.OrdersDestinations
 import com.bruno13palhano.shopdanimanagement.ui.navigation.SalesDestinations
@@ -35,9 +37,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-
-private const val ITEM_ID = "item_Id"
-private const val IS_ORDERED = "is_ordered"
 
 @HiltAndroidTest
 class HomeNavGraphTest {

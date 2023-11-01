@@ -13,7 +13,9 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import com.bruno13palhano.shopdanimanagement.MainActivity
 import com.bruno13palhano.shopdanimanagement.ui.navigation.CatalogDestination
+import com.bruno13palhano.shopdanimanagement.ui.navigation.EDITABLE
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.ITEM_ID
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -22,9 +24,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-
-private const val ITEM_ID = "item_id"
-private const val EDITABLE = "editable"
 
 @HiltAndroidTest
 class CatalogNavGraphTest {

@@ -9,9 +9,6 @@ import androidx.navigation.navArgument
 import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.CatalogItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.CatalogScreen
 
-private const val ITEM_ID = "item_id"
-private const val EDITABLE = "editable"
-
 fun NavGraphBuilder.catalogNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit

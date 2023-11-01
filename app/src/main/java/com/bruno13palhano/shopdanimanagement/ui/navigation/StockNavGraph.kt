@@ -14,10 +14,6 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScre
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrdersScreen
 
-private const val ITEM_ID = "item_Id"
-private const val EDITABLE = "item_editable"
-private const val IS_ORDERED = "is_ordered"
-
 fun NavGraphBuilder.stockNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit

@@ -13,9 +13,6 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomersScree
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.SearchCustomersScreen
 
-private const val ITEM_ID = "item_id"
-private const val EDITABLE = "item_editable"
-
 fun NavGraphBuilder.customersNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,

@@ -18,6 +18,7 @@ import androidx.navigation.testing.TestNavHostController
 import com.bruno13palhano.shopdanimanagement.MainActivity
 import com.bruno13palhano.shopdanimanagement.ui.navigation.DeliveriesDestinations
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.ITEM_ID
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -26,8 +27,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-
-private const val ITEM_ID = "item_Id"
 
 @HiltAndroidTest
 class DeliveriesNavGraphTest {
