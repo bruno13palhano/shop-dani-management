@@ -249,12 +249,12 @@ fun ChartsContent(
                 )
             }
             ProvideChartStyle(
-                chartStyle = m3ChartStyle(entityColors = listOf(MaterialTheme.colorScheme.tertiary))
+                chartStyle = m3ChartStyle(entityColors = listOf(MaterialTheme.colorScheme.primary))
             ) {
                 val columnChart = columnChart()
                 val lineChart = lineChart(lines = listOf(
                     LineChart.LineSpec(
-                        lineColor = Color.toArgb(MaterialTheme.colorScheme.secondary.value.toLong())
+                        lineColor = Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
                     )
                 ))
                 val composedChart = remember(columnChart, lineChart) { columnChart + lineChart }
