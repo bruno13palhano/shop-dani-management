@@ -25,6 +25,7 @@ fun HomeDynamicPreview() {
                 homeInfo = HomeViewModel.HomeInfo(),
                 lastSalesEntry = ChartEntryModelProducer(),
                 onOptionsItemClick = {},
+                onSalesItemClick = { _, _ ->},
                 onMenuClick = {}
             )
         }
@@ -46,6 +47,7 @@ fun HomePreview() {
                 homeInfo = HomeViewModel.HomeInfo(),
                 lastSalesEntry = ChartEntryModelProducer(),
                 onOptionsItemClick = {},
+                onSalesItemClick = { _, _ -> },
                 onMenuClick = {}
             )
         }

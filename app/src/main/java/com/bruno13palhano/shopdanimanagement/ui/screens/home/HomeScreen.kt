@@ -66,6 +66,7 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 @Composable
 fun HomeScreen(
     onOptionsItemClick: (route: String) -> Unit,
+    onSalesItemClick: (id: Long, isOrderedByCustomer: Boolean) -> Unit,
     onMenuClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -86,6 +87,7 @@ fun HomeScreen(
         homeInfo = homeInfo,
         lastSalesEntry = chart,
         onOptionsItemClick = onOptionsItemClick,
+        onSalesItemClick = onSalesItemClick,
         onMenuClick = onMenuClick
     )
 }
@@ -96,6 +98,7 @@ fun HomeContent(
     homeInfo: HomeViewModel.HomeInfo,
     lastSalesEntry: ChartEntryModelProducer,
     onOptionsItemClick: (route: String) -> Unit,
+    onSalesItemClick: (id: Long, isOrderedByCustomer: Boolean) -> Unit,
     onMenuClick: () -> Unit,
 ) {
     Scaffold(
@@ -194,7 +197,8 @@ fun HomeContent(
                             info.first.customer,
                             info.first.quantity,
                             dateFormat.format(info.first.date)
-                        )
+                        ),
+                        onClick = { onSalesItemClick(info.first.id, info.first.isOrderedByCustomer) }
                     )
                     HorizontalDivider()
                 }
