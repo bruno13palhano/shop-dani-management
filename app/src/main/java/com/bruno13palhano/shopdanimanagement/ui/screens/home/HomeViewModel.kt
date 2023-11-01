@@ -34,6 +34,8 @@ class HomeViewModel @Inject constructor(
             if (biggestSaleValue <= sale.salePrice) {
                 biggestSaleValue = sale.salePrice
                 biggestSale = Info(
+                    id = sale.id,
+                    isOrderedByCustomer = sale.isOrderedByCustomer,
                     value = (sale.quantity * sale.salePrice),
                     customer = sale.customerName,
                     item = sale.name,
@@ -44,6 +46,8 @@ class HomeViewModel @Inject constructor(
             if (smallestSaleValue >= sale.salePrice) {
                 smallestSaleValue = sale.salePrice
                 smallestSale = Info(
+                    id = sale.id,
+                    isOrderedByCustomer = sale.isOrderedByCustomer,
                     value = (sale.quantity * sale.salePrice),
                     customer = sale.customerName,
                     item = sale.name,
@@ -54,6 +58,8 @@ class HomeViewModel @Inject constructor(
             if (sales.lastIndex != -1) {
                 val last = sales.last()
                 lastSale = Info(
+                    id = last.id,
+                    isOrderedByCustomer = last.isOrderedByCustomer,
                     value = (last.quantity * last.salePrice),
                     customer = last.customerName,
                     item = last.name,
@@ -107,6 +113,8 @@ class HomeViewModel @Inject constructor(
     )
 
     data class Info(
+        val id: Long = 0L,
+        val isOrderedByCustomer: Boolean = false,
         val value: Float = 0F,
         val customer: String = "",
         val item: String = "",
