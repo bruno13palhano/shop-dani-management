@@ -71,8 +71,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun MainDynamicPreview() {
     ShopDaniManagementTheme {
@@ -106,8 +106,8 @@ fun MainDynamicPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun MainDynamicOpenPreview() {
     ShopDaniManagementTheme {
@@ -141,8 +141,8 @@ fun MainDynamicOpenPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun MainPreview() {
     ShopDaniManagementTheme(
@@ -178,8 +178,8 @@ fun MainPreview() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
+@Preview(showBackground = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun MainOpenPreview() {
     ShopDaniManagementTheme(
