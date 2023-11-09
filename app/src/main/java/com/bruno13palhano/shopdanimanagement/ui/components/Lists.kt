@@ -15,14 +15,22 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -471,5 +479,111 @@ fun CatalogItemList(
             style = MaterialTheme.typography.bodySmall,
             overflow = TextOverflow.Ellipsis
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExpandedItem(
+    modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String,
+    description: String,
+    photo: ByteArray,
+    onEditClick: () -> Unit
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    ElevatedCard(
+        modifier = modifier,
+        onClick = { expanded = !expanded },
+        colors = if (expanded) {
+            CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+        } else { CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface) }
+    ) {
+        if (expanded) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (photo.isEmpty()) {
+                    Image(
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(5)),
+                        imageVector = Icons.Filled.Image,
+                        contentDescription = stringResource(id = R.string.item_image),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Image(
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(5)),
+                        painter = rememberAsyncImagePainter(model = photo),
+                        contentDescription = stringResource(id = R.string.item_image),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1F, true)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                        text = title,
+                        maxLines = 1,
+                        style = MaterialTheme.typography.titleMedium,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                        text = subtitle,
+                        maxLines = 1,
+                        style = MaterialTheme.typography.bodyMedium,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                        text = description,
+                        maxLines = 1,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontStyle = FontStyle.Italic,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                IconButton(onClick = onEditClick) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = stringResource(id = R.string.edit_label)
+                    )
+                }
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .sizeIn(minHeight = 68.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .weight(1F, true)
+                        .padding(16.dp),
+                    text = title,
+                    maxLines = 1,
+                    style = MaterialTheme.typography.titleMedium,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Icon(
+                    modifier = Modifier.padding(16.dp),
+                    imageVector = Icons.Filled.Info,
+                    contentDescription = stringResource(id = R.string.info_label)
+                )
+            }
+        }
     }
 }
