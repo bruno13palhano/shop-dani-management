@@ -82,6 +82,8 @@ class SalesNavGraphTest {
             .onFirst()
             .performClick()
 
+        composeRule.onNodeWithContentDescription("Edit").performClick()
+
         val route = navController.currentBackStackEntry?.destination?.route
 
         assertEquals(expected, route)
