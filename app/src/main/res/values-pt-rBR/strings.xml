@@ -15,6 +15,7 @@
     <string name="drawer_menu_label">Drawer Menu</string>
     <string name="add_label">Adicionar</string>
     <string name="done_label">Concluído</string>
+    <string name="info_label">Informação</string>
     <string name="up_button_label">Botão voltar</string>
     <string name="product_image_label">Imagem do produto</string>
     <string name="category_image_label">Imagem da categoria</string>
