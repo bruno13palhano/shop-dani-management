@@ -1,5 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -14,10 +15,10 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -375,31 +376,63 @@ fun InfoItemList(
     title: String,
     subtitle: String,
     description: String,
-    onClick: () -> Unit
+    onEditClick: () -> Unit
 ) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
-            .clickable { onClick() }
+            .clickable { expanded = !expanded }
             .padding(contentPadding)
     ) {
-        Text(
-            modifier = modifier
-                .fillMaxWidth(),
-            text = title,
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Text(
-            modifier = modifier
-                .fillMaxWidth(),
-            text = subtitle,
-            style = MaterialTheme.typography.titleMedium
-        )
-        Text(
-            modifier = modifier
-                .fillMaxWidth(),
-            text = description,
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = modifier
+                    .weight(1F, true),
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                fontStyle = FontStyle.Italic
+            )
+
+            if (expanded) {
+                IconButton(onClick = onEditClick) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = stringResource(id = R.string.edit_label)
+                    )
+                }
+            } else {
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowDropDown,
+                        contentDescription = stringResource(id = R.string.expand_item_label)
+                    )
+                }
+            }
+        }
+
+        AnimatedVisibility(visible = expanded) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1F, true)
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    text = subtitle,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontStyle = FontStyle.Italic
+                )
+                Text(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    text = description,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
     }
 }
 
@@ -501,7 +534,7 @@ fun ExpandedItem(
             CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
         } else { CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface) }
     ) {
-        if (expanded) {
+        AnimatedVisibility (expanded) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -562,7 +595,9 @@ fun ExpandedItem(
                     )
                 }
             }
-        } else {
+        }
+
+        AnimatedVisibility (!expanded) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -580,8 +615,8 @@ fun ExpandedItem(
                 )
                 Icon(
                     modifier = Modifier.padding(16.dp),
-                    imageVector = Icons.Filled.Info,
-                    contentDescription = stringResource(id = R.string.info_label)
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = stringResource(id = R.string.expand_item_label)
                 )
             }
         }
