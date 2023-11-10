@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -82,6 +83,13 @@ class HomeNavGraphTest {
             .onChildren()
             .onFirst()
             .performClick()
+        composeTestRule.onAllNodesWithContentDescription("Expand item")
+            .onFirst()
+            .performClick()
+
+        composeTestRule.onAllNodesWithContentDescription("Edit")
+            .onFirst()
+            .performClick()
 
         val route = navController.currentBackStackEntry?.destination?.route
 
@@ -95,6 +103,12 @@ class HomeNavGraphTest {
         composeTestRule.onNodeWithContentDescription("List of sales")
             .performScrollTo()
             .onChildren()
+            .onFirst()
+            .performClick()
+        composeTestRule.onAllNodesWithContentDescription("Expand item")
+            .onFirst()
+            .performClick()
+        composeTestRule.onAllNodesWithContentDescription("Edit")
             .onFirst()
             .performClick()
 

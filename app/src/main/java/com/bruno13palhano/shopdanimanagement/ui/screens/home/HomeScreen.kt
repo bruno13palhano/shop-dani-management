@@ -184,7 +184,7 @@ fun HomeContent(
             ) {
                 infoSaleList.forEach { info ->
                     InfoItemList(
-                        modifier = Modifier.padding(start = 16.dp, top = 4.dp, end = 16.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         contentPadding = PaddingValues(vertical = 12.dp),
                         title = info.second,
                         subtitle = stringResource(
@@ -199,7 +199,7 @@ fun HomeContent(
                             info.first.quantity,
                             dateFormat.format(info.first.date)
                         ),
-                        onClick = { onSalesItemClick(info.first.id, info.first.isOrderedByCustomer) }
+                        onEditClick = { onSalesItemClick(info.first.id, info.first.isOrderedByCustomer) }
                     )
                     HorizontalDivider()
                 }
