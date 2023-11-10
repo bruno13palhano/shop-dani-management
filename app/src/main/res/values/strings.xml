@@ -15,6 +15,7 @@
     <string name="add_label">Add</string>
     <string name="done_label">Done</string>
     <string name="info_label">Info</string>
+    <string name="expand_item_label">Expand item</string>
     <string name="up_button_label">Up button</string>
     <string name="product_image_label">Product image</string>
     <string name="category_image_label">Category image</string>
