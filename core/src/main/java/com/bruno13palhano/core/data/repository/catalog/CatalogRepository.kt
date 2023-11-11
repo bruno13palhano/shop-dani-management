@@ -6,7 +6,7 @@ import com.bruno13palhano.core.model.Catalog
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CatalogRepository @Inject constructor(
+internal class CatalogRepository @Inject constructor(
     @InternalCatalogLight private val catalogData: CatalogData<Catalog>
 ) : CatalogData<Catalog> {
     override suspend fun insert(model: Catalog): Long {
