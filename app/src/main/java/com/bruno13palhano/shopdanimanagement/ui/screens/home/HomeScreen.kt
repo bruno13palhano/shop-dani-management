@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,8 @@ import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PointOfSale
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -32,6 +35,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
@@ -74,6 +80,7 @@ fun HomeScreen(
     val homeInfo by viewModel.homeInfo.collectAsStateWithLifecycle()
 
     val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
+    var showProfit by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(key1 = lastSalesEntry) {
         chart.setEntries(
@@ -87,7 +94,9 @@ fun HomeScreen(
         homeInfo = homeInfo,
         lastSalesEntry = chart,
         onOptionsItemClick = onOptionsItemClick,
+        showProfit = showProfit,
         onSalesItemClick = onSalesItemClick,
+        onShowProfitChange = { showProfit = it },
         onMenuClick = onMenuClick
     )
 }
@@ -97,8 +106,10 @@ fun HomeScreen(
 fun HomeContent(
     homeInfo: HomeViewModel.HomeInfo,
     lastSalesEntry: ChartEntryModelProducer,
+    showProfit: Boolean,
     onOptionsItemClick: (route: String) -> Unit,
     onSalesItemClick: (id: Long, isOrderedByCustomer: Boolean) -> Unit,
+    onShowProfitChange: (show: Boolean) -> Unit,
     onMenuClick: () -> Unit,
 ) {
     Scaffold(
@@ -142,21 +153,61 @@ fun HomeContent(
             .padding(it)
             .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 2.dp),
-                text = stringResource(id = R.string.profit_label),
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 2.dp),
-                text = stringResource(id = R.string.value_tag, homeInfo.profit),
-                style = MaterialTheme.typography.titleLarge
-            )
-            Text(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 2.dp, bottom = 8.dp),
-                text = stringResource(id = R.string.total_sales_value_tag, homeInfo.sales),
-                style = MaterialTheme.typography.bodyMedium
-            )
+            val dots = stringResource(id = R.string.dots_label)
+            Row(
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 8.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1F, true)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
+                        text = stringResource(id = R.string.profit_label),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        text = if(showProfit) {
+                            stringResource(id = R.string.value_tag, homeInfo.profit)
+                        } else {
+                            stringResource(id = R.string.value_text_tag, dots)
+                        },
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Text(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        text = if (showProfit) {
+                            stringResource(id = R.string.total_sales_value_tag, homeInfo.sales)
+                        } else {
+                            stringResource(id = R.string.total_sales_text_value_tag, dots)
+                        },
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                IconButton(
+                    modifier = Modifier.padding(end = 8.dp),
+                    onClick = { onShowProfitChange(!showProfit) }
+                ) {
+                    if (showProfit) {
+                        Icon(
+                            imageVector = Icons.Filled.Visibility,
+                            contentDescription = stringResource(id = R.string.show_label)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Filled.VisibilityOff,
+                            contentDescription = stringResource(id = R.string.hide_label)
+                        )
+                    }
+                }
+            }
 
             LazyRow(
                 modifier = Modifier.semantics { contentDescription = "Options" },
@@ -187,11 +238,19 @@ fun HomeContent(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         contentPadding = PaddingValues(vertical = 12.dp),
                         title = info.second,
-                        subtitle = stringResource(
-                            id = R.string.product_price_tag,
-                            info.first.item,
-                            info.first.value
-                        ),
+                        subtitle = if (showProfit) {
+                            stringResource(
+                                id = R.string.product_price_tag,
+                                info.first.item,
+                                info.first.value
+                            )
+                        } else {
+                            stringResource(
+                                id = R.string.product_price_text_tag,
+                                info.first.item,
+                                dots
+                            )
+                        },
                         description = pluralStringResource(
                             id = R.plurals.description_label,
                             count = info.first.quantity,
