@@ -476,39 +476,54 @@ fun CatalogItemList(
             )
         }
         Text(
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp)
+                .fillMaxWidth(),
             text = title,
             maxLines = 1,
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleMedium,
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp)
+                .fillMaxWidth(),
             text = firstSubtitle,
             maxLines = 1,
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleSmall,
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp)
+                .fillMaxWidth(),
             text = secondSubtitle,
             maxLines = 1,
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
             fontStyle = FontStyle.Italic,
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp)
+                .fillMaxWidth(),
             text = description,
             maxLines = 1,
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
             fontStyle = FontStyle.Italic,
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .fillMaxWidth(),
             text = footer,
             maxLines = 1,
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodySmall,
             overflow = TextOverflow.Ellipsis
         )
