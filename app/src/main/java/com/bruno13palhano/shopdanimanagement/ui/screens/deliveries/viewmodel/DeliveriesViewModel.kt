@@ -5,11 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.di.DeliveryRep
 import com.bruno13palhano.core.model.Delivery
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,17 +18,6 @@ class DeliveriesViewModel @Inject constructor(
 ) : ViewModel() {
     private var _deliveries = MutableStateFlow(emptyList<Delivery>())
     val deliveries = _deliveries
-        .map {
-            it.map { delivery ->
-                CommonItem(
-                    id = delivery.id,
-                    photo = byteArrayOf(),
-                    title = delivery.customerName,
-                    subtitle = delivery.productName,
-                    description = delivery.address
-                )
-            }
-        }
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
