@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -527,6 +528,119 @@ fun CatalogItemList(
             style = MaterialTheme.typography.bodySmall,
             overflow = TextOverflow.Ellipsis
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SimpleExpandedItem(
+    modifier: Modifier = Modifier,
+    title: String,
+    item1: String,
+    item2: String,
+    item3: String,
+    item4: String,
+    item5: String,
+    onEditClick: () -> Unit
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    ElevatedCard(
+        modifier = modifier,
+        onClick = { expanded = !expanded }
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1F, true)) {
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    text = item1,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontStyle = FontStyle.Italic
+                )
+            }
+            if (expanded) {
+                IconButton(onClick = onEditClick) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = stringResource(id = R.string.edit_item_label)
+                    )
+                }
+            } else {
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowDropDown,
+                        contentDescription = stringResource(id = R.string.expand_item_label)
+                    )
+                }
+            }
+        }
+
+        AnimatedVisibility(visible = expanded) {
+            Column {
+                HorizontalDivider(color = MaterialTheme.colorScheme.onSurface)
+
+                Row(
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
+                    Text(
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        text = item2,
+                        fontStyle = FontStyle.Italic,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
+                    Text(
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        text = item3,
+                        fontStyle = FontStyle.Italic,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
+                    Text(
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        text = item4,
+                        fontStyle = FontStyle.Italic,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
+                    Text(
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        text = item5,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                HorizontalDivider()
+            }
+        }
     }
 }
 
