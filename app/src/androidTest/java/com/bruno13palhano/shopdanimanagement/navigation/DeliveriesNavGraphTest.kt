@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -89,6 +90,7 @@ class DeliveriesNavGraphTest {
             .onChildren()
             .onFirst()
             .performClick()
+        composeRule.onNodeWithContentDescription("Edit Item").performClick()
 
         val route = navController.currentBackStackEntry?.destination?.route
 
@@ -103,6 +105,7 @@ class DeliveriesNavGraphTest {
             .onChildren()
             .onFirst()
             .performClick()
+        composeRule.onNodeWithContentDescription("Edit Item").performClick()
 
         composeRule.onNodeWithContentDescription("Up button").performClick()
 

@@ -7,7 +7,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveriesContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveryContent
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
@@ -55,13 +57,13 @@ fun DeliveriesPreview() {
 }
 
 private val deliveries = listOf(
-    CommonItem(1L, byteArrayOf(), "Bruno Barbosa", "Essencial", "Rua 15 de novembro"),
-    CommonItem(2L, byteArrayOf(), "Josué Barbosa", "Essencial", "Rua 15 de novembro"),
-    CommonItem(3L, byteArrayOf(), "Daniela Barbosa", "Homem", "Rua 15 de novembro"),
-    CommonItem(4L, byteArrayOf(), "Brenda Barbosa", "Essencial", "Rua 15 de novembro"),
-    CommonItem(5L, byteArrayOf(), "Helena Barbosa", "Una", "Rua 15 de novembro"),
-    CommonItem(6L, byteArrayOf(), "Socorro Barbosa", "Luna", "Rua 15 de novembro"),
-    CommonItem(7L, byteArrayOf(), "Fernando Barbosa", "Kaiak", "Rua 15 de novembro"),
+    Delivery(1L, 1L, "Bruno Barbosa", "Rua 15 de novembro", "991111111", "Essencial", 149.90F, 1.20F, 0L, 0L, false),
+    Delivery(2L, 2L, "Josué Barbosa", "Rua 15 de novembro", "992222222", "Essencial", 88.90F, 1.40F, 0L, 0L, false),
+    Delivery(3L, 3L, "Daniela Barbosa", "Rua 15 de novembro", "9933333333", "Homem", 145.90F, 1.50F, 0L, 0L, false),
+    Delivery(4L, 4L, "Brenda Barbosa", "Carão", "9944444444", "Homem Red", 120.90F, 1.20F, 0L, 0L, false),
+    Delivery(5L, 5L, "Helena Barbosa", "Jurema", "9955555555", "Una", 98.99F, 1.20F, 0L, 0L, false),
+    Delivery(6L, 6L, "Socorro Barbosa", "Centro", "9966666666", "Luna", 150.45F, 1.30F, 0L, 0L, false),
+    Delivery(7L, 7L, "Fernando Barbosa", "Rua 15 de novembero", "9977777777", "Kaiak", 120.20F, 1.40F, 0L , 0L, false),
  )
 
 @Preview(showBackground = true)

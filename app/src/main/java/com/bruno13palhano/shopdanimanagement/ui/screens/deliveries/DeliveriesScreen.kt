@@ -31,10 +31,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.CommonItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.components.SimpleExpandedItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel.DeliveriesViewModel
 
 @Composable
@@ -78,7 +80,7 @@ fun DeliveriesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeliveriesContent(
-    deliveries: List<CommonItem>,
+    deliveries: List<Delivery>,
     menuOptions: Array<String>,
     onItemClick: (id: Long) -> Unit,
     onMenuItemClick: (index: Int) -> Unit,
@@ -130,12 +132,24 @@ fun DeliveriesContent(
             contentPadding = PaddingValues(vertical = 4.dp)
         ) {
             items(items = deliveries, key = { delivery -> delivery.id }) { delivery ->
-                CommonItemList(
+                SimpleExpandedItem(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    title = delivery.title,
-                    subtitle = delivery.subtitle,
-                    description = stringResource(id = R.string.deliver_to_tag, delivery.description),
-                    onClick = { onItemClick(delivery.id) }
+                    title = delivery.customerName,
+                    item1 = stringResource(
+                        id = R.string.delivery_date_tag,
+                        dateFormat.format(delivery.deliveryDate)
+                    ),
+                    item2 = stringResource(
+                        id = R.string.product_tag,
+                        delivery.productName
+                    ),
+                    item3 = stringResource(
+                        id = R.string.delivery_price_tag,
+                        delivery.deliveryPrice
+                    ),
+                    item4 = stringResource(id = R.string.deliver_to_tag, delivery.address),
+                    item5 = stringResource(id = R.string.phone_number_tag, delivery.phoneNumber),
+                    onEditClick = { onItemClick(delivery.id) }
                 )
             }
         }
