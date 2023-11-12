@@ -181,6 +181,10 @@
     <string name="customer_debit_tag">Débito de R$ %s.</string>
     <string name="date_of_payment_tag">Data de pagamento %s.</string>
     <string name="deliver_to_tag">Entregar para %s.</string>
+    <string name="delivery_price_tag">Valor da entrega R$ %s.</string>
+    <string name="delivery_date_tag">Data da entrega %s.</string>
+    <string name="phone_number_tag">Número do telefone %s.</string>
+    <string name="product_tag">Produto, %s.</string>
     <plurals name="description_label">
         <item quantity="one">%s, %d item, %s</item>
         <item quantity="other">%s, %d itens, %s</item>
