@@ -33,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CommonItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.ExpandedItem
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
@@ -136,15 +137,16 @@ fun CustomersDebitContent(
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
             items(items = debits, key = { item -> item.id }) { item ->
-                CommonItemList(
+                ExpandedItem(
                     modifier = Modifier.padding(vertical = 4.dp),
                     title = item.title,
+                    photo = item.photo,
                     subtitle = stringResource(id = R.string.customer_debit_tag, item.subtitle),
                     description = stringResource(
                         id = R.string.date_of_payment_tag ,
                         dateFormat.format(item.description.toLong())
                     ),
-                    onClick = { onItemClick(item.id) }
+                    onEditClick = { onItemClick(item.id) }
                 )
             }
         }

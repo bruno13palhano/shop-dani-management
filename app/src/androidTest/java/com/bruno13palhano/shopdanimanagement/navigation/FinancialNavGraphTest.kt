@@ -228,6 +228,8 @@ class FinancialNavGraphTest {
             .onFirst()
             .performClick()
 
+        composeRule.onNodeWithContentDescription("Edit").performClick()
+
         val route = navController.currentBackStackEntry?.destination?.route
 
         assertEquals(expected, route)
@@ -245,6 +247,8 @@ class FinancialNavGraphTest {
             .onChildren()
             .onFirst()
             .performClick()
+
+        composeRule.onNodeWithContentDescription("Edit").performClick()
 
         composeRule.onNodeWithContentDescription("Up button").performClick()
 

@@ -424,8 +424,7 @@ fun InfoItemList(
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     text = subtitle,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontStyle = FontStyle.Italic
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp),
