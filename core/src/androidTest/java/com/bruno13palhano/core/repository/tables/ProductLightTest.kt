@@ -52,8 +52,8 @@ class ProductLightTest {
         secondProduct = makeRandomProduct(
             id = 2L,
             categories = listOf(
-                Category(id = 1L, name = "Perfumes"),
-                Category(id = 2L, name = "Soaps")
+                Category(id = 1L, category = "Perfumes"),
+                Category(id = 2L, category = "Soaps")
             ),
             company = "Natura",
             description = "Most sale"
@@ -170,7 +170,7 @@ class ProductLightTest {
 
     @Test
     fun shouldReturnProductsThatMatchesWithCategorySearch() = runTest {
-        val search = thirdProduct.categories[0].name
+        val search = thirdProduct.categories[0].category
         insertAllProducts()
 
         launch(Dispatchers.IO) {

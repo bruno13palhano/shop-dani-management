@@ -23,11 +23,11 @@ private val listOfCategoryAdapter = object : ColumnAdapter<List<Category>, Strin
         } else {
             databaseValue.split(",").map {
                 val params = it.split(":")
-                Category(id = params[0].toLong(), name = params[1])
+                Category(id = params[0].toLong(), category = params[1])
             }
         }
 
     override fun encode(value: List<Category>) = value.joinToString(",") {
-        "${it.id}:${it.name}"
+        "${it.id}:${it.category}"
     }
 }

@@ -159,7 +159,7 @@ class CategoryLightTest {
         categoryTable.insert(category3)
 
         launch(Dispatchers.IO) {
-            categoryTable.search(value = category1.name).collect { categories ->
+            categoryTable.search(value = category1.category).collect { categories ->
                 assertThat(categories).contains(category1)
                 cancel()
             }

@@ -501,17 +501,17 @@ class SaleLightTest {
         val product1 = makeRandomProduct(
             id = 1L,
             name = "Homem",
-            categories = listOf(Category(id = 1L, name = "Perfumes"))
+            categories = listOf(Category(id = 1L, category = "Perfumes"))
         )
         val product2 = makeRandomProduct(
             id = 2L,
             name = "Kaiak",
-            categories = listOf(Category(id = 2L, name = "Soaps"), Category(id = 1L, name = "Perfumes"))
+            categories = listOf(Category(id = 2L, category = "Soaps"), Category(id = 1L, category = "Perfumes"))
         )
         val product3 = makeRandomProduct(
             id = 3L,
             name = "Luna",
-            categories = listOf(Category(id = 3L, name = "Others"))
+            categories = listOf(Category(id = 3L, category = "Others"))
         )
         productTable.insert(product1)
         productTable.insert(product2)
