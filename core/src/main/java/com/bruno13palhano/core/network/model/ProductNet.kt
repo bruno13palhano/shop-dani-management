@@ -1,15 +1,16 @@
 package com.bruno13palhano.core.network.model
 
+import com.bruno13palhano.core.model.Product
 import com.squareup.moshi.Json
 
 data class ProductNet(
-    @Json val id: Long,
-    @Json val name: String,
-    @Json val code: String,
-    @Json val description: String,
-    @Json val photo: ByteArray,
-    @Json val date: Long,
-    @Json val company: String
+    @Json(name = "id") val id: Long,
+    @Json(name = "name") val name: String,
+    @Json(name = "code") val code: String,
+    @Json(name = "description") val description: String,
+    @Json(name = "photo") val photo: ByteArray,
+    @Json(name = "date") val date: Long,
+    @Json(name = "company") val company: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -39,3 +40,24 @@ data class ProductNet(
         return result
     }
 }
+
+internal fun Product.asNetwork() = ProductNet(
+    id = id,
+    name = name,
+    code = code,
+    description = description,
+    photo = photo,
+    date = date,
+    company = company
+)
+
+internal fun ProductNet.asExternal() = Product(
+    id = id,
+    name = name,
+    code = code,
+    description = description,
+    photo = photo,
+    date = date,
+    categories = emptyList(),
+    company = company
+)

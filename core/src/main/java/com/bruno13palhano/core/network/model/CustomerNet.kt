@@ -1,14 +1,15 @@
 package com.bruno13palhano.core.network.model
 
+import com.bruno13palhano.core.model.Customer
 import com.squareup.moshi.Json
 
 data class CustomerNet(
-    @Json val id: Long,
-    @Json val name: String,
-    @Json val photo: ByteArray,
-    @Json val email: String,
-    @Json val address: String,
-    @Json val phoneNumber: String
+    @Json(name = "id") val id: Long,
+    @Json(name = "name") val name: String,
+    @Json(name = "photo") val photo: ByteArray,
+    @Json(name = "email") val email: String,
+    @Json(name = "address") val address: String,
+    @Json(name = "phoneNumber") val phoneNumber: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -36,3 +37,21 @@ data class CustomerNet(
         return result
     }
 }
+
+internal fun CustomerNet.asExternal() = Customer(
+    id = id,
+    name = name,
+    photo = photo,
+    email = email,
+    address = address,
+    phoneNumber = phoneNumber
+)
+
+internal fun Customer.asNetwork() = CustomerNet(
+    id = id,
+    name = name,
+    photo = photo,
+    email = email,
+    address = address,
+    phoneNumber = phoneNumber
+)

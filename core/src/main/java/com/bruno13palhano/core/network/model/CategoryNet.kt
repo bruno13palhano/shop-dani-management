@@ -8,12 +8,12 @@ data class CategoryNet(
     @Json(name = "category") val name: String
 )
 
-fun CategoryNet.asExternal() = Category(
+internal fun CategoryNet.asExternal() = Category(
     id = id,
     name = name
 )
 
-fun Category.asNetwork() = CategoryNet(
+internal fun Category.asNetwork() = CategoryNet(
     id = id,
     name = name
 )
