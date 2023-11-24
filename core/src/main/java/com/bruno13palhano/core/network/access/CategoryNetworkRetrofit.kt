@@ -1,42 +1,43 @@
-package com.bruno13palhano.core.network.product
+package com.bruno13palhano.core.network.access
 
-import com.bruno13palhano.core.model.Product
+import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.network.CrudNetwork
 import com.bruno13palhano.core.network.Service
 import com.bruno13palhano.core.network.model.asExternal
 import com.bruno13palhano.core.network.model.asNetwork
 import javax.inject.Inject
 
-internal class ProductNetworkRetrofit @Inject constructor(
+internal class CategoryNetworkRetrofit @Inject constructor(
     private val apiService: Service
-): ProductNetwork {
-    override suspend fun getAll(): List<Product> {
+): CrudNetwork<Category> {
+    override suspend fun getAll(): List<Category> {
         return try {
-            apiService.getAllProducts().map { it.asExternal() }
+            apiService.getAllCategories().map { it.asExternal() }
         } catch (ignored: Exception) {
             ignored.printStackTrace()
             emptyList()
         }
     }
 
-    override suspend fun insertProduct(product: Product) {
+    override suspend fun insert(data: Category) {
         try {
-            apiService.insertProduct(product.asNetwork())
+            apiService.insertCategory(category = data.asNetwork())
         } catch (ignored: Exception) {
             ignored.printStackTrace()
         }
     }
 
-    override suspend fun updateProduct(product: Product) {
+    override suspend fun update(data: Category) {
         try {
-            apiService.updateProduct(product.asNetwork())
+            apiService.updateCategory(category = data.asNetwork())
         } catch (ignored: Exception) {
             ignored.printStackTrace()
         }
     }
 
-    override suspend fun deleteProduct(id: Long) {
+    override suspend fun delete(id: Long) {
         try {
-            apiService.deleteProduct(id)
+            apiService.deleteCategory(id)
         } catch (ignored: Exception) {
             ignored.printStackTrace()
         }
