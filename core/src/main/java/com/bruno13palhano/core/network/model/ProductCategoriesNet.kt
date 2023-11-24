@@ -4,6 +4,6 @@ import com.bruno13palhano.core.model.Category
 import com.squareup.moshi.Json
 
 data class ProductCategoriesNet(
-    @Json val id: Long,
-    @Json val categories: List<Category>
+    @Json(name = "id") val id: Long,
+    @Json(name = "categories") val categories: List<Category>
 )
