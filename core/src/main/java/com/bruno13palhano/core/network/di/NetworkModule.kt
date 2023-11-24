@@ -1,9 +1,10 @@
 package com.bruno13palhano.core.network.di
 
-import com.bruno13palhano.core.network.category.CategoryNetwork
-import com.bruno13palhano.core.network.category.CategoryNetworkRetrofit
-import com.bruno13palhano.core.network.product.ProductNetwork
-import com.bruno13palhano.core.network.product.ProductNetworkRetrofit
+import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.Product
+import com.bruno13palhano.core.network.CrudNetwork
+import com.bruno13palhano.core.network.access.CategoryNetworkRetrofit
+import com.bruno13palhano.core.network.access.ProductNetworkRetrofit
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -12,22 +13,26 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Qualifier
-internal annotation class CategoryNet
+internal annotation class DefaultCategoryNet
 
 @Qualifier
-internal annotation class ProductNet
+internal annotation class DefaultProductNet
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class NetworkModule {
 
-    @CategoryNet
+    @DefaultCategoryNet
     @Singleton
     @Binds
-    abstract fun bindCategoryNetwork(categoryNetwork: CategoryNetworkRetrofit): CategoryNetwork
+    abstract fun bindCategoryNetwork(
+        categoryNetwork: CategoryNetworkRetrofit
+    ): CrudNetwork<Category>
 
-    @ProductNet
+    @DefaultProductNet
     @Singleton
     @Binds
-    abstract fun bindProductNetwork(productNetwork: ProductNetworkRetrofit): ProductNetwork
+    abstract fun bindProductNetwork(
+        productNetwork: ProductNetworkRetrofit
+    ): CrudNetwork<Product>
 }
