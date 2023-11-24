@@ -5,15 +5,15 @@ import com.squareup.moshi.Json
 
 data class CategoryNet(
     @Json(name = "id") val id: Long,
-    @Json(name = "category") val name: String
+    @Json(name = "category") val category: String
 )
 
 internal fun CategoryNet.asExternal() = Category(
     id = id,
-    name = name
+    category = category
 )
 
 internal fun Category.asNetwork() = CategoryNet(
     id = id,
-    name = name
+    category = category
 )

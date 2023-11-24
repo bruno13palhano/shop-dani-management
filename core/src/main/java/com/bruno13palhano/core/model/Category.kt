@@ -7,5 +7,5 @@ package com.bruno13palhano.core.model
  */
 data class Category(
     override val id: Long,
-    val name: String
+    val category: String
 ) : Model(id = id)

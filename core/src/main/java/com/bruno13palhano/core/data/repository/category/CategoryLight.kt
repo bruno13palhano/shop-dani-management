@@ -18,14 +18,14 @@ internal class CategoryLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CategoryData<Category> {
     override suspend fun insert(model: Category): Long {
-        categoryQueries.insert(name = model.name)
+        categoryQueries.insert(name = model.category)
         return categoryQueries.getLastId().executeAsOne()
     }
 
     override suspend fun update(model: Category) {
         categoryQueries.update(
             id = model.id,
-            name = model.name
+            name = model.category
         )
     }
 
@@ -60,6 +60,6 @@ internal class CategoryLight @Inject constructor(
         name: String
     ) = Category(
         id= id,
-        name = name
+        category = name
     )
 }

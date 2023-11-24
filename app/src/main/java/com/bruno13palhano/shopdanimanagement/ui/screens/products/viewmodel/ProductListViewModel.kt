@@ -28,7 +28,7 @@ class ProductListViewModel @Inject constructor(
 ) : ViewModel() {
     val categories = categoryRepository.getAll()
         .map {
-            it.map { category -> category.name }
+            it.map { category -> category.category }
         }
         .stateIn(
             scope = viewModelScope,
@@ -61,7 +61,7 @@ class ProductListViewModel @Inject constructor(
     fun getCategory(id: Long) {
         viewModelScope.launch {
             categoryRepository.getById(id).collect {
-                name = it.name
+                name = it.category
             }
         }
     }

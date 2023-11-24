@@ -24,7 +24,7 @@ class StockOrdersViewModel @Inject constructor(
 ) : ViewModel() {
     val categories = categoryRepository.getAll()
         .map {
-            it.map { category -> category.name}
+            it.map { category -> category.category}
         }
         .stateIn(
             scope = viewModelScope,

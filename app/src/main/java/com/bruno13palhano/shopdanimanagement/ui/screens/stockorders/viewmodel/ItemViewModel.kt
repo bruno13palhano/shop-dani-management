@@ -93,7 +93,7 @@ class ItemViewModel @Inject constructor(
     }
 
     private fun setCategories(categories: List<Category>) =
-        categories.joinToString(", ") { category -> category.name }
+        categories.joinToString(", ") { category -> category.category }
 
     fun insertItems(productId: Long, isOrderedByCustomer: Boolean) {
         viewModelScope.launch {

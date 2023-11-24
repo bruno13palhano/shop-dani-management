@@ -169,7 +169,7 @@ class SaleViewModel @Inject constructor(
     }
 
     private fun setCategories(categories: List<Category>) =
-        categories.joinToString(", ") { category -> category.name }
+        categories.joinToString(", ") { category -> category.category }
 
     //Sets the current customer
     private fun setCustomerChecked(customerId: Long) {

@@ -63,7 +63,7 @@ class ProductViewModel @Inject constructor(
         viewModelScope.launch {
             categoryRepository.getAll()
                 .map {
-                    it.map { category -> CategoryCheck(category.id, category.name, false) }
+                    it.map { category -> CategoryCheck(category.id, category.category, false) }
                 }.collect {
                     allCategories = it
                 }
@@ -96,7 +96,7 @@ class ProductViewModel @Inject constructor(
             .filter { it.isChecked }
             .map { catList.add(Category(it.id, it.category)) }
         this.categories = catList
-        category = this.categories.joinToString(", ") { it.name }
+        category = this.categories.joinToString(", ") { it.category }
     }
 
     fun setCategoryChecked(category: Long) {
@@ -112,7 +112,7 @@ class ProductViewModel @Inject constructor(
         categories = allCategories
             .filter { it.isChecked }
             .map { categoryChecked ->
-                Category(id = categoryChecked.id, name = categoryChecked.category)
+                Category(id = categoryChecked.id, category = categoryChecked.category)
             }
     }
 
@@ -147,7 +147,7 @@ class ProductViewModel @Inject constructor(
                 categories = it.categories
                 company = it.company
                 setCategoriesChecked(it.categories)
-                category = it.categories.joinToString(", ") { category -> category.name }
+                category = it.categories.joinToString(", ") { category -> category.category }
                 setCompanyChecked(it.company)
             }
         }
@@ -196,7 +196,7 @@ class ProductViewModel @Inject constructor(
         date = date,
         categories = allCategories
             .filter { it.isChecked }
-            .map { Category(id = it.id, name = it.category) },
+            .map { Category(id = it.id, category = it.category) },
         company = company,
     )
 }
