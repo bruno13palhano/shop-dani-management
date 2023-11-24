@@ -55,7 +55,7 @@ internal interface Service {
     @GET("deliveries/all")
     suspend fun getAllDeliveries(): List<DeliveryNet>
 
-    @POST("deliveries/update")
+    @PUT("deliveries/update")
     suspend fun updateDelivery(@Body delivery: DeliveryNet)
 
     @DELETE("deliveries/delete/{id}")
