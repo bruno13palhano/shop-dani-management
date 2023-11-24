@@ -50,7 +50,7 @@ class TestStockOrderRepository : StockOrderData<StockOrder> {
             flowOf(
                 stockOrderList.filter { order ->
                     order.isOrderedByCustomer &&
-                            (order.categories.joinToString(", ") { it.name }
+                            (order.categories.joinToString(", ") { it.category }
                                 .contains(category))
                 }
             )
@@ -58,7 +58,7 @@ class TestStockOrderRepository : StockOrderData<StockOrder> {
             flowOf(
                 stockOrderList.filter { item ->
                     !item.isOrderedByCustomer &&
-                            (item.categories.joinToString(", ") { it.name }
+                            (item.categories.joinToString(", ") { it.category }
                                 .contains(category))
                 }
             )

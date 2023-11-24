@@ -220,7 +220,7 @@ class SaleViewModelTest {
 
         assertEquals(product.name, sut.productName)
         assertEquals(product.photo, sut.photo)
-        assertEquals(product.categories.joinToString(", ") { it.name }, sut.category)
+        assertEquals(product.categories.joinToString(", ") { it.category }, sut.category)
         assertEquals(product.company, sut.company)
     }
 
@@ -249,7 +249,7 @@ class SaleViewModelTest {
         assertEquals(item.photo, sut.photo)
         assertEquals(item.purchasePrice.toString(), sut.purchasePrice)
         assertEquals(item.salePrice.toString(), sut.salePrice)
-        assertEquals(item.categories.joinToString(", ") { it.name }, sut.category)
+        assertEquals(item.categories.joinToString(", ") { it.category }, sut.category)
         assertEquals(item.company, sut.company)
         assertEquals(item.quantity, sut.stockQuantity)
     }
@@ -281,7 +281,7 @@ class SaleViewModelTest {
         assertEquals(sale.purchasePrice.toString(), sut.purchasePrice)
         assertEquals(sale.salePrice.toString(), sut.salePrice)
         assertEquals(sale.deliveryPrice.toString(), sut.deliveryPrice)
-        assertEquals(sale.categories.joinToString(", ") { it.name }, sut.category)
+        assertEquals(sale.categories.joinToString(", ") { it.category }, sut.category)
         assertEquals(sale.company, sut.company)
         assertEquals(sale.isPaidByCustomer, sut.isPaidByCustomer)
     }

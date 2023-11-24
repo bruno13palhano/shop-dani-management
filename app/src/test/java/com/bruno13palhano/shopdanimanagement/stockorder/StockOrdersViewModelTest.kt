@@ -60,7 +60,7 @@ class StockOrdersViewModelTest {
         val collectJob = launch { sut.categories.collect() }
         advanceUntilIdle()
 
-        assertEquals(categories.map { it.name }, sut.categories.value)
+        assertEquals(categories.map { it.category }, sut.categories.value)
 
         collectJob.cancel()
     }
@@ -122,7 +122,7 @@ class StockOrdersViewModelTest {
         )
         items.forEach { stockOrderRepository.insert(it) }
         val expectedItem = items[2]
-        val category = expectedItem.categories[0].name
+        val category = expectedItem.categories[0].category
 
         val collectJob = launch { sut.stockList.collect() }
 

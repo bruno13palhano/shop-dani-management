@@ -153,7 +153,7 @@ class ItemViewModelTest {
         assertEquals(product.photo, sut.photo)
         assertEquals(product.company, sut.company)
         assertEquals(product.date, sut.date)
-        assertEquals(product.categories.joinToString(", ") { it.name }, sut.category)
+        assertEquals(product.categories.joinToString(", ") { it.category }, sut.category)
     }
 
     @Test
@@ -170,7 +170,7 @@ class ItemViewModelTest {
         assertEquals(stockOrder.company, sut.company)
         assertEquals(stockOrder.date, sut.date)
         assertEquals(stockOrder.validity, sut.validity)
-        assertEquals(stockOrder.categories.joinToString(", ") { it.name }, sut.category)
+        assertEquals(stockOrder.categories.joinToString(", ") { it.category }, sut.category)
         assertEquals(stockOrder.purchasePrice.toString(), sut.purchasePrice)
         assertEquals(stockOrder.salePrice.toString(), sut.salePrice)
         assertEquals(stockOrder.isPaid, sut.isPaid)

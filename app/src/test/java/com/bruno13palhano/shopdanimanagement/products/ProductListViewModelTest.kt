@@ -49,9 +49,9 @@ class ProductListViewModelTest {
         makeRandomProduct(id = 3L, name = "Homem")
     )
     private var categories = listOf(
-        Category(id = 1L, name = "Perfumes"),
-        Category(id = 2L, name = "Soaps"),
-        Category(id = 3L, name = "Others")
+        Category(id = 1L, category = "Perfumes"),
+        Category(id = 2L, category = "Soaps"),
+        Category(id = 3L, category = "Others")
     )
 
     @Before
@@ -96,7 +96,7 @@ class ProductListViewModelTest {
 
     @Test
     fun getCategory_shouldSetName_ifCategoryExists() = runTest {
-        val name = categories[0].name
+        val name = categories[0].category
         insertCategories()
 
         sut.getCategory(id = 1L)
@@ -111,7 +111,7 @@ class ProductListViewModelTest {
         val collectJob = launch { sut.categories.collect() }
         advanceUntilIdle()
 
-        assertEquals(categories.map { it.name }, sut.categories.value)
+        assertEquals(categories.map { it.category }, sut.categories.value)
         collectJob.cancel()
     }
 
@@ -158,7 +158,7 @@ class ProductListViewModelTest {
     @Test
     fun getProductsByCategory_shouldSetOrderProperty() = runTest {
         insertProducts()
-        val category = products[2].categories[1].name
+        val category = products[2].categories[1].category
         val collectJob = launch { sut.orders.collect() }
 
         sut.getProductsByCategory(category = category)

@@ -12,7 +12,7 @@ class TestCategoryRepository :  CategoryData<Category> {
 
     override fun search(value: String): Flow<List<Category>> {
         return flowOf(categories).map {
-            it.filter { categoryName -> categoryName.name == value }
+            it.filter { categoryName -> categoryName.category == value }
         }
     }
 

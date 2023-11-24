@@ -44,9 +44,9 @@ class ProductViewModelTest {
     private var photo = byteArrayOf()
     private var date: Long = 0L
     private var categories = listOf(
-        Category(id = 1L, name = "Perfumes"),
-        Category(id = 2L, name = "Soaps"),
-        Category(id = 3L, name = "Others")
+        Category(id = 1L, category = "Perfumes"),
+        Category(id = 2L, category = "Soaps"),
+        Category(id = 3L, category = "Others")
     )
     private var company = "Natura"
 
@@ -133,7 +133,7 @@ class ProductViewModelTest {
         advanceUntilIdle()
 
         sut.setCategoryChecked(3L)
-        assertEquals(categories[2].name, sut.category)
+        assertEquals(categories[2].category, sut.category)
     }
 
     @Test

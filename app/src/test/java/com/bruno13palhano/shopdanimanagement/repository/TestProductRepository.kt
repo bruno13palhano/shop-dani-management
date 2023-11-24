@@ -24,7 +24,7 @@ class TestProductRepository : ProductData<Product> {
         return flowOf(productList).map {
             it.filter { product ->
                 product.name == value || product.company == value || product.description == value ||
-                product.categories.joinToString(", ") { category ->  category.name } == value
+                product.categories.joinToString(", ") { category ->  category.category } == value
             }
         }
     }
@@ -42,7 +42,7 @@ class TestProductRepository : ProductData<Product> {
         return flowOf(productList).map {
             it.filter { product ->
                 product.categories.joinToString(", ") { category ->
-                    category.name
+                    category.category
                 }.contains(category)
             }
         }

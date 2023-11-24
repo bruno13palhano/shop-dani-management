@@ -36,9 +36,9 @@ class ProductCategoriesViewModelTest {
     private lateinit var sut: ProductCategoriesViewModel
 
     private var categories = listOf(
-        Category(id = 1L, name = "Perfumes"),
-        Category(id = 2L, name = "Soaps"),
-        Category(id = 3L, name = "Others")
+        Category(id = 1L, category = "Perfumes"),
+        Category(id = 2L, category = "Soaps"),
+        Category(id = 3L, category = "Others")
     )
 
     @Before
