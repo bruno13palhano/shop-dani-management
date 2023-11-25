@@ -1,13 +1,17 @@
 CREATE TABLE CategoryTable (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    timestamp TEXT NOT NULL
 );
 
 insert:
-INSERT INTO CategoryTable(name) VALUES(?);
+INSERT INTO CategoryTable(name, timestamp) VALUES(?, ?);
+
+insertWithId:
+INSERT OR REPLACE INTO CategoryTable(id, name, timestamp) VALUES(?,?,?);
 
 update:
-UPDATE CategoryTable SET name = ? WHERE id = ?;
+UPDATE CategoryTable SET name = ?, timestamp = ? WHERE id = ?;
 
 delete:
 DELETE FROM CategoryTable WHERE id = ?;
