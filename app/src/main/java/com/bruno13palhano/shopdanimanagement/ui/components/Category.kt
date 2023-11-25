@@ -81,7 +81,7 @@ fun CategoriesContent(
             items(categories) { category ->
                 SimpleItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    itemName = category.name,
+                    itemName = category.category,
                     imageVector = Icons.Filled.ArrowForward
                 ) {
                     onItemClick(category.id.toString())
