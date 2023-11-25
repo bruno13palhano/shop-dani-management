@@ -11,6 +11,7 @@ import com.bruno13palhano.core.model.Category
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 internal class CategoryLight @Inject constructor(
@@ -18,14 +19,23 @@ internal class CategoryLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CategoryData<Category> {
     override suspend fun insert(model: Category): Long {
-        categoryQueries.insert(name = model.category)
+        if(model.id == 0L) {
+            categoryQueries.insert(name = model.category, timestamp = model.timestamp.toString())
+        } else {
+            categoryQueries.insertWithId(
+                id = model.id,
+                name = model.category,
+                timestamp = model.timestamp.toString()
+            )
+        }
         return categoryQueries.getLastId().executeAsOne()
     }
 
     override suspend fun update(model: Category) {
         categoryQueries.update(
             id = model.id,
-            name = model.category
+            name = model.category,
+            timestamp = model.timestamp.toString()
         )
     }
 
@@ -57,9 +67,13 @@ internal class CategoryLight @Inject constructor(
 
     private fun mapCategory(
         id: Long,
-        name: String
-    ) = Category(
-        id= id,
-        category = name
-    )
+        name: String,
+        time: String
+    ): Category {
+        return Category(
+            id = id,
+            category = name,
+            timestamp = OffsetDateTime.parse(time)
+        )
+    }
 }
