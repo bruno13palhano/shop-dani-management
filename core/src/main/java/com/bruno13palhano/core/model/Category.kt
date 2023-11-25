@@ -1,5 +1,7 @@
 package com.bruno13palhano.core.model
 
+import java.time.OffsetDateTime
+
 /**
  * Products categories.
  *
@@ -7,5 +9,6 @@ package com.bruno13palhano.core.model
  */
 data class Category(
     override val id: Long,
-    val category: String
+    val category: String,
+    val timestamp: OffsetDateTime
 ) : Model(id = id)
