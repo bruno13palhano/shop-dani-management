@@ -2,6 +2,7 @@ package com.bruno13palhano.core.network.model
 
 import com.bruno13palhano.core.model.Product
 import com.squareup.moshi.Json
+import java.time.OffsetDateTime
 
 data class ProductNet(
     @Json(name = "id") val id: Long,
@@ -10,7 +11,8 @@ data class ProductNet(
     @Json(name = "description") val description: String,
     @Json(name = "photo") val photo: ByteArray,
     @Json(name = "date") val date: Long,
-    @Json(name = "company") val company: String
+    @Json(name = "company") val company: String,
+    @Json(name = "timestamp") val timestamp: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -25,6 +27,7 @@ data class ProductNet(
         if (!photo.contentEquals(other.photo)) return false
         if (date != other.date) return false
         if (company != other.company) return false
+        if (timestamp != other.timestamp) return false
 
         return true
     }
@@ -37,6 +40,7 @@ data class ProductNet(
         result = 31 * result + photo.contentHashCode()
         result = 31 * result + date.hashCode()
         result = 31 * result + company.hashCode()
+        result = 31 * result + timestamp.hashCode()
         return result
     }
 }
@@ -48,7 +52,8 @@ internal fun Product.asNetwork() = ProductNet(
     description = description,
     photo = photo,
     date = date,
-    company = company
+    company = company,
+    timestamp = timestamp.toString()
 )
 
 internal fun ProductNet.asExternal() = Product(
@@ -59,5 +64,6 @@ internal fun ProductNet.asExternal() = Product(
     photo = photo,
     date = date,
     categories = emptyList(),
-    company = company
+    company = company,
+    timestamp = OffsetDateTime.parse(timestamp)
 )

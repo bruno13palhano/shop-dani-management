@@ -1,5 +1,7 @@
 package com.bruno13palhano.core.model
 
+import java.time.OffsetDateTime
+
 /**
 * Product model.
 *
@@ -21,7 +23,8 @@ data class Product(
     val photo: ByteArray,
     val date: Long,
     val categories: List<Category>,
-    val company: String
+    val company: String,
+    val timestamp: OffsetDateTime
 ) : Model(id = id) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -37,6 +40,7 @@ data class Product(
         if (date != other.date) return false
         if (categories != other.categories) return false
         if (company != other.company) return false
+        if (timestamp != other.timestamp) return false
 
         return true
     }
@@ -50,6 +54,7 @@ data class Product(
         result = 31 * result + date.hashCode()
         result = 31 * result + categories.hashCode()
         result = 31 * result + company.hashCode()
+        result = 31 * result + timestamp.hashCode()
         return result
     }
 }
