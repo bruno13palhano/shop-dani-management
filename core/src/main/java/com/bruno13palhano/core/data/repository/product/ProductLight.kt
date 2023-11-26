@@ -13,6 +13,7 @@ import com.bruno13palhano.core.model.Product
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 internal class ProductLight @Inject constructor(
@@ -21,24 +22,41 @@ internal class ProductLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : ProductData<Product> {
     override suspend fun insert(model: Product): Long {
-        productCategoriesQueries.insert(
-            categories = model.categories
-        )
-        productQueries.insert(
-            name = model.name,
-            code = model.code,
-            description = model.description,
-            photo = model.photo,
-            date = model.date,
-            categoryId = productCategoriesQueries.getLastId().executeAsOne(),
-            company = model.company
-        )
+        productCategoriesQueries.transaction {
+            if (model.id == 0L) {
+                productQueries.insert(
+                    name = model.name,
+                    code = model.code,
+                    description = model.description,
+                    photo = model.photo,
+                    date = model.date,
+                    company = model.company,
+                    timestamp = model.timestamp.toString()
+                )
+            } else {
+                productQueries.insertWithId(
+                    id = model.id,
+                    name = model.name,
+                    code = model.code,
+                    description = model.description,
+                    photo = model.photo,
+                    date = model.date,
+                    company = model.company,
+                    timestamp = model.timestamp.toString()
+                )
+            }
+            productCategoriesQueries.insert(
+                productId = productQueries.getLastId().executeAsOne(),
+                categories = model.categories
+            )
+        }
         return productQueries.getLastId().executeAsOne()
     }
 
     override suspend fun update(model: Product) {
         val categoryId = productQueries.getCategoryId(id = model.id).executeAsOne()
         productCategoriesQueries.update(
+            productId = model.id,
             categories = model.categories,
             id = categoryId
         )
@@ -48,9 +66,9 @@ internal class ProductLight @Inject constructor(
             description = model.description,
             photo = model.photo,
             date = model.date,
-            categoryId = categoryId,
             company = model.company,
-            id = model.id
+            id = model.id,
+            timestamp = model.timestamp.toString()
         )
     }
 
@@ -108,6 +126,7 @@ internal class ProductLight @Inject constructor(
         date: Long,
         categories: List<Category>,
         company: String,
+        timestamp: String
     ): Product {
         return Product(
             id = id,
@@ -118,6 +137,7 @@ internal class ProductLight @Inject constructor(
             date = date,
             categories = categories,
             company = company,
+            timestamp = OffsetDateTime.parse(timestamp)
         )
     }
 }
