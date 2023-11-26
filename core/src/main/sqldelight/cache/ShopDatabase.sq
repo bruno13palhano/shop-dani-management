@@ -5,56 +5,59 @@ CREATE TABLE product (
     description TEXT NOT NULL,
     photo BLOB NOT NULL,
     date INTEGER NOT NULL,
-    categoryId INTEGER NOT NULL,
     company TEXT NOT NULL,
-    FOREIGN KEY (categoryId) REFERENCES ProductCategoriesTable(id) ON DELETE CASCADE
+    timestamp TEXT NOT NULL
 );
 
 insert:
-INSERT OR REPLACE INTO product(name, code, description, photo, date, categoryId, company)
+INSERT OR REPLACE INTO product(name, code, description, photo, date, company, timestamp)
 VALUES(?,?,?,?,?,?,?);
+
+insertWithId:
+INSERT OR REPLACE INTO product(id, name, code, description, photo, date, company, timestamp)
+VALUES (?,?,?,?,?,?,?,?);
 
 update:
 UPDATE product SET name = ?, code = ?, description = ?, photo = ?,
-    date = ?, categoryId = ?, company = ? WHERE id = ?;
+    date = ?, company = ?, timestamp = ? WHERE id = ?;
 
 delete:
 DELETE FROM product WHERE id = :productId;
 
 getAll:
-SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
-FROM product P INNER JOIN ProductCategoriesTable PC ON P.categoryId = PC.id;
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
+FROM product P INNER JOIN ProductCategoriesTable PC ON P.id = PC.productId;
 
 getById:
-SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
-FROM product P INNER JOIN ProductCategoriesTable PC ON P.categoryId = PC.id WHERE P.id = :produtId;
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
+FROM product P INNER JOIN ProductCategoriesTable PC ON P.id = PC.productId WHERE P.id = :produtId;
 
 getLast:
-SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
-FROM product P INNER JOIN ProductCategoriesTable PC ON P.categoryId = PC.id
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
+FROM product P INNER JOIN ProductCategoriesTable PC ON P.id = PC.productId
 WHERE P.id = last_insert_rowid();
 
 search:
-SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
 FROM product P INNER JOIN ProductCategoriesTable PC
 ON(PC.categories LIKE '%' || :category || '%' OR P.name LIKE '%' || :name || '%'
     OR P.description LIKE '%' || :description || '%' OR P.company LIKE '%' || :company || '%')
-WHERE P.categoryId = PC.id;
+WHERE P.id = PC.productId;
 
 searchPerCategory:
-SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
 FROM product P INNER JOIN ProductCategoriesTable PC
 ON(P.name LIKE '%' || :name || '%' OR P.description LIKE '%' || :description || '%'
     OR P.company LIKE '%' || :company || '%')
-WHERE P.categoryId = PC.id  AND P.categoryId = :categoryId;
+WHERE P.id = PC.productId  AND PC.id = :categoryId;
 
 getByCategory:
-SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
 FROM product P INNER JOIN ProductCategoriesTable PC ON(PC.categories LIKE '%' || :category || '%')
-WHERE P.categoryId = PC.id;
+WHERE P.id = PC.productId;
 
 getCategoryId:
-SELECT product.categoryId FROM product WHERE id = ?;
+SELECT PC.id FROM product P INNER JOIN ProductCategoriesTable PC WHERE P.id = ?;
 
 getLastId:
 SELECT last_insert_rowid();
