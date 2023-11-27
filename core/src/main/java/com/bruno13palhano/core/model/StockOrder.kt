@@ -1,5 +1,7 @@
 package com.bruno13palhano.core.model
 
+import java.time.OffsetDateTime
+
 data class StockOrder(
     override val id: Long,
     val productId: Long,
@@ -13,7 +15,8 @@ data class StockOrder(
     val purchasePrice: Float,
     val salePrice: Float,
     val isOrderedByCustomer: Boolean,
-    val isPaid: Boolean
+    val isPaid: Boolean,
+    val timestamp: OffsetDateTime
 ) : Model(id = id) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -34,6 +37,7 @@ data class StockOrder(
         if (salePrice != other.salePrice) return false
         if (isOrderedByCustomer != other.isOrderedByCustomer) return false
         if (isPaid != other.isPaid) return false
+        if (timestamp != other.timestamp) return false
 
         return true
     }
@@ -52,6 +56,7 @@ data class StockOrder(
         result = 31 * result + salePrice.hashCode()
         result = 31 * result + isOrderedByCustomer.hashCode()
         result = 31 * result + isPaid.hashCode()
+        result = 31 * result + timestamp.hashCode()
         return result
     }
 }
