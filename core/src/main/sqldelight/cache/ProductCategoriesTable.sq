@@ -14,5 +14,5 @@ INSERT INTO ProductCategoriesTable(productId, categories) VALUES(?,?);
 update:
 UPDATE ProductCategoriesTable SET productId = ?, categories = ? WHERE id = ?;
 
-getLastId:
-SELECT last_insert_rowid();
+getIdByProductId:
+SELECT id FROM ProductCategoriesTable WHERE productId = ?;
