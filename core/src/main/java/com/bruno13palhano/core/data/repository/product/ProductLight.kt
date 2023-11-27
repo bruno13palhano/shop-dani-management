@@ -33,6 +33,10 @@ internal class ProductLight @Inject constructor(
                     company = model.company,
                     timestamp = model.timestamp.toString()
                 )
+                productCategoriesQueries.insert(
+                    productId = productQueries.getLastId().executeAsOne(),
+                    categories = model.categories
+                )
             } else {
                 productQueries.insertWithId(
                     id = model.id,
@@ -44,11 +48,20 @@ internal class ProductLight @Inject constructor(
                     company = model.company,
                     timestamp = model.timestamp.toString()
                 )
+                try {
+                    val categoryId = productCategoriesQueries.getIdByProductId(model.id).executeAsOne()
+                    productCategoriesQueries.update(
+                        id = categoryId,
+                        productId = model.id,
+                        categories = model.categories
+                    )
+                } catch (e: Exception) {
+                    productCategoriesQueries.insert(
+                        productId = model.id,
+                        categories = model.categories
+                    )
+                }
             }
-            productCategoriesQueries.insert(
-                productId = productQueries.getLastId().executeAsOne(),
-                categories = model.categories
-            )
         }
         return productQueries.getLastId().executeAsOne()
     }
