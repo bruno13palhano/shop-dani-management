@@ -12,6 +12,7 @@ import com.bruno13palhano.core.model.StockOrder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 class StockOrderLight @Inject constructor(
@@ -19,16 +20,32 @@ class StockOrderLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : StockOrderData<StockOrder> {
     override suspend fun insert(model: StockOrder): Long {
-        stockOrderQueries.insert(
-            productId = model.productId,
-            date = model.date,
-            validity = model.validity,
-            quantity = model.quantity.toLong(),
-            purchasePrice = model.purchasePrice.toDouble(),
-            salePrice = model.salePrice.toDouble(),
-            isOrderedByCustomer = model.isOrderedByCustomer,
-            isPaid = model.isPaid
-        )
+        if (model.id == 0L) {
+            stockOrderQueries.insert(
+                productId = model.productId,
+                date = model.date,
+                validity = model.validity,
+                quantity = model.quantity.toLong(),
+                purchasePrice = model.purchasePrice.toDouble(),
+                salePrice = model.salePrice.toDouble(),
+                isOrderedByCustomer = model.isOrderedByCustomer,
+                isPaid = model.isPaid,
+                timestamp = model.timestamp.toString()
+            )
+        } else {
+            stockOrderQueries.insertWithId(
+                id = model.id,
+                productId = model.productId,
+                date = model.date,
+                validity = model.validity,
+                quantity = model.quantity.toLong(),
+                purchasePrice = model.purchasePrice.toDouble(),
+                salePrice = model.salePrice.toDouble(),
+                isOrderedByCustomer = model.isOrderedByCustomer,
+                isPaid = model.isPaid,
+                timestamp = model.timestamp.toString()
+            )
+        }
         return stockOrderQueries.lastId().executeAsOne()
     }
 
@@ -42,7 +59,8 @@ class StockOrderLight @Inject constructor(
             purchasePrice = model.purchasePrice.toDouble(),
             salePrice = model.salePrice.toDouble(),
             isOrderedByCustomer = model.isOrderedByCustomer,
-            isPaid = model.isPaid
+            isPaid = model.isPaid,
+            timestamp = model.timestamp.toString()
         )
     }
 
@@ -149,7 +167,8 @@ class StockOrderLight @Inject constructor(
         purchasePrice: Double,
         salePrice: Double,
         isOrderedByCustomer: Boolean,
-        isPaid: Boolean
+        isPaid: Boolean,
+        timestamp: String
     ) = StockOrder(
         id = id,
         productId = productId,
@@ -163,6 +182,7 @@ class StockOrderLight @Inject constructor(
         purchasePrice = purchasePrice.toFloat(),
         salePrice = salePrice.toFloat(),
         isOrderedByCustomer = isOrderedByCustomer,
-        isPaid = isPaid
+        isPaid = isPaid,
+        timestamp = OffsetDateTime.parse(timestamp)
     )
 }
