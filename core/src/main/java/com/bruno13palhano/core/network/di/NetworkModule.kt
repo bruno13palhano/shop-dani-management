@@ -1,19 +1,18 @@
 package com.bruno13palhano.core.network.di
 
-import com.bruno13palhano.core.model.Catalog
-import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Customer
-import com.bruno13palhano.core.model.Delivery
-import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockOrder
-import com.bruno13palhano.core.network.CrudNetwork
+import com.bruno13palhano.core.network.access.CatalogNetwork
 import com.bruno13palhano.core.network.access.CatalogNetworkRetrofit
+import com.bruno13palhano.core.network.access.CategoryNetwork
 import com.bruno13palhano.core.network.access.CategoryNetworkRetrofit
+import com.bruno13palhano.core.network.access.CustomerNetwork
 import com.bruno13palhano.core.network.access.CustomerNetworkRetrofit
+import com.bruno13palhano.core.network.access.DeliveryNetwork
 import com.bruno13palhano.core.network.access.DeliveryNetworkRetrofit
+import com.bruno13palhano.core.network.access.ProductNetwork
 import com.bruno13palhano.core.network.access.ProductNetworkRetrofit
+import com.bruno13palhano.core.network.access.SaleNetwork
 import com.bruno13palhano.core.network.access.SaleNetworkRetrofit
+import com.bruno13palhano.core.network.access.StockOrderNetwork
 import com.bruno13palhano.core.network.access.StockOrderNetworkRetrofit
 import dagger.Binds
 import dagger.Module
@@ -50,43 +49,35 @@ internal abstract class NetworkModule {
     @DefaultCatalogNet
     @Singleton
     @Binds
-    abstract fun bindCatalogNetwork(catalogNetwork: CatalogNetworkRetrofit): CrudNetwork<Catalog>
+    abstract fun bindCatalogNetwork(network: CatalogNetworkRetrofit): CatalogNetwork
 
     @DefaultCategoryNet
     @Singleton
     @Binds
-    abstract fun bindCategoryNetwork(
-        categoryNetwork: CategoryNetworkRetrofit
-    ): CrudNetwork<Category>
+    abstract fun bindCategoryNetwork(network: CategoryNetworkRetrofit): CategoryNetwork
 
     @DefaultCustomerNet
     @Singleton
     @Binds
-    abstract fun bindCustomerNetwork(
-        customerNetwork: CustomerNetworkRetrofit
-    ): CrudNetwork<Customer>
+    abstract fun bindCustomerNetwork(network: CustomerNetworkRetrofit): CustomerNetwork
 
     @DefaultDeliveryNet
     @Singleton
     @Binds
-    abstract fun bindDeliveryNetwork(
-        deliveryNetwork: DeliveryNetworkRetrofit
-    ): CrudNetwork<Delivery>
+    abstract fun bindDeliveryNetwork(network: DeliveryNetworkRetrofit): DeliveryNetwork
 
     @DefaultProductNet
     @Singleton
     @Binds
-    abstract fun bindProductNetwork(productNetwork: ProductNetworkRetrofit): CrudNetwork<Product>
+    abstract fun bindProductNetwork(network: ProductNetworkRetrofit): ProductNetwork
 
     @DefaultSaleNet
     @Singleton
     @Binds
-    abstract fun bindSaleNetwork(saleNetwork: SaleNetworkRetrofit): CrudNetwork<Sale>
+    abstract fun bindSaleNetwork(network: SaleNetworkRetrofit): SaleNetwork
 
     @DefaultStockOrderNet
     @Singleton
     @Binds
-    abstract fun bindStockOrderNetwork(
-        stockOrderNetwork: StockOrderNetworkRetrofit
-    ): CrudNetwork<StockOrder>
+    abstract fun bindStockOrderNetwork(network: StockOrderNetworkRetrofit): StockOrderNetwork
 }
