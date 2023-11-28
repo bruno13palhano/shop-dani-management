@@ -11,6 +11,7 @@ import com.bruno13palhano.core.model.Customer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 internal class CustomerLight @Inject constructor(
@@ -18,13 +19,26 @@ internal class CustomerLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CustomerData<Customer> {
     override suspend fun insert(model: Customer): Long {
-        customerQueries.insert(
-            name = model.name,
-            photo = model.photo,
-            email = model.email,
-            address = model.address,
-            phoneNumber = model.phoneNumber
-        )
+        if (model.id == 0L) {
+            customerQueries.insert(
+                name = model.name,
+                photo = model.photo,
+                email = model.email,
+                address = model.address,
+                phoneNumber = model.phoneNumber,
+                timestamp = model.timestamp.toString()
+            )
+        } else {
+            customerQueries.insertWithId(
+                id = model.id,
+                name = model.name,
+                photo = model.photo,
+                email = model.email,
+                address = model.address,
+                phoneNumber = model.phoneNumber,
+                timestamp = model.timestamp.toString()
+            )
+        }
         return customerQueries.getLastId().executeAsOne()
     }
 
@@ -35,7 +49,8 @@ internal class CustomerLight @Inject constructor(
             photo = model.photo,
             email = model.email,
             address = model.address,
-            phoneNumber = model.phoneNumber
+            phoneNumber = model.phoneNumber,
+            timestamp = model.timestamp.toString()
         )
     }
 
@@ -96,13 +111,15 @@ internal class CustomerLight @Inject constructor(
         photo: ByteArray,
         email: String,
         address: String,
-        phoneNumber: String
+        phoneNumber: String,
+        timestamp: String
     ) = Customer(
         id = id,
         name = name,
         photo = photo,
         email = email,
         address = address,
-        phoneNumber = phoneNumber
+        phoneNumber = phoneNumber,
+        timestamp = OffsetDateTime.parse(timestamp)
     )
 }

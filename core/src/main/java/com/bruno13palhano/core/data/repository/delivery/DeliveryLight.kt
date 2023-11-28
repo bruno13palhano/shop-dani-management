@@ -11,6 +11,7 @@ import com.bruno13palhano.core.model.Delivery
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 class DeliveryLight @Inject constructor(
@@ -18,13 +19,26 @@ class DeliveryLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : DeliveryData<Delivery> {
     override suspend fun insert(model: Delivery): Long {
-        deliveryQueries.insert(
-            saleId = model.saleId,
-            deliveryPrice = model.deliveryPrice.toDouble(),
-            shippingDate = model.shippingDate,
-            deliveryDate = model.deliveryDate,
-            delivered = model.delivered
-        )
+        if (model.id == 0L) {
+            deliveryQueries.insert(
+                saleId = model.saleId,
+                deliveryPrice = model.deliveryPrice.toDouble(),
+                shippingDate = model.shippingDate,
+                deliveryDate = model.deliveryDate,
+                delivered = model.delivered,
+                timestamp = model.timestamp.toString()
+            )
+        } else {
+            deliveryQueries.insertWithId(
+                id = model.id,
+                saleId = model.saleId,
+                deliveryPrice = model.deliveryPrice.toDouble(),
+                shippingDate = model.shippingDate,
+                deliveryDate = model.deliveryDate,
+                delivered = model.delivered,
+                timestamp = model.timestamp.toString()
+            )
+        }
         return deliveryQueries.getLastId().executeAsOne()
     }
 
@@ -35,7 +49,8 @@ class DeliveryLight @Inject constructor(
             deliveryPrice = model.deliveryPrice.toDouble(),
             shippingDate = model.shippingDate,
             deliveryDate = model.deliveryDate,
-            delivered = model.delivered
+            delivered = model.delivered,
+            timestamp = model.timestamp.toString()
         )
     }
 
@@ -97,7 +112,8 @@ class DeliveryLight @Inject constructor(
         deliveryPrice: Double,
         shippingDate: Long,
         deliveryDate: Long,
-        delivered: Boolean
+        delivered: Boolean,
+        timestamp: String
     ) = Delivery(
         id = id,
         saleId = saleId,
@@ -109,6 +125,7 @@ class DeliveryLight @Inject constructor(
         deliveryPrice = deliveryPrice.toFloat(),
         shippingDate = shippingDate,
         deliveryDate = deliveryDate,
-        delivered = delivered
+        delivered = delivered,
+        timestamp = OffsetDateTime.parse(timestamp)
     )
 }
