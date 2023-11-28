@@ -1,5 +1,7 @@
 package com.bruno13palhano.core.model
 
+import java.time.OffsetDateTime
+
 data class Customer(
     override val id: Long,
     val name: String,
@@ -7,6 +9,7 @@ data class Customer(
     val email: String,
     val address: String,
     val phoneNumber: String,
+    val timestamp: OffsetDateTime
 ) : Model(id = id) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -20,6 +23,7 @@ data class Customer(
         if (email != other.email) return false
         if (address != other.address) return false
         if (phoneNumber != other.phoneNumber) return false
+        if (timestamp != other.timestamp) return false
 
         return true
     }
@@ -31,6 +35,7 @@ data class Customer(
         result = 31 * result + email.hashCode()
         result = 31 * result + address.hashCode()
         result = 31 * result + phoneNumber.hashCode()
+        result = 31 * result + timestamp.hashCode()
         return result
     }
 }
