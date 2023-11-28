@@ -2,6 +2,7 @@ package com.bruno13palhano.core.network.model
 
 import com.bruno13palhano.core.model.Sale
 import com.squareup.moshi.Json
+import java.time.OffsetDateTime
 
 data class SaleNet (
     @Json(name = "id") val id: Long,
@@ -12,10 +13,11 @@ data class SaleNet (
     @Json(name = "purchasePrice") val purchasePrice: Float,
     @Json(name = "salePrice") val salePrice: Float,
     @Json(name = "dateOfSale") val dateOfSale: Long,
-    @Json(name = "sateOfPayment") val dateOfPayment: Long,
+    @Json(name = "dateOfPayment") val dateOfPayment: Long,
     @Json(name = "isOrderedByCustomer") val isOrderedByCustomer: Boolean,
     @Json(name = "isPaidByCustomer") val isPaidByCustomer: Boolean,
-    @Json(name = "canceled") val canceled: Boolean
+    @Json(name = "canceled") val canceled: Boolean,
+    @Json(name = "timestamp") val timestamp: String
 )
 
 internal fun SaleNet.asExternal() = Sale(
@@ -36,7 +38,8 @@ internal fun SaleNet.asExternal() = Sale(
     dateOfPayment = dateOfPayment,
     isOrderedByCustomer = isOrderedByCustomer,
     isPaidByCustomer = isPaidByCustomer,
-    canceled = canceled
+    canceled = canceled,
+    timestamp = OffsetDateTime.parse(timestamp)
 )
 
 internal fun Sale.asNetwork() = SaleNet(
@@ -51,5 +54,6 @@ internal fun Sale.asNetwork() = SaleNet(
     dateOfPayment = dateOfPayment,
     isOrderedByCustomer = isOrderedByCustomer,
     isPaidByCustomer = isPaidByCustomer,
-    canceled = canceled
+    canceled = canceled,
+    timestamp = timestamp.toString()
 )
