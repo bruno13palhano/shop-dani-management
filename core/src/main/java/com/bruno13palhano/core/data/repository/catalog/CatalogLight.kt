@@ -8,6 +8,7 @@ import com.bruno13palhano.core.data.CatalogData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Catalog
+import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,14 +20,26 @@ internal class CatalogLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CatalogData<Catalog> {
     override suspend fun insert(model: Catalog): Long {
-        catalogQueries.insert(
-            productId = model.productId,
-            title = model.title,
-            description = model.description,
-            discount = model.discount,
-            price = model.price.toDouble(),
-            timestamp = model.timestamp.toString()
-        )
+        if (model.isNew()) {
+            catalogQueries.insert(
+                productId = model.productId,
+                title = model.title,
+                description = model.description,
+                discount = model.discount,
+                price = model.price.toDouble(),
+                timestamp = model.timestamp.toString()
+            )
+        } else {
+            catalogQueries.insertWithId(
+                id = model.id,
+                productId = model.productId,
+                title = model.title,
+                description = model.description,
+                discount = model.discount,
+                price = model.price.toDouble(),
+                timestamp = model.timestamp.toString()
+            )
+        }
 
         return catalogQueries.getLastId().executeAsOne()
     }
