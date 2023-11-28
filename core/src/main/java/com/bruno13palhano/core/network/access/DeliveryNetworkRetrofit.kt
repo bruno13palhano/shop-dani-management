@@ -1,7 +1,6 @@
 package com.bruno13palhano.core.network.access
 
 import com.bruno13palhano.core.model.Delivery
-import com.bruno13palhano.core.network.CrudNetwork
 import com.bruno13palhano.core.network.Service
 import com.bruno13palhano.core.network.model.asExternal
 import com.bruno13palhano.core.network.model.asNetwork
@@ -9,7 +8,7 @@ import javax.inject.Inject
 
 internal class DeliveryNetworkRetrofit @Inject constructor(
     private val apiService: Service
-) : CrudNetwork<Delivery> {
+) : DeliveryNetwork {
     override suspend fun getAll(): List<Delivery> {
         return try {
             apiService.getAllDeliveries().map { it.asExternal() }

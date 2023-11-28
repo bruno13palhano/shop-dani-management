@@ -1,7 +1,6 @@
 package com.bruno13palhano.core.network.access
 
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.network.CrudNetwork
 import com.bruno13palhano.core.network.Service
 import com.bruno13palhano.core.network.model.asExternal
 import com.bruno13palhano.core.network.model.asNetwork
@@ -9,7 +8,7 @@ import javax.inject.Inject
 
 internal class CategoryNetworkRetrofit @Inject constructor(
     private val apiService: Service
-): CrudNetwork<Category> {
+): CategoryNetwork {
     override suspend fun getAll(): List<Category> {
         return try {
             apiService.getAllCategories().map { it.asExternal() }

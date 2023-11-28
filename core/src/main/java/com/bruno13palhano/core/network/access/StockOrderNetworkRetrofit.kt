@@ -1,7 +1,6 @@
 package com.bruno13palhano.core.network.access
 
 import com.bruno13palhano.core.model.StockOrder
-import com.bruno13palhano.core.network.CrudNetwork
 import com.bruno13palhano.core.network.Service
 import com.bruno13palhano.core.network.model.asExternal
 import com.bruno13palhano.core.network.model.asNetwork
@@ -9,7 +8,7 @@ import javax.inject.Inject
 
 internal class StockOrderNetworkRetrofit @Inject constructor(
     private val apiService: Service
-) : CrudNetwork<StockOrder> {
+) : StockOrderNetwork {
     override suspend fun getAll(): List<StockOrder> {
         return try {
             apiService.getAllItems().map { it.asExternal() }
