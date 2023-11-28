@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.network
+package com.bruno13palhano.core.network.access
 
 interface CrudNetwork<T> {
     suspend fun getAll(): List<T>
