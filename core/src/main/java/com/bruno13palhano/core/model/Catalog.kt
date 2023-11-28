@@ -1,5 +1,7 @@
 package com.bruno13palhano.core.model
 
+import java.time.OffsetDateTime
+
 data class Catalog(
     override val id: Long,
     val productId: Long,
@@ -8,7 +10,8 @@ data class Catalog(
     val title: String,
     val description: String,
     val discount: Long,
-    val price: Float
+    val price: Float,
+    val timestamp: OffsetDateTime
 ) : Model(id = id) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -24,6 +27,7 @@ data class Catalog(
         if (description != other.description) return false
         if (discount != other.discount) return false
         if (price != other.price) return false
+        if (timestamp != other.timestamp) return false
 
         return true
     }
@@ -37,6 +41,7 @@ data class Catalog(
         result = 31 * result + description.hashCode()
         result = 31 * result + discount.hashCode()
         result = 31 * result + price.hashCode()
+        result = 31 * result + timestamp.hashCode()
         return result
     }
 }

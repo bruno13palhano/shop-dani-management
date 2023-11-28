@@ -2,6 +2,7 @@ package com.bruno13palhano.core.network.model
 
 import com.bruno13palhano.core.model.Catalog
 import com.squareup.moshi.Json
+import java.time.OffsetDateTime
 
 data class CatalogNet(
     @Json(name = "id") val id: Long,
@@ -9,7 +10,8 @@ data class CatalogNet(
     @Json(name = "title") val title: String,
     @Json(name = "description") val description: String,
     @Json(name = "discount") val discount: Long,
-    @Json(name = "price") val price: Float
+    @Json(name = "price") val price: Float,
+    @Json(name = "timestamp") val timestamp: String
 )
 
 internal fun CatalogNet.asExternal() = Catalog(
@@ -20,7 +22,8 @@ internal fun CatalogNet.asExternal() = Catalog(
     title = title,
     description = description,
     discount = discount,
-    price = price
+    price = price,
+    timestamp = OffsetDateTime.parse(timestamp)
 )
 
 internal fun Catalog.asNetwork() = CatalogNet(
@@ -29,5 +32,6 @@ internal fun Catalog.asNetwork() = CatalogNet(
     title = title,
     description = description,
     discount = discount,
-    price = price
+    price = price,
+    timestamp = timestamp.toString()
 )
