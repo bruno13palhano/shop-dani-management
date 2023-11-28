@@ -13,6 +13,7 @@ import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -26,7 +27,7 @@ internal class SaleLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleData<Sale> {
     override suspend fun insert(model: Sale): Long {
-        if (model.id == 0L) {
+        if (model.isNew()) {
             saleQueries.insert(
                 productId = model.productId,
                 customerId = model.customerId,
@@ -100,7 +101,7 @@ internal class SaleLight @Inject constructor(
         onSuccess: () -> Unit,
         onError: () -> Unit
     ) {
-        if (sale.id == 0L) {
+        if (sale.isNew()) {
             if (sale.isOrderedByCustomer) {
                 saleQueries.transaction {
                     saleQueries.insert(

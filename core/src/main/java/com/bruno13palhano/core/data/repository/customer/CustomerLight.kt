@@ -8,6 +8,7 @@ import com.bruno13palhano.core.data.CustomerData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,7 +20,7 @@ internal class CustomerLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CustomerData<Customer> {
     override suspend fun insert(model: Customer): Long {
-        if (model.id == 0L) {
+        if (model.isNew()) {
             customerQueries.insert(
                 name = model.name,
                 photo = model.photo,

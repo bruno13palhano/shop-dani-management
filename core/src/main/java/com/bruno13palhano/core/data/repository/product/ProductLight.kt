@@ -10,6 +10,7 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
+import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -23,7 +24,7 @@ internal class ProductLight @Inject constructor(
 ) : ProductData<Product> {
     override suspend fun insert(model: Product): Long {
         productCategoriesQueries.transaction {
-            if (model.id == 0L) {
+            if (model.isNew()) {
                 productQueries.insert(
                     name = model.name,
                     code = model.code,

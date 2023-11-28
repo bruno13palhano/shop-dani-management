@@ -8,6 +8,7 @@ import com.bruno13palhano.core.data.CategoryData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,7 +20,7 @@ internal class CategoryLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CategoryData<Category> {
     override suspend fun insert(model: Category): Long {
-        if(model.id == 0L) {
+        if(model.isNew()) {
             categoryQueries.insert(name = model.category, timestamp = model.timestamp.toString())
         } else {
             categoryQueries.insertWithId(

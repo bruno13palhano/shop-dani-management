@@ -8,6 +8,7 @@ import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Delivery
+import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,7 +20,7 @@ class DeliveryLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : DeliveryData<Delivery> {
     override suspend fun insert(model: Delivery): Long {
-        if (model.id == 0L) {
+        if (model.isNew()) {
             deliveryQueries.insert(
                 saleId = model.saleId,
                 deliveryPrice = model.deliveryPrice.toDouble(),

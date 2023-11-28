@@ -9,6 +9,7 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -20,7 +21,7 @@ class StockOrderLight @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : StockOrderData<StockOrder> {
     override suspend fun insert(model: StockOrder): Long {
-        if (model.id == 0L) {
+        if (model.isNew()) {
             stockOrderQueries.insert(
                 productId = model.productId,
                 date = model.date,
