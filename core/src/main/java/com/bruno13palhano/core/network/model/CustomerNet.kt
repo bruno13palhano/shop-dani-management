@@ -2,14 +2,17 @@ package com.bruno13palhano.core.network.model
 
 import com.bruno13palhano.core.model.Customer
 import com.squareup.moshi.Json
+import java.time.OffsetDateTime
+import java.util.Base64
 
 data class CustomerNet(
     @Json(name = "id") val id: Long,
     @Json(name = "name") val name: String,
-    @Json(name = "photo") val photo: ByteArray,
+    @Json(name = "photo") val photo: String,
     @Json(name = "email") val email: String,
     @Json(name = "address") val address: String,
-    @Json(name = "phoneNumber") val phoneNumber: String
+    @Json(name = "phoneNumber") val phoneNumber: String,
+    @Json(name = "timestamp") val timestamp: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -19,10 +22,11 @@ data class CustomerNet(
 
         if (id != other.id) return false
         if (name != other.name) return false
-        if (!photo.contentEquals(other.photo)) return false
+        if (photo != other.photo) return false
         if (email != other.email) return false
         if (address != other.address) return false
         if (phoneNumber != other.phoneNumber) return false
+        if (timestamp != other.timestamp) return false
 
         return true
     }
@@ -30,10 +34,11 @@ data class CustomerNet(
     override fun hashCode(): Int {
         var result = id.hashCode()
         result = 31 * result + name.hashCode()
-        result = 31 * result + photo.contentHashCode()
+        result = 31 * result + photo.hashCode()
         result = 31 * result + email.hashCode()
         result = 31 * result + address.hashCode()
         result = 31 * result + phoneNumber.hashCode()
+        result = 31 * result + timestamp.hashCode()
         return result
     }
 }
@@ -41,17 +46,19 @@ data class CustomerNet(
 internal fun CustomerNet.asExternal() = Customer(
     id = id,
     name = name,
-    photo = photo,
+    photo = Base64.getDecoder().decode(photo),
     email = email,
     address = address,
-    phoneNumber = phoneNumber
+    phoneNumber = phoneNumber,
+    timestamp = OffsetDateTime.parse(timestamp)
 )
 
 internal fun Customer.asNetwork() = CustomerNet(
     id = id,
     name = name,
-    photo = photo,
+    photo = Base64.getEncoder().encodeToString(photo),
     email = email,
     address = address,
-    phoneNumber = phoneNumber
+    phoneNumber = phoneNumber,
+    timestamp = timestamp.toString()
 )
