@@ -11,6 +11,7 @@ import com.bruno13palhano.core.model.Catalog
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 internal class CatalogLight @Inject constructor(
@@ -23,7 +24,8 @@ internal class CatalogLight @Inject constructor(
             title = model.title,
             description = model.description,
             discount = model.discount,
-            price = model.price.toDouble()
+            price = model.price.toDouble(),
+            timestamp = model.timestamp.toString()
         )
 
         return catalogQueries.getLastId().executeAsOne()
@@ -35,7 +37,8 @@ internal class CatalogLight @Inject constructor(
             description = model.description,
             discount = model.discount,
             price = model.price.toDouble(),
-            id = model.id
+            id = model.id,
+            timestamp = model.timestamp.toString()
         )
     }
 
@@ -88,7 +91,8 @@ internal class CatalogLight @Inject constructor(
         title: String,
         description: String,
         discount: Long,
-        price: Double
+        price: Double,
+        timestamp: String
     ) = Catalog(
         id = id,
         productId = productId,
@@ -97,6 +101,7 @@ internal class CatalogLight @Inject constructor(
         title = title,
         description = description,
         discount = discount,
-        price = price.toFloat()
+        price = price.toFloat(),
+        timestamp = OffsetDateTime.parse(timestamp)
     )
 }
