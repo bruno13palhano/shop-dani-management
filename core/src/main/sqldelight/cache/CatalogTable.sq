@@ -5,45 +5,51 @@ CREATE TABLE CatalogTable (
     description TEXT NOT NULL,
     discount INTEGER NOT NULL,
     price REAL NOT NULL,
+    timestamp TEXT NOT NULL,
     FOREIGN KEY (productId) REFERENCES product(id) ON DELETE CASCADE
 );
 
 insert:
-INSERT OR REPLACE INTO CatalogTable(productId, title, description, discount, price)
-VALUES(?,?,?,?,?);
+INSERT INTO CatalogTable(productId, title, description, discount, price, timestamp)
+VALUES(?,?,?,?,?, ?);
+
+insertWithId:
+INSERT OR REPLACE INTO CatalogTable(id, productId, title, description, discount, price, timestamp)
+VALUES(?,?,?,?,?,?,?);
 
 update:
-UPDATE CatalogTable SET title = ?, description = ?, discount = ?, price = ? WHERE id = ?;
+UPDATE CatalogTable SET title = ?, description = ?, discount = ?, price = ?, timestamp = ?
+WHERE id = ?;
 
 delete:
 DELETE FROM CatalogTable WHERE id = ?;
 
 getAll:
-SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price, C.timestamp
 FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId);
 
 getByNameDesc:
-SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price, C.timestamp
 FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) ORDER BY P.name DESC;
 
 getByNameAsc:
-SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price, C.timestamp
 FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) ORDER BY P.name ASC;
 
 getByPriceDesc:
-SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price, C.timestamp
 FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) ORDER BY C.price DESC;
 
 getByPriceAsc:
-SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price, C.timestamp
 FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) ORDER BY C.price ASC;
 
 getById:
-SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price, C.timestamp
 FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) WHERE C.id = ?;
 
 getLast:
-SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price
+SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price, C.timestamp
 FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) WHERE C.id = last_insert_rowid();
 
 getLastId:
