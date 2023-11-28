@@ -1,15 +1,24 @@
 package com.bruno13palhano.core.data.repository.sale
 
 import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalSaleLight
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.network.access.SaleNetwork
+import com.bruno13palhano.core.network.di.DefaultSaleNet
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class SaleRepository @Inject constructor(
-    @InternalSaleLight private val saleData: SaleData<Sale>
+    @DefaultSaleNet private val saleNetwork: SaleNetwork,
+    @InternalSaleLight private val saleData: SaleData<Sale>,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleData<Sale> {
     override suspend fun insert(model: Sale): Long {
         return saleData.insert(model = model)
@@ -30,6 +39,9 @@ internal class SaleRepository @Inject constructor(
         onSuccess: () -> Unit,
         onError: () -> Unit
     ) {
+        CoroutineScope(ioDispatcher).launch {
+            saleNetwork.insertItems(sale, stockOrder, delivery)
+        }
         saleData.insertItems(
             sale = sale,
             stockOrder = stockOrder,
@@ -60,6 +72,9 @@ internal class SaleRepository @Inject constructor(
     }
 
     override fun getAll(): Flow<List<Sale>> {
+        CoroutineScope(ioDispatcher).launch {
+            saleNetwork.getAll().forEach { saleData.insert(it) }
+        }
         return saleData.getAll()
     }
 

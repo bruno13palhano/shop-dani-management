@@ -1,15 +1,27 @@
 package com.bruno13palhano.core.data.repository.customer
 
 import com.bruno13palhano.core.data.CustomerData
+import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalCustomerLight
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.network.access.CustomerNetwork
+import com.bruno13palhano.core.network.di.DefaultCustomerNet
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class CustomerRepository @Inject constructor(
-    @InternalCustomerLight private val customerData: CustomerData<Customer>
+    @DefaultCustomerNet private val customerNet: CustomerNetwork,
+    @InternalCustomerLight private val customerData: CustomerData<Customer>,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CustomerData<Customer> {
     override suspend fun insert(model: Customer): Long {
+        CoroutineScope(ioDispatcher).launch {
+            customerNet.insert(model)
+        }
         return customerData.insert(model = model)
     }
 
@@ -22,6 +34,9 @@ internal class CustomerRepository @Inject constructor(
     }
 
     override fun getAll(): Flow<List<Customer>> {
+        CoroutineScope(ioDispatcher).launch {
+            customerNet.getAll().forEach { customerData.insert(it) }
+        }
         return customerData.getAll()
     }
 

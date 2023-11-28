@@ -1,9 +1,10 @@
-package com.bruno13palhano.core.network.access
+package com.bruno13palhano.core.network.access.impl
 
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.core.network.Service
+import com.bruno13palhano.core.network.access.SaleNetwork
 import com.bruno13palhano.core.network.model.SaleItemsNet
 import com.bruno13palhano.core.network.model.asExternal
 import com.bruno13palhano.core.network.model.asNetwork

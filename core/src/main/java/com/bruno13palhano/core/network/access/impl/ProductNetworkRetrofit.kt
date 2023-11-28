@@ -1,7 +1,8 @@
-package com.bruno13palhano.core.network.access
+package com.bruno13palhano.core.network.access.impl
 
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.network.Service
+import com.bruno13palhano.core.network.access.ProductNetwork
 import com.bruno13palhano.core.network.model.asExternal
 import com.bruno13palhano.core.network.model.asNetwork
 import javax.inject.Inject

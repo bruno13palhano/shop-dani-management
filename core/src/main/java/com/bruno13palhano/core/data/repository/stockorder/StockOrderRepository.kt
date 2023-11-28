@@ -1,15 +1,27 @@
 package com.bruno13palhano.core.data.repository.stockorder
 
 import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalStockOrderLight
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.network.access.StockOrderNetwork
+import com.bruno13palhano.core.network.di.DefaultStockOrderNet
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class StockOrderRepository @Inject constructor(
+    @DefaultStockOrderNet private val stockOrderNetwork: StockOrderNetwork,
     @InternalStockOrderLight private val stockOrderData: StockOrderData<StockOrder>,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : StockOrderData<StockOrder> {
     override suspend fun insert(model: StockOrder): Long {
+        CoroutineScope(ioDispatcher).launch {
+            stockOrderNetwork.insert(model)
+        }
         return stockOrderData.insert(model = model)
     }
 
@@ -44,6 +56,12 @@ internal class StockOrderRepository @Inject constructor(
     }
 
     override fun getAll(): Flow<List<StockOrder>> {
+        CoroutineScope(ioDispatcher).launch {
+            stockOrderNetwork.getAll().forEach {
+                println("item: id: ${it.id}, name: ${it.name}, categories: ${it.categories}")
+                stockOrderData.insert(it)
+            }
+        }
         return stockOrderData.getAll()
     }
 
