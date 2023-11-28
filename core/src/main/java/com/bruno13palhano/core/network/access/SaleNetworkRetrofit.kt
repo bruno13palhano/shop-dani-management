@@ -1,15 +1,17 @@
 package com.bruno13palhano.core.network.access
 
+import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.network.CrudNetwork
+import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.core.network.Service
+import com.bruno13palhano.core.network.model.SaleItemsNet
 import com.bruno13palhano.core.network.model.asExternal
 import com.bruno13palhano.core.network.model.asNetwork
 import javax.inject.Inject
 
 internal class SaleNetworkRetrofit @Inject constructor(
     private val apiService: Service
-) : CrudNetwork<Sale> {
+) : SaleNetwork {
     override suspend fun getAll(): List<Sale> {
         return try {
             apiService.getAllSales().map { it.asExternal() }
@@ -36,8 +38,14 @@ internal class SaleNetworkRetrofit @Inject constructor(
     }
 
     override suspend fun insert(data: Sale) {
+
+    }
+
+    override suspend fun insertItems(sale: Sale, stockOrder: StockOrder, delivery: Delivery) {
         try {
-            apiService.insertSale(data.asNetwork())
+            val saleItemsNet = SaleItemsNet(sale.asNetwork(), stockOrder.asNetwork(), delivery.asNetwork())
+
+            apiService.insertSale(saleItemsNet)
         } catch (ignored: Exception) {
             ignored.printStackTrace()
         }
