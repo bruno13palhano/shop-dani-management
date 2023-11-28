@@ -6,16 +6,22 @@ CREATE TABLE DeliveryTable (
     deliveryPrice REAL NOT NULL,
     shippingDate INTEGER NOT NULL,
     deliveryDate INTEGER NOT NULL,
-    delivered INTEGER AS Boolean NOT NULL
+    delivered INTEGER AS Boolean NOT NULL,
+    timestamp TEXT NOT NULL
 );
 
 insert:
-INSERT INTO DeliveryTable(saleId, deliveryPrice, shippingDate, deliveryDate, delivered)
-VALUES(?,?,?,?,?);
+INSERT INTO DeliveryTable(saleId, deliveryPrice, shippingDate, deliveryDate, delivered, timestamp)
+VALUES(?,?,?,?,?, ?);
+
+insertWithId:
+INSERT OR REPLACE INTO DeliveryTable(id, saleId, deliveryPrice, shippingDate, deliveryDate,
+    delivered, timestamp)
+VALUES (?,?,?,?,?,?,?);
 
 update:
 UPDATE DeliveryTable SET saleId = ?, deliveryPrice = ?, shippingDate = ?, deliveryDate = ?,
-    delivered = ?
+    delivered = ?, timestamp = ?
 WHERE id = ?;
 
 delete:
@@ -26,19 +32,19 @@ DELETE FROM DeliveryTable WHERE saleId = ?;
 
 getAll:
 SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.deliveryPrice,
-    D.shippingDate, D.deliveryDate, D.delivered
+    D.shippingDate, D.deliveryDate, D.delivered, D.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D INNER JOIN CustomerTable C
 ON(P.id = S.productId AND D.saleId = S.id AND C.id = S.customerId AND S.canceled = 0);
 
 getById:
 SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.deliveryPrice,
-    D.shippingDate, D.deliveryDate, D.delivered
+    D.shippingDate, D.deliveryDate, D.delivered, D.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D INNER JOIN CustomerTable C
 ON(P.id = S.productId AND D.saleId = S.id AND C.id = S.customerId) WHERE D.id = ?;
 
 getLast:
 SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.deliveryPrice,
-    D.shippingDate, D.deliveryDate, D.delivered
+    D.shippingDate, D.deliveryDate, D.delivered, D.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D INNER JOIN CustomerTable C
 WHERE D.id = last_insert_rowid();
 
@@ -56,14 +62,14 @@ UPDATE DeliveryTable SET delivered = ? WHERE id = ?;
 
 getDeliveries:
 SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.deliveryPrice,
-    D.shippingDate, D.deliveryDate, D.delivered
+    D.shippingDate, D.deliveryDate, D.delivered, D.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D INNER JOIN CustomerTable C
 ON(P.id = S.productId AND D.saleId = S.id AND C.id = S.customerId AND S.canceled = 0)
 WHERE delivered = :delivered;
 
 getCanceledDeliveries:
 SELECT D.id, S.id, C.name, C.address, C.phoneNumber, P.name, S.salePrice, D.deliveryPrice,
-    D.shippingDate, D.deliveryDate, D.delivered
+    D.shippingDate, D.deliveryDate, D.delivered, D.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN DeliveryTable D INNER JOIN CustomerTable C
 ON(P.id = S.productId AND D.saleId = S.id AND C.id = S.customerId AND S.canceled = 1);
 
