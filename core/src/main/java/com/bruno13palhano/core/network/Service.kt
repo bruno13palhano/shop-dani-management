@@ -3,6 +3,7 @@ package com.bruno13palhano.core.network
 import com.bruno13palhano.core.network.model.CatalogNet
 import com.bruno13palhano.core.network.model.CategoryNet
 import com.bruno13palhano.core.network.model.CustomerNet
+import com.bruno13palhano.core.network.model.DataVersionNet
 import com.bruno13palhano.core.network.model.DeliveryNet
 import com.bruno13palhano.core.network.model.ProductNet
 import com.bruno13palhano.core.network.model.SaleItemsNet
@@ -97,4 +98,16 @@ internal interface Service {
 
     @DELETE("items/delete/{id}")
     suspend fun deleteItem(@Path("id") id: Long)
+
+    @GET("version/all")
+    suspend fun getVersion(): List<DataVersionNet>
+
+    @POST("version/insert")
+    suspend fun insertVersion(@Body version: DataVersionNet)
+
+    @PUT("version/update")
+    suspend fun updateVersion(@Body version: DataVersionNet)
+
+    @DELETE("version/delete/{id}")
+    suspend fun deleteVersion(@Path("id") id: Long)
 }
