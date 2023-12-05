@@ -8,6 +8,7 @@ import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.SaleData
 import com.bruno13palhano.core.data.SearchCacheData
 import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.VersionData
 import com.bruno13palhano.core.data.repository.catalog.CatalogLight
 import com.bruno13palhano.core.data.repository.category.CategoryLight
 import com.bruno13palhano.core.data.repository.customer.CustomerLight
@@ -16,9 +17,11 @@ import com.bruno13palhano.core.data.repository.product.ProductLight
 import com.bruno13palhano.core.data.repository.sale.SaleLight
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheLight
 import com.bruno13palhano.core.data.repository.stockorder.StockOrderLight
+import com.bruno13palhano.core.data.repository.version.VersionLight
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
@@ -54,6 +57,9 @@ internal annotation class InternalStockOrderLight
 
 @Qualifier
 internal annotation class InternalCatalogLight
+
+@Qualifier
+internal annotation class InternalVersionLight
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -104,4 +110,11 @@ internal abstract class InternalDataModule {
     abstract fun bindInternalCatalogLight(
         repository: CatalogLight
     ): CatalogData<Catalog>
+
+    @InternalVersionLight
+    @Singleton
+    @Binds
+    abstract fun bindInternalVersionLight(
+        repository: VersionLight
+    ): VersionData<DataVersion>
 }
