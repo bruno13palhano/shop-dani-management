@@ -9,8 +9,8 @@ data class Customer(
     val email: String,
     val address: String,
     val phoneNumber: String,
-    val timestamp: OffsetDateTime
-) : Model(id = id) {
+    override val timestamp: OffsetDateTime
+) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

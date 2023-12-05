@@ -10,5 +10,5 @@ import java.time.OffsetDateTime
 data class Category(
     override val id: Long,
     val category: String,
-    val timestamp: OffsetDateTime
-) : Model(id = id)
+    override val timestamp: OffsetDateTime
+) : Model(id = id, timestamp = timestamp)

@@ -11,8 +11,8 @@ data class Catalog(
     val description: String,
     val discount: Long,
     val price: Float,
-    val timestamp: OffsetDateTime
-) : Model(id = id) {
+    override val timestamp: OffsetDateTime
+) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
