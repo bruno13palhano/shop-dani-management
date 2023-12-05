@@ -1,0 +1,20 @@
+CREATE TABLE VersionTable (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    timestamp TEXT NOT NULL
+);
+
+insert:
+INSERT INTO VersionTable(name, timestamp) VALUES(?,?);
+
+insertWithId:
+INSERT OR REPLACE INTO VersionTable(id, name, timestamp) VALUES(?,?,?);
+
+update:
+UPDATE VersionTable SET name = ?, timestamp = ? WHERE id = ?;
+
+getVersion:
+SELECT VersionTable.* FROM VersionTable WHERE id = ?;
+
+getAll:
+SELECT VersionTable.* FROM VersionTable;
