@@ -10,6 +10,7 @@ import cache.SaleTableQueries
 import cache.SearchCacheTableQueries
 import cache.ShopDatabaseQueries
 import cache.StockOrderTableQueries
+import cache.VersionTableQueries
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.database.DatabaseFactory
 import com.bruno13palhano.core.data.database.DriverFactory
@@ -83,4 +84,10 @@ internal object DatabaseModule {
     fun provideCatalogTable(
         database: ShopDatabase
     ): CatalogTableQueries = database.catalogTableQueries
+
+    @Provides
+    @Singleton
+    fun provideVersionTable(
+        database: ShopDatabase
+    ): VersionTableQueries = database.versionTableQueries
 }
