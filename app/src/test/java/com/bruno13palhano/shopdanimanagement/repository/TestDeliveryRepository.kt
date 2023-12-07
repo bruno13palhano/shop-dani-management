@@ -1,11 +1,11 @@
 package com.bruno13palhano.shopdanimanagement.repository
 
-import com.bruno13palhano.core.data.DeliveryData
+import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
 import com.bruno13palhano.core.model.Delivery
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class TestDeliveryRepository : DeliveryData<Delivery> {
+class TestDeliveryRepository : DeliveryRepository<Delivery> {
     private val deliveries = mutableListOf<Delivery>()
 
     override suspend fun insert(model: Delivery): Long {

@@ -1,11 +1,11 @@
 package com.bruno13palhano.shopdanimanagement.repository
 
-import com.bruno13palhano.core.data.SearchCacheData
+import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.model.SearchCache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class TestSearchCacheRepository : SearchCacheData<SearchCache> {
+class TestSearchCacheRepository : SearchCacheRepository<SearchCache> {
     private val searchCacheList = mutableListOf<SearchCache>()
 
     override suspend fun insert(model: SearchCache): Long {

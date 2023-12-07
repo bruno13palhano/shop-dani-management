@@ -2,7 +2,7 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CustomerData
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CustomersViewModel @Inject constructor(
-    @CustomerRep private val customersRepository: CustomerData<Customer>
+    @CustomerRep private val customersRepository: CustomerRepository
 ): ViewModel() {
     private val _customerList = MutableStateFlow(emptyList<Customer>())
     val customerList = _customerList

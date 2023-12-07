@@ -1,32 +1,23 @@
 package com.bruno13palhano.core.data.di
 
-import com.bruno13palhano.core.data.CatalogData
-import com.bruno13palhano.core.data.CategoryData
-import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.DeliveryData
-import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.SearchCacheData
-import com.bruno13palhano.core.data.StockOrderData
-import com.bruno13palhano.core.data.VersionData
-import com.bruno13palhano.core.data.repository.catalog.CatalogLight
-import com.bruno13palhano.core.data.repository.category.CategoryLight
-import com.bruno13palhano.core.data.repository.customer.CustomerLight
-import com.bruno13palhano.core.data.repository.delivery.DeliveryLight
-import com.bruno13palhano.core.data.repository.product.ProductLight
-import com.bruno13palhano.core.data.repository.sale.SaleLight
-import com.bruno13palhano.core.data.repository.searchcache.SearchCacheLight
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderLight
-import com.bruno13palhano.core.data.repository.version.VersionLight
-import com.bruno13palhano.core.model.Catalog
-import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Customer
-import com.bruno13palhano.core.model.DataVersion
-import com.bruno13palhano.core.model.Delivery
-import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.data.repository.catalog.CatalogData
+import com.bruno13palhano.core.data.repository.catalog.DefaultCatalogData
+import com.bruno13palhano.core.data.repository.category.CategoryData
+import com.bruno13palhano.core.data.repository.category.DefaultCategoryData
+import com.bruno13palhano.core.data.repository.customer.CustomerData
+import com.bruno13palhano.core.data.repository.customer.DefaultCustomerData
+import com.bruno13palhano.core.data.repository.delivery.DefaultDeliveryData
+import com.bruno13palhano.core.data.repository.delivery.DeliveryData
+import com.bruno13palhano.core.data.repository.product.DefaultProductData
+import com.bruno13palhano.core.data.repository.product.ProductData
+import com.bruno13palhano.core.data.repository.sale.DefaultSaleData
+import com.bruno13palhano.core.data.repository.sale.SaleData
+import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheData
+import com.bruno13palhano.core.data.repository.searchcache.SearchCacheData
+import com.bruno13palhano.core.data.repository.stockorder.DefaultStockOrderData
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderData
+import com.bruno13palhano.core.data.repository.version.DefaultVersionData
+import com.bruno13palhano.core.data.repository.version.VersionData
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -68,53 +59,45 @@ internal abstract class InternalDataModule {
     @InternalCategoryLight
     @Singleton
     @Binds
-    abstract fun bindInternalCategoryLight(repository: CategoryLight): CategoryData<Category>
+    abstract fun bindInternalCategoryData(data: DefaultCategoryData): CategoryData
 
     @InternalCustomerLight
     @Singleton
     @Binds
-    abstract fun bindInternalCustomerLight(repository: CustomerLight): CustomerData<Customer>
+    abstract fun bindInternalCustomerData(data: DefaultCustomerData): CustomerData
 
     @InternalDeliveryLight
     @Singleton
     @Binds
-    abstract fun bindInternalDeliveryLight(repository: DeliveryLight): DeliveryData<Delivery>
+    abstract fun bindInternalDeliveryData(data: DefaultDeliveryData): DeliveryData
 
     @InternalProductLight
     @Singleton
     @Binds
-    abstract fun bindInternalProductLight(repository: ProductLight): ProductData<Product>
+    abstract fun bindInternalProductData(data: DefaultProductData): ProductData
 
     @InternalSaleLight
     @Singleton
     @Binds
-    abstract fun bindInternalSaleLight(repository: SaleLight): SaleData<Sale>
+    abstract fun bindInternalSaleData(data: DefaultSaleData): SaleData
 
     @InternalSearchCacheLight
     @Singleton
     @Binds
-    abstract fun bindInternalSearchCacheLight(
-        repository: SearchCacheLight
-    ): SearchCacheData<SearchCache>
+    abstract fun bindInternalSearchCacheData(data: DefaultSearchCacheData): SearchCacheData
 
     @InternalStockOrderLight
     @Singleton
     @Binds
-    abstract fun bindInternalStockOrderLight(
-        repository: StockOrderLight
-    ): StockOrderData<StockOrder>
+    abstract fun bindInternalStockOrderData(data: DefaultStockOrderData): StockOrderData
 
     @InternalCatalogLight
     @Singleton
     @Binds
-    abstract fun bindInternalCatalogLight(
-        repository: CatalogLight
-    ): CatalogData<Catalog>
+    abstract fun bindInternalCatalogData(data: DefaultCatalogData): CatalogData
 
     @InternalVersionLight
     @Singleton
     @Binds
-    abstract fun bindInternalVersionLight(
-        repository: VersionLight
-    ): VersionData<DataVersion>
+    abstract fun bindInternalVersionData(data: DefaultVersionData): VersionData
 }

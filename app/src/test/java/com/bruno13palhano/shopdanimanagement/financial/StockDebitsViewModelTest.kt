@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.financial
 
-import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomProduct
@@ -38,7 +38,7 @@ class StockDebitsViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var stockRepository: StockOrderData<StockOrder>
+    private lateinit var stockRepository: StockOrderRepository<StockOrder>
     private lateinit var sut: StockDebitsViewModel
 
     private val debits = listOf(
@@ -72,7 +72,7 @@ class StockDebitsViewModelTest {
 
     @Test
     fun getDebitStock_shouldCallGetDebitStockFromRepository() = runTest {
-        val stockRepository = mock<StockOrderData<StockOrder>>()
+        val stockRepository = mock<StockOrderRepository<StockOrder>>()
         val sut = StockDebitsViewModel(stockRepository)
 
         whenever(stockRepository.getDebitStock()).doAnswer { flowOf() }
@@ -100,7 +100,7 @@ class StockDebitsViewModelTest {
 
     @Test
     fun getStockByPrice_shouldCallGetDebitStockByPriceFromRepository() = runTest {
-        val stockRepository = mock<StockOrderData<StockOrder>>()
+        val stockRepository = mock<StockOrderRepository<StockOrder>>()
         val sut = StockDebitsViewModel(stockRepository)
 
         whenever(stockRepository.getDebitStockByPrice(any())).doAnswer { flowOf() }
@@ -128,7 +128,7 @@ class StockDebitsViewModelTest {
 
     @Test
     fun getStockByName_shouldCallGetStockByNameFromRepository() = runTest {
-        val stockRepository = mock<StockOrderData<StockOrder>>()
+        val stockRepository = mock<StockOrderRepository<StockOrder>>()
         val sut = StockDebitsViewModel(stockRepository)
 
         whenever(stockRepository.getDebitStockByName(any())).doAnswer { flowOf() }

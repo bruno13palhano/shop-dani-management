@@ -1,7 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.products
 
-import com.bruno13palhano.core.data.CategoryData
-import com.bruno13palhano.core.data.ProductData
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
+import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
@@ -40,8 +40,8 @@ class ProductListViewModelTest {
     @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var productRepository: ProductData<Product>
-    private lateinit var categoryRepository: CategoryData<Category>
+    private lateinit var productRepository: ProductRepository<Product>
+    private lateinit var categoryRepository: CategoryRepository<Category>
     private lateinit var sut: ProductListViewModel
     private var products = listOf(
         makeRandomProduct(id = 1L, name = "Homem"),
@@ -71,8 +71,8 @@ class ProductListViewModelTest {
 
     @Test
     fun updateCategory_shouldCallUpdateFromCategoryRepository() = runTest {
-        val productRep = mock<ProductData<Product>>()
-        val categoryRep = mock<CategoryData<Category>>()
+        val productRep = mock<ProductRepository<Product>>()
+        val categoryRep = mock<CategoryRepository<Category>>()
         val sut = ProductListViewModel(categoryRep, productRep)
 
         sut.updateCategory(id = 1L)
@@ -83,8 +83,8 @@ class ProductListViewModelTest {
 
     @Test
     fun getCategory_shouldCallGetByIdFromCategoryRepository() = runTest {
-        val productRep = mock<ProductData<Product>>()
-        val categoryRep = mock<CategoryData<Category>>()
+        val productRep = mock<ProductRepository<Product>>()
+        val categoryRep = mock<CategoryRepository<Category>>()
         val sut = ProductListViewModel(categoryRep, productRep)
 
         whenever(categoryRep.getById(any())).doAnswer { flowOf() }
@@ -117,8 +117,8 @@ class ProductListViewModelTest {
 
     @Test
     fun getAllProducts_shouldCallGetAllFromProductRepository() = runTest {
-        val productRep = mock<ProductData<Product>>()
-        val categoryRep = mock<CategoryData<Category>>()
+        val productRep = mock<ProductRepository<Product>>()
+        val categoryRep = mock<CategoryRepository<Category>>()
         val sut = ProductListViewModel(categoryRep, productRep)
 
         whenever(productRep.getAll()).doAnswer { flowOf() }
@@ -144,8 +144,8 @@ class ProductListViewModelTest {
     @Test
     fun getProductsByCategory_shouldCallGetProductsByCategoryFromProductRepository() = runTest {
         val category = "Perfumes"
-        val productRep = mock<ProductData<Product>>()
-        val categoryRep = mock<CategoryData<Category>>()
+        val productRep = mock<ProductRepository<Product>>()
+        val categoryRep = mock<CategoryRepository<Category>>()
         val sut = ProductListViewModel(categoryRep, productRep)
 
         whenever(productRep.getByCategory(any())).doAnswer { flowOf() }

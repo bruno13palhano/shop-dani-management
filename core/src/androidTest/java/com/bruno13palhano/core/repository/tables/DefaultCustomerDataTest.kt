@@ -1,8 +1,8 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.repository.customer.CustomerLight
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
+import com.bruno13palhano.core.data.repository.customer.DefaultCustomerData
 import com.bruno13palhano.core.mocks.makeRandomCustomer
 import com.bruno13palhano.core.model.Customer
 import com.google.common.truth.Truth.assertThat
@@ -18,9 +18,9 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class CustomerLightTest {
+class DefaultCustomerDataTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var customerTable: CustomerData<Customer>
+    private lateinit var customerTable: CustomerRepository<Customer>
     private lateinit var firstCustomer: Customer
     private lateinit var secondCustomer: Customer
     private lateinit var thirdCustomer: Customer
@@ -32,7 +32,7 @@ class CustomerLightTest {
     fun before() {
         hiltTestRule.inject()
 
-        customerTable = CustomerLight(database.customerTableQueries, Dispatchers.IO)
+        customerTable = DefaultCustomerData(database.customerTableQueries, Dispatchers.IO)
 
         firstCustomer = makeRandomCustomer(id = 1L, name = "Alan", address = "Rua 15 de Novembro")
         secondCustomer = makeRandomCustomer(id = 2L, name = "Bruno", address = "Rua 13 de Maio")

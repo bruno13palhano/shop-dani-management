@@ -1,11 +1,11 @@
 package com.bruno13palhano.shopdanimanagement.repository
 
-import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.model.StockOrder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class TestStockOrderRepository : StockOrderData<StockOrder> {
+class TestStockOrderRepository : StockOrderRepository<StockOrder> {
     private val stockOrderList = mutableListOf<StockOrder>()
 
     override suspend fun insert(model: StockOrder): Long {

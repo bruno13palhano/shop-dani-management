@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.financial
 
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCustomer
@@ -40,7 +40,7 @@ class CanceledSalesViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var saleRepository: SaleData<Sale>
+    private lateinit var saleRepository: SaleRepository<Sale>
     private lateinit var sut: CanceledSalesViewModel
 
     private val canceledSales = listOf(
@@ -75,7 +75,7 @@ class CanceledSalesViewModelTest {
 
     @Test
     fun getAllCanceledSales_shouldCallGetAllCanceledSalesFromRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = CanceledSalesViewModel(saleRepository)
 
         whenever(saleRepository.getAllCanceledSales()).doAnswer { flowOf() }
@@ -103,7 +103,7 @@ class CanceledSalesViewModelTest {
 
     @Test
     fun getAllCanceledSalesByName_shouldCallGetCanceledByNameFromRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = CanceledSalesViewModel(saleRepository)
 
         whenever(saleRepository.getCanceledByName(any())).doAnswer { flowOf() }
@@ -131,7 +131,7 @@ class CanceledSalesViewModelTest {
 
     @Test
     fun getCanceledSalesByCustomerName_shouldCallGetCanceledByCustomerNameFromRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = CanceledSalesViewModel(saleRepository)
 
         whenever(saleRepository.getCanceledByCustomerName(any())).doAnswer { flowOf() }
@@ -159,7 +159,7 @@ class CanceledSalesViewModelTest {
 
     @Test
     fun getCanceledSalesByPrice_shouldCallGetCanceledByPriceFromRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = CanceledSalesViewModel(saleRepository)
 
         whenever(saleRepository.getCanceledByPrice(any())).doAnswer { flowOf() }

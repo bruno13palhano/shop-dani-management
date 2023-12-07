@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.insights
 
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomSale
@@ -41,7 +41,7 @@ class StockOrdersSalesVIewModelTest {
     val standardDispatcherRule = StandardDispatcherRule()
 
     private val currentDay = LocalDate.now()
-    private lateinit var saleRepository: SaleData<Sale>
+    private lateinit var saleRepository: SaleRepository<Sale>
     private lateinit var sut: StockOrdersSalesViewModel
 
     private val sales = listOf(
@@ -72,7 +72,7 @@ class StockOrdersSalesVIewModelTest {
 
     @Test
     fun setStockOrderSalesRange_shouldCallGetLastSalesFromRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = StockOrdersSalesViewModel(saleRepository)
 
         whenever(saleRepository.getLastSales(any(), any())).doAnswer { flowOf() }

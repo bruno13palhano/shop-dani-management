@@ -1,9 +1,9 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.repository.product.ProductLight
 import com.bruno13palhano.core.data.repository.product.ProductRepository
+import com.bruno13palhano.core.data.repository.product.DefaultProductData
+import com.bruno13palhano.core.data.repository.product.DefaultProductRepository
 import com.bruno13palhano.core.mocks.makeRandomProduct
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
@@ -22,9 +22,9 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class ProductLightTest {
+class DefaultProductDataTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var productRepository: ProductData<Product>
+    private lateinit var productRepository: ProductRepository<Product>
     private lateinit var firstProduct: Product
     private lateinit var secondProduct: Product
     private lateinit var thirdProduct: Product
@@ -36,12 +36,12 @@ class ProductLightTest {
     fun before() {
         hiltTestRule.inject()
 
-        val productData = ProductLight(
+        val productData = DefaultProductData(
             productQueries = database.shopDatabaseQueries,
             productCategoriesQueries = database.productCategoriesTableQueries,
             ioDispatcher = Dispatchers.IO
         )
-        productRepository = ProductRepository(productData)
+        productRepository = DefaultProductRepository(productData)
 
         firstProduct = makeRandomProduct(
             id = 1L,

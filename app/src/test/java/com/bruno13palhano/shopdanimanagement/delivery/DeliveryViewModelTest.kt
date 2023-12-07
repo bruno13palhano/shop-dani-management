@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.delivery
 
-import com.bruno13palhano.core.data.DeliveryData
+import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomDelivery
@@ -34,7 +34,7 @@ class DeliveryViewModelTest {
     @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var deliveryRepository: DeliveryData<Delivery>
+    private lateinit var deliveryRepository: DeliveryRepository<Delivery>
     private lateinit var sut: DeliveryViewModel
 
     @Before
@@ -77,7 +77,7 @@ class DeliveryViewModelTest {
 
     @Test
     fun getDeliveryById_shouldCallGetByIdFromRepository() = runTest {
-        val deliveryRepository = mock<DeliveryData<Delivery>>()
+        val deliveryRepository = mock<DeliveryRepository<Delivery>>()
         val sut = DeliveryViewModel(deliveryRepository)
 
         whenever(deliveryRepository.getById(any())).doAnswer { flowOf() }
@@ -111,7 +111,7 @@ class DeliveryViewModelTest {
     @Test
     fun updateDelivery_shouldCallUpdateDeliveryPriceFromRepository() = runTest {
         val deliveryPrice = "123"
-        val deliveryRepository = mock<DeliveryData<Delivery>>()
+        val deliveryRepository = mock<DeliveryRepository<Delivery>>()
         val sut = DeliveryViewModel(deliveryRepository)
 
         sut.updateDeliveryPrice(deliveryPrice)
@@ -124,7 +124,7 @@ class DeliveryViewModelTest {
     @Test
     fun updateDelivery_shouldCallUpdateShippingDateFromRepository() = runTest {
         val shippingDate = 2000L
-        val deliveryRepository = mock<DeliveryData<Delivery>>()
+        val deliveryRepository = mock<DeliveryRepository<Delivery>>()
         val sut = DeliveryViewModel(deliveryRepository)
 
         sut.updateShippingDate(shippingDate)
@@ -137,7 +137,7 @@ class DeliveryViewModelTest {
     @Test
     fun updateDelivery_shouldCallUpdateDeliveryDateFromRepository() = runTest {
         val deliveryDate = 2000L
-        val deliveryRepository = mock<DeliveryData<Delivery>>()
+        val deliveryRepository = mock<DeliveryRepository<Delivery>>()
         val sut = DeliveryViewModel(deliveryRepository)
 
         sut.updateDeliveryDate(deliveryDate)
@@ -150,7 +150,7 @@ class DeliveryViewModelTest {
     @Test
     fun updateDelivery_shouldCallUpdateDeliveredFromRepository() = runTest {
         val delivered = true
-        val deliveryRepository = mock<DeliveryData<Delivery>>()
+        val deliveryRepository = mock<DeliveryRepository<Delivery>>()
         val sut = DeliveryViewModel(deliveryRepository)
 
         sut.updateDelivered(delivered)

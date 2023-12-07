@@ -8,10 +8,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
+import com.bruno13palhano.core.data.repository.product.ProductRepository
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
@@ -34,10 +34,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaleViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleData<Sale>,
-    @StockOrderRep private val stockOrderRepository: StockOrderData<StockOrder>,
-    @ProductRep private val productRepository: ProductData<Product>,
-    @CustomerRep private val customerRepository: CustomerData<Customer>,
+    @SaleRep private val saleRepository: SaleRepository,
+    @StockOrderRep private val stockOrderRepository: StockOrderRepository,
+    @ProductRep private val productRepository: ProductRepository,
+    @CustomerRep private val customerRepository: CustomerRepository,
 ) : ViewModel() {
     private var stockOrderId by mutableLongStateOf(0L)
     private var productId by mutableLongStateOf(0L)

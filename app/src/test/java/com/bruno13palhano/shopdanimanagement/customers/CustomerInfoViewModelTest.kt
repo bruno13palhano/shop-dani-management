@@ -1,7 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.customers
 
-import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
@@ -40,8 +40,8 @@ class CustomerInfoViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var customerRepository: CustomerData<Customer>
-    private lateinit var saleRepository: SaleData<Sale>
+    private lateinit var customerRepository: CustomerRepository<Customer>
+    private lateinit var saleRepository: SaleRepository<Sale>
     private lateinit var sut: CustomerInfoViewModel
 
     private val customers = listOf(
@@ -67,8 +67,8 @@ class CustomerInfoViewModelTest {
 
     @Test
     fun getCustomerInfo_shouldCallGetByCustomerIdFromSaleRepository() = runTest {
-        val customerRepository = mock<CustomerData<Customer>>()
-        val saleRepository = mock<SaleData<Sale>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = CustomerInfoViewModel(customerRepository, saleRepository)
 
         whenever(customerRepository.getById(any())).doAnswer { flowOf() }
@@ -82,8 +82,8 @@ class CustomerInfoViewModelTest {
 
     @Test
     fun getCustomerInfo_shouldCallGetByIdFromCustomerRepository() = runTest {
-        val customerRepository = mock<CustomerData<Customer>>()
-        val saleRepository = mock<SaleData<Sale>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = CustomerInfoViewModel(customerRepository, saleRepository)
 
         whenever(customerRepository.getById(any())).doAnswer { flowOf() }
@@ -116,8 +116,8 @@ class CustomerInfoViewModelTest {
 
     @Test
     fun getCustomerPurchases_shouldCallGetByCustomerIdFromSaleRepository() = runTest{
-        val customerRepository = mock<CustomerData<Customer>>()
-        val saleRepository = mock<SaleData<Sale>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = CustomerInfoViewModel(customerRepository, saleRepository)
 
         whenever(saleRepository.getByCustomerId(any())).doAnswer { flowOf() }

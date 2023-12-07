@@ -2,8 +2,8 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Customer
@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CustomerInfoViewModel @Inject constructor(
-    @CustomerRep private val customerRepository: CustomerData<Customer>,
-    @SaleRep private val saleRepository: SaleData<Sale>
+    @CustomerRep private val customerRepository: CustomerRepository,
+    @SaleRep private val saleRepository: SaleRepository
 ) : ViewModel() {
     private val _customerPurchases = MutableStateFlow(emptyList<Sale>())
     private val _customer = MutableStateFlow(Customer(0L, "", byteArrayOf(), "", "", "", OffsetDateTime.now(ZoneOffset.UTC)))

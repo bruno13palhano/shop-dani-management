@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.customers
 
-import com.bruno13palhano.core.data.CustomerData
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCustomer
@@ -37,7 +37,7 @@ class CustomersViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var customerRepository: CustomerData<Customer>
+    private lateinit var customerRepository: CustomerRepository<Customer>
     private lateinit var sut: CustomersViewModel
     private val customers = listOf(
         makeRandomCustomer(id = 1L, name = "Alex", address = "1"),
@@ -53,7 +53,7 @@ class CustomersViewModelTest {
 
     @Test
     fun getAllCustomers_shouldCallGetAllFromRepository() = runTest {
-        val customerRepository = mock<CustomerData<Customer>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
         val sut = CustomersViewModel(customerRepository)
 
         whenever(customerRepository.getAll()).doAnswer { flowOf() }
@@ -78,7 +78,7 @@ class CustomersViewModelTest {
 
     @Test
     fun getOrderedByName_shouldCallGetOrderedByNameFromRepository() = runTest {
-        val customerRepository = mock<CustomerData<Customer>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
         val sut = CustomersViewModel(customerRepository)
 
         whenever(customerRepository.getOrderedByName(any())).doAnswer { flowOf() }
@@ -103,7 +103,7 @@ class CustomersViewModelTest {
 
     @Test
     fun getOrderedByAddress_shouldCallGetOrderedByAddressFromRepository() = runTest {
-        val customerRepository = mock<CustomerData<Customer>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
         val sut = CustomersViewModel(customerRepository)
 
         whenever(customerRepository.getOrderedByAddress(any())).doAnswer { flowOf() }

@@ -7,8 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.repository.product.ProductRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
@@ -24,8 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ItemViewModel @Inject constructor(
-    @ProductRep private val productRepository: ProductData<Product>,
-    @StockOrderRep private val stockRepository: StockOrderData<StockOrder>
+    @ProductRep private val productRepository: ProductRepository,
+    @StockOrderRep private val stockRepository: StockOrderRepository
 ) : ViewModel() {
     private var productId by mutableLongStateOf(0L)
     var name by mutableStateOf("")

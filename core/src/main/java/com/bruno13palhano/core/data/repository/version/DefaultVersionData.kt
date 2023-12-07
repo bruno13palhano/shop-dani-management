@@ -4,7 +4,6 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.VersionTableQueries
-import com.bruno13palhano.core.data.VersionData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.DataVersion
@@ -15,10 +14,10 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-internal class VersionLight @Inject constructor(
+internal class DefaultVersionData @Inject constructor(
     private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : VersionData<DataVersion>{
+) : VersionData {
     override suspend fun insert(model: DataVersion): Long {
         if (model.id == 0L) {
             versionQueries.insert(

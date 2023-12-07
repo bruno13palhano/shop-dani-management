@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.delivery
 
-import com.bruno13palhano.core.data.DeliveryData
+import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomDelivery
@@ -37,7 +37,7 @@ class DeliveriesViewModelTest {
     @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var deliveryRepository: DeliveryData<Delivery>
+    private lateinit var deliveryRepository: DeliveryRepository<Delivery>
     private lateinit var sut: DeliveriesViewModel
     private val deliveries = listOf(
         makeRandomDelivery(id = 1L, delivered = true),
@@ -53,7 +53,7 @@ class DeliveriesViewModelTest {
 
     @Test
     fun getAllDeliveries_shouldCallGetAllFromRepository() = runTest {
-        val deliveryRepository = mock<DeliveryData<Delivery>>()
+        val deliveryRepository = mock<DeliveryRepository<Delivery>>()
         val sut = DeliveriesViewModel(deliveryRepository)
 
         whenever(deliveryRepository.getAll()).doAnswer { flowOf() }
@@ -79,7 +79,7 @@ class DeliveriesViewModelTest {
 
     @Test
     fun getDeliveries_shouldCallGetDeliveriesFromRepository() = runTest {
-        val deliveryRepository = mock<DeliveryData<Delivery>>()
+        val deliveryRepository = mock<DeliveryRepository<Delivery>>()
         val sut = DeliveriesViewModel(deliveryRepository)
 
         whenever(deliveryRepository.getDeliveries(any())).doAnswer { flowOf() }

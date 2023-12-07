@@ -2,7 +2,7 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.catalog.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CatalogData
+import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
 import com.bruno13palhano.core.data.di.CatalogRep
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CatalogViewModel @Inject constructor(
-    @CatalogRep private val catalogRepository: CatalogData<Catalog>
+    @CatalogRep private val catalogRepository: CatalogRepository
 ) : ViewModel() {
     private val _catalogItems = MutableStateFlow(emptyList<Catalog>())
     val catalogItems = _catalogItems

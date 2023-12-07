@@ -5,13 +5,11 @@ import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.ProductCategoriesTableQueries
 import cache.ShopDatabaseQueries
-import com.bruno13palhano.core.data.ProductData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.isNew
-import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,11 +17,11 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-internal class ProductLight @Inject constructor(
+internal class DefaultProductData @Inject constructor(
     private val productQueries: ShopDatabaseQueries,
     private val productCategoriesQueries: ProductCategoriesTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : ProductData<Product> {
+) : ProductData {
     override suspend fun insert(model: Product): Long {
         productCategoriesQueries.transaction {
             if (model.isNew()) {
@@ -134,10 +132,6 @@ internal class ProductLight @Inject constructor(
         return productQueries.getLast(mapper = ::mapProduct)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
-    }
-
-    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
-        TODO("Not yet implemented")
     }
 
     private fun mapProduct(

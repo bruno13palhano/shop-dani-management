@@ -1,9 +1,9 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.StockOrderData
-import com.bruno13palhano.core.data.repository.product.ProductLight
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderLight
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.product.DefaultProductData
+import com.bruno13palhano.core.data.repository.stockorder.DefaultStockOrderData
 import com.bruno13palhano.core.mocks.makeRandomProduct
 import com.bruno13palhano.core.mocks.makeRandomStockOrder
 import com.bruno13palhano.core.model.Category
@@ -22,10 +22,10 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class StockOrderLightTest {
+class DefaultStockOrderDataTest {
     @Inject
     lateinit var database: ShopDatabase
-    private lateinit var stockOrderTable: StockOrderData<StockOrder>
+    private lateinit var stockOrderTable: StockOrderRepository<StockOrder>
     private lateinit var firstItem: StockOrder
     private lateinit var secondItem: StockOrder
     private lateinit var thirdItem: StockOrder
@@ -43,9 +43,9 @@ class StockOrderLightTest {
     fun setup() = runTest {
         hiltTestRule.inject()
 
-        stockOrderTable = StockOrderLight(database.stockOrderTableQueries, Dispatchers.IO)
+        stockOrderTable = DefaultStockOrderData(database.stockOrderTableQueries, Dispatchers.IO)
 
-        val productTable = ProductLight(
+        val productTable = DefaultProductData(
             database.shopDatabaseQueries,
             database.productCategoriesTableQueries,
             Dispatchers.IO

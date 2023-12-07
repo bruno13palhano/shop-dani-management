@@ -2,13 +2,11 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CategoryData
-import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.StockOrderRep
-import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
-import com.bruno13palhano.core.model.StockOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -19,8 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StockOrdersViewModel @Inject constructor(
-    @StockOrderRep private val stockRepository: StockOrderData<StockOrder>,
-    @CategoryRep private val categoryRepository: CategoryData<Category>
+    @StockOrderRep private val stockRepository: StockOrderRepository,
+    @CategoryRep private val categoryRepository: CategoryRepository
 ) : ViewModel() {
     val categories = categoryRepository.getAll()
         .map {

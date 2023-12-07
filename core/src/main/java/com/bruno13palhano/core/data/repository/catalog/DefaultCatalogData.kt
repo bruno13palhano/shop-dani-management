@@ -4,12 +4,10 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.CatalogTableQueries
-import com.bruno13palhano.core.data.CatalogData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.core.model.isNew
-import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -17,10 +15,10 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-internal class CatalogLight @Inject constructor(
+internal class DefaultCatalogData @Inject constructor(
     private val catalogQueries: CatalogTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : CatalogData<Catalog> {
+) : CatalogData {
     override suspend fun insert(model: Catalog): Long {
         if (model.isNew()) {
             catalogQueries.insert(
@@ -99,10 +97,6 @@ internal class CatalogLight @Inject constructor(
         return catalogQueries.getLast(mapper = ::mapCatalog)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
-    }
-
-    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
-        TODO("Not yet implemented")
     }
 
     private fun mapCatalog(

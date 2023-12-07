@@ -2,8 +2,8 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.SearchCacheData
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
+import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.data.di.SearchCacheRep
 import com.bruno13palhano.core.model.Customer
@@ -19,8 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchCustomersViewModel @Inject constructor(
-    @CustomerRep private val customerRepository: CustomerData<Customer>,
-    @SearchCacheRep private val searchCacheRepository: SearchCacheData<SearchCache>
+    @CustomerRep private val customerRepository: CustomerRepository,
+    @SearchCacheRep private val searchCacheRepository: SearchCacheRepository
 ) : ViewModel() {
     val searchCache = searchCacheRepository.getAll()
         .stateIn(

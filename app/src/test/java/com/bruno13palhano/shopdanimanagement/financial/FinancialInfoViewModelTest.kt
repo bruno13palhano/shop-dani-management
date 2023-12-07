@@ -1,7 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.financial
 
-import com.bruno13palhano.core.data.DeliveryData
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
@@ -35,8 +35,8 @@ class FinancialInfoViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var saleRepository: SaleData<Sale>
-    private lateinit var deliveryRepository: DeliveryData<Delivery>
+    private lateinit var saleRepository: SaleRepository<Sale>
+    private lateinit var deliveryRepository: DeliveryRepository<Delivery>
     private lateinit var sut: FinancialInfoViewModel
 
     private val sales = listOf(

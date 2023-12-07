@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.sales
 
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCustomer
@@ -39,7 +39,7 @@ class SalesViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var salesRepository: SaleData<Sale>
+    private lateinit var salesRepository: SaleRepository<Sale>
     private lateinit var sut: SalesViewModel
 
     private val sales = listOf(
@@ -71,7 +71,7 @@ class SalesViewModelTest {
 
     @Test
     fun getSales_shouldCallGetAllFromRepository() = runTest {
-        val salesRepository = mock<SaleData<Sale>>()
+        val salesRepository = mock<SaleRepository<Sale>>()
         val sut = SalesViewModel(salesRepository)
 
         whenever(salesRepository.getAll()).doAnswer { flowOf() }
@@ -98,7 +98,7 @@ class SalesViewModelTest {
 
     @Test
     fun getSalesByCustomerName_shouldCallGetAllSalesByCustomerNameFromRepository() = runTest {
-        val salesRepository = mock<SaleData<Sale>>()
+        val salesRepository = mock<SaleRepository<Sale>>()
         val sut = SalesViewModel(salesRepository)
 
         whenever(salesRepository.getAllSalesByCustomerName(any())).doAnswer { flowOf() }
@@ -125,7 +125,7 @@ class SalesViewModelTest {
 
     @Test
     fun getSalesBySalePrice_shouldCallGetAllSalesBySalePriceFromRepository() = runTest {
-        val salesRepository = mock<SaleData<Sale>>()
+        val salesRepository = mock<SaleRepository<Sale>>()
         val sut = SalesViewModel(salesRepository)
 
         whenever(salesRepository.getAllSalesBySalePrice(any())).doAnswer { flowOf() }

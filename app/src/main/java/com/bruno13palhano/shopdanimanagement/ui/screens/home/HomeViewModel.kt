@@ -2,8 +2,8 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CatalogData
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.CatalogRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Catalog
@@ -19,8 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleData<Sale>,
-    @CatalogRep private val catalogRepository: CatalogData<Catalog>
+    @SaleRep private val saleRepository: SaleRepository,
+    @CatalogRep private val catalogRepository: CatalogRepository
 ) : ViewModel() {
     private val currentDay = LocalDate.now()
 

@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.products
 
-import com.bruno13palhano.core.data.CategoryData
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.repository.TestCategoryRepository
@@ -32,7 +32,7 @@ class ProductCategoriesViewModelTest {
     @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var categoryRepository: CategoryData<Category>
+    private lateinit var categoryRepository: CategoryRepository<Category>
     private lateinit var sut: ProductCategoriesViewModel
 
     private var categories = listOf(
@@ -57,7 +57,7 @@ class ProductCategoriesViewModelTest {
 
     @Test
     fun insertCategory_shouldCallInsertFromCategoryRepository() = runTest {
-        val categoryRepository = mock<CategoryData<Category>>()
+        val categoryRepository = mock<CategoryRepository<Category>>()
         val sut = ProductCategoriesViewModel(categoryRepository)
 
         sut.insertCategory()

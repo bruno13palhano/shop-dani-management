@@ -1,7 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.stockorder
 
-import com.bruno13palhano.core.data.SearchCacheData
-import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
@@ -41,8 +41,8 @@ class StockOrdersSearchViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var stockOrderRepository: StockOrderData<StockOrder>
-    private lateinit var searchCacheRepository: SearchCacheData<SearchCache>
+    private lateinit var stockOrderRepository: StockOrderRepository<StockOrder>
+    private lateinit var searchCacheRepository: SearchCacheRepository<SearchCache>
     private lateinit var sut: StockOrdersSearchViewModel
 
     @Before
@@ -55,8 +55,8 @@ class StockOrdersSearchViewModelTest {
     @Test
     fun insertSearch_shouldCallInsertFromSearchCacheRepository() = runTest {
         val search = "test"
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
-        val searchCacheRepository = mock<SearchCacheData<SearchCache>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val searchCacheRepository = mock<SearchCacheRepository<SearchCache>>()
         val sut = StockOrdersSearchViewModel(stockOrderRepository, searchCacheRepository)
 
         sut.insertSearch(search = search)
@@ -81,8 +81,8 @@ class StockOrdersSearchViewModelTest {
 
     @Test
     fun getSearchCache_shouldCallGetAllFromSearchCacheRepository() = runTest {
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
-        val searchCacheRepository = mock<SearchCacheData<SearchCache>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val searchCacheRepository = mock<SearchCacheRepository<SearchCache>>()
         val sut = StockOrdersSearchViewModel(stockOrderRepository, searchCacheRepository)
 
         whenever(searchCacheRepository.getAll()).doAnswer { flowOf() }
@@ -116,8 +116,8 @@ class StockOrdersSearchViewModelTest {
     @Test
     fun search_shouldCallSearchFromStockOrderRepository() = runTest {
         val search = "Perfumes"
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
-        val searchCacheRepository = mock<SearchCacheData<SearchCache>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val searchCacheRepository = mock<SearchCacheRepository<SearchCache>>()
         val sut = StockOrdersSearchViewModel(stockOrderRepository, searchCacheRepository)
 
         whenever(stockOrderRepository.search(any(), any())).doAnswer { flowOf() }

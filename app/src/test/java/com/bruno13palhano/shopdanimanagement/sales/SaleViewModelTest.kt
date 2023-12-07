@@ -1,9 +1,9 @@
 package com.bruno13palhano.shopdanimanagement.sales
 
-import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
+import com.bruno13palhano.core.data.repository.product.ProductRepository
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
@@ -50,10 +50,10 @@ class SaleViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var saleRepository: SaleData<Sale>
-    private lateinit var stockOrderRepository: StockOrderData<StockOrder>
-    private lateinit var productRepository: ProductData<Product>
-    private lateinit var customerRepository: CustomerData<Customer>
+    private lateinit var saleRepository: SaleRepository<Sale>
+    private lateinit var stockOrderRepository: StockOrderRepository<StockOrder>
+    private lateinit var productRepository: ProductRepository<Product>
+    private lateinit var customerRepository: CustomerRepository<Customer>
     private lateinit var sut: SaleViewModel
 
     @Before
@@ -175,7 +175,7 @@ class SaleViewModelTest {
 
     @Test
     fun getAllCustomers_shouldCallGetAllFromCustomerRepository() = runTest {
-        val customerRepository = mock<CustomerData<Customer>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
         val sut = makeSutFromMocks(customerRep = customerRepository)
 
         whenever(customerRepository.getAll()).doAnswer { flow {  } }
@@ -199,7 +199,7 @@ class SaleViewModelTest {
 
     @Test
     fun getProduct_shouldCallGetByIdFromProductRepository() = runTest {
-        val productRepository = mock<ProductData<Product>>()
+        val productRepository = mock<ProductRepository<Product>>()
         val sut = makeSutFromMocks(productRep = productRepository)
 
         whenever(productRepository.getById(any())).doAnswer { flowOf() }
@@ -226,7 +226,7 @@ class SaleViewModelTest {
 
     @Test
     fun getStockItem_shouldCallGetByIdFromStockOrderRepository() = runTest {
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
         val sut = makeSutFromMocks(stockOrderRep = stockOrderRepository)
 
         whenever(stockOrderRepository.getById(any())).doAnswer { flowOf() }
@@ -256,7 +256,7 @@ class SaleViewModelTest {
 
     @Test
     fun getSale_shouldCallGetByIdFromSaleRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = makeSutFromMocks(saleRep = saleRepository)
 
         whenever(saleRepository.getById(any())).doAnswer { flowOf() }
@@ -288,7 +288,7 @@ class SaleViewModelTest {
 
     @Test
     fun insertSale_shouldCallInsertItemsFromSaleRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = makeSutFromMocks(saleRep = saleRepository)
 
         sut.insertSale(isOrderedByCustomer = false, currentDate = 1000L, {}, {})
@@ -299,7 +299,7 @@ class SaleViewModelTest {
 
     @Test
     fun updateSale_shouldCallUpdateFromSaleRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = makeSutFromMocks(saleRep = saleRepository)
 
         sut.updateSale(saleId = 1L)
@@ -310,7 +310,7 @@ class SaleViewModelTest {
 
     @Test
     fun deleteSale_shouldCallDeleteByIdFromSaleRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = makeSutFromMocks(saleRep = saleRepository)
 
         sut.deleteSale(saleId = 1L)
@@ -321,7 +321,7 @@ class SaleViewModelTest {
 
     @Test
     fun cancelSale_shouldCallCancelSaleFromSaleRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = makeSutFromMocks(saleRep = saleRepository)
 
         sut.cancelSale(saleId = 1L)
@@ -341,9 +341,9 @@ class SaleViewModelTest {
     }
 
     private fun makeSutFromMocks(
-        saleRep: SaleData<Sale> = mock(),
-        stockOrderRep: StockOrderData<StockOrder> = mock(),
-        productRep: ProductData<Product> = mock(),
-        customerRep: CustomerData<Customer> = mock()
+        saleRep: SaleRepository<Sale> = mock(),
+        stockOrderRep: StockOrderRepository<StockOrder> = mock(),
+        productRep: ProductRepository<Product> = mock(),
+        customerRep: CustomerRepository<Customer> = mock()
     ): SaleViewModel = SaleViewModel(saleRep, stockOrderRep, productRep, customerRep)
 }

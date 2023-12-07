@@ -1,13 +1,5 @@
 package com.bruno13palhano.core.data.di
 
-import com.bruno13palhano.core.data.CatalogData
-import com.bruno13palhano.core.data.CategoryData
-import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.DeliveryData
-import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.SearchCacheData
-import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
 import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
@@ -16,6 +8,14 @@ import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.catalog.DefaultCatalogRepository
+import com.bruno13palhano.core.data.repository.category.DefaultCategoryRepository
+import com.bruno13palhano.core.data.repository.customer.DefaultCustomerRepository
+import com.bruno13palhano.core.data.repository.delivery.DefaultDeliveryRepository
+import com.bruno13palhano.core.data.repository.product.DefaultProductRepository
+import com.bruno13palhano.core.data.repository.sale.DefaultSaleRepository
+import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheRepository
+import com.bruno13palhano.core.data.repository.stockorder.DefaultStockOrderRepository
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
@@ -62,46 +62,40 @@ internal abstract class RepositoryModule {
     @CategoryRep
     @Singleton
     @Binds
-    abstract fun bindCategoryRepository(repository: CategoryRepository): CategoryData<Category>
+    abstract fun bindCategoryRepository(repository: DefaultCategoryRepository): CategoryRepository
 
     @CustomerRep
     @Singleton
     @Binds
-    abstract fun bindCustomerRepository(repository: CustomerRepository): CustomerData<Customer>
+    abstract fun bindCustomerRepository(repository: DefaultCustomerRepository): CustomerRepository
 
     @DeliveryRep
     @Singleton
     @Binds
-    abstract fun bindDeliveryRepository(repository: DeliveryRepository): DeliveryData<Delivery>
+    abstract fun bindDeliveryRepository(repository: DefaultDeliveryRepository): DeliveryRepository
 
     @ProductRep
     @Singleton
     @Binds
-    abstract fun bindProductRepository(repository: ProductRepository): ProductData<Product>
+    abstract fun bindProductRepository(repository: DefaultProductRepository): ProductRepository
 
     @SaleRep
     @Singleton
     @Binds
-    abstract fun bindSaleRepository(repository: SaleRepository): SaleData<Sale>
+    abstract fun bindSaleRepository(repository: DefaultSaleRepository): SaleRepository
 
     @SearchCacheRep
     @Singleton
     @Binds
-    abstract fun bindSearchCacheRepository(
-        repository: SearchCacheRepository
-    ): SearchCacheData<SearchCache>
+    abstract fun bindSearchCacheRepository(repository: DefaultSearchCacheRepository): SearchCacheRepository
 
     @StockOrderRep
     @Singleton
     @Binds
-    abstract fun bindStockOrderRepository(
-        repository: StockOrderRepository
-    ): StockOrderData<StockOrder>
+    abstract fun bindStockOrderRepository(repository: DefaultStockOrderRepository): StockOrderRepository
 
     @CatalogRep
     @Singleton
     @Binds
-    abstract fun bindCatalogRepository(
-        repository: CatalogRepository
-    ): CatalogData<Catalog>
+    abstract fun bindCatalogRepository(repository: DefaultCatalogRepository): CatalogRepository
 }

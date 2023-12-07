@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.repository
 
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
-class TestSaleRepository : SaleData<Sale> {
+class TestSaleRepository : SaleRepository<Sale> {
     private val sales = mutableListOf<Sale>()
 
     override suspend fun insert(model: Sale): Long {

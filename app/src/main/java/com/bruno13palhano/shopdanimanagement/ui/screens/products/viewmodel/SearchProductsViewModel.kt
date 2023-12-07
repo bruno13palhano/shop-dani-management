@@ -2,11 +2,10 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.SearchCacheData
+import com.bruno13palhano.core.data.repository.product.ProductRepository
+import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SearchCacheRep
-import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchProductsViewModel @Inject constructor(
-    @ProductRep private val productRepository: ProductData<Product>,
-    @SearchCacheRep private val searchCacheRepository: SearchCacheData<SearchCache>
+    @ProductRep private val productRepository: ProductRepository,
+    @SearchCacheRep private val searchCacheRepository: SearchCacheRepository
 ) : ViewModel() {
     private val _searchCache = MutableStateFlow<List<SearchCache>>(emptyList())
     val searchCache = _searchCache.asStateFlow()

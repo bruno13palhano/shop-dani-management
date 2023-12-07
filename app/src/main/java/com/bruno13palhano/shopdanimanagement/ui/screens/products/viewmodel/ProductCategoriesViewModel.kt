@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CategoryData
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.model.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductCategoriesViewModel @Inject constructor(
-    @CategoryRep private val categoryRepository: CategoryData<Category>
+    @CategoryRep private val categoryRepository: CategoryRepository
 ): ViewModel() {
     val categories = categoryRepository.getAll()
         .stateIn(

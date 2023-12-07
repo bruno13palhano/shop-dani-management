@@ -7,13 +7,13 @@ import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
-import com.bruno13palhano.core.data.CatalogData
-import com.bruno13palhano.core.data.CategoryData
-import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.DeliveryData
-import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
+import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
+import com.bruno13palhano.core.data.repository.product.ProductRepository
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.data.di.CatalogRep
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.CustomerRep
@@ -23,13 +23,6 @@ import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.di.StockOrderRep
-import com.bruno13palhano.core.model.Catalog
-import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Customer
-import com.bruno13palhano.core.model.Delivery
-import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.core.sync.Synchronizer
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -42,13 +35,13 @@ import kotlinx.coroutines.withContext
 class FetchDataWork @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
-    @CategoryRep val categoryRepository: CategoryData<Category>,
-    @CustomerRep val customerRepository: CustomerData<Customer>,
-    @ProductRep val productRepository: ProductData<Product>,
-    @StockOrderRep val stockOrderRepository: StockOrderData<StockOrder>,
-    @SaleRep val saleRepository: SaleData<Sale>,
-    @DeliveryRep val deliveryRepository: DeliveryData<Delivery>,
-    @CatalogRep val catalogRepository: CatalogData<Catalog>,
+    @CategoryRep val categoryRepository: CategoryRepository,
+    @CustomerRep val customerRepository: CustomerRepository,
+    @ProductRep val productRepository: ProductRepository,
+    @StockOrderRep val stockOrderRepository: StockOrderRepository,
+    @SaleRep val saleRepository: SaleRepository,
+    @DeliveryRep val deliveryRepository: DeliveryRepository,
+    @CatalogRep val catalogRepository: CatalogRepository,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
 ) : CoroutineWorker(context, params), Synchronizer {
 

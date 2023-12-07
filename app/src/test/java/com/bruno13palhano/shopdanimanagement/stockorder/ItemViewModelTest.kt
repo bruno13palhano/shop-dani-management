@@ -1,7 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.stockorder
 
-import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.repository.product.ProductRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
@@ -40,8 +40,8 @@ class ItemViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var productRepository: ProductData<Product>
-    private lateinit var stockOrderRepository: StockOrderData<StockOrder>
+    private lateinit var productRepository: ProductRepository<Product>
+    private lateinit var stockOrderRepository: StockOrderRepository<StockOrder>
     private lateinit var sut: ItemViewModel
 
     @Before
@@ -129,8 +129,8 @@ class ItemViewModelTest {
 
     @Test
     fun getProduct_shouldCallGetByIdFromProductRepository() = runTest {
-        val productRepository = mock<ProductData<Product>>()
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
+        val productRepository = mock<ProductRepository<Product>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
         val sut = ItemViewModel(productRepository, stockOrderRepository)
 
         whenever(productRepository.getById(any())).doAnswer { flowOf() }
@@ -178,8 +178,8 @@ class ItemViewModelTest {
 
     @Test
     fun getStockOrder_shouldCallGetByIdFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductData<Product>>()
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
+        val productRepository = mock<ProductRepository<Product>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
         val sut = ItemViewModel(productRepository, stockOrderRepository)
 
         whenever(stockOrderRepository.getById(any())).doAnswer { flowOf() }
@@ -192,8 +192,8 @@ class ItemViewModelTest {
 
     @Test
     fun insertItems_shouldCallInsertFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductData<Product>>()
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
+        val productRepository = mock<ProductRepository<Product>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
         val sut = ItemViewModel(productRepository, stockOrderRepository)
 
         sut.insertItems(productId = 1L, isOrderedByCustomer = true)
@@ -204,8 +204,8 @@ class ItemViewModelTest {
 
     @Test
     fun updateStockOrderItem_shouldCallUpdateFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductData<Product>>()
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
+        val productRepository = mock<ProductRepository<Product>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
         val sut = ItemViewModel(productRepository, stockOrderRepository)
 
         sut.updateStockOrderItem(stockOrderItemId = 1L, isOrderedByCustomer = true)
@@ -216,8 +216,8 @@ class ItemViewModelTest {
 
     @Test
     fun deleteStockOrderItem_shouldCallDeleteByIdFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductData<Product>>()
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
+        val productRepository = mock<ProductRepository<Product>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
         val sut = ItemViewModel(productRepository, stockOrderRepository)
 
         sut.deleteStockOrderItem(stockOrderId = 1L)

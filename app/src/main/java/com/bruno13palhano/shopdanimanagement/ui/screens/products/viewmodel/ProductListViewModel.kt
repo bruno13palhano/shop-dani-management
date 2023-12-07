@@ -5,12 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CategoryData
-import com.bruno13palhano.core.data.ProductData
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
+import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,8 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
-    @CategoryRep private val categoryRepository: CategoryData<Category>,
-    @ProductRep private val productRepository: ProductData<Product>
+    @CategoryRep private val categoryRepository: CategoryRepository,
+    @ProductRep private val productRepository: ProductRepository
 ) : ViewModel() {
     val categories = categoryRepository.getAll()
         .map {

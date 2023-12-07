@@ -4,12 +4,10 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.DeliveryTableQueries
-import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.isNew
-import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -17,10 +15,10 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-class DeliveryLight @Inject constructor(
+class DefaultDeliveryData @Inject constructor(
     private val deliveryQueries: DeliveryTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : DeliveryData<Delivery> {
+) : DeliveryData {
     override suspend fun insert(model: Delivery): Long {
         if (model.isNew()) {
             deliveryQueries.insert(
@@ -100,10 +98,6 @@ class DeliveryLight @Inject constructor(
         return deliveryQueries.getLast(mapper = ::mapDelivery)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
-    }
-
-    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
-        TODO("Not yet implemented")
     }
 
     override fun getCanceledDeliveries(): Flow<List<Delivery>> {

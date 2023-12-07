@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.financial
 
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCustomer
@@ -41,7 +41,7 @@ class CustomersDebitViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var saleRepository: SaleData<Sale>
+    private lateinit var saleRepository: SaleRepository<Sale>
     private lateinit var sut: CustomersDebitViewModel
 
     private val debits = listOf(
@@ -78,7 +78,7 @@ class CustomersDebitViewModelTest {
 
     @Test
     fun getDebits_shouldCallGetDebitSalesFromRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = CustomersDebitViewModel(saleRepository)
 
         whenever(saleRepository.getDebitSales()).doAnswer { flowOf() }
@@ -106,7 +106,7 @@ class CustomersDebitViewModelTest {
 
     @Test
     fun getDebitByCustomerName_shouldCallGetSalesByCustomerNameFromRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = CustomersDebitViewModel(saleRepository)
 
         whenever(saleRepository.getSalesByCustomerName(eq(false), any())).doAnswer { flowOf() }
@@ -134,7 +134,7 @@ class CustomersDebitViewModelTest {
 
     @Test
     fun getDebitBySalePrice_shouldCallGetSalesBySalePriceFromRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = CustomersDebitViewModel(saleRepository)
 
         whenever(saleRepository.getSalesBySalePrice(eq(false), any())).doAnswer { flowOf() }

@@ -1,12 +1,12 @@
 package com.bruno13palhano.shopdanimanagement.repository
 
-import com.bruno13palhano.core.data.CustomerData
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.model.Customer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class TestCustomerRepository : CustomerData<Customer> {
+class TestCustomerRepository : CustomerRepository<Customer> {
     private val customers = mutableListOf<Customer>()
 
     override fun search(search: String): Flow<List<Customer>> {

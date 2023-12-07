@@ -1,7 +1,7 @@
 package com.bruno13palhano.core.data.repository
 
 import com.bruno13palhano.core.data.DataOperations
-import com.bruno13palhano.core.data.VersionData
+import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Model
 import com.bruno13palhano.core.network.access.CrudNetwork
@@ -10,7 +10,7 @@ import com.bruno13palhano.core.network.model.DataVersionNet
 import com.bruno13palhano.core.network.model.asNetwork
 import kotlinx.coroutines.flow.first
 
-suspend fun getDataVersion(versionData: VersionData<DataVersion>, id: Long) =
+suspend fun getDataVersion(versionData: VersionData, id: Long) =
     try { versionData.getById(id = id).first() }
     catch (ignored: Exception) { DataVersion() }
 

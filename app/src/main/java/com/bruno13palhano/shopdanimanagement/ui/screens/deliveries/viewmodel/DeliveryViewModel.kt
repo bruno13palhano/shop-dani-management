@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.DeliveryData
+import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
 import com.bruno13palhano.core.data.di.DeliveryRep
 import com.bruno13palhano.core.model.Delivery
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DeliveryViewModel @Inject constructor(
-    @DeliveryRep private val deliveryRepository: DeliveryData<Delivery>
+    @DeliveryRep private val deliveryRepository: DeliveryRepository
 ) : ViewModel() {
     private var deliveryPriceDb = 0F
     private var shippingDateDb = 0L

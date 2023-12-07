@@ -1,7 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.customers
 
-import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.SearchCacheData
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
+import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
@@ -41,8 +41,8 @@ class SearchCustomersViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var customerRepository: CustomerData<Customer>
-    private lateinit var searchCacheRepository: SearchCacheData<SearchCache>
+    private lateinit var customerRepository: CustomerRepository<Customer>
+    private lateinit var searchCacheRepository: SearchCacheRepository<SearchCache>
     private lateinit var sut: SearchCustomersViewModel
 
     @Before
@@ -67,8 +67,8 @@ class SearchCustomersViewModelTest {
 
     @Test
     fun search_shouldCallSearchFromCustomerRepository() = runTest {
-        val searchCacheRepository = mock<SearchCacheData<SearchCache>>()
-        val customerRepository = mock<CustomerData<Customer>>()
+        val searchCacheRepository = mock<SearchCacheRepository<SearchCache>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
         val sut = SearchCustomersViewModel(customerRepository, searchCacheRepository)
 
         whenever(customerRepository.search(any())).doAnswer { flowOf() }
@@ -104,8 +104,8 @@ class SearchCustomersViewModelTest {
 
     @Test
     fun insert_shouldCallInsertFromSearchCacheRepository() = runTest {
-        val customerRepository = mock<CustomerData<Customer>>()
-        val searchCacheRepository = mock<SearchCacheData<SearchCache>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
+        val searchCacheRepository = mock<SearchCacheRepository<SearchCache>>()
         val sut = SearchCustomersViewModel(customerRepository, searchCacheRepository)
 
         val search = "test"

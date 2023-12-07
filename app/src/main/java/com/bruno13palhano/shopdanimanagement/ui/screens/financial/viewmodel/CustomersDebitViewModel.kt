@@ -2,7 +2,7 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CustomersDebitViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleData<Sale>,
+    @SaleRep private val saleRepository: SaleRepository,
 ) : ViewModel() {
     private val _debits = MutableStateFlow(emptyList<Sale>())
     val debits = _debits

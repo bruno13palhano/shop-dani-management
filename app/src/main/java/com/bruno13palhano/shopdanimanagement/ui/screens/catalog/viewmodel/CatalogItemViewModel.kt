@@ -5,12 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CatalogData
-import com.bruno13palhano.core.data.ProductData
+import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
+import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.di.CatalogRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.model.Catalog
-import com.bruno13palhano.core.model.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.OffsetDateTime
@@ -19,8 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CatalogItemViewModel @Inject constructor(
-    @CatalogRep private val catalogRepository: CatalogData<Catalog>,
-    @ProductRep private val productRepository: ProductData<Product>
+    @CatalogRep private val catalogRepository: CatalogRepository,
+    @ProductRep private val productRepository: ProductRepository
 ) : ViewModel() {
     private var productId = 0L
     private var catalogId = 0L

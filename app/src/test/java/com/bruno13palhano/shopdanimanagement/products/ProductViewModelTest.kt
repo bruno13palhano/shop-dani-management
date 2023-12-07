@@ -1,7 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.products
 
-import com.bruno13palhano.core.data.CategoryData
-import com.bruno13palhano.core.data.ProductData
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
+import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
@@ -28,8 +28,8 @@ import org.mockito.kotlin.mock
 @RunWith(MockitoJUnitRunner::class)
 class ProductViewModelTest {
 
-    private lateinit var productRepository: ProductData<Product>
-    private lateinit var categoryRepository: CategoryData<Category>
+    private lateinit var productRepository: ProductRepository<Product>
+    private lateinit var categoryRepository: CategoryRepository<Category>
     private lateinit var sut: ProductViewModel
 
     @get:Rule
@@ -144,8 +144,8 @@ class ProductViewModelTest {
 
     @Test
     fun whenInsertProduct_shouldCallInsertFromProductRepository() = runTest {
-        val productRep = mock<ProductData<Product>>()
-        val categoryRep = mock<CategoryData<Category>>()
+        val productRep = mock<ProductRepository<Product>>()
+        val categoryRep = mock<CategoryRepository<Category>>()
         val sut = ProductViewModel(productRep,  categoryRep)
 
         sut.insertProduct()
@@ -156,8 +156,8 @@ class ProductViewModelTest {
 
     @Test
     fun whenUpdateProduct_shouldCallUpdateFromProductRepository() = runTest {
-        val productRep = mock<ProductData<Product>>()
-        val categoryRep = mock<CategoryData<Category>>()
+        val productRep = mock<ProductRepository<Product>>()
+        val categoryRep = mock<CategoryRepository<Category>>()
         val sut = ProductViewModel(productRep,  categoryRep)
 
         sut.deleteProduct(id = 1L)
@@ -168,8 +168,8 @@ class ProductViewModelTest {
 
     @Test
     fun whenDeleteProduct_shouldCallDeleteByIdFromProductRepository() = runTest {
-        val productRep = mock<ProductData<Product>>()
-        val categoryRep = mock<CategoryData<Category>>()
+        val productRep = mock<ProductRepository<Product>>()
+        val categoryRep = mock<CategoryRepository<Category>>()
         val sut = ProductViewModel(productRep,  categoryRep)
 
         sut.updateProduct(id = 1L)

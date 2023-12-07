@@ -1,9 +1,9 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.CatalogData
-import com.bruno13palhano.core.data.repository.catalog.CatalogLight
-import com.bruno13palhano.core.data.repository.product.ProductLight
+import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
+import com.bruno13palhano.core.data.repository.catalog.DefaultCatalogData
+import com.bruno13palhano.core.data.repository.product.DefaultProductData
 import com.bruno13palhano.core.mocks.makeRandomCatalog
 import com.bruno13palhano.core.mocks.makeRandomProduct
 import com.bruno13palhano.core.model.Catalog
@@ -21,9 +21,9 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class CatalogLightTest {
+class DefaultCatalogDataTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var catalogTable: CatalogData<Catalog>
+    private lateinit var catalogTable: CatalogRepository<Catalog>
     private lateinit var firstItem: Catalog
     private lateinit var secondItem: Catalog
     private lateinit var thirdItem: Catalog
@@ -35,12 +35,12 @@ class CatalogLightTest {
     fun before() = runBlocking {
         hiltTestRule.inject()
 
-        val productTable = ProductLight(
+        val productTable = DefaultProductData(
             database.shopDatabaseQueries,
             database.productCategoriesTableQueries,
             Dispatchers.IO
         )
-        catalogTable = CatalogLight(database.catalogTableQueries, Dispatchers.IO)
+        catalogTable = DefaultCatalogData(database.catalogTableQueries, Dispatchers.IO)
 
         val product1 = makeRandomProduct(id = 1L, name = "Homem")
         val product2 = makeRandomProduct(id = 2L, name = "Kaiak")

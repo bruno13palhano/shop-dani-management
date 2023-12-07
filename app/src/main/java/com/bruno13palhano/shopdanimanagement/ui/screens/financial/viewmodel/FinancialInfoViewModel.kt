@@ -2,12 +2,10 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.DeliveryData
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.DeliveryRep
 import com.bruno13palhano.core.data.di.SaleRep
-import com.bruno13palhano.core.model.Delivery
-import com.bruno13palhano.core.model.Sale
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.combine
@@ -17,8 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FinancialInfoViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleData<Sale>,
-    @DeliveryRep private val deliveryRepository: DeliveryData<Delivery>
+    @SaleRep private val saleRepository: SaleRepository,
+    @DeliveryRep private val deliveryRepository: DeliveryRepository
 ) : ViewModel() {
     val financial = combine(
         saleRepository.getAll(),

@@ -1,13 +1,13 @@
 package com.bruno13palhano.shopdanimanagement.repository
 
-import com.bruno13palhano.core.data.CategoryData
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.model.Category
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class TestCategoryRepository :  CategoryData<Category> {
+class TestCategoryRepository : CategoryRepository<Category> {
     private val categories = mutableListOf<Category>()
 
     override fun search(value: String): Flow<List<Category>> {

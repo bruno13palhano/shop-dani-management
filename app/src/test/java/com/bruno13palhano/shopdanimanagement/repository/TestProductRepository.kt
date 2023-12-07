@@ -1,13 +1,13 @@
 package com.bruno13palhano.shopdanimanagement.repository
 
-import com.bruno13palhano.core.data.ProductData
+import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.model.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class TestProductRepository : ProductData<Product> {
+class TestProductRepository : ProductRepository<Product> {
     private val productList = mutableListOf<Product>()
 
     override suspend fun insert(model: Product): Long {

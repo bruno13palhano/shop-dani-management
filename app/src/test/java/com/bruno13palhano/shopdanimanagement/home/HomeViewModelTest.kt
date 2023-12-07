@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.home
 
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomSale
@@ -35,7 +35,7 @@ class HomeViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var saleRepository: SaleData<Sale>
+    private lateinit var saleRepository: SaleRepository<Sale>
     private lateinit var sut: HomeViewModel
 
     private val currentDay = LocalDate.now()

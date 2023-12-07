@@ -1,7 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.stockorder
 
-import com.bruno13palhano.core.data.CategoryData
-import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
@@ -41,8 +41,8 @@ class StockOrdersViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var stockOrderRepository: StockOrderData<StockOrder>
-    private lateinit var categoryRepository: CategoryData<Category>
+    private lateinit var stockOrderRepository: StockOrderRepository<StockOrder>
+    private lateinit var categoryRepository: CategoryRepository<Category>
     private lateinit var sut: StockOrdersViewModel
 
     @Before
@@ -67,8 +67,8 @@ class StockOrdersViewModelTest {
 
     @Test
     fun getItems_shouldCallGetStockOrderItemsFromStockOrderRepository() = runTest {
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
-        val categoryRepository = mock<CategoryData<Category>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val categoryRepository = mock<CategoryRepository<Category>>()
         val sut = StockOrdersViewModel(stockOrderRepository, categoryRepository)
 
         whenever(stockOrderRepository.getStockOrderItems(any())).doAnswer { flowOf() }
@@ -101,8 +101,8 @@ class StockOrdersViewModelTest {
 
     @Test
     fun getItemsByCategories_shouldCallGetByCategoryFromStockOrderRepository() = runTest {
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
-        val categoryRepository = mock<CategoryData<Category>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val categoryRepository = mock<CategoryRepository<Category>>()
         val sut = StockOrdersViewModel(stockOrderRepository, categoryRepository)
 
         whenever(stockOrderRepository.getByCategory(any(), any())).doAnswer { flowOf() }
@@ -136,8 +136,8 @@ class StockOrdersViewModelTest {
 
     @Test
     fun getOutOfStock_shouldCallGetOutOfStockFromStockOrderRepository() = runTest {
-        val stockOrderRepository = mock<StockOrderData<StockOrder>>()
-        val categoryRepository = mock<CategoryData<Category>>()
+        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val categoryRepository = mock<CategoryRepository<Category>>()
         val sut = StockOrdersViewModel(stockOrderRepository, categoryRepository)
 
         whenever(stockOrderRepository.getOutOfStock()).doAnswer { flowOf() }

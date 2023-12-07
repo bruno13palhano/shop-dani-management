@@ -1,8 +1,8 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.CategoryData
-import com.bruno13palhano.core.data.repository.category.CategoryLight
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
+import com.bruno13palhano.core.data.repository.category.DefaultCategoryData
 import com.bruno13palhano.core.mocks.makeRandomCategory
 import com.bruno13palhano.core.model.Category
 import com.google.common.truth.Truth.assertThat
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltAndroidTest
 class CategoryLightTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var categoryTable: CategoryData<Category>
+    private lateinit var categoryTable: CategoryRepository<Category>
     private lateinit var firstCategory: Category
     private lateinit var secondCategory: Category
     private lateinit var thirdCategory: Category
@@ -33,7 +33,7 @@ class CategoryLightTest {
     fun before() {
         hiltTestRule.inject()
 
-        categoryTable = CategoryLight(database.categoryTableQueries, Dispatchers.IO)
+        categoryTable = DefaultCategoryData(database.categoryTableQueries, Dispatchers.IO)
 
         firstCategory = makeRandomCategory(id = 1L)
         secondCategory = makeRandomCategory(id = 2L)

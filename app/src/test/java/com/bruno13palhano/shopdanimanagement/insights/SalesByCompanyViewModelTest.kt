@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.insights
 
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
@@ -39,7 +39,7 @@ class SalesByCompanyViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var saleRepository: SaleData<Sale>
+    private lateinit var saleRepository: SaleRepository<Sale>
     private lateinit var sut: SalesByCompanyViewModel
 
     private val sales = listOf(
@@ -73,7 +73,7 @@ class SalesByCompanyViewModelTest {
 
     @Test
     fun getChartByRange_shouldCallGetAllFromRepository() = runTest {
-        val saleRepository = mock<SaleData<Sale>>()
+        val saleRepository = mock<SaleRepository<Sale>>()
         val sut = SalesByCompanyViewModel(saleRepository)
 
         whenever(saleRepository.getAll()).doAnswer { flowOf() }

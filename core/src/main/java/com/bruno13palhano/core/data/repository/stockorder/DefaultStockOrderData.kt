@@ -4,13 +4,11 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.StockOrderTableQueries
-import com.bruno13palhano.core.data.StockOrderData
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.core.model.isNew
-import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -18,10 +16,10 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-class StockOrderLight @Inject constructor(
+class DefaultStockOrderData @Inject constructor(
     private val stockOrderQueries: StockOrderTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : StockOrderData<StockOrder> {
+) : StockOrderData {
     override suspend fun insert(model: StockOrder): Long {
         if (model.isNew()) {
             stockOrderQueries.insert(
@@ -158,10 +156,6 @@ class StockOrderLight @Inject constructor(
         return stockOrderQueries.getLast(mapper = ::mapStockOrder)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
-    }
-
-    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
-        TODO("Not yet implemented")
     }
 
     private fun mapStockOrder(

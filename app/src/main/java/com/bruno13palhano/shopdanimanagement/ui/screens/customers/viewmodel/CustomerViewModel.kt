@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.CustomerData
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.model.Customer
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CustomerViewModel @Inject constructor(
-    @CustomerRep private val customerRepository: CustomerData<Customer>
+    @CustomerRep private val customerRepository: CustomerRepository
 ) : ViewModel() {
     var name by mutableStateOf("")
         private set

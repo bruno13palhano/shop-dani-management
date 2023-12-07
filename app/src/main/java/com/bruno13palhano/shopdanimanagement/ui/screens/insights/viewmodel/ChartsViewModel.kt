@@ -2,9 +2,8 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.SaleData
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.SaleRep
-import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.screens.setChartEntries
 import com.bruno13palhano.shopdanimanagement.ui.screens.setQuantity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChartsViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleData<Sale>
+    @SaleRep private val saleRepository: SaleRepository
 ) : ViewModel() {
     private var days = arrayOf(0)
 

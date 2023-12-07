@@ -1,12 +1,12 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.DeliveryData
-import com.bruno13palhano.core.data.repository.customer.CustomerLight
-import com.bruno13palhano.core.data.repository.delivery.DeliveryLight
-import com.bruno13palhano.core.data.repository.product.ProductLight
-import com.bruno13palhano.core.data.repository.sale.SaleLight
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderLight
+import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
+import com.bruno13palhano.core.data.repository.customer.DefaultCustomerData
+import com.bruno13palhano.core.data.repository.delivery.DefaultDeliveryData
+import com.bruno13palhano.core.data.repository.product.DefaultProductData
+import com.bruno13palhano.core.data.repository.sale.DefaultSaleData
+import com.bruno13palhano.core.data.repository.stockorder.DefaultStockOrderData
 import com.bruno13palhano.core.mocks.makeRandomCustomer
 import com.bruno13palhano.core.mocks.makeRandomDelivery
 import com.bruno13palhano.core.mocks.makeRandomProduct
@@ -29,9 +29,9 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class DeliveryLightTest {
+class DefaultCategoryDataTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var deliveryTable: DeliveryData<Delivery>
+    private lateinit var deliveryTable: DeliveryRepository<Delivery>
     private lateinit var customer1: Customer
     private lateinit var delivery1: Delivery
     private lateinit var delivery2: Delivery
@@ -331,16 +331,16 @@ class DeliveryLightTest {
     }
 
     private suspend fun init() {
-        val saleTable = SaleLight(
+        val saleTable = DefaultSaleData(
             database.saleTableQueries,
             database.deliveryTableQueries,
             database.stockOrderTableQueries,
             Dispatchers.IO
         )
-        val stockOrderTable = StockOrderLight(database.stockOrderTableQueries, Dispatchers.IO)
-        val customerTable = CustomerLight(database.customerTableQueries, Dispatchers.IO)
-        deliveryTable = DeliveryLight(database.deliveryTableQueries, Dispatchers.IO)
-        val productTable = ProductLight(
+        val stockOrderTable = DefaultStockOrderData(database.stockOrderTableQueries, Dispatchers.IO)
+        val customerTable = DefaultCustomerData(database.customerTableQueries, Dispatchers.IO)
+        deliveryTable = DefaultDeliveryData(database.deliveryTableQueries, Dispatchers.IO)
+        val productTable = DefaultProductData(
             database.shopDatabaseQueries,
             database.productCategoriesTableQueries,
             Dispatchers.IO

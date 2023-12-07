@@ -1,12 +1,12 @@
 package com.bruno13palhano.shopdanimanagement.repository
 
-import com.bruno13palhano.core.data.CatalogData
+import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
 import com.bruno13palhano.core.model.Catalog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 
-class TestCatalogRepository : CatalogData<Catalog> {
+class TestCatalogRepository : CatalogRepository<Catalog> {
     private val catalogList = mutableListOf<Catalog>()
 
     override fun getOrderedByName(isOrderedAsc: Boolean): Flow<List<Catalog>> {

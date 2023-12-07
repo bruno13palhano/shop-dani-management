@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.customers
 
-import com.bruno13palhano.core.data.CustomerData
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCustomer
@@ -36,7 +36,7 @@ class CustomerViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var customerRepository: CustomerData<Customer>
+    private lateinit var customerRepository: CustomerRepository<Customer>
     private lateinit var sut: CustomerViewModel
 
     @Before
@@ -113,7 +113,7 @@ class CustomerViewModelTest {
 
     @Test
     fun getCustomer_shouldCallGetByIdFromRepository() = runTest {
-        val customerRepository = mock<CustomerData<Customer>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
         val sut = CustomerViewModel(customerRepository)
 
         whenever(customerRepository.getById(any())).doAnswer { flowOf() }
@@ -141,7 +141,7 @@ class CustomerViewModelTest {
 
     @Test
     fun insertCustomer_shouldCallInsertFromRepository() = runTest {
-        val customerRepository = mock<CustomerData<Customer>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
         val sut = CustomerViewModel(customerRepository)
 
         sut.insertCustomer()
@@ -152,7 +152,7 @@ class CustomerViewModelTest {
 
     @Test
     fun updateCustomer_shouldCallUpdateFromRepository() = runTest {
-        val customerRepository = mock<CustomerData<Customer>>()
+        val customerRepository = mock<CustomerRepository<Customer>>()
         val sut = CustomerViewModel(customerRepository)
 
         sut.updateCustomer(id = 1L)

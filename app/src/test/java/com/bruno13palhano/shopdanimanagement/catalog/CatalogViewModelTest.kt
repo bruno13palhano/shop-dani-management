@@ -1,6 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.catalog
 
-import com.bruno13palhano.core.data.CatalogData
+import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCatalog
@@ -38,7 +38,7 @@ class CatalogViewModelTest {
     @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var catalogRepository: CatalogData<Catalog>
+    private lateinit var catalogRepository: CatalogRepository<Catalog>
     private lateinit var sut: CatalogViewModel
 
     private var catalogItems = listOf(
@@ -68,7 +68,7 @@ class CatalogViewModelTest {
 
     @Test
     fun getAll_shouldCallGetAllFromCatalogRepository() = runTest {
-        val catalogRepository = mock<CatalogData<Catalog>>()
+        val catalogRepository = mock<CatalogRepository<Catalog>>()
         val sut = CatalogViewModel(catalogRepository)
 
         whenever(catalogRepository.getAll()).doAnswer { flowOf() }
@@ -93,7 +93,7 @@ class CatalogViewModelTest {
 
     @Test
     fun getOrderedByName_shouldCallGetOrderByNameFormRepositories() = runTest {
-        val catalogRepository = mock<CatalogData<Catalog>>()
+        val catalogRepository = mock<CatalogRepository<Catalog>>()
         val sut = CatalogViewModel(catalogRepository)
 
         whenever(catalogRepository.getOrderedByName(any())).doAnswer { flowOf() }
@@ -119,7 +119,7 @@ class CatalogViewModelTest {
 
     @Test
     fun getOrderedByPrice_shouldCallGetOrderedByPriceFromRepository() = runTest {
-        val catalogRepository = mock<CatalogData<Catalog>>()
+        val catalogRepository = mock<CatalogRepository<Catalog>>()
         val sut = CatalogViewModel(catalogRepository)
 
         whenever(catalogRepository.getOrderedByPrice(any())).doAnswer { flowOf() }
