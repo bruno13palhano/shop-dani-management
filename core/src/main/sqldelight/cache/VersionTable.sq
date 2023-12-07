@@ -18,3 +18,12 @@ SELECT VersionTable.* FROM VersionTable WHERE id = ?;
 
 getAll:
 SELECT VersionTable.* FROM VersionTable;
+
+delete:
+DELETE FROM VersionTable WHERE id = ?;
+
+getLast:
+SELECT VersionTable.* FROM VersionTable WHERE id = last_insert_rowid();
+
+getLastId:
+SELECT last_insert_rowid();
