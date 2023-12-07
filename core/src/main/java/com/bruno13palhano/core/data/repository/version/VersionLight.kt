@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class VersionLight @Inject constructor(
@@ -22,23 +23,26 @@ internal class VersionLight @Inject constructor(
         if (model.id == 0L) {
             versionQueries.insert(
                 name = model.name,
-                timestamp = model.timestamp.toString(),
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp),
             )
         } else {
             versionQueries.insertWithId(
                 id = model.id,
                 name = model.name,
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
         }
 
-        return 1L
+        return versionQueries.getLastId().executeAsOne()
     }
 
     override suspend fun update(model: DataVersion) {
         versionQueries.update(
             name = model.name,
-            timestamp = model.timestamp.toString(),
+            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(model.timestamp),
             id = model.id
         )
     }
@@ -58,7 +62,9 @@ internal class VersionLight @Inject constructor(
     }
 
     override fun getLast(): Flow<DataVersion> {
-        TODO("Not yet implemented")
+        return versionQueries.getLast(mapper = ::mapVersion)
+            .asFlow().mapToOne(ioDispatcher)
+            .catch { it.printStackTrace() }
     }
 
     private fun mapVersion(
