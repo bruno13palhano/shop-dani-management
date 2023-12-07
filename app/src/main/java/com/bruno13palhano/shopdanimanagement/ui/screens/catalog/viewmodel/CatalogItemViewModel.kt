@@ -13,6 +13,8 @@ import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.core.model.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -102,7 +104,8 @@ class CatalogItemViewModel @Inject constructor(
         title = title,
         description = description,
         discount = stringToLong(discount),
-        price = stringToFloat(price)
+        price = stringToFloat(price),
+        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
     )
 
     private fun stringToLong(value: String) = try { value.toLong() } catch (ignored: Exception) { 0L }

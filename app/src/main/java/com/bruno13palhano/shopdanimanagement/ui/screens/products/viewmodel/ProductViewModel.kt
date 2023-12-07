@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -94,7 +96,7 @@ class ProductViewModel @Inject constructor(
         val catList = mutableListOf<Category>()
         categories
             .filter { it.isChecked }
-            .map { catList.add(Category(it.id, it.category)) }
+            .map { catList.add(Category(it.id, it.category,  OffsetDateTime.now(ZoneOffset.UTC))) }
         this.categories = catList
         category = this.categories.joinToString(", ") { it.category }
     }
@@ -112,7 +114,11 @@ class ProductViewModel @Inject constructor(
         categories = allCategories
             .filter { it.isChecked }
             .map { categoryChecked ->
-                Category(id = categoryChecked.id, category = categoryChecked.category)
+                Category(
+                    id = categoryChecked.id,
+                    category = categoryChecked.category,
+                    timestamp =  OffsetDateTime.now(ZoneOffset.UTC)
+                )
             }
     }
 
@@ -196,7 +202,8 @@ class ProductViewModel @Inject constructor(
         date = date,
         categories = allCategories
             .filter { it.isChecked }
-            .map { Category(id = it.id, category = it.category) },
+            .map { Category(id = it.id, category = it.category, timestamp = OffsetDateTime.now(ZoneOffset.UTC)) },
         company = company,
+        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
     )
 }

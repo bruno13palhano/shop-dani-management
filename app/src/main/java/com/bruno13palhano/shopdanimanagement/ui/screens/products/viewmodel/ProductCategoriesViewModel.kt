@@ -12,6 +12,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,7 +35,7 @@ class ProductCategoriesViewModel @Inject constructor(
     }
 
     fun insertCategory() {
-        val category = Category(0L, newName.trim())
+        val category = Category(0L, newName.trim(), timestamp = OffsetDateTime.now(ZoneOffset.UTC))
         viewModelScope.launch {
             categoryRepository.insert(category)
         }

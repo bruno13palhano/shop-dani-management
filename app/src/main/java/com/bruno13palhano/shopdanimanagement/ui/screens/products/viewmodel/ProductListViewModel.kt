@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +53,7 @@ class ProductListViewModel @Inject constructor(
     }
 
     fun updateCategory(id: Long) {
-        val category = Category(id, name.trim())
+        val category = Category(id, name.trim(), timestamp = OffsetDateTime.now())
         viewModelScope.launch {
             categoryRepository.update(category)
         }

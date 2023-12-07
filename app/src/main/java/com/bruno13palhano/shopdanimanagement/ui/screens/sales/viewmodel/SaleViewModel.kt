@@ -28,6 +28,8 @@ import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -268,7 +270,8 @@ class SaleViewModel @Inject constructor(
         dateOfPayment = dateOfPayment,
         isOrderedByCustomer = isOrderedByCustomer,
         isPaidByCustomer = isPaidByCustomer,
-        canceled = false
+        canceled = false,
+        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
     )
 
     private fun createStockOrder(
@@ -288,7 +291,8 @@ class SaleViewModel @Inject constructor(
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
         isOrderedByCustomer = isOrderedByCustomer,
-        isPaid = isPaid
+        isPaid = isPaid,
+        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
     )
 
     private fun createDelivery() = Delivery(
@@ -302,7 +306,8 @@ class SaleViewModel @Inject constructor(
         deliveryPrice = stringToFloat(deliveryPrice),
         shippingDate = dateOfSale,
         deliveryDate = dateOfSale,
-        delivered = false
+        delivered = false,
+        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
     )
 
     private fun stringToFloat(value: String): Float {

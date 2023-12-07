@@ -18,6 +18,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -144,7 +146,8 @@ class ItemViewModel @Inject constructor(
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
         isOrderedByCustomer = isOrderedByCustomer,
-        isPaid = isPaid
+        isPaid = isPaid,
+        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
     )
 
     private fun updateStockOrder(stockOrderId: Long, isOrderedByCustomer: Boolean) = StockOrder(
@@ -160,7 +163,8 @@ class ItemViewModel @Inject constructor(
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
         isOrderedByCustomer = isOrderedByCustomer,
-        isPaid = isPaid
+        isPaid = isPaid,
+        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
     )
 
     private fun stringToFloat(value: String): Float {

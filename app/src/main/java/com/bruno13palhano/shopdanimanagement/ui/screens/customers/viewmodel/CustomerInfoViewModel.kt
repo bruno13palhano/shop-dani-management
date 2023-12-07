@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +27,7 @@ class CustomerInfoViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleData<Sale>
 ) : ViewModel() {
     private val _customerPurchases = MutableStateFlow(emptyList<Sale>())
-    private val _customer = MutableStateFlow(Customer(0L, "", byteArrayOf(), "", "", ""))
+    private val _customer = MutableStateFlow(Customer(0L, "", byteArrayOf(), "", "", "", OffsetDateTime.now(ZoneOffset.UTC)))
 
     val customerInfo = combine(_customerPurchases, _customer) { purchases, customer ->
         var owingValue = 0F

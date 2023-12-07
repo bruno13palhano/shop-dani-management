@@ -13,6 +13,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -78,7 +80,8 @@ class CustomerViewModel @Inject constructor(
             photo = photo,
             email = email,
             address = address,
-            phoneNumber = phoneNumber
+            phoneNumber = phoneNumber,
+            timestamp = OffsetDateTime.now(ZoneOffset.UTC)
         )
         viewModelScope.launch {
             customerRepository.insert(customer)
@@ -92,7 +95,8 @@ class CustomerViewModel @Inject constructor(
             photo = photo,
             email = email,
             address = address,
-            phoneNumber = phoneNumber
+            phoneNumber = phoneNumber,
+            timestamp = OffsetDateTime.now(ZoneOffset.UTC)
         )
         viewModelScope.launch {
             customerRepository.update(customer)
