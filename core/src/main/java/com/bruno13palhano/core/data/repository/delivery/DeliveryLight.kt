@@ -9,10 +9,12 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.isNew
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class DeliveryLight @Inject constructor(
@@ -27,7 +29,8 @@ class DeliveryLight @Inject constructor(
                 shippingDate = model.shippingDate,
                 deliveryDate = model.deliveryDate,
                 delivered = model.delivered,
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
         } else {
             deliveryQueries.insertWithId(
@@ -37,7 +40,8 @@ class DeliveryLight @Inject constructor(
                 shippingDate = model.shippingDate,
                 deliveryDate = model.deliveryDate,
                 delivered = model.delivered,
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
         }
         return deliveryQueries.getLastId().executeAsOne()
@@ -51,7 +55,8 @@ class DeliveryLight @Inject constructor(
             shippingDate = model.shippingDate,
             deliveryDate = model.deliveryDate,
             delivered = model.delivered,
-            timestamp = model.timestamp.toString()
+            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(model.timestamp)
         )
     }
 
@@ -95,6 +100,10 @@ class DeliveryLight @Inject constructor(
         return deliveryQueries.getLast(mapper = ::mapDelivery)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
+    }
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
     }
 
     override fun getCanceledDeliveries(): Flow<List<Delivery>> {

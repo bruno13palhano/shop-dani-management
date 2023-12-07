@@ -10,10 +10,12 @@ import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.core.model.isNew
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class StockOrderLight @Inject constructor(
@@ -31,7 +33,8 @@ class StockOrderLight @Inject constructor(
                 salePrice = model.salePrice.toDouble(),
                 isOrderedByCustomer = model.isOrderedByCustomer,
                 isPaid = model.isPaid,
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
         } else {
             stockOrderQueries.insertWithId(
@@ -44,7 +47,8 @@ class StockOrderLight @Inject constructor(
                 salePrice = model.salePrice.toDouble(),
                 isOrderedByCustomer = model.isOrderedByCustomer,
                 isPaid = model.isPaid,
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
         }
         return stockOrderQueries.lastId().executeAsOne()
@@ -61,7 +65,8 @@ class StockOrderLight @Inject constructor(
             salePrice = model.salePrice.toDouble(),
             isOrderedByCustomer = model.isOrderedByCustomer,
             isPaid = model.isPaid,
-            timestamp = model.timestamp.toString()
+            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(model.timestamp)
         )
     }
 
@@ -153,6 +158,10 @@ class StockOrderLight @Inject constructor(
         return stockOrderQueries.getLast(mapper = ::mapStockOrder)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
+    }
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
     }
 
     private fun mapStockOrder(

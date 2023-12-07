@@ -9,10 +9,12 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.isNew
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class CustomerLight @Inject constructor(
@@ -27,7 +29,8 @@ internal class CustomerLight @Inject constructor(
                 email = model.email,
                 address = model.address,
                 phoneNumber = model.phoneNumber,
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
         } else {
             customerQueries.insertWithId(
@@ -37,7 +40,8 @@ internal class CustomerLight @Inject constructor(
                 email = model.email,
                 address = model.address,
                 phoneNumber = model.phoneNumber,
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
         }
         return customerQueries.getLastId().executeAsOne()
@@ -51,7 +55,8 @@ internal class CustomerLight @Inject constructor(
             email = model.email,
             address = model.address,
             phoneNumber = model.phoneNumber,
-            timestamp = model.timestamp.toString()
+            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(model.timestamp)
         )
     }
 
@@ -104,6 +109,10 @@ internal class CustomerLight @Inject constructor(
         return customerQueries.getLast(mapper = ::mapCustomer)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
+    }
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
     }
 
     private fun mapCustomer(

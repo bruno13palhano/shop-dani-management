@@ -9,10 +9,12 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.core.model.isNew
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class CatalogLight @Inject constructor(
@@ -27,7 +29,8 @@ internal class CatalogLight @Inject constructor(
                 description = model.description,
                 discount = model.discount,
                 price = model.price.toDouble(),
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
         } else {
             catalogQueries.insertWithId(
@@ -37,7 +40,8 @@ internal class CatalogLight @Inject constructor(
                 description = model.description,
                 discount = model.discount,
                 price = model.price.toDouble(),
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
         }
 
@@ -51,7 +55,8 @@ internal class CatalogLight @Inject constructor(
             discount = model.discount,
             price = model.price.toDouble(),
             id = model.id,
-            timestamp = model.timestamp.toString()
+            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(model.timestamp)
         )
     }
 
@@ -94,6 +99,10 @@ internal class CatalogLight @Inject constructor(
         return catalogQueries.getLast(mapper = ::mapCatalog)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
+    }
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
     }
 
     private fun mapCatalog(

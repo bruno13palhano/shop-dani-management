@@ -14,10 +14,12 @@ import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.core.model.isNew
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class SaleLight @Inject constructor(
@@ -40,7 +42,8 @@ internal class SaleLight @Inject constructor(
                 isOrderedByCustomer = model.isOrderedByCustomer,
                 isPaidByCustomer = model.isPaidByCustomer,
                 canceled = model.canceled,
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
 
             return saleQueries.getLastId().executeAsOne()
@@ -58,7 +61,8 @@ internal class SaleLight @Inject constructor(
                 isOrderedByCustomer = model.isOrderedByCustomer,
                 isPaidByCustomer = model.isPaidByCustomer,
                 canceled = model.canceled,
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
 
             return model.id
@@ -78,7 +82,8 @@ internal class SaleLight @Inject constructor(
             isOrderedByCustomer = model.isOrderedByCustomer,
             isPaidByCustomer = model.isPaidByCustomer,
             canceled = model.canceled,
-            timestamp = model.timestamp.toString(),
+            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(model.timestamp),
             id = model.id
         )
     }
@@ -116,7 +121,8 @@ internal class SaleLight @Inject constructor(
                         isOrderedByCustomer = true,
                         isPaidByCustomer = sale.isPaidByCustomer,
                         canceled = sale.canceled,
-                        timestamp = sale.timestamp.toString()
+                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            .format(sale.timestamp)
                     )
                     deliveryQueries.insert(
                         saleId = saleQueries.getLastId().executeAsOne(),
@@ -124,7 +130,8 @@ internal class SaleLight @Inject constructor(
                         shippingDate = delivery.shippingDate,
                         deliveryDate = delivery.deliveryDate,
                         delivered = delivery.delivered,
-                        timestamp = delivery.timestamp.toString()
+                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            .format(delivery.timestamp)
                     )
                     stockOrderQueries.insert(
                         productId = stockOrder.productId,
@@ -135,7 +142,8 @@ internal class SaleLight @Inject constructor(
                         salePrice = stockOrder.salePrice.toDouble(),
                         isOrderedByCustomer = true,
                         isPaid = stockOrder.isPaid,
-                        timestamp = stockOrder.timestamp.toString()
+                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            .format(stockOrder.timestamp)
                     )
                 }
                 onSuccess()
@@ -160,7 +168,8 @@ internal class SaleLight @Inject constructor(
                             isOrderedByCustomer = false,
                             isPaidByCustomer = sale.isPaidByCustomer,
                             canceled = sale.canceled,
-                            timestamp = sale.timestamp.toString()
+                            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                                .format(sale.timestamp)
                         )
                         deliveryQueries.insert(
                             saleId = saleQueries.getLastId().executeAsOne(),
@@ -168,7 +177,8 @@ internal class SaleLight @Inject constructor(
                             shippingDate = delivery.shippingDate,
                             deliveryDate = delivery.deliveryDate,
                             delivered = delivery.delivered,
-                            timestamp = delivery.timestamp.toString()
+                            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                                .format(delivery.timestamp)
                         )
                     }
                     onSuccess()
@@ -192,7 +202,8 @@ internal class SaleLight @Inject constructor(
                         isOrderedByCustomer = true,
                         isPaidByCustomer = sale.isPaidByCustomer,
                         canceled = sale.canceled,
-                        timestamp = sale.timestamp.toString()
+                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            .format(sale.timestamp)
                     )
                     deliveryQueries.insertWithId(
                         id = delivery.id,
@@ -201,7 +212,8 @@ internal class SaleLight @Inject constructor(
                         shippingDate = delivery.shippingDate,
                         deliveryDate = delivery.deliveryDate,
                         delivered = delivery.delivered,
-                        timestamp = delivery.timestamp.toString()
+                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            .format(delivery.timestamp)
                     )
                     stockOrderQueries.insertWithId(
                         id = stockOrder.id,
@@ -213,7 +225,8 @@ internal class SaleLight @Inject constructor(
                         salePrice = stockOrder.salePrice.toDouble(),
                         isOrderedByCustomer = true,
                         isPaid = stockOrder.isPaid,
-                        timestamp = stockOrder.timestamp.toString()
+                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            .format(stockOrder.timestamp)
                     )
                 }
                 onSuccess()
@@ -239,7 +252,8 @@ internal class SaleLight @Inject constructor(
                             isOrderedByCustomer = false,
                             isPaidByCustomer = sale.isPaidByCustomer,
                             canceled = sale.canceled,
-                            timestamp = sale.timestamp.toString()
+                            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                                .format(sale.timestamp)
                         )
                         deliveryQueries.insertWithId(
                             id = delivery.id,
@@ -248,7 +262,8 @@ internal class SaleLight @Inject constructor(
                             shippingDate = delivery.shippingDate,
                             deliveryDate = delivery.deliveryDate,
                             delivered = delivery.delivered,
-                            timestamp = delivery.timestamp.toString()
+                            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                                .format(delivery.timestamp)
                         )
                     }
                     onSuccess()
@@ -395,6 +410,10 @@ internal class SaleLight @Inject constructor(
         return saleQueries.getLast(mapper = ::mapSale)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
+    }
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
     }
 
     override fun getDebitSales(): Flow<List<Sale>> {

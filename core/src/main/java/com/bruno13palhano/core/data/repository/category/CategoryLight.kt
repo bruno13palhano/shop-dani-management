@@ -9,10 +9,12 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.isNew
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class CategoryLight @Inject constructor(
@@ -21,12 +23,16 @@ internal class CategoryLight @Inject constructor(
 ) : CategoryData<Category> {
     override suspend fun insert(model: Category): Long {
         if(model.isNew()) {
-            categoryQueries.insert(name = model.category, timestamp = model.timestamp.toString())
+            categoryQueries.insert(
+                name = model.category,
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp))
         } else {
             categoryQueries.insertWithId(
                 id = model.id,
                 name = model.category,
-                timestamp = model.timestamp.toString()
+                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                    .format(model.timestamp)
             )
         }
         return categoryQueries.getLastId().executeAsOne()
@@ -36,7 +42,8 @@ internal class CategoryLight @Inject constructor(
         categoryQueries.update(
             id = model.id,
             name = model.category,
-            timestamp = model.timestamp.toString()
+            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(model.timestamp)
         )
     }
 
@@ -59,6 +66,10 @@ internal class CategoryLight @Inject constructor(
         return categoryQueries.getLast(mapper = ::mapCategory)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
+    }
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
     }
 
     override fun search(value: String): Flow<List<Category>> {

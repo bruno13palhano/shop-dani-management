@@ -11,10 +11,12 @@ import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.isNew
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class ProductLight @Inject constructor(
@@ -32,7 +34,8 @@ internal class ProductLight @Inject constructor(
                     photo = model.photo,
                     date = model.date,
                     company = model.company,
-                    timestamp = model.timestamp.toString()
+                    timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                        .format(model.timestamp)
                 )
                 productCategoriesQueries.insert(
                     productId = productQueries.getLastId().executeAsOne(),
@@ -47,7 +50,8 @@ internal class ProductLight @Inject constructor(
                     photo = model.photo,
                     date = model.date,
                     company = model.company,
-                    timestamp = model.timestamp.toString()
+                    timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                        .format(model.timestamp)
                 )
                 try {
                     val categoryId = productCategoriesQueries.getIdByProductId(model.id).executeAsOne()
@@ -82,7 +86,8 @@ internal class ProductLight @Inject constructor(
             date = model.date,
             company = model.company,
             id = model.id,
-            timestamp = model.timestamp.toString()
+            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(model.timestamp)
         )
     }
 
@@ -129,6 +134,10 @@ internal class ProductLight @Inject constructor(
         return productQueries.getLast(mapper = ::mapProduct)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
+    }
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
     }
 
     private fun mapProduct(
