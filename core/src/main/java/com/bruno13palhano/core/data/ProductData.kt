@@ -1,8 +1,9 @@
 package com.bruno13palhano.core.data
 
+import com.bruno13palhano.core.sync.Syncable
 import kotlinx.coroutines.flow.Flow
 
-interface ProductData<T> : DataOperations<T> {
+interface ProductData<T> : DataOperations<T>, Syncable {
 
     /**
      * Searches for products of type [T] with this value.

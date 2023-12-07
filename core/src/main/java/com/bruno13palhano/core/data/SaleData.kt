@@ -3,9 +3,10 @@ package com.bruno13palhano.core.data
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.sync.Syncable
 import kotlinx.coroutines.flow.Flow
 
-interface SaleData<T> : DataOperations<T> {
+interface SaleData<T> : DataOperations<T>, Syncable {
     suspend fun insertItems(
         sale: Sale,
         stockOrder: StockOrder,

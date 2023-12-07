@@ -1,8 +1,9 @@
 package com.bruno13palhano.core.data
 
+import com.bruno13palhano.core.sync.Syncable
 import kotlinx.coroutines.flow.Flow
 
-interface StockOrderData<T> : DataOperations<T> {
+interface StockOrderData<T> : DataOperations<T>, Syncable {
     fun getItems(isOrderedByCustomer: Boolean): Flow<List<T>>
     fun search(value: String, isOrderedByCustomer: Boolean): Flow<List<T>>
     fun getByCategory(category: String, isOrderedByCustomer: Boolean): Flow<List<T>>

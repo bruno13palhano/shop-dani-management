@@ -1,8 +1,9 @@
 package com.bruno13palhano.core.data
 
+import com.bruno13palhano.core.sync.Syncable
 import kotlinx.coroutines.flow.Flow
 
-interface CategoryData<T> : DataOperations<T> {
+interface CategoryData<T> : DataOperations<T>, Syncable {
     /**
      * Searches for categories of type [T] with this value.
      * @param value the searching value.
