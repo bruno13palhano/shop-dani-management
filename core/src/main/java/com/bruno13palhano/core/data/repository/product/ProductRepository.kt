@@ -1,32 +1,38 @@
 package com.bruno13palhano.core.data.repository.product
 
 import com.bruno13palhano.core.data.ProductData
-import com.bruno13palhano.core.data.di.Dispatcher
+import com.bruno13palhano.core.data.VersionData
 import com.bruno13palhano.core.data.di.InternalProductLight
-import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.repository.getDataList
+import com.bruno13palhano.core.data.repository.getDataVersion
+import com.bruno13palhano.core.data.repository.getNetworkList
+import com.bruno13palhano.core.data.repository.getNetworkVersion
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.network.access.ProductNetwork
+import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.di.DefaultProductNet
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
+import com.bruno13palhano.core.network.di.DefaultVersionNet
+import com.bruno13palhano.core.sync.Synchronizer
+import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 internal class ProductRepository @Inject constructor(
     @DefaultProductNet private val productNetwork: ProductNetwork,
     @InternalProductLight private val productData: ProductData<Product>,
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
+    @InternalVersionLight private val versionLight: VersionData<DataVersion>,
+    @DefaultVersionNet private val versionNetwork: VersionNetwork,
 ): ProductData<Product> {
     override suspend fun insert(model: Product): Long {
-        CoroutineScope(ioDispatcher).launch {
-            productNetwork.insert(model)
-        }
+        versionLight.insert(DataVersion(2L, "PRODUCT", model.timestamp))
         return productData.insert(model = model)
     }
 
     override suspend fun update(model: Product) {
-        println(productNetwork.getAll())
+        versionLight.update(DataVersion(2L, "PRODUCT", OffsetDateTime.now()))
         productData.update(model = model)
     }
 
@@ -43,16 +49,11 @@ internal class ProductRepository @Inject constructor(
     }
 
     override suspend fun deleteById(id: Long) {
+        versionLight.update(DataVersion(2L, "PRODUCT", OffsetDateTime.now()))
         return productData.deleteById(id = id)
     }
 
     override fun getAll(): Flow<List<Product>> {
-        CoroutineScope(ioDispatcher).launch {
-            productNetwork.getAll().map {
-                println(it)
-                productData.insert(it)
-            }
-        }
         return productData.getAll()
     }
 
@@ -63,4 +64,22 @@ internal class ProductRepository @Inject constructor(
     override fun getLast(): Flow<Product> {
         return productData.getLast()
     }
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
+        synchronizer.syncData(
+            dataVersion = getDataVersion(versionLight, 2L),
+            networkVersion = getNetworkVersion(versionNetwork, 2L),
+            dataList = getDataList(productData),
+            networkList = getNetworkList(productNetwork),
+            onPush = { deleteIds, saveList, dtVersion ->
+                deleteIds.forEach { productNetwork.delete(it) }
+                saveList.forEach { productNetwork.insert(it) }
+                versionNetwork.insert(dtVersion)
+            },
+            onPull = { deleteIds, saveList, netVersion ->
+                deleteIds.forEach { productData.deleteById(it) }
+                saveList.forEach { productData.insert(it) }
+                versionLight.insert(netVersion)
+            }
+        )
 }

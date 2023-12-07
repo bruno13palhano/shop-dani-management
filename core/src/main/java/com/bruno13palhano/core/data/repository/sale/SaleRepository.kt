@@ -1,30 +1,46 @@
 package com.bruno13palhano.core.data.repository.sale
 
+import com.bruno13palhano.core.data.DeliveryData
 import com.bruno13palhano.core.data.SaleData
-import com.bruno13palhano.core.data.di.Dispatcher
+import com.bruno13palhano.core.data.StockOrderData
+import com.bruno13palhano.core.data.VersionData
+import com.bruno13palhano.core.data.di.InternalDeliveryLight
 import com.bruno13palhano.core.data.di.InternalSaleLight
-import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.data.di.InternalStockOrderLight
+import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.repository.getDataList
+import com.bruno13palhano.core.data.repository.getDataVersion
+import com.bruno13palhano.core.data.repository.getNetworkList
+import com.bruno13palhano.core.data.repository.getNetworkVersion
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.core.network.access.SaleNetwork
+import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.di.DefaultSaleNet
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
+import com.bruno13palhano.core.network.di.DefaultVersionNet
+import com.bruno13palhano.core.sync.Synchronizer
+import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 internal class SaleRepository @Inject constructor(
     @DefaultSaleNet private val saleNetwork: SaleNetwork,
     @InternalSaleLight private val saleData: SaleData<Sale>,
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
+    @InternalStockOrderLight private val stockOrderData: StockOrderData<StockOrder>,
+    @InternalDeliveryLight val deliveryData: DeliveryData<Delivery>,
+    @InternalVersionLight private val versionLight: VersionData<DataVersion>,
+    @DefaultVersionNet private val versionNetwork: VersionNetwork,
 ) : SaleData<Sale> {
     override suspend fun insert(model: Sale): Long {
+        versionLight.insert(DataVersion(4L, "SALE", model.timestamp))
         return saleData.insert(model = model)
     }
 
     override suspend fun update(model: Sale) {
+        versionLight.update(DataVersion(4L, "SALE", model.timestamp))
         saleData.update(model = model)
     }
 
@@ -39,9 +55,8 @@ internal class SaleRepository @Inject constructor(
         onSuccess: () -> Unit,
         onError: () -> Unit
     ) {
-        CoroutineScope(ioDispatcher).launch {
-            saleNetwork.insertItems(sale, stockOrder, delivery)
-        }
+        versionLight.insert(DataVersion(4L, "SALE", sale.timestamp))
+        versionLight.insert(DataVersion(5L, "DELIVERY", sale.timestamp))
         saleData.insertItems(
             sale = sale,
             stockOrder = stockOrder,
@@ -68,13 +83,11 @@ internal class SaleRepository @Inject constructor(
     }
 
     override suspend fun deleteById(id: Long) {
+        versionLight.update(DataVersion(4L, "SALE", OffsetDateTime.now()))
         saleData.deleteById(id = id)
     }
 
     override fun getAll(): Flow<List<Sale>> {
-        CoroutineScope(ioDispatcher).launch {
-            saleNetwork.getAll().forEach { saleData.insert(it) }
-        }
         return saleData.getAll()
     }
 
@@ -129,6 +142,34 @@ internal class SaleRepository @Inject constructor(
     override fun getLast(): Flow<Sale> {
         return saleData.getLast()
     }
+
+    override suspend fun syncWith(synchronizer: Synchronizer) =
+        synchronizer.syncData(
+            dataVersion = getDataVersion(versionLight, 4L),
+            networkVersion = getNetworkVersion(versionNetwork, 4L),
+            dataList = getDataList(saleData),
+            networkList = getNetworkList(saleNetwork),
+            onPush = { deleteIds, saveList, dtVersion ->
+                val items = getDataList(stockOrderData)
+                val deliveries = getDataList(deliveryData)
+                deleteIds.forEach { saleNetwork.delete(it) }
+                saveList.forEach { sale ->
+                    items.forEach { item ->
+                        deliveries.forEach { delivery ->
+                            if (sale.stockOrderId == item.id && sale.id == delivery.saleId) {
+                                saleNetwork.insertItems(sale, item, delivery)
+                            }
+                        }
+                    }
+                }
+                versionNetwork.insert(dtVersion)
+            },
+            onPull = { deleteIds, saveList, netVersion ->
+                deleteIds.forEach { saleData.deleteById(it) }
+                saveList.forEach { saleData.insert(it) }
+                versionLight.insert(netVersion)
+            }
+        )
 
     override fun getDebitSales(): Flow<List<Sale>> {
         return saleData.getDebitSales()

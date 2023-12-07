@@ -1,42 +1,47 @@
 package com.bruno13palhano.core.data.repository.customer
 
 import com.bruno13palhano.core.data.CustomerData
-import com.bruno13palhano.core.data.di.Dispatcher
+import com.bruno13palhano.core.data.VersionData
 import com.bruno13palhano.core.data.di.InternalCustomerLight
-import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.repository.getDataVersion
+import com.bruno13palhano.core.data.repository.getDataList
+import com.bruno13palhano.core.data.repository.getNetworkList
+import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.network.access.CustomerNetwork
+import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.di.DefaultCustomerNet
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
+import com.bruno13palhano.core.network.di.DefaultVersionNet
+import com.bruno13palhano.core.sync.Synchronizer
+import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 internal class CustomerRepository @Inject constructor(
-    @DefaultCustomerNet private val customerNet: CustomerNetwork,
+    @DefaultCustomerNet private val customerNetwork: CustomerNetwork,
     @InternalCustomerLight private val customerData: CustomerData<Customer>,
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
+    @InternalVersionLight private val versionLight: VersionData<DataVersion>,
+    @DefaultVersionNet private val versionNetwork: VersionNetwork,
 ) : CustomerData<Customer> {
     override suspend fun insert(model: Customer): Long {
-        CoroutineScope(ioDispatcher).launch {
-            customerNet.insert(model)
-        }
+        versionLight.insert(DataVersion(6L, "CUSTOMER", model.timestamp))
         return customerData.insert(model = model)
     }
 
     override suspend fun update(model: Customer) {
+        versionLight.update(DataVersion(6L, "CUSTOMER", model.timestamp))
         customerData.update(model = model)
     }
 
     override suspend fun deleteById(id: Long) {
+        versionLight.update(DataVersion(6L, "CUSTOMER", OffsetDateTime.now()))
         customerData.deleteById(id = id)
     }
 
     override fun getAll(): Flow<List<Customer>> {
-        CoroutineScope(ioDispatcher).launch {
-            customerNet.getAll().forEach { customerData.insert(it) }
-        }
         return customerData.getAll()
     }
 
@@ -59,4 +64,22 @@ internal class CustomerRepository @Inject constructor(
     override fun getLast(): Flow<Customer> {
         return customerData.getLast()
     }
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
+        synchronizer.syncData(
+            dataVersion = getDataVersion(versionLight, 6L),
+            networkVersion = getNetworkVersion(versionNetwork, 6L),
+            dataList = getDataList(customerData),
+            networkList = getNetworkList(customerNetwork),
+            onPush = { deleteIds, saveList, dtVersion ->
+                deleteIds.forEach { customerNetwork.delete(it) }
+                saveList.forEach { customerNetwork.insert(it) }
+                versionNetwork.insert(dtVersion)
+            },
+            onPull = { deleteIds, saveList, netVersion ->
+                deleteIds.forEach { customerData.deleteById(it) }
+                saveList.forEach { customerData.insert(it) }
+                versionLight.insert(netVersion)
+            }
+        )
 }
