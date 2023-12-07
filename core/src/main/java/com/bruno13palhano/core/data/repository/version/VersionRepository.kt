@@ -10,8 +10,7 @@ internal class VersionRepository @Inject constructor(
     @InternalVersionLight private val versionLight: VersionData<DataVersion>
 ) : VersionData<DataVersion> {
     override suspend fun insert(model: DataVersion): Long {
-        versionLight.insert(model = model)
-        return 1
+        return versionLight.insert(model = model)
     }
 
     override suspend fun update(model: DataVersion) {
@@ -31,6 +30,6 @@ internal class VersionRepository @Inject constructor(
     }
 
     override fun getLast(): Flow<DataVersion> {
-        TODO("Not yet implemented")
+        return versionLight.getLast()
     }
 }
