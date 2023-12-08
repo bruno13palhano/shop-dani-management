@@ -107,10 +107,22 @@ internal class DefaultSaleData @Inject constructor(
         if (sale.isNew()) {
             if (sale.isOrderedByCustomer) {
                 saleQueries.transaction {
+                    stockOrderQueries.insert(
+                        productId = stockOrder.productId,
+                        date = stockOrder.date,
+                        validity = stockOrder.validity,
+                        quantity = sale.quantity.toLong(),
+                        purchasePrice = stockOrder.purchasePrice.toDouble(),
+                        salePrice = stockOrder.salePrice.toDouble(),
+                        isOrderedByCustomer = true,
+                        isPaid = stockOrder.isPaid,
+                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            .format(stockOrder.timestamp)
+                    )
                     saleQueries.insert(
                         productId = sale.productId,
                         customerId = sale.customerId,
-                        stockOrderId = sale.stockOrderId,
+                        stockOrderId = stockOrderQueries.lastId().executeAsOne(),
                         quantity = sale.quantity.toLong(),
                         salePrice = sale.salePrice.toDouble(),
                         purchasePrice = sale.purchasePrice.toDouble(),
@@ -130,18 +142,6 @@ internal class DefaultSaleData @Inject constructor(
                         delivered = delivery.delivered,
                         timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
                             .format(delivery.timestamp)
-                    )
-                    stockOrderQueries.insert(
-                        productId = stockOrder.productId,
-                        date = stockOrder.date,
-                        validity = stockOrder.validity,
-                        quantity = sale.quantity.toLong(),
-                        purchasePrice = stockOrder.purchasePrice.toDouble(),
-                        salePrice = stockOrder.salePrice.toDouble(),
-                        isOrderedByCustomer = true,
-                        isPaid = stockOrder.isPaid,
-                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            .format(stockOrder.timestamp)
                     )
                 }
                 onSuccess()
@@ -187,6 +187,19 @@ internal class DefaultSaleData @Inject constructor(
         } else {
             if (sale.isOrderedByCustomer) {
                 saleQueries.transaction {
+                    stockOrderQueries.insertWithId(
+                        id = stockOrder.id,
+                        productId = stockOrder.productId,
+                        date = stockOrder.date,
+                        validity = stockOrder.validity,
+                        quantity = sale.quantity.toLong(),
+                        purchasePrice = stockOrder.purchasePrice.toDouble(),
+                        salePrice = stockOrder.salePrice.toDouble(),
+                        isOrderedByCustomer = true,
+                        isPaid = stockOrder.isPaid,
+                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            .format(stockOrder.timestamp)
+                    )
                     saleQueries.insertWithId(
                         id = sale.id,
                         productId = sale.productId,
@@ -212,19 +225,6 @@ internal class DefaultSaleData @Inject constructor(
                         delivered = delivery.delivered,
                         timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
                             .format(delivery.timestamp)
-                    )
-                    stockOrderQueries.insertWithId(
-                        id = stockOrder.id,
-                        productId = stockOrder.productId,
-                        date = stockOrder.date,
-                        validity = stockOrder.validity,
-                        quantity = sale.quantity.toLong(),
-                        purchasePrice = stockOrder.purchasePrice.toDouble(),
-                        salePrice = stockOrder.salePrice.toDouble(),
-                        isOrderedByCustomer = true,
-                        isPaid = stockOrder.isPaid,
-                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            .format(stockOrder.timestamp)
                     )
                 }
                 onSuccess()
