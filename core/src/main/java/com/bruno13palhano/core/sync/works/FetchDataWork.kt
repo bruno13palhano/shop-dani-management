@@ -27,7 +27,6 @@ import com.bruno13palhano.core.sync.Synchronizer
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 
 @HiltWorker
@@ -45,13 +44,13 @@ class FetchDataWork @AssistedInject constructor(
 ) : CoroutineWorker(context, params), Synchronizer {
 
     override suspend fun doWork(): Result = withContext(ioDispatcher) {
-        val category = async { categoryRepository.sync() }.await()
-        val product = async { productRepository.sync() }.await()
-        val customer = async { customerRepository.sync() }.await()
-        val stockOrder = async { stockOrderRepository.sync() }.await()
-        val sale = async { saleRepository.sync() }.await()
-        val delivery = async { deliveryRepository.sync() }.await()
-        val catalog = async { catalogRepository.sync() }.await()
+        val category = categoryRepository.sync()
+        val product = productRepository.sync()
+        val customer = customerRepository.sync()
+        val stockOrder = stockOrderRepository.sync()
+        val sale = saleRepository.sync()
+        val delivery = deliveryRepository.sync()
+        val catalog = catalogRepository.sync()
 
         val syncedSuccessfully = category && product && customer && stockOrder && sale && delivery
                 && catalog
