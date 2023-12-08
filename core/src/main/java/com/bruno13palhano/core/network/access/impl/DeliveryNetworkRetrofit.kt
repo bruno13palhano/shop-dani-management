@@ -36,6 +36,10 @@ internal class DeliveryNetworkRetrofit @Inject constructor(
     }
 
     override suspend fun insert(data: Delivery) {
-
+        try {
+            apiService.insertDelivery(data.asNetwork())
+        } catch (ignored: Exception) {
+            ignored.printStackTrace()
+        }
     }
 }

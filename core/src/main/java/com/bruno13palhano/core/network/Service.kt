@@ -54,6 +54,9 @@ internal interface Service {
     @DELETE("customers/delete/{id}")
     suspend fun deleteCustomer(@Path("id") id: Long)
 
+    @POST("deliveries/insert")
+    suspend fun insertDelivery(@Body delivery: DeliveryNet)
+
     @GET("deliveries/all")
     suspend fun getAllDeliveries(): List<DeliveryNet>
 
