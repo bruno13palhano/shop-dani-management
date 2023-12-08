@@ -44,18 +44,17 @@ class FetchDataWork @AssistedInject constructor(
 ) : CoroutineWorker(context, params), Synchronizer {
 
     override suspend fun doWork(): Result = withContext(ioDispatcher) {
-        val category = categoryRepository.sync()
-        val product = productRepository.sync()
-        val customer = customerRepository.sync()
-        val stockOrder = stockOrderRepository.sync()
-        val sale = saleRepository.sync()
-        val delivery = deliveryRepository.sync()
-        val catalog = catalogRepository.sync()
+        val synced = syncedSuccessfully(
+            categorySynced = categoryRepository.sync(),
+            productSynced = productRepository.sync(),
+            customerSynced = customerRepository.sync(),
+            stockOrderSynced = stockOrderRepository.sync(),
+            saleSynced = saleRepository.sync(),
+            deliverySynced = deliveryRepository.sync(),
+            catalogSynced = catalogRepository.sync()
+        )
 
-        val syncedSuccessfully = category && product && customer && stockOrder && sale && delivery
-                && catalog
-
-        if (syncedSuccessfully) {
+        if (synced) {
             Result.success()
         } else {
             Result.retry()
@@ -70,4 +69,15 @@ class FetchDataWork @AssistedInject constructor(
             )
             .build()
     }
+
+    private fun syncedSuccessfully(
+        categorySynced: Boolean,
+        productSynced: Boolean,
+        customerSynced: Boolean,
+        stockOrderSynced: Boolean,
+        saleSynced: Boolean,
+        deliverySynced: Boolean,
+        catalogSynced: Boolean
+    ) = categorySynced && productSynced && customerSynced && stockOrderSynced && saleSynced
+            && deliverySynced && catalogSynced
 }
