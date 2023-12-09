@@ -9,7 +9,7 @@ interface StockOrderRepository : RepositoryOperations<StockOrder>, Syncable {
     fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>>
     fun search(value: String, isOrderedByCustomer: Boolean): Flow<List<StockOrder>>
     fun getByCategory(category: String, isOrderedByCustomer: Boolean): Flow<List<StockOrder>>
-    suspend fun updateStockOrderQuantity(id: Long, quantity: Int)
+    suspend fun updateStockOrderQuantity(id: Long, quantity: Int, timestamp: String)
     fun getStockOrderItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>>
     fun getDebitStock(): Flow<List<StockOrder>>
     fun getOutOfStock(): Flow<List<StockOrder>>
