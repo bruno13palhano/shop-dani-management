@@ -4,13 +4,13 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalCatalogLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.model.Catalog
-import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.network.access.CatalogNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.di.DefaultCatalogNet
@@ -31,7 +31,8 @@ internal class DefaultCatalogRepository @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CatalogRepository {
     override suspend fun insert(model: Catalog): Long {
-        val catalogVersion = DataVersion(7L, "CATALOG", model.timestamp)
+        val catalogVersion = Versions.catalogVersion(timestamp = model.timestamp)
+
         val id = catalogData.insert(model = model) {
             CoroutineScope(ioDispatcher).launch {
                 val netModel = Catalog(
@@ -49,6 +50,7 @@ internal class DefaultCatalogRepository @Inject constructor(
                 catalogNetwork.insert(data = netModel)
             }
         }
+
         versionData.insert(model = catalogVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.insert(data = catalogVersion)
@@ -59,12 +61,14 @@ internal class DefaultCatalogRepository @Inject constructor(
     }
 
     override suspend fun update(model: Catalog) {
-        val catalogVersion = DataVersion(1L, "CATEGORY", model.timestamp)
+        val catalogVersion = Versions.catalogVersion(timestamp = model.timestamp)
+
         catalogData.update(model = model) {
             CoroutineScope(ioDispatcher).launch {
                 catalogNetwork.update(data = model)
             }
         }
+
         versionData.update(model = catalogVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.update(data = catalogVersion)
@@ -73,12 +77,14 @@ internal class DefaultCatalogRepository @Inject constructor(
     }
 
     override suspend fun deleteById(id: Long, timestamp: String) {
-        val catalogVersion = DataVersion(7L, "CATALOG", timestamp)
+        val catalogVersion = Versions.catalogVersion(timestamp = timestamp)
+
         catalogData.deleteById(id = id) {
             CoroutineScope(ioDispatcher).launch {
                 catalogNetwork.delete(id = id)
             }
         }
+
         versionData.update(model = catalogVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.update(data = catalogVersion)

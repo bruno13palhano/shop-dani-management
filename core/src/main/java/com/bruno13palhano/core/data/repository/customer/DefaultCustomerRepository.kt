@@ -4,13 +4,13 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalCustomerLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.model.Customer
-import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.network.access.CustomerNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.di.DefaultCustomerNet
@@ -31,7 +31,8 @@ internal class DefaultCustomerRepository @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CustomerRepository {
     override suspend fun insert(model: Customer): Long {
-        val customerVersion = DataVersion(6L, "CUSTOMER", model.timestamp)
+        val customerVersion = Versions.customerVersion(timestamp = model.timestamp)
+
         val id = customerData.insert(model = model) {
             CoroutineScope(ioDispatcher).launch {
                 val netModel = Customer(
@@ -46,6 +47,7 @@ internal class DefaultCustomerRepository @Inject constructor(
                 customerNetwork.insert(data = netModel)
             }
         }
+
         versionData.insert(customerVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.insert(data = customerVersion)
@@ -56,12 +58,14 @@ internal class DefaultCustomerRepository @Inject constructor(
     }
 
     override suspend fun update(model: Customer) {
-        val customerVersion = DataVersion(6L, "CUSTOMER", model.timestamp)
+        val customerVersion = Versions.customerVersion(timestamp = model.timestamp)
+
         customerData.update(model = model) {
             CoroutineScope(ioDispatcher).launch {
                 customerNetwork.update(data = model)
             }
         }
+
         versionData.update(model = customerVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.update(data = customerVersion)
@@ -70,12 +74,14 @@ internal class DefaultCustomerRepository @Inject constructor(
     }
 
     override suspend fun deleteById(id: Long, timestamp: String) {
-        val customerVersion = DataVersion(6L, "CUSTOMER", timestamp)
+        val customerVersion = Versions.customerVersion(timestamp = timestamp)
+
         customerData.deleteById(id = id) {
             CoroutineScope(ioDispatcher).launch {
                 customerNetwork.delete(id = id)
             }
         }
+
         versionData.update(model = customerVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.update(data = customerVersion)

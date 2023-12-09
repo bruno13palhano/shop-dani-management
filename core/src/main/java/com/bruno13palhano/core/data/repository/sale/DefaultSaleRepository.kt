@@ -6,6 +6,7 @@ import com.bruno13palhano.core.data.di.InternalSaleLight
 import com.bruno13palhano.core.data.di.InternalStockOrderLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.delivery.DeliveryData
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
@@ -13,7 +14,6 @@ import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.stockorder.StockOrderData
 import com.bruno13palhano.core.data.repository.version.VersionData
-import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
@@ -39,7 +39,8 @@ internal class DefaultSaleRepository @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleRepository {
     override suspend fun insert(model: Sale): Long {
-        val saleVersion = DataVersion(4L, "SALE", model.timestamp)
+        val saleVersion = Versions.saleVersion(timestamp = model.timestamp)
+
         val id = saleData.insert(model = model) {
             CoroutineScope(ioDispatcher).launch {
                 val netModel = Sale(
@@ -67,6 +68,7 @@ internal class DefaultSaleRepository @Inject constructor(
                 saleNetwork.insert(data = netModel)
             }
         }
+
         versionData.insert(saleVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.insert(saleVersion)
@@ -77,12 +79,14 @@ internal class DefaultSaleRepository @Inject constructor(
     }
 
     override suspend fun update(model: Sale) {
-        val saleVersion = DataVersion(4L, "SALE", model.timestamp)
+        val saleVersion = Versions.saleVersion(timestamp = model.timestamp)
+
         saleData.update(model = model) {
             CoroutineScope(ioDispatcher).launch {
                 saleNetwork.update(data = model)
             }
         }
+
         versionData.update(saleVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.update(saleVersion)
@@ -101,8 +105,9 @@ internal class DefaultSaleRepository @Inject constructor(
         onSuccess: () -> Unit,
         onError: () -> Unit
     ) {
-        val saleVersion = DataVersion(4L, "SALE", sale.timestamp)
-        val deliveryVersion = DataVersion(5L, "DELIVERY", sale.timestamp)
+        val saleVersion = Versions.saleVersion(timestamp = sale.timestamp)
+        val deliveryVersion = Versions.deliveryVersion(timestamp = delivery.timestamp)
+
         saleData.insertItems(
             sale = sale,
             stockOrder = stockOrder,
@@ -164,11 +169,13 @@ internal class DefaultSaleRepository @Inject constructor(
                 saleNetwork.insertItems(netSale, netStockOrder, netDelivery)
             }
         }
+
         versionData.insert(saleVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.insert(saleVersion)
             }
         }
+
         versionData.insert(deliveryVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.insert(deliveryVersion)
@@ -193,12 +200,14 @@ internal class DefaultSaleRepository @Inject constructor(
     }
 
     override suspend fun deleteById(id: Long, timestamp: String) {
-        val saleVersion = DataVersion(4L, "SALE", timestamp)
+        val saleVersion = Versions.saleVersion(timestamp = timestamp)
+
         saleData.deleteById(id = id) {
             CoroutineScope(ioDispatcher).launch {
                 saleNetwork.delete(id = id)
             }
         }
+
         versionData.update(saleVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.update(saleVersion)

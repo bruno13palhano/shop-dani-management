@@ -4,13 +4,13 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalCategoryLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.network.access.CategoryNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.di.DefaultCategoryNet
@@ -35,12 +35,14 @@ internal class DefaultCategoryRepository @Inject constructor(
     }
 
     override suspend fun deleteById(id: Long, timestamp: String) {
-        val categoryVersion = DataVersion(1L, "CATEGORY", timestamp)
+        val categoryVersion = Versions.categoryVersion(timestamp = timestamp)
+
         versionData.update(model = categoryVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.update(data = categoryVersion)
             }
         }
+
         categoryData.deleteById(id = id) {
             CoroutineScope(ioDispatcher).launch {
                 categoryNetwork.delete(id = id)
@@ -79,12 +81,14 @@ internal class DefaultCategoryRepository @Inject constructor(
         )
 
     override suspend fun update(model: Category) {
-        val categoryVersion = DataVersion(1L, "CATEGORY", model.timestamp)
+        val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
+
         versionData.update(model = categoryVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.update(data = categoryVersion)
             }
         }
+
         categoryData.update(model = model) {
             CoroutineScope(ioDispatcher).launch {
                 categoryNetwork.update(data = model)
@@ -93,7 +97,8 @@ internal class DefaultCategoryRepository @Inject constructor(
     }
 
     override suspend fun insert(model: Category): Long {
-        val categoryVersion = DataVersion(1L, "CATEGORY", model.timestamp)
+        val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
+
         val id = categoryData.insert(model = model) {
             CoroutineScope(ioDispatcher).launch {
                 val netModel = Category(
@@ -105,6 +110,7 @@ internal class DefaultCategoryRepository @Inject constructor(
                 categoryNetwork.insert(data = netModel)
             }
         }
+
         versionData.insert(model = categoryVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.insert(data = categoryVersion)

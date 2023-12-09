@@ -4,12 +4,12 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalProductLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.version.VersionData
-import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.network.access.ProductNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
@@ -31,7 +31,8 @@ internal class DefaultProductRepository @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ): ProductRepository {
     override suspend fun insert(model: Product): Long {
-        val productVersion = DataVersion(2L, "PRODUCT", model.timestamp)
+        val productVersion = Versions.productVersion(timestamp = model.timestamp)
+
         val id = productData.insert(model = model) {
             CoroutineScope(ioDispatcher).launch {
                 val netModel = Product(
@@ -49,6 +50,7 @@ internal class DefaultProductRepository @Inject constructor(
                 productNetwork.insert(data = netModel)
             }
         }
+
         versionData.insert(productVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.insert(data = productVersion)
@@ -59,12 +61,14 @@ internal class DefaultProductRepository @Inject constructor(
     }
 
     override suspend fun update(model: Product) {
-        val productVersion = DataVersion(2L, "PRODUCT", model.timestamp)
+        val productVersion = Versions.productVersion(timestamp = model.timestamp)
+
         productData.update(model = model) {
             CoroutineScope(ioDispatcher).launch {
                 productNetwork.insert(data = model)
             }
         }
+
         versionData.update(model = productVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.insert(data = productVersion)
@@ -85,12 +89,14 @@ internal class DefaultProductRepository @Inject constructor(
     }
 
     override suspend fun deleteById(id: Long, timestamp: String) {
-        val productVersion = DataVersion(2L, "PRODUCT", timestamp)
+        val productVersion = Versions.productVersion(timestamp = timestamp)
+
         productData.deleteById(id = id) {
             CoroutineScope(ioDispatcher).launch {
                 productNetwork.delete(id = id)
             }
         }
+
         versionData.update(model = productVersion) {
             CoroutineScope(ioDispatcher).launch {
                 versionNetwork.update(data = productVersion)

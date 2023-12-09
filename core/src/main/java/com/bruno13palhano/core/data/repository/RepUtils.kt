@@ -25,3 +25,13 @@ suspend fun <T : Model> getDataList(data: DataOperations<T>) =
 suspend fun <T : Model> getNetworkList(network: CrudNetwork<T>) =
     try { network.getAll() }
     catch (ignored: Exception) { emptyList() }
+
+object Versions {
+    fun categoryVersion(timestamp: String) = DataVersion(1L, "CATEGORY", timestamp)
+    fun productVersion(timestamp: String) = DataVersion(2L, "PRODUCT", timestamp)
+    fun stockOrderVersion(timestamp: String) = DataVersion(3L, "STOCK_ORDER", timestamp)
+    fun saleVersion(timestamp: String) = DataVersion(4L, "SALE", timestamp)
+    fun deliveryVersion(timestamp: String) = DataVersion(5L, "DELIVERY", timestamp)
+    fun customerVersion(timestamp: String) = DataVersion(6L, "CUSTOMER", timestamp)
+    fun catalogVersion(timestamp: String) = DataVersion(7L, "CATALOG", timestamp)
+}
