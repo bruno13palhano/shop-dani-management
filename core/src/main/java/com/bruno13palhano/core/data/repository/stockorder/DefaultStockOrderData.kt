@@ -98,9 +98,8 @@ class DefaultStockOrderData @Inject constructor(
         ).asFlow().mapToList(ioDispatcher)
     }
 
-    override suspend fun updateStockOrderQuantity(id: Long, quantity: Int, onSuccess: () -> Unit) {
+    override suspend fun updateStockOrderQuantity(id: Long, quantity: Int) {
         stockOrderQueries.updateStockOrderQuantity(quantity = quantity.toLong(), id = id)
-        onSuccess()
     }
 
     override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
