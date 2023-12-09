@@ -5,7 +5,6 @@ import com.bruno13palhano.core.model.Model
 import com.bruno13palhano.core.network.model.DataVersionNet
 import com.bruno13palhano.core.network.model.asExternal
 import kotlinx.coroutines.CancellationException
-import java.time.OffsetDateTime
 
 interface Synchronizer {
     suspend fun Syncable.sync() = this@sync.syncWith(this@Synchronizer)
@@ -24,11 +23,11 @@ suspend fun <T : Model> Synchronizer.syncData(
     onPull: suspend (deleteIds: List<Long>, saveList: List<T>, netVersion: DataVersion) -> Unit
 ) = suspendRunCatching {
     if (dataVersion.id != 0L || networkVersion.id != 0L) {
-        if (dataVersion.timestamp > OffsetDateTime.parse(networkVersion.timestamp)) {
+        if (dataVersion.timestamp > networkVersion.timestamp) {
             if (dataList.isNotEmpty()) {
                 onPush(networkList.map { it.id }, dataList, dataVersion)
             }
-        } else if (dataVersion.timestamp < OffsetDateTime.parse(networkVersion.timestamp)) {
+        } else if (dataVersion.timestamp < networkVersion.timestamp) {
             if (networkList.isNotEmpty()) {
                 onPull(dataList.map { it.id }, networkList, networkVersion.asExternal())
             }
