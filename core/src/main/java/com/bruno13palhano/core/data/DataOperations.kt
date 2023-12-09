@@ -13,7 +13,7 @@ interface DataOperations<T> {
      * Insert a [model] of type [T].
      * @param model the new [model] to be inserted.
      */
-    suspend fun insert(model: T): Long
+    suspend fun insert(model: T, onSuccess: (id: Long) -> Unit): Long
 
     /**
      * Updates the [model] of type [T].
