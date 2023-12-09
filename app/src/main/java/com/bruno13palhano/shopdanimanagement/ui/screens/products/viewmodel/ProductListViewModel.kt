@@ -11,6 +11,7 @@ import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -18,7 +19,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +52,7 @@ class ProductListViewModel @Inject constructor(
     }
 
     fun updateCategory(id: Long) {
-        val category = Category(id, name.trim(), timestamp = OffsetDateTime.now())
+        val category = Category(id = id, category = name.trim(), timestamp = getCurrentTimestamp())
         viewModelScope.launch {
             categoryRepository.update(category)
         }

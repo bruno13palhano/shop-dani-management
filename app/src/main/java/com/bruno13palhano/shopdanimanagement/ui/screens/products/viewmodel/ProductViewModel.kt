@@ -16,13 +16,12 @@ import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
 import com.bruno13palhano.shopdanimanagement.ui.components.CompanyCheck
+import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -96,7 +95,7 @@ class ProductViewModel @Inject constructor(
         val catList = mutableListOf<Category>()
         categories
             .filter { it.isChecked }
-            .map { catList.add(Category(it.id, it.category,  OffsetDateTime.now(ZoneOffset.UTC))) }
+            .map { catList.add(Category(it.id, it.category, getCurrentTimestamp())) }
         this.categories = catList
         category = this.categories.joinToString(", ") { it.category }
     }
@@ -117,7 +116,7 @@ class ProductViewModel @Inject constructor(
                 Category(
                     id = categoryChecked.id,
                     category = categoryChecked.category,
-                    timestamp =  OffsetDateTime.now(ZoneOffset.UTC)
+                    timestamp = getCurrentTimestamp()
                 )
             }
     }
@@ -189,7 +188,10 @@ class ProductViewModel @Inject constructor(
 
     fun deleteProduct(id: Long) {
         viewModelScope.launch {
-            productRepository.deleteById(id)
+            productRepository.deleteById(
+                id = id,
+                timestamp = getCurrentTimestamp()
+            )
         }
     }
 
@@ -202,8 +204,8 @@ class ProductViewModel @Inject constructor(
         date = date,
         categories = allCategories
             .filter { it.isChecked }
-            .map { Category(id = it.id, category = it.category, timestamp = OffsetDateTime.now(ZoneOffset.UTC)) },
+            .map { Category(id = it.id, category = it.category, timestamp = getCurrentTimestamp()) },
         company = company,
-        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
+        timestamp = getCurrentTimestamp()
     )
 }

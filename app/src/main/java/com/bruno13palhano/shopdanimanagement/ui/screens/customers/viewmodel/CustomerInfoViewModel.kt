@@ -8,6 +8,7 @@ import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Sale
+import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import com.bruno13palhano.shopdanimanagement.ui.screens.setChartEntries
 import com.bruno13palhano.shopdanimanagement.ui.screens.setQuantity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,8 +18,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +26,7 @@ class CustomerInfoViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleRepository
 ) : ViewModel() {
     private val _customerPurchases = MutableStateFlow(emptyList<Sale>())
-    private val _customer = MutableStateFlow(Customer(0L, "", byteArrayOf(), "", "", "", OffsetDateTime.now(ZoneOffset.UTC)))
+    private val _customer = MutableStateFlow(Customer(0L, "", byteArrayOf(), "", "", "", getCurrentTimestamp()))
 
     val customerInfo = combine(_customerPurchases, _customer) { purchases, customer ->
         var owingValue = 0F

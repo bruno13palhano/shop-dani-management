@@ -17,19 +17,16 @@ import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Delivery
-import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerCheck
+import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -242,7 +239,10 @@ class SaleViewModel @Inject constructor(
 
     fun deleteSale(saleId: Long) {
         viewModelScope.launch {
-            saleRepository.deleteById(saleId)
+            saleRepository.deleteById(
+                id = saleId,
+                timestamp = getCurrentTimestamp()
+            )
         }
     }
 
@@ -271,7 +271,7 @@ class SaleViewModel @Inject constructor(
         isOrderedByCustomer = isOrderedByCustomer,
         isPaidByCustomer = isPaidByCustomer,
         canceled = false,
-        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
+        timestamp = getCurrentTimestamp()
     )
 
     private fun createStockOrder(
@@ -292,7 +292,7 @@ class SaleViewModel @Inject constructor(
         salePrice = stringToFloat(salePrice),
         isOrderedByCustomer = isOrderedByCustomer,
         isPaid = isPaid,
-        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
+        timestamp = getCurrentTimestamp()
     )
 
     private fun createDelivery() = Delivery(
@@ -307,7 +307,7 @@ class SaleViewModel @Inject constructor(
         shippingDate = dateOfSale,
         deliveryDate = dateOfSale,
         delivered = false,
-        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
+        timestamp = getCurrentTimestamp()
     )
 
     private fun stringToFloat(value: String): Float {

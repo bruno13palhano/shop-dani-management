@@ -12,14 +12,12 @@ import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -129,7 +127,10 @@ class ItemViewModel @Inject constructor(
 
     fun deleteStockOrderItem(stockOrderId: Long) {
         viewModelScope.launch {
-            stockRepository.deleteById(id = stockOrderId)
+            stockRepository.deleteById(
+                id = stockOrderId,
+                timestamp = getCurrentTimestamp()
+            )
         }
     }
 
@@ -147,7 +148,7 @@ class ItemViewModel @Inject constructor(
         salePrice = stringToFloat(salePrice),
         isOrderedByCustomer = isOrderedByCustomer,
         isPaid = isPaid,
-        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
+        timestamp = getCurrentTimestamp()
     )
 
     private fun updateStockOrder(stockOrderId: Long, isOrderedByCustomer: Boolean) = StockOrder(
@@ -164,7 +165,7 @@ class ItemViewModel @Inject constructor(
         salePrice = stringToFloat(salePrice),
         isOrderedByCustomer = isOrderedByCustomer,
         isPaid = isPaid,
-        timestamp = OffsetDateTime.now(ZoneOffset.UTC)
+        timestamp = getCurrentTimestamp()
     )
 
     private fun stringToFloat(value: String): Float {

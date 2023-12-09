@@ -8,12 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,7 +34,11 @@ class ProductCategoriesViewModel @Inject constructor(
     }
 
     fun insertCategory() {
-        val category = Category(0L, newName.trim(), timestamp = OffsetDateTime.now(ZoneOffset.UTC))
+        val category = Category(
+            id = 0L,
+            category = newName.trim(),
+            timestamp = getCurrentTimestamp()
+        )
         viewModelScope.launch {
             categoryRepository.insert(category)
         }

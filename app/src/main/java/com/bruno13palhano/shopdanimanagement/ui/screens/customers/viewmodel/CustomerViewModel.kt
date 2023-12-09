@@ -9,12 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -81,7 +80,7 @@ class CustomerViewModel @Inject constructor(
             email = email,
             address = address,
             phoneNumber = phoneNumber,
-            timestamp = OffsetDateTime.now(ZoneOffset.UTC)
+            timestamp = getCurrentTimestamp()
         )
         viewModelScope.launch {
             customerRepository.insert(customer)
@@ -96,7 +95,7 @@ class CustomerViewModel @Inject constructor(
             email = email,
             address = address,
             phoneNumber = phoneNumber,
-            timestamp = OffsetDateTime.now(ZoneOffset.UTC)
+            timestamp = getCurrentTimestamp()
         )
         viewModelScope.launch {
             customerRepository.update(customer)
