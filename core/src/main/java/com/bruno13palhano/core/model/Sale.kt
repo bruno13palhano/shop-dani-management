@@ -1,7 +1,5 @@
 package com.bruno13palhano.core.model
 
-import java.time.OffsetDateTime
-
 data class Sale(
     override val id: Long,
     val productId: Long,
@@ -21,7 +19,7 @@ data class Sale(
     val isOrderedByCustomer: Boolean,
     val isPaidByCustomer: Boolean,
     val canceled: Boolean,
-    override val timestamp: OffsetDateTime
+    override val timestamp: String
 ) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

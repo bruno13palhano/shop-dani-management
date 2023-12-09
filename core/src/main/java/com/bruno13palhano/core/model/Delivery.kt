@@ -1,7 +1,5 @@
 package com.bruno13palhano.core.model
 
-import java.time.OffsetDateTime
-
 data class Delivery(
     override val id: Long,
     val saleId: Long,
@@ -14,5 +12,5 @@ data class Delivery(
     val shippingDate: Long,
     val deliveryDate: Long,
     val delivered: Boolean,
-    override val timestamp: OffsetDateTime
+    override val timestamp: String
 ) : Model(id = id, timestamp = timestamp)

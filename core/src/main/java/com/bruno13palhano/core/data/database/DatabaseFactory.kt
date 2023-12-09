@@ -4,8 +4,6 @@ import app.cash.sqldelight.ColumnAdapter
 import cache.ProductCategoriesTable
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.model.Category
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 
 internal class DatabaseFactory(private val driverFactory: DriverFactory) {
     fun createDriver(): ShopDatabase {
@@ -28,13 +26,11 @@ private val listOfCategoryAdapter = object : ColumnAdapter<List<Category>, Strin
                 Category(
                     id = params[0].toLong(),
                     category = params[1],
-                    timestamp = OffsetDateTime.parse(params[2])
+                    timestamp = params[2]
                 )
             }
         }
 
-    override fun encode(value: List<Category>) = value.joinToString(",") {
-            "${it.id}&${it.category}" +
-            "&${DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").format(it.timestamp)}"
-        }
+    override fun encode(value: List<Category>) =
+        value.joinToString(",") { "${it.id}&${it.category}" + "&${it.timestamp}" }
 }

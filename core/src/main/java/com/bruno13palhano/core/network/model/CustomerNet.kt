@@ -2,7 +2,6 @@ package com.bruno13palhano.core.network.model
 
 import com.bruno13palhano.core.model.Customer
 import com.squareup.moshi.Json
-import java.time.OffsetDateTime
 import java.util.Base64
 
 data class CustomerNet(
@@ -50,7 +49,7 @@ internal fun CustomerNet.asExternal() = Customer(
     email = email,
     address = address,
     phoneNumber = phoneNumber,
-    timestamp = OffsetDateTime.parse(timestamp)
+    timestamp = timestamp
 )
 
 internal fun Customer.asNetwork() = CustomerNet(
@@ -60,5 +59,5 @@ internal fun Customer.asNetwork() = CustomerNet(
     email = email,
     address = address,
     phoneNumber = phoneNumber,
-    timestamp = timestamp.toString()
+    timestamp = timestamp
 )

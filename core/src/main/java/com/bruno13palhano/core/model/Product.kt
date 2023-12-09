@@ -1,7 +1,5 @@
 package com.bruno13palhano.core.model
 
-import java.time.OffsetDateTime
-
 /**
 * Product model.
 *
@@ -24,7 +22,7 @@ data class Product(
     val date: Long,
     val categories: List<Category>,
     val company: String,
-    override val timestamp: OffsetDateTime
+    override val timestamp: String
 ) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

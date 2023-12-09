@@ -2,7 +2,6 @@ package com.bruno13palhano.core.network.model
 
 import com.bruno13palhano.core.model.Sale
 import com.squareup.moshi.Json
-import java.time.OffsetDateTime
 
 data class SaleNet (
     @Json(name = "id") val id: Long,
@@ -39,7 +38,7 @@ internal fun SaleNet.asExternal() = Sale(
     isOrderedByCustomer = isOrderedByCustomer,
     isPaidByCustomer = isPaidByCustomer,
     canceled = canceled,
-    timestamp = OffsetDateTime.parse(timestamp)
+    timestamp = timestamp
 )
 
 internal fun Sale.asNetwork() = SaleNet(
@@ -55,5 +54,5 @@ internal fun Sale.asNetwork() = SaleNet(
     isOrderedByCustomer = isOrderedByCustomer,
     isPaidByCustomer = isPaidByCustomer,
     canceled = canceled,
-    timestamp = timestamp.toString()
+    timestamp = timestamp
 )

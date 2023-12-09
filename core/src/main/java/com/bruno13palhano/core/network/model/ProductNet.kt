@@ -2,7 +2,6 @@ package com.bruno13palhano.core.network.model
 
 import com.bruno13palhano.core.model.Product
 import com.squareup.moshi.Json
-import java.time.OffsetDateTime
 import java.util.Base64
 
 data class ProductNet(
@@ -58,7 +57,7 @@ internal fun Product.asNetwork() = ProductNet(
     date = date,
     categories = categories.map { it.asNetwork() },
     company = company,
-    timestamp = timestamp.toString()
+    timestamp = timestamp
 )
 
 internal fun ProductNet.asExternal() = Product(
@@ -70,5 +69,5 @@ internal fun ProductNet.asExternal() = Product(
     date = date,
     categories = categories.map { it.asExternal() },
     company = company,
-    timestamp = OffsetDateTime.parse(timestamp)
+    timestamp = timestamp
 )

@@ -2,7 +2,6 @@ package com.bruno13palhano.core.network.model
 
 import com.bruno13palhano.core.model.DataVersion
 import com.squareup.moshi.Json
-import java.time.OffsetDateTime
 
 data class DataVersionNet(
     @Json(name = "id") val id: Long = 0L,
@@ -13,11 +12,11 @@ data class DataVersionNet(
 internal fun DataVersionNet.asExternal() = DataVersion(
     id = id,
     name = name,
-    timestamp = OffsetDateTime.parse(timestamp)
+    timestamp = timestamp
 )
 
 internal fun DataVersion.asNetwork() = DataVersionNet(
     id = id,
     name = name,
-    timestamp = timestamp.toString()
+    timestamp = timestamp
 )

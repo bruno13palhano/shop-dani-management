@@ -2,7 +2,6 @@ package com.bruno13palhano.core.network.model
 
 import com.bruno13palhano.core.model.StockOrder
 import com.squareup.moshi.Json
-import java.time.OffsetDateTime
 
 data class StockOrderNet(
     @Json(name = "id") val id: Long,
@@ -31,7 +30,7 @@ internal fun StockOrderNet.asExternal() = StockOrder(
     salePrice = salePrice,
     isOrderedByCustomer = isOrderedByCustomer,
     isPaid = isPaid,
-    timestamp = OffsetDateTime.parse(timestamp)
+    timestamp = timestamp
 )
 
 internal fun StockOrder.asNetwork() = StockOrderNet(
@@ -44,5 +43,5 @@ internal fun StockOrder.asNetwork() = StockOrderNet(
     salePrice = salePrice,
     isOrderedByCustomer = isOrderedByCustomer,
     isPaid = isPaid,
-    timestamp = timestamp.toString()
+    timestamp = timestamp
 )

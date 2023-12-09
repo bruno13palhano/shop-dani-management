@@ -2,7 +2,6 @@ package com.bruno13palhano.core.network.model
 
 import com.bruno13palhano.core.model.Delivery
 import com.squareup.moshi.Json
-import java.time.OffsetDateTime
 
 data class DeliveryNet(
     @Json(name = "id") val id: Long,
@@ -26,7 +25,7 @@ internal fun DeliveryNet.asExternal() = Delivery(
     shippingDate = shippingDate,
     deliveryDate = deliveryDate,
     delivered = delivered,
-    timestamp = OffsetDateTime.parse(timestamp)
+    timestamp = timestamp
 )
 
 internal fun Delivery.asNetwork() = DeliveryNet(
@@ -36,5 +35,5 @@ internal fun Delivery.asNetwork() = DeliveryNet(
     shippingDate = shippingDate,
     deliveryDate = deliveryDate,
     delivered = delivered,
-    timestamp = timestamp.toString()
+    timestamp = timestamp
 )
