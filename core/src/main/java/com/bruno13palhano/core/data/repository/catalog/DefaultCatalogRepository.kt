@@ -1,7 +1,9 @@
 package com.bruno13palhano.core.data.repository.catalog
 
+import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalCatalogLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getNetworkList
@@ -15,8 +17,10 @@ import com.bruno13palhano.core.network.di.DefaultCatalogNet
 import com.bruno13palhano.core.network.di.DefaultVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import java.time.OffsetDateTime
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class DefaultCatalogRepository @Inject constructor(
@@ -24,20 +28,62 @@ internal class DefaultCatalogRepository @Inject constructor(
     @InternalCatalogLight private val catalogData: CatalogData,
     @InternalVersionLight private val versionData: VersionData,
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CatalogRepository {
     override suspend fun insert(model: Catalog): Long {
-        versionData.insert(DataVersion(7L, "CATALOG", model.timestamp))
-        return catalogData.insert(model = model)
+        val catalogVersion = DataVersion(7L, "CATALOG", model.timestamp)
+        val id = catalogData.insert(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                val netModel = Catalog(
+                    id = it,
+                    productId = model.productId,
+                    name = model.name,
+                    photo = model.photo,
+                    title = model.title,
+                    description = model.description,
+                    discount = model.discount,
+                    price = model.price,
+                    timestamp = model.timestamp
+                )
+
+                catalogNetwork.insert(data = netModel)
+            }
+        }
+        versionData.insert(model = catalogVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.insert(data = catalogVersion)
+            }
+        }
+
+        return id
     }
 
     override suspend fun update(model: Catalog) {
-        versionData.update(DataVersion(7L, "CATALOG", model.timestamp))
-        catalogData.update(model = model)
+        val catalogVersion = DataVersion(1L, "CATEGORY", model.timestamp)
+        catalogData.update(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                catalogNetwork.update(data = model)
+            }
+        }
+        versionData.update(model = catalogVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.update(data = catalogVersion)
+            }
+        }
     }
 
-    override suspend fun deleteById(id: Long) {
-        versionData.update(DataVersion(7L, "CATALOG", OffsetDateTime.now()))
-        catalogData.deleteById(id = id)
+    override suspend fun deleteById(id: Long, timestamp: String) {
+        val catalogVersion = DataVersion(7L, "CATALOG", timestamp)
+        catalogData.deleteById(id = id) {
+            CoroutineScope(ioDispatcher).launch {
+                catalogNetwork.delete(id = id)
+            }
+        }
+        versionData.update(model = catalogVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.update(data = catalogVersion)
+            }
+        }
     }
 
     override fun getAll(): Flow<List<Catalog>> {
@@ -72,9 +118,9 @@ internal class DefaultCatalogRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { catalogData.deleteById(it) }
-                saveList.forEach { catalogData.insert(it) }
-                versionData.insert(netVersion)
+                deleteIds.forEach { catalogData.deleteById(it) {} }
+                saveList.forEach { catalogData.insert(it) {} }
+                versionData.insert(netVersion) {}
             }
         )
 }

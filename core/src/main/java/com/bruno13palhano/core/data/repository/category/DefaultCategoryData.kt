@@ -11,42 +11,46 @@ import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class DefaultCategoryData @Inject constructor(
     private val categoryQueries:  CategoryTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CategoryData {
-    override suspend fun insert(model: Category): Long {
+    override suspend fun insert(model: Category, onSuccess: (id: Long) -> Unit): Long {
         if(model.isNew()) {
             categoryQueries.insert(
                 name = model.category,
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp))
+                timestamp = model.timestamp
+            )
+            val id = categoryQueries.getLastId().executeAsOne()
+            onSuccess(id)
+
+            return id
         } else {
             categoryQueries.insertWithId(
                 id = model.id,
                 name = model.category,
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp)
+                timestamp = model.timestamp
             )
+            onSuccess(model.id)
+
+            return model.id
         }
-        return categoryQueries.getLastId().executeAsOne()
     }
 
-    override suspend fun update(model: Category) {
+    override suspend fun update(model: Category, onSuccess: () -> Unit) {
         categoryQueries.update(
             id = model.id,
             name = model.category,
-            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                .format(model.timestamp)
+            timestamp = model.timestamp
         )
+        onSuccess()
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
         categoryQueries.delete(id)
+        onSuccess()
     }
 
     override fun getAll(): Flow<List<Category>> {
@@ -74,12 +78,12 @@ internal class DefaultCategoryData @Inject constructor(
     private fun mapCategory(
         id: Long,
         name: String,
-        time: String
+        timestamp: String
     ): Category {
         return Category(
             id = id,
             category = name,
-            timestamp = OffsetDateTime.parse(time)
+            timestamp = timestamp
         )
     }
 }

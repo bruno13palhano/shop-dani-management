@@ -10,44 +10,46 @@ import com.bruno13palhano.core.model.DataVersion
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class DefaultVersionData @Inject constructor(
     private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : VersionData {
-    override suspend fun insert(model: DataVersion): Long {
+    override suspend fun insert(model: DataVersion, onSuccess: (id: Long) -> Unit): Long {
         if (model.id == 0L) {
             versionQueries.insert(
                 name = model.name,
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp),
+                timestamp = model.timestamp,
             )
+            val id = versionQueries.getLastId().executeAsOne()
+            onSuccess(id)
+
+            return id
         } else {
             versionQueries.insertWithId(
                 id = model.id,
                 name = model.name,
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp)
+                timestamp = model.timestamp
             )
-        }
+            onSuccess(model.id)
 
-        return versionQueries.getLastId().executeAsOne()
+            return model.id
+        }
     }
 
-    override suspend fun update(model: DataVersion) {
+    override suspend fun update(model: DataVersion, onSuccess: () -> Unit) {
         versionQueries.update(
             name = model.name,
-            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                .format(model.timestamp),
+            timestamp = model.timestamp,
             id = model.id
         )
+        onSuccess()
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
         versionQueries.delete(id = id)
+        onSuccess()
     }
 
     override fun getAll(): Flow<List<DataVersion>> {
@@ -73,6 +75,6 @@ internal class DefaultVersionData @Inject constructor(
     ) = DataVersion(
         id = id,
         name = name,
-        timestamp = OffsetDateTime.parse(timestamp)
+        timestamp = timestamp
     )
 }

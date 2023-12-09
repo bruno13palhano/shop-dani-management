@@ -1,7 +1,9 @@
 package com.bruno13palhano.core.data.repository.customer
 
+import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalCustomerLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getNetworkList
@@ -15,8 +17,10 @@ import com.bruno13palhano.core.network.di.DefaultCustomerNet
 import com.bruno13palhano.core.network.di.DefaultVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import java.time.OffsetDateTime
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class DefaultCustomerRepository @Inject constructor(
@@ -24,20 +28,59 @@ internal class DefaultCustomerRepository @Inject constructor(
     @InternalCustomerLight private val customerData: CustomerData,
     @InternalVersionLight private val versionData: VersionData,
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CustomerRepository {
     override suspend fun insert(model: Customer): Long {
-        versionData.insert(DataVersion(6L, "CUSTOMER", model.timestamp))
-        return customerData.insert(model = model)
+        val customerVersion = DataVersion(6L, "CUSTOMER", model.timestamp)
+        val id = customerData.insert(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                val netModel = Customer(
+                    id = it,
+                    name = model.name,
+                    photo = model.photo,
+                    email = model.email,
+                    address = model.address,
+                    phoneNumber = model.phoneNumber,
+                    timestamp = model.timestamp
+                )
+                customerNetwork.insert(data = netModel)
+            }
+        }
+        versionData.insert(customerVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.insert(data = customerVersion)
+            }
+        }
+
+        return id
     }
 
     override suspend fun update(model: Customer) {
-        versionData.update(DataVersion(6L, "CUSTOMER", model.timestamp))
-        customerData.update(model = model)
+        val customerVersion = DataVersion(6L, "CUSTOMER", model.timestamp)
+        customerData.update(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                customerNetwork.update(data = model)
+            }
+        }
+        versionData.update(model = customerVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.update(data = customerVersion)
+            }
+        }
     }
 
-    override suspend fun deleteById(id: Long) {
-        versionData.update(DataVersion(6L, "CUSTOMER", OffsetDateTime.now()))
-        customerData.deleteById(id = id)
+    override suspend fun deleteById(id: Long, timestamp: String) {
+        val customerVersion = DataVersion(6L, "CUSTOMER", timestamp)
+        customerData.deleteById(id = id) {
+            CoroutineScope(ioDispatcher).launch {
+                customerNetwork.delete(id = id)
+            }
+        }
+        versionData.update(model = customerVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.update(data = customerVersion)
+            }
+        }
     }
 
     override fun getAll(): Flow<List<Customer>> {
@@ -76,9 +119,9 @@ internal class DefaultCustomerRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { customerData.deleteById(it) }
-                saveList.forEach { customerData.insert(it) }
-                versionData.insert(netVersion)
+                deleteIds.forEach { customerData.deleteById(it) {} }
+                saveList.forEach { customerData.insert(it) {} }
+                versionData.insert(netVersion) {}
             }
         )
 }

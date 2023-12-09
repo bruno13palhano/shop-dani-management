@@ -11,15 +11,13 @@ import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class DefaultCatalogData @Inject constructor(
     private val catalogQueries: CatalogTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CatalogData {
-    override suspend fun insert(model: Catalog): Long {
+    override suspend fun insert(model: Catalog, onSuccess: (id: Long) -> Unit): Long {
         if (model.isNew()) {
             catalogQueries.insert(
                 productId = model.productId,
@@ -27,9 +25,12 @@ internal class DefaultCatalogData @Inject constructor(
                 description = model.description,
                 discount = model.discount,
                 price = model.price.toDouble(),
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp)
+                timestamp = model.timestamp
             )
+            val id = catalogQueries.getLastId().executeAsOne()
+            onSuccess(id)
+
+            return id
         } else {
             catalogQueries.insertWithId(
                 id = model.id,
@@ -38,28 +39,29 @@ internal class DefaultCatalogData @Inject constructor(
                 description = model.description,
                 discount = model.discount,
                 price = model.price.toDouble(),
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp)
+                timestamp = model.timestamp
             )
-        }
+            onSuccess(model.id)
 
-        return catalogQueries.getLastId().executeAsOne()
+            return model.id
+        }
     }
 
-    override suspend fun update(model: Catalog) {
+    override suspend fun update(model: Catalog, onSuccess: () -> Unit) {
         catalogQueries.update(
             title = model.title,
             description = model.description,
             discount = model.discount,
             price = model.price.toDouble(),
             id = model.id,
-            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                .format(model.timestamp)
+            timestamp = model.timestamp
         )
+        onSuccess()
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
         catalogQueries.delete(id = id)
+        onSuccess()
     }
 
     override fun getAll(): Flow<List<Catalog>> {
@@ -118,6 +120,6 @@ internal class DefaultCatalogData @Inject constructor(
         description = description,
         discount = discount,
         price = price.toFloat(),
-        timestamp = OffsetDateTime.parse(timestamp)
+        timestamp = timestamp
     )
 }

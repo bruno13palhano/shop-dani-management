@@ -1,7 +1,9 @@
 package com.bruno13palhano.core.data.repository.product
 
+import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalProductLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
@@ -15,8 +17,10 @@ import com.bruno13palhano.core.network.di.DefaultProductNet
 import com.bruno13palhano.core.network.di.DefaultVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import java.time.OffsetDateTime
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class DefaultProductRepository @Inject constructor(
@@ -24,15 +28,48 @@ internal class DefaultProductRepository @Inject constructor(
     @InternalProductLight private val productData: ProductData,
     @InternalVersionLight private val versionData: VersionData,
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ): ProductRepository {
     override suspend fun insert(model: Product): Long {
-        versionData.insert(DataVersion(2L, "PRODUCT", model.timestamp))
-        return productData.insert(model = model)
+        val productVersion = DataVersion(2L, "PRODUCT", model.timestamp)
+        val id = productData.insert(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                val netModel = Product(
+                    id = it,
+                    name = model.name,
+                    code = model.code,
+                    description = model.description,
+                    photo = model.photo,
+                    date = model.date,
+                    categories = model.categories,
+                    company = model.company,
+                    timestamp = model.timestamp
+                )
+
+                productNetwork.insert(data = netModel)
+            }
+        }
+        versionData.insert(productVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.insert(data = productVersion)
+            }
+        }
+
+        return id
     }
 
     override suspend fun update(model: Product) {
-        versionData.update(DataVersion(2L, "PRODUCT", OffsetDateTime.now()))
-        productData.update(model = model)
+        val productVersion = DataVersion(2L, "PRODUCT", model.timestamp)
+        productData.update(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                productNetwork.insert(data = model)
+            }
+        }
+        versionData.update(model = productVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.insert(data = productVersion)
+            }
+        }
     }
 
     override fun search(value: String): Flow<List<Product>> {
@@ -47,9 +84,18 @@ internal class DefaultProductRepository @Inject constructor(
         return productData.getByCategory(category = category)
     }
 
-    override suspend fun deleteById(id: Long) {
-        versionData.update(DataVersion(2L, "PRODUCT", OffsetDateTime.now()))
-        return productData.deleteById(id = id)
+    override suspend fun deleteById(id: Long, timestamp: String) {
+        val productVersion = DataVersion(2L, "PRODUCT", timestamp)
+        productData.deleteById(id = id) {
+            CoroutineScope(ioDispatcher).launch {
+                productNetwork.delete(id = id)
+            }
+        }
+        versionData.update(model = productVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.update(data = productVersion)
+            }
+        }
     }
 
     override fun getAll(): Flow<List<Product>> {
@@ -76,9 +122,9 @@ internal class DefaultProductRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { productData.deleteById(it) }
-                saveList.forEach { productData.insert(it) }
-                versionData.insert(netVersion)
+                deleteIds.forEach { productData.deleteById(it) {} }
+                saveList.forEach { productData.insert(it) {} }
+                versionData.insert(netVersion) {}
             }
         )
 }

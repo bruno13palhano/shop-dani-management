@@ -16,8 +16,6 @@ import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class DefaultSaleData @Inject constructor(
@@ -26,7 +24,7 @@ internal class DefaultSaleData @Inject constructor(
     private val stockOrderQueries: StockOrderTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleData {
-    override suspend fun insert(model: Sale): Long {
+    override suspend fun insert(model: Sale, onSuccess: (id: Long) -> Unit): Long {
         if (model.isNew()) {
             saleQueries.insert(
                 productId = model.productId,
@@ -40,11 +38,12 @@ internal class DefaultSaleData @Inject constructor(
                 isOrderedByCustomer = model.isOrderedByCustomer,
                 isPaidByCustomer = model.isPaidByCustomer,
                 canceled = model.canceled,
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp)
+                timestamp = model.timestamp
             )
+            val id = saleQueries.getLastId().executeAsOne()
+            onSuccess(id)
 
-            return saleQueries.getLastId().executeAsOne()
+            return id
         } else {
             saleQueries.insertWithId(
                 id = model.id,
@@ -59,15 +58,15 @@ internal class DefaultSaleData @Inject constructor(
                 isOrderedByCustomer = model.isOrderedByCustomer,
                 isPaidByCustomer = model.isPaidByCustomer,
                 canceled = model.canceled,
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp)
+                timestamp = model.timestamp
             )
+            onSuccess(model.id)
 
             return model.id
         }
     }
 
-    override suspend fun update(model: Sale) {
+    override suspend fun update(model: Sale, onSuccess: () -> Unit) {
         saleQueries.update(
             productId = model.productId,
             customerId =  model.customerId,
@@ -80,10 +79,10 @@ internal class DefaultSaleData @Inject constructor(
             isOrderedByCustomer = model.isOrderedByCustomer,
             isPaidByCustomer = model.isPaidByCustomer,
             canceled = model.canceled,
-            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                .format(model.timestamp),
+            timestamp = model.timestamp,
             id = model.id
         )
+        onSuccess()
     }
 
     override suspend fun cancelSale(saleId: Long) {
@@ -101,11 +100,13 @@ internal class DefaultSaleData @Inject constructor(
         sale: Sale,
         stockOrder: StockOrder,
         delivery: Delivery,
-        onSuccess: () -> Unit,
-        onError: () -> Unit
+        onSuccess: (saleId: Long, stockId: Long, deliveryId: Long) -> Unit
     ) {
         if (sale.isNew()) {
             if (sale.isOrderedByCustomer) {
+                var saleId = 0L
+                var orderId = 0L
+
                 saleQueries.transaction {
                     stockOrderQueries.insert(
                         productId = stockOrder.productId,
@@ -116,13 +117,13 @@ internal class DefaultSaleData @Inject constructor(
                         salePrice = stockOrder.salePrice.toDouble(),
                         isOrderedByCustomer = true,
                         isPaid = stockOrder.isPaid,
-                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            .format(stockOrder.timestamp)
+                        timestamp = stockOrder.timestamp
                     )
+                    orderId = stockOrderQueries.lastId().executeAsOne()
                     saleQueries.insert(
                         productId = sale.productId,
                         customerId = sale.customerId,
-                        stockOrderId = stockOrderQueries.lastId().executeAsOne(),
+                        stockOrderId = orderId,
                         quantity = sale.quantity.toLong(),
                         salePrice = sale.salePrice.toDouble(),
                         purchasePrice = sale.purchasePrice.toDouble(),
@@ -131,22 +132,22 @@ internal class DefaultSaleData @Inject constructor(
                         isOrderedByCustomer = true,
                         isPaidByCustomer = sale.isPaidByCustomer,
                         canceled = sale.canceled,
-                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            .format(sale.timestamp)
+                        timestamp = sale.timestamp
                     )
+                    saleId = saleQueries.getLastId().executeAsOne()
                     deliveryQueries.insert(
-                        saleId = saleQueries.getLastId().executeAsOne(),
+                        saleId = saleId,
                         deliveryPrice = delivery.deliveryPrice.toDouble(),
                         shippingDate = delivery.shippingDate,
                         deliveryDate = delivery.deliveryDate,
                         delivered = delivery.delivered,
-                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            .format(delivery.timestamp)
+                        timestamp = delivery.timestamp
                     )
                 }
-                onSuccess()
+                onSuccess(saleId, orderId, deliveryQueries.getLastId().executeAsOne())
             } else {
                 val quantity = stockOrder.quantity - sale.quantity
+                var saleId = 0L
 
                 if (quantity >= 0) {
                     saleQueries.transaction {
@@ -166,22 +167,19 @@ internal class DefaultSaleData @Inject constructor(
                             isOrderedByCustomer = false,
                             isPaidByCustomer = sale.isPaidByCustomer,
                             canceled = sale.canceled,
-                            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                                .format(sale.timestamp)
+                            timestamp = sale.timestamp
                         )
+                        saleId = saleQueries.getLastId().executeAsOne()
                         deliveryQueries.insert(
-                            saleId = saleQueries.getLastId().executeAsOne(),
+                            saleId = saleId,
                             deliveryPrice = delivery.deliveryPrice.toDouble(),
                             shippingDate = delivery.shippingDate,
                             deliveryDate = delivery.deliveryDate,
                             delivered = delivery.delivered,
-                            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                                .format(delivery.timestamp)
+                            timestamp = delivery.timestamp
                         )
                     }
-                    onSuccess()
-                } else {
-                    onError()
+                    onSuccess(saleId, stockOrder.id, deliveryQueries.getLastId().executeAsOne())
                 }
             }
         } else {
@@ -197,8 +195,7 @@ internal class DefaultSaleData @Inject constructor(
                         salePrice = stockOrder.salePrice.toDouble(),
                         isOrderedByCustomer = true,
                         isPaid = stockOrder.isPaid,
-                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            .format(stockOrder.timestamp)
+                        timestamp = stockOrder.timestamp
                     )
                     saleQueries.insertWithId(
                         id = sale.id,
@@ -213,8 +210,7 @@ internal class DefaultSaleData @Inject constructor(
                         isOrderedByCustomer = true,
                         isPaidByCustomer = sale.isPaidByCustomer,
                         canceled = sale.canceled,
-                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            .format(sale.timestamp)
+                        timestamp = sale.timestamp
                     )
                     deliveryQueries.insertWithId(
                         id = delivery.id,
@@ -223,11 +219,10 @@ internal class DefaultSaleData @Inject constructor(
                         shippingDate = delivery.shippingDate,
                         deliveryDate = delivery.deliveryDate,
                         delivered = delivery.delivered,
-                        timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            .format(delivery.timestamp)
+                        timestamp = delivery.timestamp
                     )
                 }
-                onSuccess()
+                onSuccess(sale.id, stockOrder.id, delivery.id)
             } else {
                 val quantity = stockOrder.quantity - sale.quantity
 
@@ -250,8 +245,7 @@ internal class DefaultSaleData @Inject constructor(
                             isOrderedByCustomer = false,
                             isPaidByCustomer = sale.isPaidByCustomer,
                             canceled = sale.canceled,
-                            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                                .format(sale.timestamp)
+                            timestamp = sale.timestamp
                         )
                         deliveryQueries.insertWithId(
                             id = delivery.id,
@@ -260,13 +254,10 @@ internal class DefaultSaleData @Inject constructor(
                             shippingDate = delivery.shippingDate,
                             deliveryDate = delivery.deliveryDate,
                             delivered = delivery.delivered,
-                            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                                .format(delivery.timestamp)
+                            timestamp = delivery.timestamp
                         )
                     }
-                    onSuccess()
-                } else {
-                    onError()
+                    onSuccess(sale.id, stockOrder.id, delivery.id)
                 }
             }
         }
@@ -302,8 +293,9 @@ internal class DefaultSaleData @Inject constructor(
         ).asFlow().mapToList(ioDispatcher)
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
         saleQueries.delete(id = id)
+        onSuccess()
     }
 
     override fun getAll(): Flow<List<Sale>> {
@@ -455,7 +447,7 @@ internal class DefaultSaleData @Inject constructor(
             isOrderedByCustomer = isOrderedByCustomer,
             isPaidByCustomer = isPaidByCustomer,
             canceled = canceled,
-            timestamp = OffsetDateTime.parse(timestamp)
+            timestamp = timestamp
         )
     }
 }

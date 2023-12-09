@@ -11,15 +11,13 @@ import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class DefaultDeliveryData @Inject constructor(
     private val deliveryQueries: DeliveryTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : DeliveryData {
-    override suspend fun insert(model: Delivery): Long {
+    override suspend fun insert(model: Delivery, onSuccess: (id: Long) -> Unit): Long {
         if (model.isNew()) {
             deliveryQueries.insert(
                 saleId = model.saleId,
@@ -27,9 +25,12 @@ class DefaultDeliveryData @Inject constructor(
                 shippingDate = model.shippingDate,
                 deliveryDate = model.deliveryDate,
                 delivered = model.delivered,
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp)
+                timestamp = model.timestamp
             )
+            val id = deliveryQueries.getLastId().executeAsOne()
+            onSuccess(id)
+
+            return id
         } else {
             deliveryQueries.insertWithId(
                 id = model.id,
@@ -38,14 +39,15 @@ class DefaultDeliveryData @Inject constructor(
                 shippingDate = model.shippingDate,
                 deliveryDate = model.deliveryDate,
                 delivered = model.delivered,
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp)
+                timestamp = model.timestamp
             )
+            onSuccess(model.id)
+
+            return model.id
         }
-        return deliveryQueries.getLastId().executeAsOne()
     }
 
-    override suspend fun update(model: Delivery) {
+    override suspend fun update(model: Delivery, onSuccess: () -> Unit) {
         deliveryQueries.update(
             id = model.id,
             saleId = model.saleId,
@@ -53,9 +55,9 @@ class DefaultDeliveryData @Inject constructor(
             shippingDate = model.shippingDate,
             deliveryDate = model.deliveryDate,
             delivered = model.delivered,
-            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                .format(model.timestamp)
+            timestamp = model.timestamp
         )
+        onSuccess()
     }
 
     override suspend fun updateDeliveryPrice(id: Long, deliveryPrice: Float) {
@@ -79,8 +81,9 @@ class DefaultDeliveryData @Inject constructor(
             .asFlow().mapToList(ioDispatcher)
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
         deliveryQueries.delete(id = id)
+        onSuccess()
     }
 
     override fun getAll(): Flow<List<Delivery>> {
@@ -130,6 +133,6 @@ class DefaultDeliveryData @Inject constructor(
         shippingDate = shippingDate,
         deliveryDate = deliveryDate,
         delivered = delivered,
-        timestamp = OffsetDateTime.parse(timestamp)
+        timestamp = timestamp
     )
 }

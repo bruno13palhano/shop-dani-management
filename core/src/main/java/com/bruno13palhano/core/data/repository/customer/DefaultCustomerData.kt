@@ -11,15 +11,13 @@ import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class DefaultCustomerData @Inject constructor(
     private val customerQueries: CustomerTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CustomerData {
-    override suspend fun insert(model: Customer): Long {
+    override suspend fun insert(model: Customer, onSuccess: (id: Long) -> Unit): Long {
         if (model.isNew()) {
             customerQueries.insert(
                 name = model.name,
@@ -27,9 +25,12 @@ internal class DefaultCustomerData @Inject constructor(
                 email = model.email,
                 address = model.address,
                 phoneNumber = model.phoneNumber,
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp)
+                timestamp = model.timestamp
             )
+            val id = customerQueries.getLastId().executeAsOne()
+            onSuccess(id)
+
+            return id
         } else {
             customerQueries.insertWithId(
                 id = model.id,
@@ -38,14 +39,15 @@ internal class DefaultCustomerData @Inject constructor(
                 email = model.email,
                 address = model.address,
                 phoneNumber = model.phoneNumber,
-                timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    .format(model.timestamp)
+                timestamp = model.timestamp
             )
+            onSuccess(model.id)
+
+            return model.id
         }
-        return customerQueries.getLastId().executeAsOne()
     }
 
-    override suspend fun update(model: Customer) {
+    override suspend fun update(model: Customer, onSuccess: () -> Unit) {
         customerQueries.update(
             id = model.id,
             name = model.name,
@@ -53,13 +55,14 @@ internal class DefaultCustomerData @Inject constructor(
             email = model.email,
             address = model.address,
             phoneNumber = model.phoneNumber,
-            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                .format(model.timestamp)
+            timestamp = model.timestamp
         )
+        onSuccess()
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
         customerQueries.delete(id)
+        onSuccess()
     }
 
     override fun getAll(): Flow<List<Customer>> {
@@ -124,6 +127,6 @@ internal class DefaultCustomerData @Inject constructor(
         email = email,
         address = address,
         phoneNumber = phoneNumber,
-        timestamp = OffsetDateTime.parse(timestamp)
+        timestamp = timestamp
     )
 }

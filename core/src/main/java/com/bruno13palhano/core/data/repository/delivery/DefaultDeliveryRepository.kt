@@ -1,7 +1,9 @@
 package com.bruno13palhano.core.data.repository.delivery
 
+import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalDeliveryLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
@@ -15,8 +17,10 @@ import com.bruno13palhano.core.network.di.DefaultDeliveryNet
 import com.bruno13palhano.core.network.di.DefaultVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import java.time.OffsetDateTime
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class DefaultDeliveryRepository @Inject constructor(
@@ -24,15 +28,51 @@ internal class DefaultDeliveryRepository @Inject constructor(
     @InternalDeliveryLight private val deliveryData: DeliveryData,
     @InternalVersionLight private val versionData: VersionData,
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : DeliveryRepository {
     override suspend fun insert(model: Delivery): Long {
-        versionData.insert(DataVersion(5L, "DELIVERY", model.timestamp))
-        return deliveryData.insert(model = model)
+        val deliveryVersion = DataVersion(5L, "DELIVERY", model.timestamp)
+        val id = deliveryData.insert(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                val netModel = Delivery(
+                    id = it,
+                    saleId = model.saleId,
+                    customerName = model.customerName,
+                    address = model.address,
+                    phoneNumber = model.phoneNumber,
+                    productName = model.productName,
+                    price = model.price,
+                    deliveryPrice = model.deliveryPrice,
+                    shippingDate = model.shippingDate,
+                    deliveryDate = model.deliveryDate,
+                    delivered = model.delivered,
+                    timestamp = model.timestamp
+                )
+
+                deliveryNetwork.insert(data = netModel)
+            }
+        }
+        versionData.insert(model = deliveryVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.insert(data = deliveryVersion)
+            }
+        }
+
+        return id
     }
 
     override suspend fun update(model: Delivery) {
-        versionData.update(DataVersion(5L, "DELIVERY", model.timestamp))
-        deliveryData.update(model = model)
+        val deliveryVersion = DataVersion(5L, "DELIVERY", model.timestamp)
+        deliveryData.update(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                deliveryNetwork.update(data = model)
+            }
+        }
+        versionData.update(model = deliveryVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.update(data = deliveryVersion)
+            }
+        }
     }
 
     override suspend fun updateDeliveryPrice(id: Long, deliveryPrice: Float) {
@@ -55,9 +95,18 @@ internal class DefaultDeliveryRepository @Inject constructor(
         return deliveryData.getDeliveries(delivered = delivered)
     }
 
-    override suspend fun deleteById(id: Long) {
-        versionData.update(DataVersion(5L, "DELIVERY", OffsetDateTime.now()))
-        deliveryData.deleteById(id = id)
+    override suspend fun deleteById(id: Long, timestamp: String) {
+        val deliveryVersion = DataVersion(5L, "DELIVERY", timestamp)
+        deliveryData.deleteById(id = id) {
+            CoroutineScope(ioDispatcher).launch {
+                deliveryNetwork.delete(id = id)
+            }
+        }
+        versionData.update(model = deliveryVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.update(data = deliveryVersion)
+            }
+        }
     }
 
     override fun getAll(): Flow<List<Delivery>> {
@@ -84,9 +133,9 @@ internal class DefaultDeliveryRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { deliveryData.deleteById(it) }
-                saveList.forEach { deliveryData.insert(it) }
-                versionData.insert(netVersion)
+                deleteIds.forEach { deliveryData.deleteById(it) {} }
+                saveList.forEach { deliveryData.insert(it) {} }
+                versionData.insert(netVersion) {}
             }
         )
 

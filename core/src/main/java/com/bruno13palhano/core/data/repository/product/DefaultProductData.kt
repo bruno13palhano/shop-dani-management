@@ -13,8 +13,6 @@ import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class DefaultProductData @Inject constructor(
@@ -22,7 +20,7 @@ internal class DefaultProductData @Inject constructor(
     private val productCategoriesQueries: ProductCategoriesTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : ProductData {
-    override suspend fun insert(model: Product): Long {
+    override suspend fun insert(model: Product, onSuccess: (id: Long) -> Unit): Long {
         productCategoriesQueries.transaction {
             if (model.isNew()) {
                 productQueries.insert(
@@ -32,13 +30,14 @@ internal class DefaultProductData @Inject constructor(
                     photo = model.photo,
                     date = model.date,
                     company = model.company,
-                    timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                        .format(model.timestamp)
+                    timestamp = model.timestamp
                 )
                 productCategoriesQueries.insert(
                     productId = productQueries.getLastId().executeAsOne(),
                     categories = model.categories
                 )
+                onSuccess(productQueries.getLastId().executeAsOne())
+
             } else {
                 productQueries.insertWithId(
                     id = model.id,
@@ -48,8 +47,7 @@ internal class DefaultProductData @Inject constructor(
                     photo = model.photo,
                     date = model.date,
                     company = model.company,
-                    timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                        .format(model.timestamp)
+                    timestamp = model.timestamp
                 )
                 try {
                     val categoryId = productCategoriesQueries.getIdByProductId(model.id).executeAsOne()
@@ -64,12 +62,14 @@ internal class DefaultProductData @Inject constructor(
                         categories = model.categories
                     )
                 }
+                onSuccess(model.id)
             }
         }
-        return productQueries.getLastId().executeAsOne()
+
+        return if (model.id == 0L) productQueries.getLastId().executeAsOne() else model.id
     }
 
-    override suspend fun update(model: Product) {
+    override suspend fun update(model: Product, onSuccess: () -> Unit) {
         val categoryId = productQueries.getCategoryId(id = model.id).executeAsOne()
         productCategoriesQueries.update(
             productId = model.id,
@@ -84,9 +84,9 @@ internal class DefaultProductData @Inject constructor(
             date = model.date,
             company = model.company,
             id = model.id,
-            timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                .format(model.timestamp)
+            timestamp = model.timestamp
         )
+        onSuccess()
     }
 
     override fun search(value: String): Flow<List<Product>> {
@@ -114,8 +114,9 @@ internal class DefaultProductData @Inject constructor(
             .asFlow().mapToList(ioDispatcher)
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
         productQueries.delete(productId = id)
+        onSuccess()
     }
 
     override fun getAll(): Flow<List<Product>> {
@@ -154,7 +155,7 @@ internal class DefaultProductData @Inject constructor(
             date = date,
             categories = categories,
             company = company,
-            timestamp = OffsetDateTime.parse(timestamp)
+            timestamp = timestamp
         )
     }
 }

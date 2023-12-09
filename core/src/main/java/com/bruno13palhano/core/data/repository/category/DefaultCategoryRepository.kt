@@ -1,7 +1,9 @@
 package com.bruno13palhano.core.data.repository.category
 
+import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalCategoryLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getNetworkList
@@ -15,8 +17,10 @@ import com.bruno13palhano.core.network.di.DefaultCategoryNet
 import com.bruno13palhano.core.network.di.DefaultVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import java.time.OffsetDateTime
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class DefaultCategoryRepository @Inject constructor(
@@ -24,14 +28,24 @@ internal class DefaultCategoryRepository @Inject constructor(
     @InternalCategoryLight private val categoryData: CategoryData,
     @InternalVersionLight private val versionData: VersionData,
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ): CategoryRepository {
     override fun search(value: String): Flow<List<Category>> {
         return categoryData.search(value = value)
     }
 
-    override suspend fun deleteById(id: Long) {
-        versionData.update(DataVersion(1L, "CATEGORY", OffsetDateTime.now()))
-        categoryData.deleteById(id = id)
+    override suspend fun deleteById(id: Long, timestamp: String) {
+        val categoryVersion = DataVersion(1L, "CATEGORY", timestamp)
+        versionData.update(model = categoryVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.update(data = categoryVersion)
+            }
+        }
+        categoryData.deleteById(id = id) {
+            CoroutineScope(ioDispatcher).launch {
+                categoryNetwork.delete(id = id)
+            }
+        }
     }
 
     override fun getAll(): Flow<List<Category>> {
@@ -58,19 +72,45 @@ internal class DefaultCategoryRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { categoryData.deleteById(it) }
-                saveList.forEach { categoryData.insert(it) }
-                versionData.insert(netVersion)
+                deleteIds.forEach { categoryData.deleteById(it) {} }
+                saveList.forEach { categoryData.insert(it) {} }
+                versionData.insert(netVersion) {}
             }
         )
 
     override suspend fun update(model: Category) {
-        versionData.update(DataVersion(1L, "CATEGORY", model.timestamp))
-        return categoryData.update(model = model)
+        val categoryVersion = DataVersion(1L, "CATEGORY", model.timestamp)
+        versionData.update(model = categoryVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.update(data = categoryVersion)
+            }
+        }
+        categoryData.update(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                categoryNetwork.update(data = model)
+            }
+        }
     }
 
     override suspend fun insert(model: Category): Long {
-        versionData.insert(DataVersion(1L, "CATEGORY", model.timestamp))
-        return categoryData.insert(model = model)
+        val categoryVersion = DataVersion(1L, "CATEGORY", model.timestamp)
+        val id = categoryData.insert(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                val netModel = Category(
+                    id = it,
+                    category = model.category,
+                    timestamp = model.timestamp
+                )
+
+                categoryNetwork.insert(data = netModel)
+            }
+        }
+        versionData.insert(model = categoryVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.insert(data = categoryVersion)
+            }
+        }
+
+        return id
     }
 }

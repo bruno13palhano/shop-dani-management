@@ -1,7 +1,9 @@
 package com.bruno13palhano.core.data.repository.stockorder
 
+import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalStockOrderLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
@@ -15,8 +17,10 @@ import com.bruno13palhano.core.network.di.DefaultStockOrderNet
 import com.bruno13palhano.core.network.di.DefaultVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import java.time.OffsetDateTime
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class DefaultStockOrderRepository @Inject constructor(
@@ -24,15 +28,53 @@ internal class DefaultStockOrderRepository @Inject constructor(
     @InternalStockOrderLight private val stockOrderData: StockOrderData,
     @InternalVersionLight private val versionData: VersionData,
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : StockOrderRepository {
     override suspend fun insert(model: StockOrder): Long {
-        versionData.insert(DataVersion(3L, "STOCK_ORDER", model.timestamp))
-        return stockOrderData.insert(model = model)
+        val stockOrderVersion = DataVersion(3L, "STOCK_ORDER", model.timestamp)
+        val id = stockOrderData.insert(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                val netModel = StockOrder(
+                    id = it,
+                    productId = model.productId,
+                    name = model.name,
+                    photo = model.photo,
+                    date = model.date,
+                    validity = model.validity,
+                    quantity = model.quantity,
+                    categories = model.categories,
+                    company = model.company,
+                    purchasePrice = model.purchasePrice,
+                    salePrice = model.salePrice,
+                    isOrderedByCustomer = model.isOrderedByCustomer,
+                    isPaid = model.isPaid,
+                    timestamp = model.timestamp
+                )
+
+                stockOrderNetwork.insert(data = netModel)
+            }
+        }
+        versionData.insert(stockOrderVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.insert(data = stockOrderVersion)
+            }
+        }
+
+        return id
     }
 
     override suspend fun update(model: StockOrder) {
-        versionData.update(DataVersion(3L, "STOCK_ORDER", model.timestamp))
-        stockOrderData.update(model = model)
+        val stockOrderVersion = DataVersion(3L, "STOCK_ORDER", model.timestamp)
+        stockOrderData.update(model = model) {
+            CoroutineScope(ioDispatcher).launch {
+                stockOrderNetwork.update(data = model)
+            }
+        }
+        versionData.update(stockOrderVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.insert(data = stockOrderVersion)
+            }
+        }
     }
 
     override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
@@ -53,14 +95,24 @@ internal class DefaultStockOrderRepository @Inject constructor(
         )
     }
 
-    override suspend fun updateStockOrderQuantity(id: Long, quantity: Int) {
-        versionData.update(DataVersion(3L, "STOCK_ORDER", OffsetDateTime.now()))
+    override suspend fun updateStockOrderQuantity(id: Long, quantity: Int, timestamp: String) {
+        val stockOrderVersion = DataVersion(3L, "STOCK_ORDER", timestamp)
         stockOrderData.updateStockOrderQuantity(id = id, quantity = quantity)
+        versionData.update(model = stockOrderVersion) {}
     }
 
-    override suspend fun deleteById(id: Long) {
-        versionData.update(DataVersion(3L, "STOCK_ORDER", OffsetDateTime.now()))
-        stockOrderData.deleteById(id = id)
+    override suspend fun deleteById(id: Long, timestamp: String) {
+        val stockOrderVersion = DataVersion(3L, "STOCK_ORDER", timestamp)
+        stockOrderData.deleteById(id = id) {
+            CoroutineScope(ioDispatcher).launch {
+                stockOrderNetwork.delete(id = id)
+            }
+        }
+        versionData.update(stockOrderVersion) {
+            CoroutineScope(ioDispatcher).launch {
+                versionNetwork.update(data = stockOrderVersion)
+            }
+        }
     }
 
     override fun getAll(): Flow<List<StockOrder>> {
@@ -107,9 +159,9 @@ internal class DefaultStockOrderRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { stockOrderData.deleteById(it) }
-                saveList.forEach { stockOrderData.insert(it) }
-                versionData.insert(netVersion)
+                deleteIds.forEach { stockOrderData.deleteById(it) {} }
+                saveList.forEach { stockOrderData.insert(it) {} }
+                versionData.insert(netVersion) {}
             }
         )
 }

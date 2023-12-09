@@ -9,15 +9,15 @@ internal class DefaultVersionRepository @Inject constructor(
     @InternalVersionLight private val versionData: VersionData
 ) : VersionRepository {
     override suspend fun insert(model: DataVersion): Long {
-        return versionData.insert(model = model)
+        return versionData.insert(model = model) {}
     }
 
     override suspend fun update(model: DataVersion) {
-        versionData.update(model = model)
+        versionData.update(model = model) {}
     }
 
-    override suspend fun deleteById(id: Long) {
-        versionData.deleteById(id = id)
+    override suspend fun deleteById(id: Long, timestamp: String) {
+        versionData.deleteById(id = id) {}
     }
 
     override fun getAll(): Flow<List<DataVersion>> {
