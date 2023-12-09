@@ -19,13 +19,13 @@ interface DataOperations<T> {
      * Updates the [model] of type [T].
      * @param model the [model] to be updated.
      */
-    suspend fun update(model: T)
+    suspend fun update(model: T, onSuccess: () -> Unit)
 
     /**
      * Deletes the model of type [T] specified by this [id].
      * @param id the [id] of the model to be deleted.
      */
-    suspend fun deleteById(id: Long)
+    suspend fun deleteById(id: Long, onSuccess: () -> Unit)
 
     /**
      * Gets all models of type [T].
