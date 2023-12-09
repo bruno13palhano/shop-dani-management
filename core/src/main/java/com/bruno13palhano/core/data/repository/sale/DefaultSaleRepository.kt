@@ -43,28 +43,7 @@ internal class DefaultSaleRepository @Inject constructor(
 
         val id = saleData.insert(model = model) {
             CoroutineScope(ioDispatcher).launch {
-                val netModel = Sale(
-                    id = it,
-                    productId = model.productId,
-                    stockOrderId = model.stockOrderId,
-                    customerId = model.customerId,
-                    name = model.name,
-                    customerName = model.customerName,
-                    photo = model.photo,
-                    quantity = model.quantity,
-                    purchasePrice = model.purchasePrice,
-                    salePrice = model.salePrice,
-                    deliveryPrice = model.deliveryPrice,
-                    categories = model.categories,
-                    company = model.company,
-                    dateOfSale = model.dateOfSale,
-                    dateOfPayment =model.dateOfPayment,
-                    isOrderedByCustomer = model.isOrderedByCustomer,
-                    isPaidByCustomer = model.isPaidByCustomer,
-                    canceled = model.canceled,
-                    timestamp = model.timestamp
-                )
-
+                val netModel = createSale(sale = model, id = it)
                 saleNetwork.insert(data = netModel)
             }
         }
@@ -115,56 +94,12 @@ internal class DefaultSaleRepository @Inject constructor(
         ) { saleId, stockOrderId, deliveryId ->
             onSuccess()
             CoroutineScope(ioDispatcher).launch {
-                val netSale = Sale(
-                    id = saleId,
-                    productId = sale.productId,
-                    stockOrderId = sale.stockOrderId,
-                    customerId = sale.customerId,
-                    name = sale.name,
-                    customerName = sale.customerName,
-                    photo = sale.photo,
-                    quantity = sale.quantity,
-                    purchasePrice = sale.purchasePrice,
-                    salePrice = sale.salePrice,
-                    deliveryPrice = sale.deliveryPrice,
-                    categories = sale.categories,
-                    company = sale.company,
-                    dateOfSale = sale.dateOfSale,
-                    dateOfPayment = sale.dateOfPayment,
-                    isOrderedByCustomer = sale.isOrderedByCustomer,
-                    isPaidByCustomer = sale.isPaidByCustomer,
-                    canceled = sale.canceled,
-                    timestamp = sale.timestamp
-                )
-                val netStockOrder = StockOrder(
-                    id = stockOrderId,
-                    productId = stockOrder.productId,
-                    name = stockOrder.name,
-                    photo = stockOrder.photo,
-                    date = stockOrder.date,
-                    validity = stockOrder.validity,
-                    quantity = stockOrder.quantity,
-                    categories = stockOrder.categories,
-                    company = stockOrder.company,
-                    purchasePrice = stockOrder.purchasePrice,
-                    salePrice = stockOrder.salePrice,
-                    isOrderedByCustomer = stockOrder.isOrderedByCustomer,
-                    isPaid = stockOrder.isPaid,
-                    timestamp = stockOrder.timestamp
-                )
-                val netDelivery = Delivery(
-                    id = deliveryId,
-                    saleId = saleId,
-                    customerName = delivery.customerName,
-                    address = delivery.address,
-                    phoneNumber = delivery.phoneNumber,
-                    productName = delivery.productName,
-                    price = delivery.price,
-                    deliveryPrice = delivery.deliveryPrice,
-                    shippingDate = delivery.shippingDate,
-                    deliveryDate = delivery.deliveryDate,
-                    delivered = delivery.delivered,
-                    timestamp = delivery.timestamp
+                val netSale = createSale(sale = sale, id = saleId)
+                val netStockOrder = createStockOrder(stockOrder = stockOrder, id = stockOrderId)
+                val netDelivery = createDelivery(
+                    delivery = delivery,
+                    deliveryId = deliveryId,
+                    saleId = saleId
                 )
                 saleNetwork.insertItems(netSale, netStockOrder, netDelivery)
             }
@@ -302,4 +237,58 @@ internal class DefaultSaleRepository @Inject constructor(
     override fun getDebitSales(): Flow<List<Sale>> {
         return saleData.getDebitSales()
     }
+
+    private fun createSale(sale: Sale, id: Long) = Sale(
+        id = id,
+        productId = sale.productId,
+        stockOrderId = sale.stockOrderId,
+        customerId = sale.customerId,
+        name = sale.name,
+        customerName = sale.customerName,
+        photo = sale.photo,
+        quantity = sale.quantity,
+        purchasePrice = sale.purchasePrice,
+        salePrice = sale.salePrice,
+        deliveryPrice = sale.deliveryPrice,
+        categories = sale.categories,
+        company = sale.company,
+        dateOfSale = sale.dateOfSale,
+        dateOfPayment = sale.dateOfPayment,
+        isOrderedByCustomer = sale.isOrderedByCustomer,
+        isPaidByCustomer = sale.isPaidByCustomer,
+        canceled = sale.canceled,
+        timestamp = sale.timestamp
+    )
+
+    private fun createStockOrder(stockOrder: StockOrder, id: Long) = StockOrder(
+        id = id,
+        productId = stockOrder.productId,
+        name = stockOrder.name,
+        photo = stockOrder.photo,
+        date = stockOrder.date,
+        validity = stockOrder.validity,
+        quantity = stockOrder.quantity,
+        categories = stockOrder.categories,
+        company = stockOrder.company,
+        purchasePrice = stockOrder.purchasePrice,
+        salePrice = stockOrder.salePrice,
+        isOrderedByCustomer = stockOrder.isOrderedByCustomer,
+        isPaid = stockOrder.isPaid,
+        timestamp = stockOrder.timestamp
+    )
+
+    private fun createDelivery(delivery: Delivery, deliveryId: Long, saleId: Long) = Delivery(
+        id = deliveryId,
+        saleId = saleId,
+        customerName = delivery.customerName,
+        address = delivery.address,
+        phoneNumber = delivery.phoneNumber,
+        productName = delivery.productName,
+        price = delivery.price,
+        deliveryPrice = delivery.deliveryPrice,
+        shippingDate = delivery.shippingDate,
+        deliveryDate = delivery.deliveryDate,
+        delivered = delivery.delivered,
+        timestamp = delivery.timestamp
+    )
 }
