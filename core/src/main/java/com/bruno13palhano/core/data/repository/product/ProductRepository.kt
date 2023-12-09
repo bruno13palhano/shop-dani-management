@@ -1,11 +1,11 @@
 package com.bruno13palhano.core.data.repository.product
 
-import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.RepositoryOperations
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.sync.Syncable
 import kotlinx.coroutines.flow.Flow
 
-interface ProductRepository : DataOperations<Product>, Syncable {
+interface ProductRepository : RepositoryOperations<Product>, Syncable {
 
     /**
      * Searches for products of type [Product] with this value.

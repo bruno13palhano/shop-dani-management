@@ -1,11 +1,11 @@
 package com.bruno13palhano.core.data.repository.delivery
 
-import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.RepositoryOperations
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.sync.Syncable
 import kotlinx.coroutines.flow.Flow
 
-interface DeliveryRepository : DataOperations<Delivery>, Syncable {
+interface DeliveryRepository : RepositoryOperations<Delivery>, Syncable {
     suspend fun updateDeliveryPrice(id: Long, deliveryPrice: Float)
     suspend fun updateShippingDate(id: Long, shippingDate: Long)
     suspend fun updateDeliveryDate(id: Long, deliveryDate: Long)

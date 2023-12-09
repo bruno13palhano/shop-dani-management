@@ -1,13 +1,13 @@
 package com.bruno13palhano.core.data.repository.sale
 
-import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.RepositoryOperations
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.core.sync.Syncable
 import kotlinx.coroutines.flow.Flow
 
-interface SaleRepository : DataOperations<Sale>, Syncable {
+interface SaleRepository : RepositoryOperations<Sale>, Syncable {
     suspend fun insertItems(
         sale: Sale,
         stockOrder: StockOrder,
