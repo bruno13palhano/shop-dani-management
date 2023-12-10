@@ -100,13 +100,13 @@ internal class DefaultCategoryRepository @Inject constructor(
         val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
 
         val id = categoryData.insert(model = model) {
-            CoroutineScope(ioDispatcher).launch {
-                val netModel = Category(
-                    id = it,
-                    category = model.category,
-                    timestamp = model.timestamp
-                )
+            val netModel = Category(
+                id = it,
+                category = model.category,
+                timestamp = model.timestamp
+            )
 
+            CoroutineScope(ioDispatcher).launch {
                 categoryNetwork.insert(data = netModel)
             }
         }

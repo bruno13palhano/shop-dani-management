@@ -34,16 +34,17 @@ internal class DefaultCustomerRepository @Inject constructor(
         val customerVersion = Versions.customerVersion(timestamp = model.timestamp)
 
         val id = customerData.insert(model = model) {
+            val netModel = Customer(
+                id = it,
+                name = model.name,
+                photo = model.photo,
+                email = model.email,
+                address = model.address,
+                phoneNumber = model.phoneNumber,
+                timestamp = model.timestamp
+            )
+
             CoroutineScope(ioDispatcher).launch {
-                val netModel = Customer(
-                    id = it,
-                    name = model.name,
-                    photo = model.photo,
-                    email = model.email,
-                    address = model.address,
-                    phoneNumber = model.phoneNumber,
-                    timestamp = model.timestamp
-                )
                 customerNetwork.insert(data = netModel)
             }
         }

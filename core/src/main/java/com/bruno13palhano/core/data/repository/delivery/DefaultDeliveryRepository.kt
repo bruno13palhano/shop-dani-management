@@ -34,22 +34,22 @@ internal class DefaultDeliveryRepository @Inject constructor(
         val deliveryVersion = Versions.deliveryVersion(timestamp = model.timestamp)
 
         val id = deliveryData.insert(model = model) {
-            CoroutineScope(ioDispatcher).launch {
-                val netModel = Delivery(
-                    id = it,
-                    saleId = model.saleId,
-                    customerName = model.customerName,
-                    address = model.address,
-                    phoneNumber = model.phoneNumber,
-                    productName = model.productName,
-                    price = model.price,
-                    deliveryPrice = model.deliveryPrice,
-                    shippingDate = model.shippingDate,
-                    deliveryDate = model.deliveryDate,
-                    delivered = model.delivered,
-                    timestamp = model.timestamp
-                )
+            val netModel = Delivery(
+                id = it,
+                saleId = model.saleId,
+                customerName = model.customerName,
+                address = model.address,
+                phoneNumber = model.phoneNumber,
+                productName = model.productName,
+                price = model.price,
+                deliveryPrice = model.deliveryPrice,
+                shippingDate = model.shippingDate,
+                deliveryDate = model.deliveryDate,
+                delivered = model.delivered,
+                timestamp = model.timestamp
+            )
 
+            CoroutineScope(ioDispatcher).launch {
                 deliveryNetwork.insert(data = netModel)
             }
         }

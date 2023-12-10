@@ -34,19 +34,19 @@ internal class DefaultProductRepository @Inject constructor(
         val productVersion = Versions.productVersion(timestamp = model.timestamp)
 
         val id = productData.insert(model = model) {
-            CoroutineScope(ioDispatcher).launch {
-                val netModel = Product(
-                    id = it,
-                    name = model.name,
-                    code = model.code,
-                    description = model.description,
-                    photo = model.photo,
-                    date = model.date,
-                    categories = model.categories,
-                    company = model.company,
-                    timestamp = model.timestamp
-                )
+            val netModel = Product(
+                id = it,
+                name = model.name,
+                code = model.code,
+                description = model.description,
+                photo = model.photo,
+                date = model.date,
+                categories = model.categories,
+                company = model.company,
+                timestamp = model.timestamp
+            )
 
+            CoroutineScope(ioDispatcher).launch {
                 productNetwork.insert(data = netModel)
             }
         }

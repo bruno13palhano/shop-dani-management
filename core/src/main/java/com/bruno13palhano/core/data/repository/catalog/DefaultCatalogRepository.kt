@@ -34,19 +34,19 @@ internal class DefaultCatalogRepository @Inject constructor(
         val catalogVersion = Versions.catalogVersion(timestamp = model.timestamp)
 
         val id = catalogData.insert(model = model) {
-            CoroutineScope(ioDispatcher).launch {
-                val netModel = Catalog(
-                    id = it,
-                    productId = model.productId,
-                    name = model.name,
-                    photo = model.photo,
-                    title = model.title,
-                    description = model.description,
-                    discount = model.discount,
-                    price = model.price,
-                    timestamp = model.timestamp
-                )
+            val netModel = Catalog(
+                id = it,
+                productId = model.productId,
+                name = model.name,
+                photo = model.photo,
+                title = model.title,
+                description = model.description,
+                discount = model.discount,
+                price = model.price,
+                timestamp = model.timestamp
+            )
 
+            CoroutineScope(ioDispatcher).launch {
                 catalogNetwork.insert(data = netModel)
             }
         }

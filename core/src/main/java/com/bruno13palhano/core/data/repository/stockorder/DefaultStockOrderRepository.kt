@@ -34,24 +34,24 @@ internal class DefaultStockOrderRepository @Inject constructor(
         val stockOrderVersion = Versions.stockOrderVersion(timestamp = model.timestamp)
 
         val id = stockOrderData.insert(model = model) {
-            CoroutineScope(ioDispatcher).launch {
-                val netModel = StockOrder(
-                    id = it,
-                    productId = model.productId,
-                    name = model.name,
-                    photo = model.photo,
-                    date = model.date,
-                    validity = model.validity,
-                    quantity = model.quantity,
-                    categories = model.categories,
-                    company = model.company,
-                    purchasePrice = model.purchasePrice,
-                    salePrice = model.salePrice,
-                    isOrderedByCustomer = model.isOrderedByCustomer,
-                    isPaid = model.isPaid,
-                    timestamp = model.timestamp
-                )
+            val netModel = StockOrder(
+                id = it,
+                productId = model.productId,
+                name = model.name,
+                photo = model.photo,
+                date = model.date,
+                validity = model.validity,
+                quantity = model.quantity,
+                categories = model.categories,
+                company = model.company,
+                purchasePrice = model.purchasePrice,
+                salePrice = model.salePrice,
+                isOrderedByCustomer = model.isOrderedByCustomer,
+                isPaid = model.isPaid,
+                timestamp = model.timestamp
+            )
 
+            CoroutineScope(ioDispatcher).launch {
                 stockOrderNetwork.insert(data = netModel)
             }
         }
