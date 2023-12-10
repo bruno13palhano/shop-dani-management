@@ -42,8 +42,13 @@ internal class DefaultSaleRepository @Inject constructor(
         val saleVersion = Versions.saleVersion(timestamp = model.timestamp)
 
         val id = saleData.insert(model = model) {
+            val netModel = createSale(
+                sale = model,
+                saleId = it,
+                stockOrderId = model.stockOrderId
+            )
+
             CoroutineScope(ioDispatcher).launch {
-                val netModel = createSale(sale = model, id = it)
                 saleNetwork.insert(data = netModel)
             }
         }
@@ -93,14 +98,15 @@ internal class DefaultSaleRepository @Inject constructor(
             delivery = delivery
         ) { saleId, stockOrderId, deliveryId ->
             onSuccess()
+            val netStockOrder = createStockOrder(stockOrder = stockOrder, id = stockOrderId)
+            val netSale = createSale(sale = sale, saleId = saleId, stockOrderId = stockOrderId)
+            val netDelivery = createDelivery(
+                delivery = delivery,
+                deliveryId = deliveryId,
+                saleId = saleId
+            )
+
             CoroutineScope(ioDispatcher).launch {
-                val netSale = createSale(sale = sale, id = saleId)
-                val netStockOrder = createStockOrder(stockOrder = stockOrder, id = stockOrderId)
-                val netDelivery = createDelivery(
-                    delivery = delivery,
-                    deliveryId = deliveryId,
-                    saleId = saleId
-                )
                 saleNetwork.insertItems(netSale, netStockOrder, netDelivery)
             }
         }
@@ -238,10 +244,10 @@ internal class DefaultSaleRepository @Inject constructor(
         return saleData.getDebitSales()
     }
 
-    private fun createSale(sale: Sale, id: Long) = Sale(
-        id = id,
+    private fun createSale(sale: Sale, saleId: Long, stockOrderId: Long) = Sale(
+        id = saleId,
         productId = sale.productId,
-        stockOrderId = sale.stockOrderId,
+        stockOrderId = stockOrderId,
         customerId = sale.customerId,
         name = sale.name,
         customerName = sale.customerName,
