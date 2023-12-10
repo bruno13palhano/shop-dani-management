@@ -60,13 +60,14 @@ class ProductViewModel @Inject constructor(
             initialValue = false
         )
 
-    fun getAllCategories() {
+    fun getAllCategories(onCategoriesDone: () -> Unit) {
         viewModelScope.launch {
             categoryRepository.getAll()
                 .map {
                     it.map { category -> CategoryCheck(category.id, category.category, false) }
                 }.collect {
                     allCategories = it
+                    onCategoriesDone()
                 }
         }
     }
@@ -92,11 +93,9 @@ class ProductViewModel @Inject constructor(
     }
 
     fun updateCategories(categories: List<CategoryCheck>) {
-        val catList = mutableListOf<Category>()
-        categories
+        this.categories = categories
             .filter { it.isChecked }
-            .map { catList.add(Category(it.id, it.category, getCurrentTimestamp())) }
-        this.categories = catList
+            .map { Category(it.id, it.category, getCurrentTimestamp()) }
         category = this.categories.joinToString(", ") { it.category }
     }
 

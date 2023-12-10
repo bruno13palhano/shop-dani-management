@@ -46,14 +46,16 @@ fun ProductScreen(
     navigateUp: () -> Unit,
     viewModel: ProductViewModel = hiltViewModel()
 ) {
-    if (isEditable) {
-        LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = Unit) {
+        if (isEditable) {
+            viewModel.getAllCategories {}
             viewModel.getProduct(productId)
+        } else {
+            viewModel.getAllCategories {
+                viewModel.setCategoryChecked(categoryId)
+            }
+            viewModel.updateDate(date = currentDate)
         }
-    } else {
-        viewModel.getAllCategories()
-        viewModel.updateDate(date = currentDate)
-        viewModel.setCategoryChecked(categoryId)
     }
 
     val context = LocalContext.current
