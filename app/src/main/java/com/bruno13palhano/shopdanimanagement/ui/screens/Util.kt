@@ -6,6 +6,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.icu.text.DateFormat
 import android.icu.text.SimpleDateFormat
 import android.icu.util.TimeZone
@@ -13,6 +15,7 @@ import android.net.Uri
 import com.bruno13palhano.shopdanimanagement.ui.notifications.ExpiredProductsNotification
 import com.bruno13palhano.shopdanimanagement.ui.notifications.receivers.ExpiredProductsReceiver
 import okio.IOException
+import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -67,6 +70,11 @@ fun setAlarmNotification(
 @Throws(IOException::class)
 fun getBytes(context: Context, uri: Uri): ByteArray? {
     return context.contentResolver.openInputStream(uri)?.use {
-        return it.buffered().readBytes()
+        val outputStream = ByteArrayOutputStream()
+        val byteArray = it.buffered().readBytes()
+        val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+        val isCompressed = bitmap.compress(Bitmap.CompressFormat.JPEG, 25, outputStream)
+
+        return if (isCompressed) outputStream.toByteArray() else byteArray
     }
 }
