@@ -70,7 +70,7 @@ internal class DefaultProductData @Inject constructor(
     }
 
     override suspend fun update(model: Product, onSuccess: () -> Unit) {
-        val categoryId = productQueries.getCategoryId(id = model.id).executeAsOne()
+        val categoryId = productCategoriesQueries.getIdByProductId(productId = model.id).executeAsOne()
         productCategoriesQueries.update(
             productId = model.id,
             categories = model.categories,
