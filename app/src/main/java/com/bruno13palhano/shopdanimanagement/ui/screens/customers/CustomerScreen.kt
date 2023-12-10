@@ -1,6 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.customers
 
-import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.SnackbarHostState
@@ -37,15 +36,9 @@ fun CustomerScreen(
 
     val context = LocalContext.current
     val isCustomerNotEmpty by viewModel.isCustomerNotEmpty.collectAsStateWithLifecycle()
-    val contentResolver = context.contentResolver
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let {
-                contentResolver.takePersistableUriPermission(
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                )
                 getBytes(context, it)?.let { imageByteArray ->
                     viewModel.updatePhoto(photo = imageByteArray)
                 }

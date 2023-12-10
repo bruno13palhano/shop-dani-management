@@ -1,6 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.products
 
-import android.content.Intent
 import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,14 +59,9 @@ fun ProductScreen(
 
     val context = LocalContext.current
     val isProductValid by viewModel.isProductValid.collectAsStateWithLifecycle()
-
-    val takeFlags: Int = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
-            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-    val contentResolver = context.contentResolver
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let {
-                contentResolver.takePersistableUriPermission(uri, takeFlags)
                 getBytes(context, it)?.let { imageByteArray ->
                     viewModel.updatePhoto(photo = imageByteArray)
                 }
