@@ -80,22 +80,6 @@ class DefaultDeliveryData @Inject constructor(
         }
     }
 
-    override suspend fun updateDeliveryPrice(id: Long, deliveryPrice: Float) {
-        deliveryQueries.updateDeliveryPrice(id = id, deliveryPrice = deliveryPrice.toDouble())
-    }
-
-    override suspend fun updateShippingDate(id: Long, shippingDate: Long) {
-        deliveryQueries.updateShippingDate(shippingDate = shippingDate, id = id)
-    }
-
-    override suspend fun updateDeliveryDate(id: Long, deliveryDate: Long) {
-        deliveryQueries.updateDeliveryDate(deliveryDate = deliveryDate, id = id)
-    }
-
-    override suspend fun updateDelivered(id: Long, delivered: Boolean) {
-        deliveryQueries.updateDelivered(delivered = delivered, id = id)
-    }
-
     override fun getDeliveries(delivered: Boolean): Flow<List<Delivery>> {
         return deliveryQueries.getDeliveries(delivered = delivered, mapper = ::mapDelivery)
             .asFlow().mapToList(ioDispatcher)

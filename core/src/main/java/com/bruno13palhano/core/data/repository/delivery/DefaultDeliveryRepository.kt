@@ -95,22 +95,6 @@ internal class DefaultDeliveryRepository @Inject constructor(
         }
     }
 
-    override suspend fun updateDeliveryPrice(id: Long, deliveryPrice: Float) {
-        deliveryData.updateDeliveryPrice(id = id, deliveryPrice = deliveryPrice)
-    }
-
-    override suspend fun updateShippingDate(id: Long, shippingDate: Long) {
-        deliveryData.updateShippingDate(id = id, shippingDate = shippingDate)
-    }
-
-    override suspend fun updateDeliveryDate(id: Long, deliveryDate: Long) {
-        deliveryData.updateDeliveryDate(id = id, deliveryDate = deliveryDate)
-    }
-
-    override suspend fun updateDelivered(id: Long, delivered: Boolean) {
-        deliveryData.updateDelivered(id = id, delivered = delivered)
-    }
-
     override fun getDeliveries(delivered: Boolean): Flow<List<Delivery>> {
         return deliveryData.getDeliveries(delivered = delivered)
     }
