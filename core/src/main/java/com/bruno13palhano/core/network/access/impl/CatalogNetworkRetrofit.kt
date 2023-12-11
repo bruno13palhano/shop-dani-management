@@ -19,27 +19,11 @@ internal class CatalogNetworkRetrofit @Inject constructor(
         }
     }
 
-    override suspend fun delete(id: Long) {
-        try {
-            apiService.deleteCatalogItem(id)
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun delete(id: Long) = apiService.deleteCatalogItem(id)
 
-    override suspend fun update(data: Catalog) {
-        try {
-            apiService.updateCatalogItem(data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun update(data: Catalog) =
+        apiService.updateCatalogItem(data.asNetwork())
 
-    override suspend fun insert(data: Catalog) {
-        try {
-            apiService.insertCatalogItem(data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun insert(data: Catalog) =
+        apiService.insertCatalogItem(data.asNetwork())
 }

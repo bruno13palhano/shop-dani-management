@@ -19,27 +19,11 @@ internal class StockOrderNetworkRetrofit @Inject constructor(
         }
     }
 
-    override suspend fun delete(id: Long) {
-        try {
-            apiService.deleteItem(id)
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun delete(id: Long) = apiService.deleteItem(id)
 
-    override suspend fun update(data: StockOrder) {
-        try {
-            apiService.updateItem(data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun update(data: StockOrder) =
+        apiService.updateItem(data.asNetwork())
 
-    override suspend fun insert(data: StockOrder) {
-        try {
-            apiService.insertItem(data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun insert(data: StockOrder) =
+        apiService.insertItem(data.asNetwork())
 }

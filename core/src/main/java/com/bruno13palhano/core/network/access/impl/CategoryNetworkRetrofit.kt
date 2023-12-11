@@ -19,27 +19,11 @@ internal class CategoryNetworkRetrofit @Inject constructor(
         }
     }
 
-    override suspend fun insert(data: Category) {
-        try {
-            apiService.insertCategory(category = data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun insert(data: Category) =
+        apiService.insertCategory(category = data.asNetwork())
 
-    override suspend fun update(data: Category) {
-        try {
-            apiService.updateCategory(category = data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun update(data: Category) =
+        apiService.updateCategory(category = data.asNetwork())
 
-    override suspend fun delete(id: Long) {
-        try {
-            apiService.deleteCategory(id)
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun delete(id: Long) = apiService.deleteCategory(id)
 }

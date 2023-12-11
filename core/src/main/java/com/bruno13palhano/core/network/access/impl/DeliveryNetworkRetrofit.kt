@@ -19,27 +19,11 @@ internal class DeliveryNetworkRetrofit @Inject constructor(
         }
     }
 
-    override suspend fun delete(id: Long) {
-        try {
-            apiService.deleteDelivery(id)
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun delete(id: Long) = apiService.deleteDelivery(id)
 
-    override suspend fun update(data: Delivery) {
-        try {
-            apiService.updateDelivery(data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun update(data: Delivery) =
+        apiService.updateDelivery(data.asNetwork())
 
-    override suspend fun insert(data: Delivery) {
-        try {
-            apiService.insertDelivery(data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun insert(data: Delivery) =
+        apiService.insertDelivery(data.asNetwork())
 }

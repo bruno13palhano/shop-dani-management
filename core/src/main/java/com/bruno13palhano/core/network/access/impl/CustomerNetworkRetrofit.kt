@@ -19,27 +19,11 @@ internal class CustomerNetworkRetrofit @Inject constructor(
         }
     }
 
-    override suspend fun delete(id: Long) {
-        try {
-            apiService.deleteCustomer(id)
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun delete(id: Long) = apiService.deleteCustomer(id)
 
-    override suspend fun update(data: Customer) {
-        try {
-            apiService.updateCustomer(data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun update(data: Customer) =
+        apiService.updateCustomer(data.asNetwork())
 
-    override suspend fun insert(data: Customer) {
-        try {
-            apiService.insertCustomer(data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun insert(data: Customer) =
+        apiService.insertCustomer(data.asNetwork())
 }

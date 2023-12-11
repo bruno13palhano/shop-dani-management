@@ -19,27 +19,11 @@ internal class DataVersionNetworkRetrofit @Inject constructor(
         }
     }
 
-    override suspend fun insert(data: DataVersion) {
-        try {
-            apiService.insertVersion(version = data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun insert(data: DataVersion) =
+        apiService.insertVersion(version = data.asNetwork())
 
-    override suspend fun update(data: DataVersion) {
-        try {
-            apiService.updateVersion(version = data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun update(data: DataVersion) =
+        apiService.updateVersion(version = data.asNetwork())
 
-    override suspend fun delete(id: Long) {
-        try {
-            apiService.deleteVersion(id)
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun delete(id: Long) = apiService.deleteVersion(id)
 }

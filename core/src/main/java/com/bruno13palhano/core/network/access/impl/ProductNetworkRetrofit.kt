@@ -19,27 +19,11 @@ internal class ProductNetworkRetrofit @Inject constructor(
         }
     }
 
-    override suspend fun insert(data: Product) {
-        try {
-            apiService.insertProduct(data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun insert(data: Product) =
+        apiService.insertProduct(data.asNetwork())
 
-    override suspend fun update(data: Product) {
-        try {
-            apiService.updateProduct(data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun update(data: Product) =
+        apiService.updateProduct(data.asNetwork())
 
-    override suspend fun delete(id: Long) {
-        try {
-            apiService.deleteProduct(id)
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun delete(id: Long) = apiService.deleteProduct(id)
 }

@@ -22,33 +22,22 @@ internal class SaleNetworkRetrofit @Inject constructor(
         }
     }
 
-    override suspend fun delete(id: Long) {
-        try {
-            apiService.deleteSale(id)
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun delete(id: Long) = apiService.deleteSale(id)
 
-    override suspend fun update(data: Sale) {
-        try {
-            apiService.updateSale(data.asNetwork())
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
-    }
+    override suspend fun update(data: Sale) =
+        apiService.updateSale(data.asNetwork())
 
     override suspend fun insert(data: Sale) {
 
     }
 
     override suspend fun insertItems(sale: Sale, stockOrder: StockOrder, delivery: Delivery) {
-        try {
-            val saleItemsNet = SaleItemsNet(sale.asNetwork(), stockOrder.asNetwork(), delivery.asNetwork())
+        val saleItemsNet = SaleItemsNet(
+            sale = sale.asNetwork(),
+            stockOrder = stockOrder.asNetwork(),
+            delivery = delivery.asNetwork()
+        )
 
-            apiService.insertSale(saleItemsNet)
-        } catch (ignored: Exception) {
-            ignored.printStackTrace()
-        }
+        apiService.insertSale(saleItemsNet)
     }
 }
