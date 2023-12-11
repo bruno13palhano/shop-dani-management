@@ -134,12 +134,12 @@ class ProductViewModel @Inject constructor(
             }
     }
 
-    fun insertProduct() {
+    fun insertProduct(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         viewModelScope.launch {
             productRepository.insert(
                 model = createProduct(id = 0L),
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess =  { onSuccess() }
             )
         }
     }
@@ -183,23 +183,31 @@ class ProductViewModel @Inject constructor(
         allCompanies = companiesCheck
     }
 
-    fun updateProduct(id: Long) {
+    fun updateProduct(
+        id: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         viewModelScope.launch {
             productRepository.update(
                 model = createProduct(id = id),
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = onSuccess
             )
         }
     }
 
-    fun deleteProduct(id: Long) {
+    fun deleteProduct(
+        id: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         viewModelScope.launch {
             productRepository.deleteById(
                 id = id,
                 timestamp = getCurrentTimestamp(),
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = onSuccess
             )
         }
     }

@@ -97,15 +97,31 @@ fun CatalogItemScreen(
         onMenuOptionsItemClick = { index ->
             when (index) {
                 0 -> {
-                    viewModel.delete()
-                    navigateUp()
+                    viewModel.delete(
+                        onError = {}
+                    ) {
+
+                    }
                 }
             }
+            navigateUp()
         },
         onDoneButtonClick = {
-            if (catalogId == 0L) viewModel.insert()
-            else viewModel.update()
-            navigateUp()
+            if (catalogId == 0L) {
+                viewModel.insert(
+                    onError = {}
+                ) {
+
+                }
+                navigateUp()
+            } else {
+                viewModel.update(
+                    onError = {}
+                ) {
+
+                }
+                navigateUp()
+            }
         },
         navigateUp = navigateUp
     )

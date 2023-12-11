@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
 import com.bruno13palhano.core.data.di.DeliveryRep
 import com.bruno13palhano.core.model.Delivery
+import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,11 +18,7 @@ import javax.inject.Inject
 class DeliveryViewModel @Inject constructor(
     @DeliveryRep private val deliveryRepository: DeliveryRepository
 ) : ViewModel() {
-    private var deliveryPriceDb = 0F
-    private var shippingDateDb = 0L
-    private var deliveryDateDb = 0L
-    private var deliveredDb = false
-
+    private var saleId = 0L
     var name by mutableStateOf("")
         private set
     var address by mutableStateOf("")
@@ -60,6 +57,7 @@ class DeliveryViewModel @Inject constructor(
     fun getDeliveryById(deliveryId: Long) {
         viewModelScope.launch {
             deliveryRepository.getById(deliveryId).collect {
+                saleId = it.saleId
                 name = it.customerName
                 address = it.address
                 phoneNumber = it.phoneNumber
@@ -67,36 +65,38 @@ class DeliveryViewModel @Inject constructor(
                 price = it.price.toString()
                 deliveryPrice = it.deliveryPrice.toString()
                 shippingDate = it.shippingDate
-                shippingDateDb = it.shippingDate
                 deliveryDate = it.deliveryDate
-                deliveryPriceDb = it.deliveryPrice
-                deliveryDateDb = it.deliveryDate
                 delivered = it.delivered
-                deliveredDb = it.delivered
             }
         }
     }
 
-    fun updateDelivery(deliveryId: Long) {
-        if (stringToFloat(deliveryPrice) != deliveryPriceDb) {
-            viewModelScope.launch {
-                deliveryRepository.updateDeliveryPrice(deliveryId, stringToFloat(deliveryPrice))
-            }
-        }
-        if (shippingDate != shippingDateDb) {
-            viewModelScope.launch {
-                deliveryRepository.updateShippingDate(deliveryId, shippingDate)
-            }
-        }
-        if (deliveryDate != deliveryDateDb) {
-            viewModelScope.launch {
-                deliveryRepository.updateDeliveryDate(deliveryId, deliveryDate)
-            }
-        }
-        if (delivered != deliveredDb) {
-            viewModelScope.launch {
-                deliveryRepository.updateDelivered(deliveryId, delivered)
-            }
+    fun updateDelivery(
+        deliveryId: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        val delivery = Delivery(
+            id = deliveryId,
+            saleId = saleId,
+            customerName = name,
+            address = address,
+            phoneNumber = phoneNumber,
+            productName = productName,
+            price = stringToFloat(price),
+            deliveryPrice = stringToFloat(deliveryPrice),
+            shippingDate = shippingDate,
+            deliveryDate = deliveryDate,
+            delivered = delivered,
+            timestamp = getCurrentTimestamp()
+        )
+
+        viewModelScope.launch {
+            deliveryRepository.update(
+                model = delivery,
+                onError = onError,
+                onSuccess = onSuccess
+            )
         }
     }
 

@@ -72,7 +72,7 @@ class CustomerViewModel @Inject constructor(
         }
     }
 
-    fun insertCustomer() {
+    fun insertCustomer(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         val customer = Customer(
             id = 0L,
             name = name,
@@ -85,13 +85,17 @@ class CustomerViewModel @Inject constructor(
         viewModelScope.launch {
             customerRepository.insert(
                 model = customer,
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = { onSuccess() }
             )
         }
     }
 
-    fun updateCustomer(id: Long) {
+    fun updateCustomer(
+        id: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val customer = Customer(
             id = id,
             name = name,
@@ -104,8 +108,8 @@ class CustomerViewModel @Inject constructor(
         viewModelScope.launch {
             customerRepository.update(
                 model = customer,
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = onSuccess
             )
         }
     }

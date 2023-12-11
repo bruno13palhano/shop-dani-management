@@ -183,34 +183,39 @@ fun SaleScreen(
         onMoreOptionsItemClick = { index ->
             when (index) {
                 SaleItemMenu.delete -> {
-                    viewModel.deleteSale(saleId)
-                    navigateUp()
+                    viewModel.deleteSale(
+                        saleId = saleId,
+                        onError = {}
+                    ) {
+
+                    }
                 }
                 SaleItemMenu.cancel -> {
-                    viewModel.cancelSale(saleId)
-                    navigateUp()
+                    viewModel.updateSale(
+                        saleId = saleId,
+                        canceled = true,
+                        onError = {}
+                    ) {
+
+                    }
                 }
             }
+            navigateUp()
         },
         onDoneButtonClick = {
             if (isSaleNotEmpty) {
                 if (isEdit) {
-                    viewModel.updateSale(saleId)
-                    navigateUp()
+                    viewModel.updateSale(
+                        saleId = saleId,
+                        onError = {},
+                        canceled = false
+                    ) {
+
+                    }
                 } else {
                     viewModel.insertSale(
                         isOrderedByCustomer = isOrderedByCustomer,
                         currentDate = currentDate,
-                        onSuccess = {
-                            navigateUp()
-                            setAlarmNotification(
-                                id = stockOrderId,
-                                title = viewModel.customerName,
-                                date = viewModel.dateOfPayment,
-                                description = viewModel.company,
-                                context = context
-                            )
-                        },
                         onError = {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
@@ -218,8 +223,17 @@ fun SaleScreen(
                                 )
                             }
                         }
-                    )
+                    ) {
+                        setAlarmNotification(
+                            id = stockOrderId,
+                            title = viewModel.customerName,
+                            date = viewModel.dateOfPayment,
+                            description = viewModel.company,
+                            context = context
+                        )
+                    }
                 }
+                navigateUp()
             } else {
                 scope.launch {
                     snackbarHostState.showSnackbar(errorMessage)

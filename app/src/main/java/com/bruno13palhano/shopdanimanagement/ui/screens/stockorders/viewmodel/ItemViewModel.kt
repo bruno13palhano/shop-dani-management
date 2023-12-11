@@ -95,12 +95,17 @@ class ItemViewModel @Inject constructor(
     private fun setCategories(categories: List<Category>) =
         categories.joinToString(", ") { category -> category.category }
 
-    fun insertItems(productId: Long, isOrderedByCustomer: Boolean) {
+    fun insertItems(
+        productId: Long,
+        isOrderedByCustomer: Boolean,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         viewModelScope.launch {
             stockRepository.insert(
                 model = createStockOrder(productId, isOrderedByCustomer),
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = { onSuccess() }
             )
         }
     }
@@ -123,23 +128,32 @@ class ItemViewModel @Inject constructor(
         }
     }
 
-    fun updateStockOrderItem(stockOrderItemId: Long, isOrderedByCustomer: Boolean) {
+    fun updateStockOrderItem(
+        stockOrderItemId: Long,
+        isOrderedByCustomer: Boolean,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         viewModelScope.launch {
             stockRepository.update(
                 model = updateStockOrder(stockOrderItemId, isOrderedByCustomer),
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = onSuccess
             )
         }
     }
 
-    fun deleteStockOrderItem(stockOrderId: Long) {
+    fun deleteStockOrderItem(
+        stockOrderId: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         viewModelScope.launch {
             stockRepository.deleteById(
                 id = stockOrderId,
                 timestamp = getCurrentTimestamp(),
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = onSuccess
             )
         }
     }

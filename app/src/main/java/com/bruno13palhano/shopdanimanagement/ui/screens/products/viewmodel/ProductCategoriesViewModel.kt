@@ -33,7 +33,7 @@ class ProductCategoriesViewModel @Inject constructor(
         this.newName = newName
     }
 
-    fun insertCategory() {
+    fun insertCategory(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         val category = Category(
             id = 0L,
             category = newName.trim(),
@@ -42,8 +42,8 @@ class ProductCategoriesViewModel @Inject constructor(
         viewModelScope.launch {
             categoryRepository.insert(
                 model = category,
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = { onSuccess() }
             )
         }
         restoreValue()

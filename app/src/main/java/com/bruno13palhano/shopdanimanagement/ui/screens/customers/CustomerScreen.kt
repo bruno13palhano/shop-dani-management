@@ -73,11 +73,21 @@ fun CustomerScreen(
         onDoneButtonClick = {
             if (isCustomerNotEmpty) {
                 if (isEditable) {
-                    viewModel.updateCustomer(customerId)
+                    viewModel.updateCustomer(
+                        id = customerId,
+                        onError = {}
+                    ) {
+
+                    }
+                    navigateUp()
                 } else {
-                    viewModel.insertCustomer()
+                    viewModel.insertCustomer(
+                        onError = {}
+                    ) {
+
+                    }
+                    navigateUp()
                 }
-                navigateUp()
             } else {
                 scope.launch {
                     snackbarHostState.showSnackbar(errorMessage)

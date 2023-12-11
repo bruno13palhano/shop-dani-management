@@ -76,33 +76,33 @@ class CatalogItemViewModel @Inject constructor(
         }
     }
 
-    fun insert() {
+    fun insert(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         viewModelScope.launch {
             catalogRepository.insert(
                 model = initCatalogItem(),
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = { onSuccess() }
             )
         }
     }
 
-    fun update() {
+    fun update(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         viewModelScope.launch {
             catalogRepository.update(
                 model = initCatalogItem(),
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = onSuccess
             )
         }
     }
 
-    fun delete() {
+    fun delete(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         viewModelScope.launch {
             catalogRepository.deleteById(
                 id = catalogId,
                 timestamp = getCurrentTimestamp(),
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = onSuccess
             )
         }
     }

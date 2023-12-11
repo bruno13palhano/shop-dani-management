@@ -26,7 +26,13 @@ fun ProductCategoriesScreen(
         onAddButtonClick = { showCategoryDialog = true },
         onCategoryChange = viewModel::updateName,
         onDismissRequest = { showCategoryDialog = false },
-        onOkClick = { viewModel.insertCategory() },
+        onOkClick = {
+            viewModel.insertCategory(
+                onError = {}
+            ) {
+
+            }
+        },
         onItemClick = onItemClick,
         onIconMenuClick = onIconMenuClick
     )

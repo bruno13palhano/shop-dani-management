@@ -183,15 +183,16 @@ class SaleViewModel @Inject constructor(
     fun insertSale(
         isOrderedByCustomer: Boolean,
         currentDate: Long,
-        onSuccess: () -> Unit,
-        onError: () -> Unit
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
             saleRepository.insertItems(
                 sale = createSale(
                     id = 0L,
                     productId = productId,
-                    isOrderedByCustomer = isOrderedByCustomer
+                    isOrderedByCustomer = isOrderedByCustomer,
+                    canceled = false
                 ),
                 stockOrder = createStockOrder(
                     productId = productId,
@@ -199,8 +200,8 @@ class SaleViewModel @Inject constructor(
                     isOrderedByCustomer = isOrderedByCustomer
                 ),
                 delivery = createDelivery(),
+                onError = onError,
                 onSuccess = onSuccess,
-                onError = { onError() }
             )
         }
     }
@@ -229,27 +230,37 @@ class SaleViewModel @Inject constructor(
         }
     }
 
-    fun updateSale(saleId: Long) {
+    fun updateSale(
+        saleId: Long,
+        canceled: Boolean,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         viewModelScope.launch {
             saleRepository.update(
                 model = createSale(
                     id = saleId,
                     productId = productId,
-                    isOrderedByCustomer = isOrderedByCustomer
+                    isOrderedByCustomer = isOrderedByCustomer,
+                    canceled = canceled
                 ),
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = onSuccess
             )
         }
     }
 
-    fun deleteSale(saleId: Long) {
+    fun deleteSale(
+        saleId: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         viewModelScope.launch {
             saleRepository.deleteById(
                 id = saleId,
                 timestamp = getCurrentTimestamp(),
-                onError = {},
-                onSuccess = {}
+                onError = onError,
+                onSuccess = onSuccess
             )
         }
     }
@@ -260,7 +271,12 @@ class SaleViewModel @Inject constructor(
         }
     }
 
-    private fun createSale(id: Long, productId: Long, isOrderedByCustomer: Boolean) = Sale(
+    private fun createSale(
+        id: Long,
+        productId: Long,
+        isOrderedByCustomer: Boolean,
+        canceled: Boolean
+    ) = Sale(
         id = id,
         productId = productId,
         customerId = customerId,
@@ -278,7 +294,7 @@ class SaleViewModel @Inject constructor(
         dateOfPayment = dateOfPayment,
         isOrderedByCustomer = isOrderedByCustomer,
         isPaidByCustomer = isPaidByCustomer,
-        canceled = false,
+        canceled = canceled,
         timestamp = getCurrentTimestamp()
     )
 

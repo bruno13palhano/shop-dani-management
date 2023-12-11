@@ -163,10 +163,15 @@ fun ItemScreen(
         onMoreOptionsItemClick = { index ->
             when (index) {
                 0 -> {
-                    viewModel.deleteStockOrderItem(stockOrderId = stockOrderItemId)
-                    navigateUp()
+                    viewModel.deleteStockOrderItem(
+                        stockOrderId = stockOrderItemId,
+                        onError = {}
+                    ) {
+
+                    }
                 }
             }
+            navigateUp()
         },
         onOutsideClick = {
             keyboardController?.hide()
@@ -175,25 +180,36 @@ fun ItemScreen(
         onDoneButtonClick = {
             if (isItemNotEmpty) {
                 if (isEditable) {
-                    viewModel.updateStockOrderItem(stockOrderItemId, isOrderedByCustomer)
-                    setAlarmNotification(
-                        id = stockOrderItemId,
-                        title = viewModel.name,
-                        date = viewModel.validity,
-                        description = viewModel.company,
-                        context = context
-                    )
+                    viewModel.updateStockOrderItem(
+                        stockOrderItemId = stockOrderItemId,
+                        isOrderedByCustomer = isOrderedByCustomer,
+                        onError = {}
+                    ) {
+                        setAlarmNotification(
+                            id = stockOrderItemId,
+                            title = viewModel.name,
+                            date = viewModel.validity,
+                            description = viewModel.company,
+                            context = context
+                        )
+                    }
+                    navigateUp()
                 } else {
-                    viewModel.insertItems(productId, isOrderedByCustomer)
-                    setAlarmNotification(
-                        id = productId,
-                        title = viewModel.name,
-                        date = viewModel.validity,
-                        description = viewModel.company,
-                        context = context
-                    )
+                    viewModel.insertItems(
+                        productId = productId,
+                        isOrderedByCustomer = isOrderedByCustomer,
+                        onError = {}
+                    ) {
+                        setAlarmNotification(
+                            id = productId,
+                            title = viewModel.name,
+                            date = viewModel.validity,
+                            description = viewModel.company,
+                            context = context
+                        )
+                    }
+                    navigateUp()
                 }
-                navigateUp()
             } else {
                 scope.launch {
                     snackbarHostState.showSnackbar(errorMessage)

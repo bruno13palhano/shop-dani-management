@@ -140,10 +140,15 @@ fun ProductScreen(
                     onAddToCatalogClick(productId)
                 }
                 ProductMenuItem.delete -> {
-                    navigateUp()
-                    viewModel.deleteProduct(productId)
+                    viewModel.deleteProduct(
+                        id = productId,
+                        onError = {}
+                    ) {
+
+                    }
                 }
             }
+            navigateUp()
         },
         onOutsideClick = {
             keyboardController?.hide()
@@ -152,9 +157,18 @@ fun ProductScreen(
         onActionButtonClick = {
             if (isProductValid) {
                 if (isEditable) {
-                    viewModel.updateProduct(productId)
+                    viewModel.updateProduct(
+                        id = productId,
+                        onError = {}
+                    ) {
+
+                    }
                 } else {
-                    viewModel.insertProduct()
+                    viewModel.insertProduct(
+                        onError = {}
+                    ) {
+
+                    }
                 }
                 navigateUp()
             } else {
