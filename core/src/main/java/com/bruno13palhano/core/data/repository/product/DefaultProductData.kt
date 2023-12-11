@@ -20,73 +20,97 @@ internal class DefaultProductData @Inject constructor(
     private val productCategoriesQueries: ProductCategoriesTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : ProductData {
-    override suspend fun insert(model: Product, onSuccess: (id: Long) -> Unit): Long {
-        productCategoriesQueries.transaction {
-            if (model.isNew()) {
-                productQueries.insert(
-                    name = model.name,
-                    code = model.code,
-                    description = model.description,
-                    photo = model.photo,
-                    date = model.date,
-                    company = model.company,
-                    timestamp = model.timestamp
-                )
-                productCategoriesQueries.insert(
-                    productId = productQueries.getLastId().executeAsOne(),
-                    categories = model.categories
-                )
-                onSuccess(productQueries.getLastId().executeAsOne())
-
-            } else {
-                productQueries.insertWithId(
-                    id = model.id,
-                    name = model.name,
-                    code = model.code,
-                    description = model.description,
-                    photo = model.photo,
-                    date = model.date,
-                    company = model.company,
-                    timestamp = model.timestamp
-                )
-                try {
-                    val categoryId = productCategoriesQueries.getIdByProductId(model.id).executeAsOne()
-                    productCategoriesQueries.update(
-                        id = categoryId,
-                        productId = model.id,
-                        categories = model.categories
+    override suspend fun insert(
+        model: Product,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
+        var id = 0L
+        try {
+            productCategoriesQueries.transaction {
+                if (model.isNew()) {
+                    productQueries.insert(
+                        name = model.name,
+                        code = model.code,
+                        description = model.description,
+                        photo = model.photo,
+                        date = model.date,
+                        company = model.company,
+                        timestamp = model.timestamp
                     )
-                } catch (e: Exception) {
                     productCategoriesQueries.insert(
-                        productId = model.id,
+                        productId = productQueries.getLastId().executeAsOne(),
                         categories = model.categories
                     )
+                    id = productQueries.getLastId().executeAsOne()
+                    onSuccess(id)
+                } else {
+                    productQueries.insertWithId(
+                        id = model.id,
+                        name = model.name,
+                        code = model.code,
+                        description = model.description,
+                        photo = model.photo,
+                        date = model.date,
+                        company = model.company,
+                        timestamp = model.timestamp
+                    )
+                    try {
+                        val categoryId =
+                            productCategoriesQueries.getIdByProductId(model.id).executeAsOne()
+                        productCategoriesQueries.update(
+                            id = categoryId,
+                            productId = model.id,
+                            categories = model.categories
+                        )
+                    } catch (e: Exception) {
+                        productCategoriesQueries.insert(
+                            productId = model.id,
+                            categories = model.categories
+                        )
+                    }
+                    id = model.id
+                    onSuccess(id)
                 }
-                onSuccess(model.id)
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(1)
         }
 
-        return if (model.id == 0L) productQueries.getLastId().executeAsOne() else model.id
+        return id
     }
 
-    override suspend fun update(model: Product, onSuccess: () -> Unit) {
-        val categoryId = productCategoriesQueries.getIdByProductId(productId = model.id).executeAsOne()
-        productCategoriesQueries.update(
-            productId = model.id,
-            categories = model.categories,
-            id = categoryId
-        )
-        productQueries.update(
-            name = model.name,
-            code = model.code,
-            description = model.description,
-            photo = model.photo,
-            date = model.date,
-            company = model.company,
-            id = model.id,
-            timestamp = model.timestamp
-        )
-        onSuccess()
+    override suspend fun update(
+        model: Product,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            productQueries.transaction {
+                val categoryId =
+                    productCategoriesQueries.getIdByProductId(productId = model.id).executeAsOne()
+                productCategoriesQueries.update(
+                    productId = model.id,
+                    categories = model.categories,
+                    id = categoryId
+                )
+                productQueries.update(
+                    name = model.name,
+                    code = model.code,
+                    description = model.description,
+                    photo = model.photo,
+                    date = model.date,
+                    company = model.company,
+                    id = model.id,
+                    timestamp = model.timestamp
+                )
+                onSuccess()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(2)
+        }
     }
 
     override fun search(value: String): Flow<List<Product>> {
@@ -114,9 +138,18 @@ internal class DefaultProductData @Inject constructor(
             .asFlow().mapToList(ioDispatcher)
     }
 
-    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
-        productQueries.delete(productId = id)
-        onSuccess()
+    override suspend fun deleteById(
+        id: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            productQueries.delete(productId = id)
+            onSuccess()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(3)
+        }
     }
 
     override fun getAll(): Flow<List<Product>> {

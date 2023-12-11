@@ -18,25 +18,60 @@ class DefaultStockOrderData @Inject constructor(
     private val stockOrderQueries: StockOrderTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : StockOrderData {
-    override suspend fun insert(model: StockOrder, onSuccess: (id: Long) -> Unit): Long {
-        if (model.isNew()) {
-            stockOrderQueries.insert(
-                productId = model.productId,
-                date = model.date,
-                validity = model.validity,
-                quantity = model.quantity.toLong(),
-                purchasePrice = model.purchasePrice.toDouble(),
-                salePrice = model.salePrice.toDouble(),
-                isOrderedByCustomer = model.isOrderedByCustomer,
-                isPaid = model.isPaid,
-                timestamp = model.timestamp
-            )
-            val id = stockOrderQueries.lastId().executeAsOne()
-            onSuccess(id)
+    override suspend fun insert(
+        model: StockOrder,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
+        try {
+            if (model.isNew()) {
+                stockOrderQueries.insert(
+                    productId = model.productId,
+                    date = model.date,
+                    validity = model.validity,
+                    quantity = model.quantity.toLong(),
+                    purchasePrice = model.purchasePrice.toDouble(),
+                    salePrice = model.salePrice.toDouble(),
+                    isOrderedByCustomer = model.isOrderedByCustomer,
+                    isPaid = model.isPaid,
+                    timestamp = model.timestamp
+                )
+                val id = stockOrderQueries.lastId().executeAsOne()
+                onSuccess(id)
 
-            return id
-        } else {
-            stockOrderQueries.insertWithId(
+                return id
+            } else {
+                stockOrderQueries.insertWithId(
+                    id = model.id,
+                    productId = model.productId,
+                    date = model.date,
+                    validity = model.validity,
+                    quantity = model.quantity.toLong(),
+                    purchasePrice = model.purchasePrice.toDouble(),
+                    salePrice = model.salePrice.toDouble(),
+                    isOrderedByCustomer = model.isOrderedByCustomer,
+                    isPaid = model.isPaid,
+                    timestamp = model.timestamp
+                )
+                onSuccess(model.id)
+
+                return model.id
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(1)
+
+            return 0L
+        }
+    }
+
+    override suspend fun update(
+        model: StockOrder,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            stockOrderQueries.update(
                 id = model.id,
                 productId = model.productId,
                 date = model.date,
@@ -48,26 +83,11 @@ class DefaultStockOrderData @Inject constructor(
                 isPaid = model.isPaid,
                 timestamp = model.timestamp
             )
-            onSuccess(model.id)
-
-            return model.id
+            onSuccess()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(2)
         }
-    }
-
-    override suspend fun update(model: StockOrder, onSuccess: () -> Unit) {
-        stockOrderQueries.update(
-            id = model.id,
-            productId = model.productId,
-            date = model.date,
-            validity = model.validity,
-            quantity = model.quantity.toLong(),
-            purchasePrice = model.purchasePrice.toDouble(),
-            salePrice = model.salePrice.toDouble(),
-            isOrderedByCustomer = model.isOrderedByCustomer,
-            isPaid = model.isPaid,
-            timestamp = model.timestamp
-        )
-        onSuccess()
     }
 
     override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
@@ -102,9 +122,18 @@ class DefaultStockOrderData @Inject constructor(
         stockOrderQueries.updateStockOrderQuantity(quantity = quantity.toLong(), id = id)
     }
 
-    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
-        stockOrderQueries.delete(id = id)
-        onSuccess()
+    override suspend fun deleteById(
+        id: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            stockOrderQueries.delete(id = id)
+            onSuccess()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(3)
+        }
     }
 
     override fun getAll(): Flow<List<StockOrder>> {

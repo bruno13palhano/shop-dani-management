@@ -17,22 +17,54 @@ class DefaultDeliveryData @Inject constructor(
     private val deliveryQueries: DeliveryTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : DeliveryData {
-    override suspend fun insert(model: Delivery, onSuccess: (id: Long) -> Unit): Long {
-        if (model.isNew()) {
-            deliveryQueries.insert(
-                saleId = model.saleId,
-                deliveryPrice = model.deliveryPrice.toDouble(),
-                shippingDate = model.shippingDate,
-                deliveryDate = model.deliveryDate,
-                delivered = model.delivered,
-                timestamp = model.timestamp
-            )
-            val id = deliveryQueries.getLastId().executeAsOne()
-            onSuccess(id)
+    override suspend fun insert(
+        model: Delivery,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
+        try {
+            if (model.isNew()) {
+                deliveryQueries.insert(
+                    saleId = model.saleId,
+                    deliveryPrice = model.deliveryPrice.toDouble(),
+                    shippingDate = model.shippingDate,
+                    deliveryDate = model.deliveryDate,
+                    delivered = model.delivered,
+                    timestamp = model.timestamp
+                )
+                val id = deliveryQueries.getLastId().executeAsOne()
+                onSuccess(id)
 
-            return id
-        } else {
-            deliveryQueries.insertWithId(
+                return id
+            } else {
+                deliveryQueries.insertWithId(
+                    id = model.id,
+                    saleId = model.saleId,
+                    deliveryPrice = model.deliveryPrice.toDouble(),
+                    shippingDate = model.shippingDate,
+                    deliveryDate = model.deliveryDate,
+                    delivered = model.delivered,
+                    timestamp = model.timestamp
+                )
+                onSuccess(model.id)
+
+                return model.id
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(1)
+
+            return 0L
+        }
+    }
+
+    override suspend fun update(
+        model: Delivery,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            deliveryQueries.update(
                 id = model.id,
                 saleId = model.saleId,
                 deliveryPrice = model.deliveryPrice.toDouble(),
@@ -41,23 +73,11 @@ class DefaultDeliveryData @Inject constructor(
                 delivered = model.delivered,
                 timestamp = model.timestamp
             )
-            onSuccess(model.id)
-
-            return model.id
+            onSuccess()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(2)
         }
-    }
-
-    override suspend fun update(model: Delivery, onSuccess: () -> Unit) {
-        deliveryQueries.update(
-            id = model.id,
-            saleId = model.saleId,
-            deliveryPrice = model.deliveryPrice.toDouble(),
-            shippingDate = model.shippingDate,
-            deliveryDate = model.deliveryDate,
-            delivered = model.delivered,
-            timestamp = model.timestamp
-        )
-        onSuccess()
     }
 
     override suspend fun updateDeliveryPrice(id: Long, deliveryPrice: Float) {
@@ -81,9 +101,18 @@ class DefaultDeliveryData @Inject constructor(
             .asFlow().mapToList(ioDispatcher)
     }
 
-    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
-        deliveryQueries.delete(id = id)
-        onSuccess()
+    override suspend fun deleteById(
+        id: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            deliveryQueries.delete(id = id)
+            onSuccess()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(3)
+        }
     }
 
     override fun getAll(): Flow<List<Delivery>> {

@@ -17,51 +17,80 @@ internal class DefaultCatalogData @Inject constructor(
     private val catalogQueries: CatalogTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CatalogData {
-    override suspend fun insert(model: Catalog, onSuccess: (id: Long) -> Unit): Long {
-        if (model.isNew()) {
-            catalogQueries.insert(
-                productId = model.productId,
-                title = model.title,
-                description = model.description,
-                discount = model.discount,
-                price = model.price.toDouble(),
-                timestamp = model.timestamp
-            )
-            val id = catalogQueries.getLastId().executeAsOne()
-            onSuccess(id)
+    override suspend fun insert(
+        model: Catalog,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long
+    ) -> Unit): Long {
+        try {
+            if (model.isNew()) {
+                catalogQueries.insert(
+                    productId = model.productId,
+                    title = model.title,
+                    description = model.description,
+                    discount = model.discount,
+                    price = model.price.toDouble(),
+                    timestamp = model.timestamp
+                )
+                val id = catalogQueries.getLastId().executeAsOne()
+                onSuccess(id)
 
-            return id
-        } else {
-            catalogQueries.insertWithId(
-                id = model.id,
-                productId = model.productId,
-                title = model.title,
-                description = model.description,
-                discount = model.discount,
-                price = model.price.toDouble(),
-                timestamp = model.timestamp
-            )
-            onSuccess(model.id)
+                return id
+            } else {
+                catalogQueries.insertWithId(
+                    id = model.id,
+                    productId = model.productId,
+                    title = model.title,
+                    description = model.description,
+                    discount = model.discount,
+                    price = model.price.toDouble(),
+                    timestamp = model.timestamp
+                )
+                onSuccess(model.id)
 
-            return model.id
+                return model.id
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(1)
+
+            return 0L
         }
     }
 
-    override suspend fun update(model: Catalog, onSuccess: () -> Unit) {
-        catalogQueries.update(
-            title = model.title,
-            description = model.description,
-            discount = model.discount,
-            price = model.price.toDouble(),
-            id = model.id,
-            timestamp = model.timestamp
-        )
-        onSuccess()
+    override suspend fun update(
+        model: Catalog,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            catalogQueries.update(
+                title = model.title,
+                description = model.description,
+                discount = model.discount,
+                price = model.price.toDouble(),
+                id = model.id,
+                timestamp = model.timestamp
+            )
+            onSuccess()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(2)
+        }
     }
 
-    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
-        catalogQueries.delete(id = id)
-        onSuccess()
+    override suspend fun deleteById(
+        id: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            catalogQueries.delete(id = id)
+            onSuccess()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(3)
+        }
     }
 
     override fun getAll(): Flow<List<Catalog>> {

@@ -11,6 +11,7 @@ interface SaleData : DataOperations<Sale> {
         sale: Sale,
         stockOrder: StockOrder,
         delivery: Delivery,
+        onError: (error: Int) -> Unit,
         onSuccess: (saleId: Long, stockId: Long, deliveryId: Long) -> Unit
     )
     fun getByCustomerId(customerId: Long): Flow<List<Sale>>

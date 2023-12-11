@@ -7,6 +7,7 @@ import cache.VersionTableQueries
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.DataVersion
+import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -16,40 +17,69 @@ internal class DefaultVersionData @Inject constructor(
     private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : VersionData {
-    override suspend fun insert(model: DataVersion, onSuccess: (id: Long) -> Unit): Long {
-        if (model.id == 0L) {
-            versionQueries.insert(
-                name = model.name,
-                timestamp = model.timestamp,
-            )
-            val id = versionQueries.getLastId().executeAsOne()
-            onSuccess(id)
+    override suspend fun insert(
+        model: DataVersion,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit,
+    ): Long {
+        try {
+            if (model.isNew()) {
+                versionQueries.insert(
+                    name = model.name,
+                    timestamp = model.timestamp,
+                )
+                val id = versionQueries.getLastId().executeAsOne()
+                onSuccess(id)
 
-            return id
-        } else {
-            versionQueries.insertWithId(
-                id = model.id,
-                name = model.name,
-                timestamp = model.timestamp
-            )
-            onSuccess(model.id)
+                return id
+            } else {
+                versionQueries.insertWithId(
+                    id = model.id,
+                    name = model.name,
+                    timestamp = model.timestamp
+                )
+                onSuccess(model.id)
 
-            return model.id
+                return model.id
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(1)
+
+            return 0L
         }
     }
 
-    override suspend fun update(model: DataVersion, onSuccess: () -> Unit) {
-        versionQueries.update(
-            name = model.name,
-            timestamp = model.timestamp,
-            id = model.id
-        )
-        onSuccess()
+    override suspend fun update(
+        model: DataVersion,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            versionQueries.update(
+                name = model.name,
+                timestamp = model.timestamp,
+                id = model.id
+            )
+            onSuccess()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(2)
+        }
     }
 
-    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
-        versionQueries.delete(id = id)
-        onSuccess()
+    override suspend fun deleteById(
+        id: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            versionQueries.delete(id = id)
+            onSuccess()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(3)
+        }
     }
 
     override fun getAll(): Flow<List<DataVersion>> {

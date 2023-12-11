@@ -13,19 +13,23 @@ interface DataOperations<T> {
      * Insert a [model] of type [T].
      * @param model the new [model] to be inserted.
      */
-    suspend fun insert(model: T, onSuccess: (id: Long) -> Unit): Long
+    suspend fun insert(
+        model: T,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long
 
     /**
      * Updates the [model] of type [T].
      * @param model the [model] to be updated.
      */
-    suspend fun update(model: T, onSuccess: () -> Unit)
+    suspend fun update(model: T, onError: (error: Int) -> Unit, onSuccess: () -> Unit)
 
     /**
      * Deletes the model of type [T] specified by this [id].
      * @param id the [id] of the model to be deleted.
      */
-    suspend fun deleteById(id: Long, onSuccess: () -> Unit)
+    suspend fun deleteById(id: Long, onError: (error: Int) -> Unit, onSuccess: () -> Unit)
 
     /**
      * Gets all models of type [T].

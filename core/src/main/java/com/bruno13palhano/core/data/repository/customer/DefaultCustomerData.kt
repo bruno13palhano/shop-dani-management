@@ -17,22 +17,54 @@ internal class DefaultCustomerData @Inject constructor(
     private val customerQueries: CustomerTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CustomerData {
-    override suspend fun insert(model: Customer, onSuccess: (id: Long) -> Unit): Long {
-        if (model.isNew()) {
-            customerQueries.insert(
-                name = model.name,
-                photo = model.photo,
-                email = model.email,
-                address = model.address,
-                phoneNumber = model.phoneNumber,
-                timestamp = model.timestamp
-            )
-            val id = customerQueries.getLastId().executeAsOne()
-            onSuccess(id)
+    override suspend fun insert(
+        model: Customer,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
+        try {
+            if (model.isNew()) {
+                customerQueries.insert(
+                    name = model.name,
+                    photo = model.photo,
+                    email = model.email,
+                    address = model.address,
+                    phoneNumber = model.phoneNumber,
+                    timestamp = model.timestamp
+                )
+                val id = customerQueries.getLastId().executeAsOne()
+                onSuccess(id)
 
-            return id
-        } else {
-            customerQueries.insertWithId(
+                return id
+            } else {
+                customerQueries.insertWithId(
+                    id = model.id,
+                    name = model.name,
+                    photo = model.photo,
+                    email = model.email,
+                    address = model.address,
+                    phoneNumber = model.phoneNumber,
+                    timestamp = model.timestamp
+                )
+                onSuccess(model.id)
+
+                return model.id
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(1)
+
+            return 0L
+        }
+    }
+
+    override suspend fun update(
+        model: Customer,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            customerQueries.update(
                 id = model.id,
                 name = model.name,
                 photo = model.photo,
@@ -41,28 +73,25 @@ internal class DefaultCustomerData @Inject constructor(
                 phoneNumber = model.phoneNumber,
                 timestamp = model.timestamp
             )
-            onSuccess(model.id)
-
-            return model.id
+            onSuccess()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(2)
         }
     }
 
-    override suspend fun update(model: Customer, onSuccess: () -> Unit) {
-        customerQueries.update(
-            id = model.id,
-            name = model.name,
-            photo = model.photo,
-            email = model.email,
-            address = model.address,
-            phoneNumber = model.phoneNumber,
-            timestamp = model.timestamp
-        )
-        onSuccess()
-    }
-
-    override suspend fun deleteById(id: Long, onSuccess: () -> Unit) {
-        customerQueries.delete(id)
-        onSuccess()
+    override suspend fun deleteById(
+        id: Long,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            customerQueries.delete(id)
+            onSuccess()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(3)
+        }
     }
 
     override fun getAll(): Flow<List<Customer>> {
