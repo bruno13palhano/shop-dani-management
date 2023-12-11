@@ -58,25 +58,18 @@ internal class DefaultStockOrderRepository @Inject constructor(
                 timestamp = model.timestamp
             )
 
-            try {
-                CoroutineScope(ioDispatcher).launch {
-                    stockOrderNetwork.insert(data = netModel)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(4)
+            CoroutineScope(ioDispatcher).launch {
+                try { stockOrderNetwork.insert(data = netModel) }
+                catch (e: Exception) { onError(4) }
             }
         }
 
         versionData.insert(model = stockOrderVersion, onError = onError) {
-            try {
-                CoroutineScope(ioDispatcher).launch {
+            CoroutineScope(ioDispatcher).launch {
+                try {
                     versionNetwork.insert(data = stockOrderVersion)
                     onSuccess(id)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(4)
+                } catch (e: Exception) { onError(4) }
             }
         }
 
@@ -91,25 +84,18 @@ internal class DefaultStockOrderRepository @Inject constructor(
         val stockOrderVersion = Versions.stockOrderVersion(timestamp = model.timestamp)
 
         stockOrderData.update(model = model, onError = onError) {
-            try {
-                CoroutineScope(ioDispatcher).launch {
-                    stockOrderNetwork.update(data = model)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(5)
+            CoroutineScope(ioDispatcher).launch {
+                try { stockOrderNetwork.update(data = model) }
+                catch (e: Exception) { onError(5) }
             }
         }
 
         versionData.update(model = stockOrderVersion, onError = onError) {
-            try {
-                CoroutineScope(ioDispatcher).launch {
+            CoroutineScope(ioDispatcher).launch {
+                try {
                     versionNetwork.insert(data = stockOrderVersion)
                     onSuccess()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(5)
+                } catch (e: Exception) { onError(5) }
             }
         }
     }
@@ -150,25 +136,18 @@ internal class DefaultStockOrderRepository @Inject constructor(
         val stockOrderVersion = Versions.stockOrderVersion(timestamp = timestamp)
 
         stockOrderData.deleteById(id = id, onError = onError) {
-            try {
-                CoroutineScope(ioDispatcher).launch {
-                    stockOrderNetwork.delete(id = id)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(6)
+            CoroutineScope(ioDispatcher).launch {
+                try { stockOrderNetwork.delete(id = id) }
+                catch (e: Exception) { onError(6) }
             }
         }
 
         versionData.update(model = stockOrderVersion, onError = onError) {
-            try {
-                CoroutineScope(ioDispatcher).launch {
+            CoroutineScope(ioDispatcher).launch {
+                try {
                     versionNetwork.update(data = stockOrderVersion)
                     onSuccess()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(6)
+                } catch (e: Exception) { onError(6) }
             }
         }
     }

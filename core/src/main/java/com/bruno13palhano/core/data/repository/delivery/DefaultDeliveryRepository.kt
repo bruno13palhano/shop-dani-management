@@ -53,25 +53,18 @@ internal class DefaultDeliveryRepository @Inject constructor(
                 timestamp = model.timestamp
             )
 
-            try {
-                CoroutineScope(ioDispatcher).launch {
-                    deliveryNetwork.insert(data = netModel)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(4)
+            CoroutineScope(ioDispatcher).launch {
+                try { deliveryNetwork.insert(data = netModel) }
+                catch (e: Exception) { onError(4) }
             }
         }
 
         versionData.insert(model = deliveryVersion, onError = onError) {
-            try {
-                CoroutineScope(ioDispatcher).launch {
+            CoroutineScope(ioDispatcher).launch {
+                try {
                     versionNetwork.insert(data = deliveryVersion)
                     onSuccess(id)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(4)
+                } catch (e: Exception) { onError(4) }
             }
         }
 
@@ -86,25 +79,18 @@ internal class DefaultDeliveryRepository @Inject constructor(
         val deliveryVersion = Versions.deliveryVersion(timestamp = model.timestamp)
 
         deliveryData.update(model = model, onError = onError) {
-            try {
-                CoroutineScope(ioDispatcher).launch {
-                    deliveryNetwork.update(data = model)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(5)
+            CoroutineScope(ioDispatcher).launch {
+                try { deliveryNetwork.update(data = model) }
+                catch (e: Exception) { onError(5) }
             }
         }
 
         versionData.update(model = deliveryVersion, onError = onError) {
-            try {
-                CoroutineScope(ioDispatcher).launch {
+            CoroutineScope(ioDispatcher).launch {
+                try {
                     versionNetwork.update(data = deliveryVersion)
                     onSuccess()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(5)
+                } catch (e: Exception) { onError(5) }
             }
         }
     }
@@ -138,25 +124,18 @@ internal class DefaultDeliveryRepository @Inject constructor(
         val deliveryVersion = Versions.deliveryVersion(timestamp = timestamp)
 
         deliveryData.deleteById(id = id, onError = onError) {
-            try {
-                CoroutineScope(ioDispatcher).launch {
-                    deliveryNetwork.delete(id = id)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(6)
+            CoroutineScope(ioDispatcher).launch {
+                try { deliveryNetwork.delete(id = id) }
+                catch (e: Exception) { onError(6) }
             }
         }
 
         versionData.update(model = deliveryVersion, onError = onError) {
-            try {
-                CoroutineScope(ioDispatcher).launch {
+            CoroutineScope(ioDispatcher).launch {
+                try {
                     versionNetwork.update(data = deliveryVersion)
                     onSuccess()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                onError(6)
+                } catch (e: Exception) { onError(6) }
             }
         }
     }
