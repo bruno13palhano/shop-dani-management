@@ -30,10 +30,14 @@ internal class DefaultCatalogRepository @Inject constructor(
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CatalogRepository {
-    override suspend fun insert(model: Catalog): Long {
+    override suspend fun insert(
+        model: Catalog,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
         val catalogVersion = Versions.catalogVersion(timestamp = model.timestamp)
 
-        val id = catalogData.insert(model = model) {
+        val id = catalogData.insert(model = model, onError = onError) {
             val netModel = Catalog(
                 id = it,
                 productId = model.productId,
@@ -46,48 +50,90 @@ internal class DefaultCatalogRepository @Inject constructor(
                 timestamp = model.timestamp
             )
 
-            CoroutineScope(ioDispatcher).launch {
-                catalogNetwork.insert(data = netModel)
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    catalogNetwork.insert(data = netModel)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
-        versionData.insert(model = catalogVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.insert(data = catalogVersion)
+        versionData.insert(model = catalogVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.insert(data = catalogVersion)
+                    onSuccess(id)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
         return id
     }
 
-    override suspend fun update(model: Catalog) {
+    override suspend fun update(
+        model: Catalog,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val catalogVersion = Versions.catalogVersion(timestamp = model.timestamp)
 
-        catalogData.update(model = model) {
-            CoroutineScope(ioDispatcher).launch {
-                catalogNetwork.update(data = model)
+        catalogData.update(model = model, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    catalogNetwork.update(data = model)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
 
-        versionData.update(model = catalogVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.update(data = catalogVersion)
+        versionData.update(model = catalogVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.update(data = catalogVersion)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
     }
 
-    override suspend fun deleteById(id: Long, timestamp: String) {
+    override suspend fun deleteById(
+        id: Long,
+        timestamp: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val catalogVersion = Versions.catalogVersion(timestamp = timestamp)
 
-        catalogData.deleteById(id = id) {
-            CoroutineScope(ioDispatcher).launch {
-                catalogNetwork.delete(id = id)
+        catalogData.deleteById(id = id, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    catalogNetwork.delete(id = id)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
 
-        versionData.update(model = catalogVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.update(data = catalogVersion)
+        versionData.update(model = catalogVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.update(data = catalogVersion)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
     }
@@ -124,9 +170,9 @@ internal class DefaultCatalogRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { catalogData.deleteById(it) {} }
-                saveList.forEach { catalogData.insert(it) {} }
-                versionData.insert(netVersion) {}
+                deleteIds.forEach { catalogData.deleteById(it, {}) {} }
+                saveList.forEach { catalogData.insert(it, {}) {} }
+                versionData.insert(netVersion, {}) {}
             }
         )
 }

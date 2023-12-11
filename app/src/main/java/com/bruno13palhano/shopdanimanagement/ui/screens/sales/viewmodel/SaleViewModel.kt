@@ -200,7 +200,7 @@ class SaleViewModel @Inject constructor(
                 ),
                 delivery = createDelivery(),
                 onSuccess = onSuccess,
-                onError = onError
+                onError = { onError() }
             )
         }
     }
@@ -232,7 +232,13 @@ class SaleViewModel @Inject constructor(
     fun updateSale(saleId: Long) {
         viewModelScope.launch {
             saleRepository.update(
-                createSale(id = saleId, productId = productId, isOrderedByCustomer = isOrderedByCustomer)
+                model = createSale(
+                    id = saleId,
+                    productId = productId,
+                    isOrderedByCustomer = isOrderedByCustomer
+                ),
+                onError = {},
+                onSuccess = {}
             )
         }
     }
@@ -241,7 +247,9 @@ class SaleViewModel @Inject constructor(
         viewModelScope.launch {
             saleRepository.deleteById(
                 id = saleId,
-                timestamp = getCurrentTimestamp()
+                timestamp = getCurrentTimestamp(),
+                onError = {},
+                onSuccess = {}
             )
         }
     }

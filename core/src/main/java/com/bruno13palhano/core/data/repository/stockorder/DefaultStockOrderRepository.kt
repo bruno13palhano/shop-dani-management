@@ -30,10 +30,17 @@ internal class DefaultStockOrderRepository @Inject constructor(
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : StockOrderRepository {
-    override suspend fun insert(model: StockOrder): Long {
+    override suspend fun insert(
+        model: StockOrder,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
         val stockOrderVersion = Versions.stockOrderVersion(timestamp = model.timestamp)
 
-        val id = stockOrderData.insert(model = model) {
+        val id = stockOrderData.insert(
+            model = model,
+            onError = onError,
+        ) {
             val netModel = StockOrder(
                 id = it,
                 productId = model.productId,
@@ -51,32 +58,58 @@ internal class DefaultStockOrderRepository @Inject constructor(
                 timestamp = model.timestamp
             )
 
-            CoroutineScope(ioDispatcher).launch {
-                stockOrderNetwork.insert(data = netModel)
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    stockOrderNetwork.insert(data = netModel)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
-        versionData.insert(stockOrderVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.insert(data = stockOrderVersion)
+        versionData.insert(model = stockOrderVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.insert(data = stockOrderVersion)
+                    onSuccess(id)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
         return id
     }
 
-    override suspend fun update(model: StockOrder) {
+    override suspend fun update(
+        model: StockOrder,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val stockOrderVersion = Versions.stockOrderVersion(timestamp = model.timestamp)
 
-        stockOrderData.update(model = model) {
-            CoroutineScope(ioDispatcher).launch {
-                stockOrderNetwork.update(data = model)
+        stockOrderData.update(model = model, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    stockOrderNetwork.update(data = model)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
 
-        versionData.update(stockOrderVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.insert(data = stockOrderVersion)
+        versionData.update(model = stockOrderVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.insert(data = stockOrderVersion)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
     }
@@ -102,21 +135,40 @@ internal class DefaultStockOrderRepository @Inject constructor(
     override suspend fun updateStockOrderQuantity(id: Long, quantity: Int, timestamp: String) {
         val stockOrderVersion = Versions.stockOrderVersion(timestamp = timestamp)
         stockOrderData.updateStockOrderQuantity(id = id, quantity = quantity)
-        versionData.update(model = stockOrderVersion) {}
+        versionData.update(
+            model = stockOrderVersion,
+            onError = {}
+        ) {}
     }
 
-    override suspend fun deleteById(id: Long, timestamp: String) {
+    override suspend fun deleteById(
+        id: Long,
+        timestamp: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val stockOrderVersion = Versions.stockOrderVersion(timestamp = timestamp)
 
-        stockOrderData.deleteById(id = id) {
-            CoroutineScope(ioDispatcher).launch {
-                stockOrderNetwork.delete(id = id)
+        stockOrderData.deleteById(id = id, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    stockOrderNetwork.delete(id = id)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
 
-        versionData.update(stockOrderVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.update(data = stockOrderVersion)
+        versionData.update(model = stockOrderVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.update(data = stockOrderVersion)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
     }
@@ -165,9 +217,9 @@ internal class DefaultStockOrderRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { stockOrderData.deleteById(it) {} }
-                saveList.forEach { stockOrderData.insert(it) {} }
-                versionData.insert(netVersion) {}
+                deleteIds.forEach { stockOrderData.deleteById(it, {}) {} }
+                saveList.forEach { stockOrderData.insert(it, {}) {} }
+                versionData.insert(netVersion, {}) {}
             }
         )
 }

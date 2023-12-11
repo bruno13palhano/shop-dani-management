@@ -40,7 +40,11 @@ class ProductCategoriesViewModel @Inject constructor(
             timestamp = getCurrentTimestamp()
         )
         viewModelScope.launch {
-            categoryRepository.insert(category)
+            categoryRepository.insert(
+                model = category,
+                onError = {},
+                onSuccess = {}
+            )
         }
         restoreValue()
     }

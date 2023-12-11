@@ -83,7 +83,11 @@ class CustomerViewModel @Inject constructor(
             timestamp = getCurrentTimestamp()
         )
         viewModelScope.launch {
-            customerRepository.insert(customer)
+            customerRepository.insert(
+                model = customer,
+                onError = {},
+                onSuccess = {}
+            )
         }
     }
 
@@ -98,7 +102,11 @@ class CustomerViewModel @Inject constructor(
             timestamp = getCurrentTimestamp()
         )
         viewModelScope.launch {
-            customerRepository.update(customer)
+            customerRepository.update(
+                model = customer,
+                onError = {},
+                onSuccess = {}
+            )
         }
     }
 }

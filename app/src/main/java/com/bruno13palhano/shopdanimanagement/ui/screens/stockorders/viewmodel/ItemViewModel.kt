@@ -97,7 +97,11 @@ class ItemViewModel @Inject constructor(
 
     fun insertItems(productId: Long, isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
-            stockRepository.insert(createStockOrder(productId, isOrderedByCustomer))
+            stockRepository.insert(
+                model = createStockOrder(productId, isOrderedByCustomer),
+                onError = {},
+                onSuccess = {}
+            )
         }
     }
 
@@ -121,7 +125,11 @@ class ItemViewModel @Inject constructor(
 
     fun updateStockOrderItem(stockOrderItemId: Long, isOrderedByCustomer: Boolean) {
         viewModelScope.launch {
-            stockRepository.update(updateStockOrder(stockOrderItemId, isOrderedByCustomer))
+            stockRepository.update(
+                model = updateStockOrder(stockOrderItemId, isOrderedByCustomer),
+                onError = {},
+                onSuccess = {}
+            )
         }
     }
 
@@ -129,7 +137,9 @@ class ItemViewModel @Inject constructor(
         viewModelScope.launch {
             stockRepository.deleteById(
                 id = stockOrderId,
-                timestamp = getCurrentTimestamp()
+                timestamp = getCurrentTimestamp(),
+                onError = {},
+                onSuccess = {}
             )
         }
     }

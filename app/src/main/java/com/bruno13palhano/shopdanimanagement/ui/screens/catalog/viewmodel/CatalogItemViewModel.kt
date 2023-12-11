@@ -78,13 +78,21 @@ class CatalogItemViewModel @Inject constructor(
 
     fun insert() {
         viewModelScope.launch {
-            catalogRepository.insert(model = initCatalogItem())
+            catalogRepository.insert(
+                model = initCatalogItem(),
+                onError = {},
+                onSuccess = {}
+            )
         }
     }
 
     fun update() {
         viewModelScope.launch {
-            catalogRepository.update(model = initCatalogItem())
+            catalogRepository.update(
+                model = initCatalogItem(),
+                onError = {},
+                onSuccess = {}
+            )
         }
     }
 
@@ -92,7 +100,9 @@ class CatalogItemViewModel @Inject constructor(
         viewModelScope.launch {
             catalogRepository.deleteById(
                 id = catalogId,
-                timestamp = getCurrentTimestamp()
+                timestamp = getCurrentTimestamp(),
+                onError = {},
+                onSuccess = {}
             )
         }
     }

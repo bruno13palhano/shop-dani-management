@@ -30,10 +30,14 @@ internal class DefaultCustomerRepository @Inject constructor(
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CustomerRepository {
-    override suspend fun insert(model: Customer): Long {
+    override suspend fun insert(
+        model: Customer,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
         val customerVersion = Versions.customerVersion(timestamp = model.timestamp)
 
-        val id = customerData.insert(model = model) {
+        val id = customerData.insert(model = model, onError = onError) {
             val netModel = Customer(
                 id = it,
                 name = model.name,
@@ -44,48 +48,90 @@ internal class DefaultCustomerRepository @Inject constructor(
                 timestamp = model.timestamp
             )
 
-            CoroutineScope(ioDispatcher).launch {
-                customerNetwork.insert(data = netModel)
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    customerNetwork.insert(data = netModel)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
-        versionData.insert(customerVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.insert(data = customerVersion)
+        versionData.insert(model = customerVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.insert(data = customerVersion)
+                    onSuccess(id)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
         return id
     }
 
-    override suspend fun update(model: Customer) {
+    override suspend fun update(
+        model: Customer,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val customerVersion = Versions.customerVersion(timestamp = model.timestamp)
 
-        customerData.update(model = model) {
-            CoroutineScope(ioDispatcher).launch {
-                customerNetwork.update(data = model)
+        customerData.update(model = model, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    customerNetwork.update(data = model)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
 
-        versionData.update(model = customerVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.update(data = customerVersion)
+        versionData.update(model = customerVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.update(data = customerVersion)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
     }
 
-    override suspend fun deleteById(id: Long, timestamp: String) {
+    override suspend fun deleteById(
+        id: Long,
+        timestamp: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val customerVersion = Versions.customerVersion(timestamp = timestamp)
 
-        customerData.deleteById(id = id) {
-            CoroutineScope(ioDispatcher).launch {
-                customerNetwork.delete(id = id)
+        customerData.deleteById(id = id, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    customerNetwork.delete(id = id)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
 
-        versionData.update(model = customerVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.update(data = customerVersion)
+        versionData.update(model = customerVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.update(data = customerVersion)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
     }
@@ -126,9 +172,9 @@ internal class DefaultCustomerRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { customerData.deleteById(it) {} }
-                saveList.forEach { customerData.insert(it) {} }
-                versionData.insert(netVersion) {}
+                deleteIds.forEach { customerData.deleteById(it, {}) {} }
+                saveList.forEach { customerData.insert(it, {}) {} }
+                versionData.insert(netVersion, {}) {}
             }
         )
 }

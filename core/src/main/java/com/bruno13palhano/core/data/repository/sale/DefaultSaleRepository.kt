@@ -38,42 +38,72 @@ internal class DefaultSaleRepository @Inject constructor(
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleRepository {
-    override suspend fun insert(model: Sale): Long {
+    override suspend fun insert(
+        model: Sale,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
         val saleVersion = Versions.saleVersion(timestamp = model.timestamp)
 
-        val id = saleData.insert(model = model) {
+        val id = saleData.insert(model = model, onError = onError) {
             val netModel = createSale(
                 sale = model,
                 saleId = it,
                 stockOrderId = model.stockOrderId
             )
 
-            CoroutineScope(ioDispatcher).launch {
-                saleNetwork.insert(data = netModel)
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    saleNetwork.insert(data = netModel)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
-        versionData.insert(saleVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.insert(saleVersion)
+        versionData.insert(model = saleVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.insert(saleVersion)
+                    onSuccess(id)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
         return id
     }
 
-    override suspend fun update(model: Sale) {
+    override suspend fun update(
+        model: Sale,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val saleVersion = Versions.saleVersion(timestamp = model.timestamp)
 
-        saleData.update(model = model) {
-            CoroutineScope(ioDispatcher).launch {
-                saleNetwork.update(data = model)
+        saleData.update(model = model, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    saleNetwork.update(data = model)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
 
-        versionData.update(saleVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.update(saleVersion)
+        versionData.update(model = saleVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.update(saleVersion)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
     }
@@ -86,8 +116,8 @@ internal class DefaultSaleRepository @Inject constructor(
         sale: Sale,
         stockOrder: StockOrder,
         delivery: Delivery,
-        onSuccess: () -> Unit,
-        onError: () -> Unit
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
     ) {
         val saleVersion = Versions.saleVersion(timestamp = sale.timestamp)
         val deliveryVersion = Versions.deliveryVersion(timestamp = delivery.timestamp)
@@ -95,9 +125,9 @@ internal class DefaultSaleRepository @Inject constructor(
         saleData.insertItems(
             sale = sale,
             stockOrder = stockOrder,
-            delivery = delivery
+            delivery = delivery,
+            onError = onError
         ) { saleId, stockOrderId, deliveryId ->
-            onSuccess()
             val netStockOrder = createStockOrder(stockOrder = stockOrder, id = stockOrderId)
             val netSale = createSale(sale = sale, saleId = saleId, stockOrderId = stockOrderId)
             val netDelivery = createDelivery(
@@ -106,20 +136,36 @@ internal class DefaultSaleRepository @Inject constructor(
                 saleId = saleId
             )
 
-            CoroutineScope(ioDispatcher).launch {
-                saleNetwork.insertItems(netSale, netStockOrder, netDelivery)
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    saleNetwork.insertItems(netSale, netStockOrder, netDelivery)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
-        versionData.insert(saleVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.insert(saleVersion)
+        versionData.insert(model = saleVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.insert(saleVersion)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
-        versionData.insert(deliveryVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.insert(deliveryVersion)
+        versionData.insert(model = deliveryVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.insert(deliveryVersion)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
     }
@@ -140,18 +186,34 @@ internal class DefaultSaleRepository @Inject constructor(
         return saleData.getAllOrdersSales(offset = offset, limit = limit)
     }
 
-    override suspend fun deleteById(id: Long, timestamp: String) {
+    override suspend fun deleteById(
+        id: Long,
+        timestamp: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val saleVersion = Versions.saleVersion(timestamp = timestamp)
 
-        saleData.deleteById(id = id) {
-            CoroutineScope(ioDispatcher).launch {
-                saleNetwork.delete(id = id)
+        saleData.deleteById(id = id, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    saleNetwork.delete(id = id)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
 
-        versionData.update(saleVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.update(saleVersion)
+        versionData.update(model = saleVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.update(saleVersion)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
     }
@@ -234,9 +296,9 @@ internal class DefaultSaleRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { saleData.deleteById(it) {} }
-                saveList.forEach { saleData.insert(it) {} }
-                versionData.insert(netVersion) {}
+                deleteIds.forEach { saleData.deleteById(it, {}) {} }
+                saveList.forEach { saleData.insert(it, {}) {} }
+                versionData.insert(netVersion, {}) {}
             }
         )
 

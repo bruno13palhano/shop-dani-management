@@ -34,18 +34,34 @@ internal class DefaultCategoryRepository @Inject constructor(
         return categoryData.search(value = value)
     }
 
-    override suspend fun deleteById(id: Long, timestamp: String) {
+    override suspend fun deleteById(
+        id: Long,
+        timestamp: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val categoryVersion = Versions.categoryVersion(timestamp = timestamp)
 
-        versionData.update(model = categoryVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.update(data = categoryVersion)
+        versionData.update(model = categoryVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.update(data = categoryVersion)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
 
-        categoryData.deleteById(id = id) {
-            CoroutineScope(ioDispatcher).launch {
-                categoryNetwork.delete(id = id)
+        categoryData.deleteById(id = id, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    categoryNetwork.delete(id = id)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
     }
@@ -74,46 +90,76 @@ internal class DefaultCategoryRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { categoryData.deleteById(it) {} }
-                saveList.forEach { categoryData.insert(it) {} }
-                versionData.insert(netVersion) {}
+                deleteIds.forEach { categoryData.deleteById(it, {}) {} }
+                saveList.forEach { categoryData.insert(it, {}) {} }
+                versionData.insert(netVersion, {}) {}
             }
         )
 
-    override suspend fun update(model: Category) {
+    override suspend fun update(
+        model: Category,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
 
-        versionData.update(model = categoryVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.update(data = categoryVersion)
+        versionData.update(model = categoryVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.update(data = categoryVersion)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
 
-        categoryData.update(model = model) {
-            CoroutineScope(ioDispatcher).launch {
-                categoryNetwork.update(data = model)
+        categoryData.update(model = model, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    categoryNetwork.update(data = model)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
     }
 
-    override suspend fun insert(model: Category): Long {
+    override suspend fun insert(
+        model: Category,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
         val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
 
-        val id = categoryData.insert(model = model) {
+        val id = categoryData.insert(model = model, onError = onError) {
             val netModel = Category(
                 id = it,
                 category = model.category,
                 timestamp = model.timestamp
             )
 
-            CoroutineScope(ioDispatcher).launch {
-                categoryNetwork.insert(data = netModel)
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    categoryNetwork.insert(data = netModel)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
-        versionData.insert(model = categoryVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.insert(data = categoryVersion)
+        versionData.insert(model = categoryVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.insert(data = categoryVersion)
+                    onSuccess(id)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 

@@ -136,7 +136,11 @@ class ProductViewModel @Inject constructor(
 
     fun insertProduct() {
         viewModelScope.launch {
-            productRepository.insert(createProduct(id = 0L))
+            productRepository.insert(
+                model = createProduct(id = 0L),
+                onError = {},
+                onSuccess = {}
+            )
         }
     }
 
@@ -181,7 +185,11 @@ class ProductViewModel @Inject constructor(
 
     fun updateProduct(id: Long) {
         viewModelScope.launch {
-            productRepository.update(createProduct(id = id))
+            productRepository.update(
+                model = createProduct(id = id),
+                onError = {},
+                onSuccess = {}
+            )
         }
     }
 
@@ -189,7 +197,9 @@ class ProductViewModel @Inject constructor(
         viewModelScope.launch {
             productRepository.deleteById(
                 id = id,
-                timestamp = getCurrentTimestamp()
+                timestamp = getCurrentTimestamp(),
+                onError = {},
+                onSuccess = {}
             )
         }
     }

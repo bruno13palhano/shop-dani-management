@@ -54,7 +54,11 @@ class ProductListViewModel @Inject constructor(
     fun updateCategory(id: Long) {
         val category = Category(id = id, category = name.trim(), timestamp = getCurrentTimestamp())
         viewModelScope.launch {
-            categoryRepository.update(category)
+            categoryRepository.update(
+                model = category,
+                onError = {},
+                onSuccess = {}
+            )
         }
     }
 

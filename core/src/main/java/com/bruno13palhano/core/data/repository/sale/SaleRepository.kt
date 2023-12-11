@@ -12,8 +12,8 @@ interface SaleRepository : RepositoryOperations<Sale>, Syncable {
         sale: Sale,
         stockOrder: StockOrder,
         delivery: Delivery,
-        onSuccess: () -> Unit,
-        onError: () -> Unit
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
     )
     fun getByCustomerId(customerId: Long): Flow<List<Sale>>
     fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>>

@@ -30,10 +30,14 @@ internal class DefaultDeliveryRepository @Inject constructor(
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : DeliveryRepository {
-    override suspend fun insert(model: Delivery): Long {
+    override suspend fun insert(
+        model: Delivery,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
         val deliveryVersion = Versions.deliveryVersion(timestamp = model.timestamp)
 
-        val id = deliveryData.insert(model = model) {
+        val id = deliveryData.insert(model = model, onError = onError) {
             val netModel = Delivery(
                 id = it,
                 saleId = model.saleId,
@@ -49,32 +53,58 @@ internal class DefaultDeliveryRepository @Inject constructor(
                 timestamp = model.timestamp
             )
 
-            CoroutineScope(ioDispatcher).launch {
-                deliveryNetwork.insert(data = netModel)
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    deliveryNetwork.insert(data = netModel)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
-        versionData.insert(model = deliveryVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.insert(data = deliveryVersion)
+        versionData.insert(model = deliveryVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.insert(data = deliveryVersion)
+                    onSuccess(id)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(4)
             }
         }
 
         return id
     }
 
-    override suspend fun update(model: Delivery) {
+    override suspend fun update(
+        model: Delivery,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val deliveryVersion = Versions.deliveryVersion(timestamp = model.timestamp)
 
-        deliveryData.update(model = model) {
-            CoroutineScope(ioDispatcher).launch {
-                deliveryNetwork.update(data = model)
+        deliveryData.update(model = model, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    deliveryNetwork.update(data = model)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
 
-        versionData.update(model = deliveryVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.update(data = deliveryVersion)
+        versionData.update(model = deliveryVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.update(data = deliveryVersion)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(5)
             }
         }
     }
@@ -99,18 +129,34 @@ internal class DefaultDeliveryRepository @Inject constructor(
         return deliveryData.getDeliveries(delivered = delivered)
     }
 
-    override suspend fun deleteById(id: Long, timestamp: String) {
+    override suspend fun deleteById(
+        id: Long,
+        timestamp: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val deliveryVersion = Versions.deliveryVersion(timestamp = timestamp)
 
-        deliveryData.deleteById(id = id) {
-            CoroutineScope(ioDispatcher).launch {
-                deliveryNetwork.delete(id = id)
+        deliveryData.deleteById(id = id, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    deliveryNetwork.delete(id = id)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
 
-        versionData.update(model = deliveryVersion) {
-            CoroutineScope(ioDispatcher).launch {
-                versionNetwork.update(data = deliveryVersion)
+        versionData.update(model = deliveryVersion, onError = onError) {
+            try {
+                CoroutineScope(ioDispatcher).launch {
+                    versionNetwork.update(data = deliveryVersion)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(6)
             }
         }
     }
@@ -139,9 +185,9 @@ internal class DefaultDeliveryRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { deliveryData.deleteById(it) {} }
-                saveList.forEach { deliveryData.insert(it) {} }
-                versionData.insert(netVersion) {}
+                deleteIds.forEach { deliveryData.deleteById(it, {}) {} }
+                saveList.forEach { deliveryData.insert(it, {}) {} }
+                versionData.insert(netVersion, {}) {}
             }
         )
 
