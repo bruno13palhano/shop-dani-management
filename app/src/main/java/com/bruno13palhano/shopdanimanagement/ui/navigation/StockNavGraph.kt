@@ -9,7 +9,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.ItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderSearchScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrdersScreen
@@ -44,8 +44,7 @@ fun NavGraphBuilder.stockNavGraph(
         }
         composable(route = StockDestinations.STOCK_SEARCH_ITEM_ROUTE) {
             showBottomMenu(true)
-            StockOrderSearchScreen(
-                isOrderedByCustomer = false,
+            StockSearchScreen(
                 onItemClick = { stockId ->
                     navController.navigate(
                         route = "${StockDestinations.STOCK_ITEM_ROUTE}/$stockId/${true}/${false}"
@@ -102,8 +101,7 @@ fun NavGraphBuilder.stockNavGraph(
             if (id != null && editable != null && isOrdered != null) {
                 ItemScreen(
                     isEditable = editable,
-                    stockOrderItemId = if (editable) id else 0L,
-                    isOrderedByCustomer = isOrdered,
+                    stockItemId = if (editable) id else 0L,
                     screenTitle = if (editable) {
                         stringResource(id = R.string.edit_stock_item_label)
                     } else {

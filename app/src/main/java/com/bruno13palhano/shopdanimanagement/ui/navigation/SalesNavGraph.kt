@@ -10,7 +10,7 @@ import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrdersScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrderSearchScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
@@ -27,6 +27,7 @@ fun NavGraphBuilder.salesNavGraph(
         composable(route = SalesDestinations.MAIN_SALES_ROUTE) {
             showBottomMenu(true)
             SalesScreen(
+                screenTitle = stringResource(id = R.string.sales_label),
                 onItemClick = { saleId ->
                     navController.navigate(
                         route = "${SalesDestinations.SALES_SALE_ROUTE}/$saleId/${true}/${false}"
@@ -52,8 +53,7 @@ fun NavGraphBuilder.salesNavGraph(
         }
         composable(route = SalesDestinations.SALES_SEARCH_STOCK_ROUTE) {
             showBottomMenu(true)
-            StockOrderSearchScreen(
-                isOrderedByCustomer = false,
+            StockSearchScreen(
                 onItemClick = { stockItem ->
                     navController.navigate(
                         route = "${SalesDestinations.SALES_SALE_ROUTE}/$stockItem/${true}/${false}"

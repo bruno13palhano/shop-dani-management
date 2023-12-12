@@ -102,9 +102,8 @@ fun NavGraphBuilder.financialNavGraph(
             backStackEntry.arguments?.getLong(ITEM_ID)?.let { stockItemId ->
                 ItemScreen(
                     isEditable = true,
-                    isOrderedByCustomer = false,
                     productId = 0L,
-                    stockOrderItemId = stockItemId,
+                    stockItemId = stockItemId,
                     screenTitle = stringResource(id = R.string.edit_stock_item_label),
                     navigateUp = { navController.navigateUp() }
                 )
