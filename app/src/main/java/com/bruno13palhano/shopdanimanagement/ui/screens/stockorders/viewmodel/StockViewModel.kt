@@ -3,7 +3,7 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.category.CategoryRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StockOrdersViewModel @Inject constructor(
-    @StockOrderRep private val stockRepository: StockOrderRepository,
+    @StockOrderRep private val stockRepository: StockRepository,
     @CategoryRep private val categoryRepository: CategoryRepository
 ) : ViewModel() {
     val categories = categoryRepository.getAll()
@@ -38,9 +38,9 @@ class StockOrdersViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun getItems(isOrderedByCustomer: Boolean) {
+    fun getItems() {
         viewModelScope.launch {
-            stockRepository.getStockOrderItems(isOrderedByCustomer).collect {
+            stockRepository.getStockOrderItems().collect {
                 _stockList.value = it.map { stockOrder ->
                     Stock(
                         id = stockOrder.id,
@@ -54,9 +54,9 @@ class StockOrdersViewModel @Inject constructor(
         }
     }
 
-    fun getItemsByCategories(category: String, isOrderedByCustomer: Boolean) {
+    fun getItemsByCategories(category: String) {
         viewModelScope.launch {
-            stockRepository.getByCategory(category, isOrderedByCustomer).collect {
+            stockRepository.getByCategory(category).collect {
                 _stockList.value = it.map { stockOrder ->
                     Stock(
                         id = stockOrder.id,

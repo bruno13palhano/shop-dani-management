@@ -1,14 +1,14 @@
 package com.bruno13palhano.shopdanimanagement.stockorder
 
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomSearchCache
 import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
 import com.bruno13palhano.shopdanimanagement.repository.TestSearchCacheRepository
-import com.bruno13palhano.shopdanimanagement.repository.TestStockOrderRepository
+import com.bruno13palhano.shopdanimanagement.repository.TestStockRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockOrdersSearchViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,23 +41,23 @@ class StockOrdersSearchViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var stockOrderRepository: StockOrderRepository<StockOrder>
+    private lateinit var stockItemRepository: StockRepository<StockItem>
     private lateinit var searchCacheRepository: SearchCacheRepository<SearchCache>
     private lateinit var sut: StockOrdersSearchViewModel
 
     @Before
     fun setup() {
-        stockOrderRepository = TestStockOrderRepository()
+        stockItemRepository = TestStockRepository()
         searchCacheRepository = TestSearchCacheRepository()
-        sut = StockOrdersSearchViewModel(stockOrderRepository, searchCacheRepository)
+        sut = StockOrdersSearchViewModel(stockItemRepository, searchCacheRepository)
     }
 
     @Test
     fun insertSearch_shouldCallInsertFromSearchCacheRepository() = runTest {
         val search = "test"
-        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val stockItemRepository = mock<StockRepository<StockItem>>()
         val searchCacheRepository = mock<SearchCacheRepository<SearchCache>>()
-        val sut = StockOrdersSearchViewModel(stockOrderRepository, searchCacheRepository)
+        val sut = StockOrdersSearchViewModel(stockItemRepository, searchCacheRepository)
 
         sut.insertSearch(search = search)
         advanceUntilIdle()
@@ -81,9 +81,9 @@ class StockOrdersSearchViewModelTest {
 
     @Test
     fun getSearchCache_shouldCallGetAllFromSearchCacheRepository() = runTest {
-        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val stockItemRepository = mock<StockRepository<StockItem>>()
         val searchCacheRepository = mock<SearchCacheRepository<SearchCache>>()
-        val sut = StockOrdersSearchViewModel(stockOrderRepository, searchCacheRepository)
+        val sut = StockOrdersSearchViewModel(stockItemRepository, searchCacheRepository)
 
         whenever(searchCacheRepository.getAll()).doAnswer { flowOf() }
 
@@ -102,7 +102,7 @@ class StockOrdersSearchViewModelTest {
         )
         val item = items[1]
         val search = item.name
-        items.forEach { stockOrderRepository.insert(it) }
+        items.forEach { stockItemRepository.insert(it) }
 
         val collectJob = launch { sut.stockOrderItems.collect() }
         sut.search(search = search, isOrderedByCustomer = false)
@@ -116,19 +116,19 @@ class StockOrdersSearchViewModelTest {
     @Test
     fun search_shouldCallSearchFromStockOrderRepository() = runTest {
         val search = "Perfumes"
-        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val stockItemRepository = mock<StockRepository<StockItem>>()
         val searchCacheRepository = mock<SearchCacheRepository<SearchCache>>()
-        val sut = StockOrdersSearchViewModel(stockOrderRepository, searchCacheRepository)
+        val sut = StockOrdersSearchViewModel(stockItemRepository, searchCacheRepository)
 
-        whenever(stockOrderRepository.search(any(), any())).doAnswer { flowOf() }
+        whenever(stockItemRepository.search(any(), any())).doAnswer { flowOf() }
 
         sut.search(search = search, isOrderedByCustomer = true)
         advanceUntilIdle()
 
-        verify(stockOrderRepository).search(any(), any())
+        verify(stockItemRepository).search(any(), any())
     }
 
-    private fun mapToStock(items: List<StockOrder>) =
+    private fun mapToStock(items: List<StockItem>) =
         items.map {
             Stock(
                 id = it.id,

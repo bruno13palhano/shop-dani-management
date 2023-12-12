@@ -1,14 +1,14 @@
 package com.bruno13palhano.shopdanimanagement.stockorder
 
 import com.bruno13palhano.core.data.repository.category.CategoryRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCategory
 import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
 import com.bruno13palhano.shopdanimanagement.repository.TestCategoryRepository
-import com.bruno13palhano.shopdanimanagement.repository.TestStockOrderRepository
+import com.bruno13palhano.shopdanimanagement.repository.TestStockRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockOrdersViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,15 +41,15 @@ class StockOrdersViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var stockOrderRepository: StockOrderRepository<StockOrder>
+    private lateinit var stockItemRepository: StockRepository<StockItem>
     private lateinit var categoryRepository: CategoryRepository<Category>
     private lateinit var sut: StockOrdersViewModel
 
     @Before
     fun setup() {
-        stockOrderRepository = TestStockOrderRepository()
+        stockItemRepository = TestStockRepository()
         categoryRepository = TestCategoryRepository()
-        sut = StockOrdersViewModel(stockOrderRepository, categoryRepository)
+        sut = StockOrdersViewModel(stockItemRepository, categoryRepository)
     }
 
     @Test
@@ -67,16 +67,16 @@ class StockOrdersViewModelTest {
 
     @Test
     fun getItems_shouldCallGetStockOrderItemsFromStockOrderRepository() = runTest {
-        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val stockItemRepository = mock<StockRepository<StockItem>>()
         val categoryRepository = mock<CategoryRepository<Category>>()
-        val sut = StockOrdersViewModel(stockOrderRepository, categoryRepository)
+        val sut = StockOrdersViewModel(stockItemRepository, categoryRepository)
 
-        whenever(stockOrderRepository.getStockOrderItems(any())).doAnswer { flowOf() }
+        whenever(stockItemRepository.getStockOrderItems(any())).doAnswer { flowOf() }
 
         sut.getItems(isOrderedByCustomer = true)
         advanceUntilIdle()
 
-        verify(stockOrderRepository).getStockOrderItems(any())
+        verify(stockItemRepository).getStockOrderItems(any())
     }
 
     @Test
@@ -86,7 +86,7 @@ class StockOrdersViewModelTest {
             makeRandomStockOrder(id = 2L, isOrderedByCustomer = true),
             makeRandomStockOrder(id = 3L, isOrderedByCustomer = false)
         )
-        items.forEach { stockOrderRepository.insert(it) }
+        items.forEach { stockItemRepository.insert(it) }
         val expectedItem = items[1]
 
         val collectJob = launch { sut.stockList.collect() }
@@ -101,16 +101,16 @@ class StockOrdersViewModelTest {
 
     @Test
     fun getItemsByCategories_shouldCallGetByCategoryFromStockOrderRepository() = runTest {
-        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val stockItemRepository = mock<StockRepository<StockItem>>()
         val categoryRepository = mock<CategoryRepository<Category>>()
-        val sut = StockOrdersViewModel(stockOrderRepository, categoryRepository)
+        val sut = StockOrdersViewModel(stockItemRepository, categoryRepository)
 
-        whenever(stockOrderRepository.getByCategory(any(), any())).doAnswer { flowOf() }
+        whenever(stockItemRepository.getByCategory(any(), any())).doAnswer { flowOf() }
 
         sut.getItemsByCategories(category = "Perfumes", isOrderedByCustomer = true)
         advanceUntilIdle()
 
-        verify(stockOrderRepository).getByCategory(any(), any())
+        verify(stockItemRepository).getByCategory(any(), any())
     }
 
     @Test
@@ -120,7 +120,7 @@ class StockOrdersViewModelTest {
             makeRandomStockOrder(id = 2L, isOrderedByCustomer = true),
             makeRandomStockOrder(id = 3L, isOrderedByCustomer = false)
         )
-        items.forEach { stockOrderRepository.insert(it) }
+        items.forEach { stockItemRepository.insert(it) }
         val expectedItem = items[2]
         val category = expectedItem.categories[0].category
 
@@ -136,16 +136,16 @@ class StockOrdersViewModelTest {
 
     @Test
     fun getOutOfStock_shouldCallGetOutOfStockFromStockOrderRepository() = runTest {
-        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
+        val stockItemRepository = mock<StockRepository<StockItem>>()
         val categoryRepository = mock<CategoryRepository<Category>>()
-        val sut = StockOrdersViewModel(stockOrderRepository, categoryRepository)
+        val sut = StockOrdersViewModel(stockItemRepository, categoryRepository)
 
-        whenever(stockOrderRepository.getOutOfStock()).doAnswer { flowOf() }
+        whenever(stockItemRepository.getOutOfStock()).doAnswer { flowOf() }
 
         sut.getOutOfStock()
         advanceUntilIdle()
 
-        verify(stockOrderRepository).getOutOfStock()
+        verify(stockItemRepository).getOutOfStock()
     }
 
     @Test
@@ -155,7 +155,7 @@ class StockOrdersViewModelTest {
             makeRandomStockOrder(id = 2L, isOrderedByCustomer = true),
             makeRandomStockOrder(id = 3L, isOrderedByCustomer = false)
         )
-        items.forEach { stockOrderRepository.insert(it) }
+        items.forEach { stockItemRepository.insert(it) }
         val expectedItem = items[0]
 
         val collectJob = launch { sut.stockList.collect() }
@@ -168,7 +168,7 @@ class StockOrdersViewModelTest {
         collectJob.cancel()
     }
 
-    private fun mapToStock(items: List<StockOrder>) =
+    private fun mapToStock(items: List<StockItem>) =
         items.map {
             Stock(
                 id = it.id,

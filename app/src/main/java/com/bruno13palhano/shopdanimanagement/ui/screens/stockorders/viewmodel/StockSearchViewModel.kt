@@ -3,7 +3,7 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.di.SearchCacheRep
 import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.SearchCache
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StockOrdersSearchViewModel @Inject constructor(
-    @StockOrderRep private val stockOrderRepository: StockOrderRepository,
+    @StockOrderRep private val stockRepository: StockRepository,
     @SearchCacheRep private val searchCacheRepository: SearchCacheRepository
 ) : ViewModel() {
     private val _searchCache = MutableStateFlow<List<SearchCache>>(emptyList())
@@ -37,10 +37,10 @@ class StockOrdersSearchViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun search(search: String, isOrderedByCustomer: Boolean) {
+    fun search(search: String) {
         if (search.trim().isNotEmpty()) {
             viewModelScope.launch {
-                stockOrderRepository.search(search, isOrderedByCustomer).collect {
+                stockRepository.search(search).collect {
                     _stockOrderItems.value = it.map { item ->
                         Stock(
                             id = item.id,

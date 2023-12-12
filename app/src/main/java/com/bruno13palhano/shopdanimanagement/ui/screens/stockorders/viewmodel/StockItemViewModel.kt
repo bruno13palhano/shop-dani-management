@@ -8,11 +8,11 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.product.ProductRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -23,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ItemViewModel @Inject constructor(
     @ProductRep private val productRepository: ProductRepository,
-    @StockOrderRep private val stockRepository: StockOrderRepository
+    @StockOrderRep private val stockRepository: StockRepository
 ) : ViewModel() {
     private var productId by mutableLongStateOf(0L)
     var name by mutableStateOf("")
@@ -97,22 +97,21 @@ class ItemViewModel @Inject constructor(
 
     fun insertItems(
         productId: Long,
-        isOrderedByCustomer: Boolean,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
             stockRepository.insert(
-                model = createStockOrder(productId, isOrderedByCustomer),
+                model = createStockItem(productId),
                 onError = onError,
                 onSuccess = { onSuccess() }
             )
         }
     }
 
-    fun getStockOrder(stockOrderItemId: Long) {
+    fun getStockItem(stockItemId: Long) {
         viewModelScope.launch {
-            stockRepository.getById(stockOrderItemId).collect {
+            stockRepository.getById(stockItemId).collect {
                 productId = it.productId
                 name = it.name
                 photo = it.photo
@@ -128,22 +127,21 @@ class ItemViewModel @Inject constructor(
         }
     }
 
-    fun updateStockOrderItem(
-        stockOrderItemId: Long,
-        isOrderedByCustomer: Boolean,
+    fun updateStockItem(
+        stockItemId: Long,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
             stockRepository.update(
-                model = updateStockOrder(stockOrderItemId, isOrderedByCustomer),
+                model = updateStockItem(stockItemId),
                 onError = onError,
                 onSuccess = onSuccess
             )
         }
     }
 
-    fun deleteStockOrderItem(
+    fun deleteStockItem(
         stockOrderId: Long,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
@@ -158,7 +156,7 @@ class ItemViewModel @Inject constructor(
         }
     }
 
-    private fun createStockOrder(productId: Long, isOrderedByCustomer: Boolean) = StockOrder(
+    private fun createStockItem(productId: Long) = StockItem(
         id = 0L,
         productId = productId,
         name = name,
@@ -170,12 +168,11 @@ class ItemViewModel @Inject constructor(
         company = company,
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
-        isOrderedByCustomer = isOrderedByCustomer,
         isPaid = isPaid,
         timestamp = getCurrentTimestamp()
     )
 
-    private fun updateStockOrder(stockOrderId: Long, isOrderedByCustomer: Boolean) = StockOrder(
+    private fun updateStockItem(stockOrderId: Long) = StockItem(
         id = stockOrderId,
         productId = productId,
         name = name,
@@ -187,7 +184,6 @@ class ItemViewModel @Inject constructor(
         company = company,
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
-        isOrderedByCustomer = isOrderedByCustomer,
         isPaid = isPaid,
         timestamp = getCurrentTimestamp()
     )

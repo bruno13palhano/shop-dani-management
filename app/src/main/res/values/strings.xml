@@ -81,6 +81,12 @@
     <string name="price_text_tag">R$ %s.</string>
     <string name="discount_tag">%s%% discount.</string>
     <string name="quantity_tag">%s, units.</string>
+    <string name="insert_database_error">Failed to insert data into the database.</string>
+    <string name="update_database_error">Failed to update data in the database.</string>
+    <string name="delete_database_error">Failed to delete data in the database.</string>
+    <string name="insert_server_error">Failed to insert data into the server</string>
+    <string name="update_server_error">Failed to update data on the server.</string>
+    <string name="delete_server_error">Failed to delete data on the server.</string>
     <string name="empty_fields_error">Fill in the missing fields</string>
     <string name="only_x_items_error_label">There\'s only %d items on stock</string>
     <string name="search_label">Search</string>

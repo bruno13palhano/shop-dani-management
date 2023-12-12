@@ -21,9 +21,7 @@ fun StockOrdersScreen(
     navigateUp: () -> Unit,
     viewModel: StockOrdersViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getItems(isOrderedByCustomer)
-    }
+    LaunchedEffect(key1 = Unit) { viewModel.getItems() }
 
     val menuOptions =
         if (!isOrderedByCustomer) {
@@ -51,20 +49,20 @@ fun StockOrdersScreen(
             if (!isOrderedByCustomer) {
                 when (index) {
                     0 -> {
-                        viewModel.getItems(false)
+                        viewModel.getItems()
                     }
                     1 -> { viewModel.getOutOfStock() }
                     else -> {
-                        viewModel.getItemsByCategories(menuOptions[index], false)
+                        viewModel.getItemsByCategories(menuOptions[index])
                     }
                 }
             } else {
                 when (index) {
                     0 -> {
-                        viewModel.getItems(true)
+                        viewModel.getItems()
                     }
                     else -> {
-                        viewModel.getItemsByCategories(menuOptions[index], true)
+                        viewModel.getItemsByCategories(menuOptions[index])
                     }
                 }
             }

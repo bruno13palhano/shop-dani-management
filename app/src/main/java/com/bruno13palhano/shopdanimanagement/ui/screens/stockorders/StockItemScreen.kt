@@ -44,7 +44,7 @@ fun ItemScreen(
 ) {
     LaunchedEffect(key1 = Unit) {
         if (isEditable) {
-            viewModel.getStockOrder(stockOrderItemId)
+            viewModel.getStockItem(stockOrderItemId)
         } else {
             viewModel.updateDate(currentDate)
             viewModel.updateValidity(currentDate)
@@ -163,7 +163,7 @@ fun ItemScreen(
         onMoreOptionsItemClick = { index ->
             when (index) {
                 0 -> {
-                    viewModel.deleteStockOrderItem(
+                    viewModel.deleteStockItem(
                         stockOrderId = stockOrderItemId,
                         onError = {}
                     ) {
@@ -180,9 +180,8 @@ fun ItemScreen(
         onDoneButtonClick = {
             if (isItemNotEmpty) {
                 if (isEditable) {
-                    viewModel.updateStockOrderItem(
-                        stockOrderItemId = stockOrderItemId,
-                        isOrderedByCustomer = isOrderedByCustomer,
+                    viewModel.updateStockItem(
+                        stockItemId = stockOrderItemId,
                         onError = {}
                     ) {
                         setAlarmNotification(
@@ -197,7 +196,6 @@ fun ItemScreen(
                 } else {
                     viewModel.insertItems(
                         productId = productId,
-                        isOrderedByCustomer = isOrderedByCustomer,
                         onError = {}
                     ) {
                         setAlarmNotification(

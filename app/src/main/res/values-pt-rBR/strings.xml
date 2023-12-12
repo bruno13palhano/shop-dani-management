@@ -82,6 +82,12 @@
     <string name="price_text_tag">R$ %s.</string>
     <string name="discount_tag">%s%% discount.</string>
     <string name="quantity_tag">%s, unidades.</string>
+    <string name="insert_database_error">Falha ao inserir dados no banco de dados.</string>
+    <string name="update_database_error">Falha ao modificar dados no banco de dados.</string>
+    <string name="delete_database_error">Falha ao deletar dados no banco de dados.</string>
+    <string name="insert_server_error">Falha ao inserir dados no servidor</string>
+    <string name="update_server_error">Falha ao modificar dados no servidor</string>
+    <string name="delete_server_error">Falha ao deltear dados no servidor</string>
     <string name="empty_fields_error">Preencha os campos vazios</string>
     <string name="only_x_items_error_label">Há apenas %d items no estoque</string>
     <string name="search_label">Pesquisar</string>

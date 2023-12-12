@@ -9,8 +9,7 @@ import com.bruno13palhano.shopdanimanagement.ui.components.SearchContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockOrdersSearchViewModel
 
 @Composable
-fun StockOrderSearchScreen(
-    isOrderedByCustomer: Boolean,
+fun StockSearchScreen(
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,
     viewModel: StockOrdersSearchViewModel = hiltViewModel()
@@ -26,7 +25,7 @@ fun StockOrderSearchScreen(
         stockProducts = stockOrderItems,
         searchCacheList = searchCacheList,
         onSearchClick = { search ->
-            viewModel.search(search, isOrderedByCustomer)
+            viewModel.search(search)
             viewModel.insertSearch(search)
         },
         onItemClick = onItemClick,
