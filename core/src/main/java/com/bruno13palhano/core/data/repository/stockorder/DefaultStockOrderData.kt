@@ -4,9 +4,11 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.StockOrderTableQueries
+import cache.VersionTableQueries
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,32 +18,83 @@ import javax.inject.Inject
 
 class DefaultStockOrderData @Inject constructor(
     private val stockOrderQueries: StockOrderTableQueries,
+    private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : StockOrderData {
     override suspend fun insert(
         model: StockOrder,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long) -> Unit
     ): Long {
+        var id = 0L
+
         try {
             if (model.isNew()) {
-                stockOrderQueries.insert(
-                    productId = model.productId,
-                    date = model.date,
-                    validity = model.validity,
-                    quantity = model.quantity.toLong(),
-                    purchasePrice = model.purchasePrice.toDouble(),
-                    salePrice = model.salePrice.toDouble(),
-                    isOrderedByCustomer = model.isOrderedByCustomer,
-                    isPaid = model.isPaid,
-                    timestamp = model.timestamp
-                )
-                val id = stockOrderQueries.lastId().executeAsOne()
-                onSuccess(id)
+                stockOrderQueries.transaction {
+                    stockOrderQueries.insert(
+                        productId = model.productId,
+                        date = model.date,
+                        validity = model.validity,
+                        quantity = model.quantity.toLong(),
+                        purchasePrice = model.purchasePrice.toDouble(),
+                        salePrice = model.salePrice.toDouble(),
+                        isOrderedByCustomer = model.isOrderedByCustomer,
+                        isPaid = model.isPaid,
+                        timestamp = model.timestamp
+                    )
+                    id = stockOrderQueries.lastId().executeAsOne()
 
-                return id
+                    versionQueries.insertWithId(
+                        id = version.id,
+                        name = version.name,
+                        timestamp = version.timestamp
+                    )
+
+                    onSuccess(id)
+                }
             } else {
-                stockOrderQueries.insertWithId(
+                stockOrderQueries.transaction {
+                    stockOrderQueries.insertWithId(
+                        id = model.id,
+                        productId = model.productId,
+                        date = model.date,
+                        validity = model.validity,
+                        quantity = model.quantity.toLong(),
+                        purchasePrice = model.purchasePrice.toDouble(),
+                        salePrice = model.salePrice.toDouble(),
+                        isOrderedByCustomer = model.isOrderedByCustomer,
+                        isPaid = model.isPaid,
+                        timestamp = model.timestamp
+                    )
+
+                    versionQueries.insertWithId(
+                        id = version.id,
+                        name = version.name,
+                        timestamp = version.timestamp
+                    )
+
+                    id = model.id
+                    onSuccess(model.id)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(1)
+        }
+
+        return id
+    }
+
+    override suspend fun update(
+        model: StockOrder,
+        version: DataVersion,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            stockOrderQueries.transaction {
+                stockOrderQueries.update(
                     id = model.id,
                     productId = model.productId,
                     date = model.date,
@@ -53,37 +106,15 @@ class DefaultStockOrderData @Inject constructor(
                     isPaid = model.isPaid,
                     timestamp = model.timestamp
                 )
-                onSuccess(model.id)
 
-                return model.id
+                versionQueries.update(
+                    name = version.name,
+                    timestamp = version.timestamp,
+                    id = version.id
+                )
+
+                onSuccess()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            onError(1)
-
-            return 0L
-        }
-    }
-
-    override suspend fun update(
-        model: StockOrder,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
-        try {
-            stockOrderQueries.update(
-                id = model.id,
-                productId = model.productId,
-                date = model.date,
-                validity = model.validity,
-                quantity = model.quantity.toLong(),
-                purchasePrice = model.purchasePrice.toDouble(),
-                salePrice = model.salePrice.toDouble(),
-                isOrderedByCustomer = model.isOrderedByCustomer,
-                isPaid = model.isPaid,
-                timestamp = model.timestamp
-            )
-            onSuccess()
         } catch (e: Exception) {
             e.printStackTrace()
             onError(2)
@@ -124,12 +155,22 @@ class DefaultStockOrderData @Inject constructor(
 
     override suspend fun deleteById(
         id: Long,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
         try {
-            stockOrderQueries.delete(id = id)
-            onSuccess()
+            stockOrderQueries.transaction {
+                stockOrderQueries.delete(id = id)
+
+                versionQueries.update(
+                    name = version.name,
+                    timestamp = version.timestamp,
+                    id = version.id
+                )
+
+                onSuccess()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             onError(3)

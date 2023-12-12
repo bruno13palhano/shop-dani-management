@@ -37,7 +37,7 @@ internal class DefaultCustomerRepository @Inject constructor(
     ): Long {
         val customerVersion = Versions.customerVersion(timestamp = model.timestamp)
 
-        val id = customerData.insert(model = model, onError = onError) {
+        val id = customerData.insert(model = model, version = customerVersion, onError = onError) {
             val netModel = Customer(
                 id = it,
                 name = model.name,
@@ -49,17 +49,12 @@ internal class DefaultCustomerRepository @Inject constructor(
             )
 
             CoroutineScope(ioDispatcher).launch {
-                try { customerNetwork.insert(data = netModel) }
-                catch (e: Exception) { onError(4) }
-            }
-        }
-
-        versionData.insert(model = customerVersion, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
                 try {
+                    customerNetwork.insert(data = netModel)
                     versionNetwork.insert(data = customerVersion)
-                    onSuccess(id)
-                } catch (e: Exception) { onError(4) }
+                    onSuccess(netModel.id)
+                }
+                catch (e: Exception) { onError(4) }
             }
         }
 
@@ -73,19 +68,14 @@ internal class DefaultCustomerRepository @Inject constructor(
     ) {
         val customerVersion = Versions.customerVersion(timestamp = model.timestamp)
 
-        customerData.update(model = model, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try { customerNetwork.update(data = model) }
-                catch (e: Exception) { onError(5) }
-            }
-        }
-
-        versionData.update(model = customerVersion, onError = onError) {
+        customerData.update(model = model, version = customerVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
+                    customerNetwork.update(data = model)
                     versionNetwork.update(data = customerVersion)
                     onSuccess()
-                } catch (e: Exception) { onError(5) }
+                }
+                catch (e: Exception) { onError(5) }
             }
         }
     }
@@ -98,19 +88,14 @@ internal class DefaultCustomerRepository @Inject constructor(
     ) {
         val customerVersion = Versions.customerVersion(timestamp = timestamp)
 
-        customerData.deleteById(id = id, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try { customerNetwork.delete(id = id) }
-                catch (e: Exception) { onError(6) }
-            }
-        }
-
-        versionData.update(model = customerVersion, onError = onError) {
+        customerData.deleteById(id = id, version = customerVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
+                    customerNetwork.delete(id = id)
                     versionNetwork.update(data = customerVersion)
                     onSuccess()
-                } catch (e: Exception) { onError(6) }
+                }
+                catch (e: Exception) { onError(6) }
             }
         }
     }
@@ -151,8 +136,8 @@ internal class DefaultCustomerRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { customerData.deleteById(it, {}) {} }
-                saveList.forEach { customerData.insert(it, {}) {} }
+                deleteIds.forEach { customerData.deleteById(it, netVersion, {}) {} }
+                saveList.forEach { customerData.insert(it, netVersion, {}) {} }
                 versionData.insert(netVersion, {}) {}
             }
         )

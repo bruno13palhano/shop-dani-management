@@ -39,6 +39,7 @@ internal class DefaultStockOrderRepository @Inject constructor(
 
         val id = stockOrderData.insert(
             model = model,
+            version = stockOrderVersion,
             onError = onError,
         ) {
             val netModel = StockOrder(
@@ -59,17 +60,12 @@ internal class DefaultStockOrderRepository @Inject constructor(
             )
 
             CoroutineScope(ioDispatcher).launch {
-                try { stockOrderNetwork.insert(data = netModel) }
-                catch (e: Exception) { onError(4) }
-            }
-        }
-
-        versionData.insert(model = stockOrderVersion, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
                 try {
+                    stockOrderNetwork.insert(data = netModel)
                     versionNetwork.insert(data = stockOrderVersion)
-                    onSuccess(id)
-                } catch (e: Exception) { onError(4) }
+                    onSuccess(netModel.id)
+                }
+                catch (e: Exception) { onError(4) }
             }
         }
 
@@ -83,19 +79,14 @@ internal class DefaultStockOrderRepository @Inject constructor(
     ) {
         val stockOrderVersion = Versions.stockOrderVersion(timestamp = model.timestamp)
 
-        stockOrderData.update(model = model, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try { stockOrderNetwork.update(data = model) }
-                catch (e: Exception) { onError(5) }
-            }
-        }
-
-        versionData.update(model = stockOrderVersion, onError = onError) {
+        stockOrderData.update(model = model, version = stockOrderVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
+                    stockOrderNetwork.update(data = model)
                     versionNetwork.insert(data = stockOrderVersion)
                     onSuccess()
-                } catch (e: Exception) { onError(5) }
+                }
+                catch (e: Exception) { onError(5) }
             }
         }
     }
@@ -119,12 +110,7 @@ internal class DefaultStockOrderRepository @Inject constructor(
     }
 
     override suspend fun updateStockOrderQuantity(id: Long, quantity: Int, timestamp: String) {
-        val stockOrderVersion = Versions.stockOrderVersion(timestamp = timestamp)
         stockOrderData.updateStockOrderQuantity(id = id, quantity = quantity)
-        versionData.update(
-            model = stockOrderVersion,
-            onError = {}
-        ) {}
     }
 
     override suspend fun deleteById(
@@ -135,19 +121,14 @@ internal class DefaultStockOrderRepository @Inject constructor(
     ) {
         val stockOrderVersion = Versions.stockOrderVersion(timestamp = timestamp)
 
-        stockOrderData.deleteById(id = id, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try { stockOrderNetwork.delete(id = id) }
-                catch (e: Exception) { onError(6) }
-            }
-        }
-
-        versionData.update(model = stockOrderVersion, onError = onError) {
+        stockOrderData.deleteById(id = id, version = stockOrderVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
+                    stockOrderNetwork.delete(id = id)
                     versionNetwork.update(data = stockOrderVersion)
                     onSuccess()
-                } catch (e: Exception) { onError(6) }
+                }
+                catch (e: Exception) { onError(6) }
             }
         }
     }
@@ -196,8 +177,8 @@ internal class DefaultStockOrderRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { stockOrderData.deleteById(it, {}) {} }
-                saveList.forEach { stockOrderData.insert(it, {}) {} }
+                deleteIds.forEach { stockOrderData.deleteById(it, netVersion, {}) {} }
+                saveList.forEach { stockOrderData.insert(it, netVersion, {}) {} }
                 versionData.insert(netVersion, {}) {}
             }
         )

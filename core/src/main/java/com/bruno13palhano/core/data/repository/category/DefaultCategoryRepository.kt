@@ -42,17 +42,11 @@ internal class DefaultCategoryRepository @Inject constructor(
     ) {
         val categoryVersion = Versions.categoryVersion(timestamp = timestamp)
 
-        versionData.update(model = categoryVersion, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try { versionNetwork.update(data = categoryVersion) }
-                catch (e: Exception) { onError(6) }
-            }
-        }
-
-        categoryData.deleteById(id = id, onError = onError) {
+        categoryData.deleteById(id = id, version = categoryVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
                     categoryNetwork.delete(id = id)
+                    versionNetwork.update(data = categoryVersion)
                     onSuccess()
                 } catch (e: Exception) { onError(6) }
             }
@@ -83,8 +77,8 @@ internal class DefaultCategoryRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { categoryData.deleteById(it, {}) {} }
-                saveList.forEach { categoryData.insert(it, {}) {} }
+                deleteIds.forEach { categoryData.deleteById(it, netVersion, {}) {} }
+                saveList.forEach { categoryData.insert(it, netVersion, {}) {} }
                 versionData.insert(netVersion, {}) {}
             }
         )
@@ -96,17 +90,11 @@ internal class DefaultCategoryRepository @Inject constructor(
     ) {
         val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
 
-        versionData.update(model = categoryVersion, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try { versionNetwork.update(data = categoryVersion) }
-                catch (e: Exception) { onError(5) }
-            }
-        }
-
-        categoryData.update(model = model, onError = onError) {
+        categoryData.update(model = model, version = categoryVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
                     categoryNetwork.update(data = model)
+                    versionNetwork.update(data = categoryVersion)
                     onSuccess()
                 } catch (e: Exception) { onError(5) }
             }
@@ -120,7 +108,7 @@ internal class DefaultCategoryRepository @Inject constructor(
     ): Long {
         val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
 
-        val id = categoryData.insert(model = model, onError = onError) {
+        val id = categoryData.insert(model = model, version = categoryVersion, onError = onError) {
             val netModel = Category(
                 id = it,
                 category = model.category,
@@ -128,17 +116,12 @@ internal class DefaultCategoryRepository @Inject constructor(
             )
 
             CoroutineScope(ioDispatcher).launch {
-                try { categoryNetwork.insert(data = netModel) }
-                catch (e: Exception) { onError(4) }
-            }
-        }
-
-        versionData.insert(model = categoryVersion, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
                 try {
+                    categoryNetwork.insert(data = netModel)
                     versionNetwork.insert(data = categoryVersion)
-                    onSuccess(id)
-                } catch (e: Exception) { onError(4) }
+                    onSuccess(netModel.id)
+                }
+                catch (e: Exception) { onError(4) }
             }
         }
 

@@ -5,9 +5,11 @@ import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.ProductCategoriesTableQueries
 import cache.ShopDatabaseQueries
+import cache.VersionTableQueries
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,17 +20,20 @@ import javax.inject.Inject
 internal class DefaultProductData @Inject constructor(
     private val productQueries: ShopDatabaseQueries,
     private val productCategoriesQueries: ProductCategoriesTableQueries,
+    private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : ProductData {
     override suspend fun insert(
         model: Product,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long) -> Unit
     ): Long {
         var id = 0L
+
         try {
-            productCategoriesQueries.transaction {
-                if (model.isNew()) {
+            if (model.isNew()) {
+                productQueries.transaction {
                     productQueries.insert(
                         name = model.name,
                         code = model.code,
@@ -38,13 +43,23 @@ internal class DefaultProductData @Inject constructor(
                         company = model.company,
                         timestamp = model.timestamp
                     )
+                    id = productQueries.getLastId().executeAsOne()
+
                     productCategoriesQueries.insert(
                         productId = productQueries.getLastId().executeAsOne(),
                         categories = model.categories
                     )
-                    id = productQueries.getLastId().executeAsOne()
+
+                    versionQueries.insertWithId(
+                        id = version.id,
+                        name = version.name,
+                        timestamp = version.timestamp
+                    )
+
                     onSuccess(id)
-                } else {
+                }
+            } else {
+                productQueries.transaction {
                     productQueries.insertWithId(
                         id = model.id,
                         name = model.name,
@@ -69,6 +84,13 @@ internal class DefaultProductData @Inject constructor(
                             categories = model.categories
                         )
                     }
+
+                    versionQueries.insertWithId(
+                        id = version.id,
+                        name = version.name,
+                        timestamp = version.timestamp
+                    )
+
                     id = model.id
                     onSuccess(id)
                 }
@@ -83,6 +105,7 @@ internal class DefaultProductData @Inject constructor(
 
     override suspend fun update(
         model: Product,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
@@ -95,6 +118,7 @@ internal class DefaultProductData @Inject constructor(
                     categories = model.categories,
                     id = categoryId
                 )
+
                 productQueries.update(
                     name = model.name,
                     code = model.code,
@@ -105,6 +129,13 @@ internal class DefaultProductData @Inject constructor(
                     id = model.id,
                     timestamp = model.timestamp
                 )
+
+                versionQueries.update(
+                    name = version.name,
+                    timestamp = version.name,
+                    id = version.id
+                )
+
                 onSuccess()
             }
         } catch (e: Exception) {
@@ -140,12 +171,22 @@ internal class DefaultProductData @Inject constructor(
 
     override suspend fun deleteById(
         id: Long,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
         try {
-            productQueries.delete(productId = id)
-            onSuccess()
+            productQueries.transaction {
+                productQueries.delete(productId = id)
+
+                versionQueries.update(
+                    name = version.name,
+                    timestamp = version.timestamp,
+                    id = version.id
+                )
+
+                onSuccess()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             onError(3)

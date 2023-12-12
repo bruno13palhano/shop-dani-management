@@ -4,9 +4,11 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.CatalogTableQueries
+import cache.VersionTableQueries
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Catalog
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -15,64 +17,93 @@ import javax.inject.Inject
 
 internal class DefaultCatalogData @Inject constructor(
     private val catalogQueries: CatalogTableQueries,
+    private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CatalogData {
     override suspend fun insert(
         model: Catalog,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long
     ) -> Unit): Long {
+        var id = 0L
+
         try {
             if (model.isNew()) {
-                catalogQueries.insert(
-                    productId = model.productId,
-                    title = model.title,
-                    description = model.description,
-                    discount = model.discount,
-                    price = model.price.toDouble(),
-                    timestamp = model.timestamp
-                )
-                val id = catalogQueries.getLastId().executeAsOne()
-                onSuccess(id)
+                catalogQueries.transaction {
+                    catalogQueries.insert(
+                        productId = model.productId,
+                        title = model.title,
+                        description = model.description,
+                        discount = model.discount,
+                        price = model.price.toDouble(),
+                        timestamp = model.timestamp
+                    )
+                    id = catalogQueries.getLastId().executeAsOne()
 
-                return id
+                    versionQueries.insertWithId(
+                        id = version.id,
+                        name = version.name,
+                        timestamp = version.timestamp
+                    )
+
+                    onSuccess(id)
+                }
             } else {
-                catalogQueries.insertWithId(
-                    id = model.id,
-                    productId = model.productId,
-                    title = model.title,
-                    description = model.description,
-                    discount = model.discount,
-                    price = model.price.toDouble(),
-                    timestamp = model.timestamp
-                )
-                onSuccess(model.id)
+                catalogQueries.transaction {
+                    catalogQueries.insertWithId(
+                        id = model.id,
+                        productId = model.productId,
+                        title = model.title,
+                        description = model.description,
+                        discount = model.discount,
+                        price = model.price.toDouble(),
+                        timestamp = model.timestamp
+                    )
 
-                return model.id
+                    versionQueries.insertWithId(
+                        id = version.id,
+                        name = version.name,
+                        timestamp = version.timestamp
+                    )
+
+                    id = model.id
+                    onSuccess(model.id)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
             onError(1)
-
-            return 0L
         }
+
+        return id
     }
 
     override suspend fun update(
         model: Catalog,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
         try {
-            catalogQueries.update(
-                title = model.title,
-                description = model.description,
-                discount = model.discount,
-                price = model.price.toDouble(),
-                id = model.id,
-                timestamp = model.timestamp
-            )
-            onSuccess()
+            catalogQueries.transaction {
+                catalogQueries.update(
+                    title = model.title,
+                    description = model.description,
+                    discount = model.discount,
+                    price = model.price.toDouble(),
+                    id = model.id,
+                    timestamp = model.timestamp
+                )
+
+                versionQueries.update(
+                    name = version.name,
+                    timestamp = version.timestamp,
+                    id = version.id
+                )
+
+                onSuccess()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             onError(2)
@@ -81,12 +112,22 @@ internal class DefaultCatalogData @Inject constructor(
 
     override suspend fun deleteById(
         id: Long,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
         try {
-            catalogQueries.delete(id = id)
-            onSuccess()
+            catalogQueries.transaction {
+                catalogQueries.delete(id = id)
+
+                versionQueries.update(
+                    name = version.name,
+                    timestamp = version.timestamp,
+                    id = version.id
+                )
+
+                onSuccess()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             onError(3)

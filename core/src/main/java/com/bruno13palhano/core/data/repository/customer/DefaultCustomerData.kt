@@ -4,9 +4,11 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.CustomerTableQueries
+import cache.VersionTableQueries
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -15,29 +17,77 @@ import javax.inject.Inject
 
 internal class DefaultCustomerData @Inject constructor(
     private val customerQueries: CustomerTableQueries,
+    private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : CustomerData {
     override suspend fun insert(
         model: Customer,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long) -> Unit
     ): Long {
+        var id = 0L
+
         try {
             if (model.isNew()) {
-                customerQueries.insert(
-                    name = model.name,
-                    photo = model.photo,
-                    email = model.email,
-                    address = model.address,
-                    phoneNumber = model.phoneNumber,
-                    timestamp = model.timestamp
-                )
-                val id = customerQueries.getLastId().executeAsOne()
-                onSuccess(id)
+                customerQueries.transaction {
+                    customerQueries.insert(
+                        name = model.name,
+                        photo = model.photo,
+                        email = model.email,
+                        address = model.address,
+                        phoneNumber = model.phoneNumber,
+                        timestamp = model.timestamp
+                    )
+                    id = customerQueries.getLastId().executeAsOne()
 
-                return id
+                    versionQueries.insertWithId(
+                        id = version.id,
+                        name = version.name,
+                        timestamp = version.timestamp
+                    )
+
+                    onSuccess(id)
+                }
             } else {
-                customerQueries.insertWithId(
+                customerQueries.transaction {
+                    customerQueries.insertWithId(
+                        id = model.id,
+                        name = model.name,
+                        photo = model.photo,
+                        email = model.email,
+                        address = model.address,
+                        phoneNumber = model.phoneNumber,
+                        timestamp = model.timestamp
+                    )
+
+                    versionQueries.insertWithId(
+                        id = version.id,
+                        name = version.name,
+                        timestamp = version.timestamp
+                    )
+
+                    id = model.id
+                    onSuccess(model.id)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onError(1)
+        }
+
+        return id
+    }
+
+    override suspend fun update(
+        model: Customer,
+        version: DataVersion,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        try {
+            customerQueries.transaction {
+                customerQueries.update(
                     id = model.id,
                     name = model.name,
                     photo = model.photo,
@@ -46,34 +96,15 @@ internal class DefaultCustomerData @Inject constructor(
                     phoneNumber = model.phoneNumber,
                     timestamp = model.timestamp
                 )
-                onSuccess(model.id)
 
-                return model.id
+                versionQueries.update(
+                    name = version.name,
+                    timestamp = version.timestamp,
+                    id = version.id
+                )
+
+                onSuccess()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            onError(1)
-
-            return 0L
-        }
-    }
-
-    override suspend fun update(
-        model: Customer,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
-        try {
-            customerQueries.update(
-                id = model.id,
-                name = model.name,
-                photo = model.photo,
-                email = model.email,
-                address = model.address,
-                phoneNumber = model.phoneNumber,
-                timestamp = model.timestamp
-            )
-            onSuccess()
         } catch (e: Exception) {
             e.printStackTrace()
             onError(2)
@@ -82,12 +113,22 @@ internal class DefaultCustomerData @Inject constructor(
 
     override suspend fun deleteById(
         id: Long,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
         try {
-            customerQueries.delete(id)
-            onSuccess()
+            customerQueries.transaction {
+                customerQueries.delete(id)
+
+                versionQueries.update(
+                    name = version.name,
+                    timestamp = version.timestamp,
+                    id = version.id
+                )
+
+                onSuccess()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             onError(3)

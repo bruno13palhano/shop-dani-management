@@ -6,9 +6,11 @@ import app.cash.sqldelight.coroutines.mapToOne
 import cache.DeliveryTableQueries
 import cache.SaleTableQueries
 import cache.StockOrderTableQueries
+import cache.VersionTableQueries
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
@@ -22,83 +24,108 @@ internal class DefaultSaleData @Inject constructor(
     private val saleQueries: SaleTableQueries,
     private val deliveryQueries: DeliveryTableQueries,
     private val stockOrderQueries: StockOrderTableQueries,
+    private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleData {
     override suspend fun insert(
         model: Sale,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long
     ) -> Unit): Long {
+        var id = 0L
+
         try {
             if (model.isNew()) {
-                saleQueries.insert(
-                    productId = model.productId,
-                    customerId = model.customerId,
-                    stockOrderId = model.stockOrderId,
-                    quantity = model.quantity.toLong(),
-                    purchasePrice = model.purchasePrice.toDouble(),
-                    salePrice = model.salePrice.toDouble(),
-                    dateOfSale = model.dateOfSale,
-                    dateOfPayment = model.dateOfPayment,
-                    isOrderedByCustomer = model.isOrderedByCustomer,
-                    isPaidByCustomer = model.isPaidByCustomer,
-                    canceled = model.canceled,
-                    timestamp = model.timestamp
-                )
-                val id = saleQueries.getLastId().executeAsOne()
-                onSuccess(id)
+                saleQueries.transaction {
+                    saleQueries.insert(
+                        productId = model.productId,
+                        customerId = model.customerId,
+                        stockOrderId = model.stockOrderId,
+                        quantity = model.quantity.toLong(),
+                        purchasePrice = model.purchasePrice.toDouble(),
+                        salePrice = model.salePrice.toDouble(),
+                        dateOfSale = model.dateOfSale,
+                        dateOfPayment = model.dateOfPayment,
+                        isOrderedByCustomer = model.isOrderedByCustomer,
+                        isPaidByCustomer = model.isPaidByCustomer,
+                        canceled = model.canceled,
+                        timestamp = model.timestamp
+                    )
 
-                return id
+                    versionQueries.insert(name = version.name, timestamp = version.timestamp)
+
+                    id = saleQueries.getLastId().executeAsOne()
+                    onSuccess(id)
+                }
             } else {
-                saleQueries.insertWithId(
-                    id = model.id,
-                    productId = model.productId,
-                    customerId = model.customerId,
-                    stockOrderId = model.stockOrderId,
-                    quantity = model.quantity.toLong(),
-                    purchasePrice = model.purchasePrice.toDouble(),
-                    salePrice = model.salePrice.toDouble(),
-                    dateOfSale = model.dateOfSale,
-                    dateOfPayment = model.dateOfPayment,
-                    isOrderedByCustomer = model.isOrderedByCustomer,
-                    isPaidByCustomer = model.isPaidByCustomer,
-                    canceled = model.canceled,
-                    timestamp = model.timestamp
-                )
-                onSuccess(model.id)
+                saleQueries.transaction {
+                    saleQueries.insertWithId(
+                        id = model.id,
+                        productId = model.productId,
+                        customerId = model.customerId,
+                        stockOrderId = model.stockOrderId,
+                        quantity = model.quantity.toLong(),
+                        purchasePrice = model.purchasePrice.toDouble(),
+                        salePrice = model.salePrice.toDouble(),
+                        dateOfSale = model.dateOfSale,
+                        dateOfPayment = model.dateOfPayment,
+                        isOrderedByCustomer = model.isOrderedByCustomer,
+                        isPaidByCustomer = model.isPaidByCustomer,
+                        canceled = model.canceled,
+                        timestamp = model.timestamp
+                    )
 
-                return model.id
+                    versionQueries.insertWithId(
+                        id = version.id,
+                        name = version.name,
+                        timestamp = version.timestamp
+                    )
+
+                    id = model.id
+                    onSuccess(model.id)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
             onError(1)
-
-            return 0L
         }
+
+        return id
     }
 
     override suspend fun update(
         model: Sale,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
         try {
-            saleQueries.update(
-                productId = model.productId,
-                customerId = model.customerId,
-                stockOrderId = model.stockOrderId,
-                quantity = model.quantity.toLong(),
-                purchasePrice = model.purchasePrice.toDouble(),
-                salePrice = model.salePrice.toDouble(),
-                dateOfSale = model.dateOfSale,
-                dateOfPayment = model.dateOfPayment,
-                isOrderedByCustomer = model.isOrderedByCustomer,
-                isPaidByCustomer = model.isPaidByCustomer,
-                canceled = model.canceled,
-                timestamp = model.timestamp,
-                id = model.id
-            )
-            onSuccess()
+            saleQueries.transaction {
+                saleQueries.update(
+                    productId = model.productId,
+                    customerId = model.customerId,
+                    stockOrderId = model.stockOrderId,
+                    quantity = model.quantity.toLong(),
+                    purchasePrice = model.purchasePrice.toDouble(),
+                    salePrice = model.salePrice.toDouble(),
+                    dateOfSale = model.dateOfSale,
+                    dateOfPayment = model.dateOfPayment,
+                    isOrderedByCustomer = model.isOrderedByCustomer,
+                    isPaidByCustomer = model.isPaidByCustomer,
+                    canceled = model.canceled,
+                    timestamp = model.timestamp,
+                    id = model.id
+                )
+
+                versionQueries.update(
+                    name = version.name,
+                    timestamp = version.timestamp,
+                    id = version.id
+                )
+
+                onSuccess()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             onError(2)
@@ -120,6 +147,8 @@ internal class DefaultSaleData @Inject constructor(
         sale: Sale,
         stockOrder: StockOrder,
         delivery: Delivery,
+        saleVersion: DataVersion,
+        deliveryVersion: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: (saleId: Long, stockId: Long, deliveryId: Long) -> Unit
     ) {
@@ -130,43 +159,58 @@ internal class DefaultSaleData @Inject constructor(
                     var orderId = 0L
 
                     saleQueries.transaction {
-                        stockOrderQueries.insert(
-                            productId = stockOrder.productId,
-                            date = stockOrder.date,
-                            validity = stockOrder.validity,
-                            quantity = sale.quantity.toLong(),
-                            purchasePrice = stockOrder.purchasePrice.toDouble(),
-                            salePrice = stockOrder.salePrice.toDouble(),
-                            isOrderedByCustomer = true,
-                            isPaid = stockOrder.isPaid,
-                            timestamp = stockOrder.timestamp
+                        saleQueries.transaction {
+                            stockOrderQueries.insert(
+                                productId = stockOrder.productId,
+                                date = stockOrder.date,
+                                validity = stockOrder.validity,
+                                quantity = sale.quantity.toLong(),
+                                purchasePrice = stockOrder.purchasePrice.toDouble(),
+                                salePrice = stockOrder.salePrice.toDouble(),
+                                isOrderedByCustomer = true,
+                                isPaid = stockOrder.isPaid,
+                                timestamp = stockOrder.timestamp
+                            )
+                            orderId = stockOrderQueries.lastId().executeAsOne()
+                            saleQueries.insert(
+                                productId = sale.productId,
+                                customerId = sale.customerId,
+                                stockOrderId = orderId,
+                                quantity = sale.quantity.toLong(),
+                                salePrice = sale.salePrice.toDouble(),
+                                purchasePrice = sale.purchasePrice.toDouble(),
+                                dateOfSale = sale.dateOfSale,
+                                dateOfPayment = sale.dateOfPayment,
+                                isOrderedByCustomer = true,
+                                isPaidByCustomer = sale.isPaidByCustomer,
+                                canceled = sale.canceled,
+                                timestamp = sale.timestamp
+                            )
+                            saleId = saleQueries.getLastId().executeAsOne()
+                            deliveryQueries.insert(
+                                saleId = saleId,
+                                deliveryPrice = delivery.deliveryPrice.toDouble(),
+                                shippingDate = delivery.shippingDate,
+                                deliveryDate = delivery.deliveryDate,
+                                delivered = delivery.delivered,
+                                timestamp = delivery.timestamp
+                            )
+                        }
+
+                        versionQueries.insertWithId(
+                            id = saleVersion.id,
+                            name = saleVersion.name,
+                            timestamp = saleVersion.timestamp
                         )
-                        orderId = stockOrderQueries.lastId().executeAsOne()
-                        saleQueries.insert(
-                            productId = sale.productId,
-                            customerId = sale.customerId,
-                            stockOrderId = orderId,
-                            quantity = sale.quantity.toLong(),
-                            salePrice = sale.salePrice.toDouble(),
-                            purchasePrice = sale.purchasePrice.toDouble(),
-                            dateOfSale = sale.dateOfSale,
-                            dateOfPayment = sale.dateOfPayment,
-                            isOrderedByCustomer = true,
-                            isPaidByCustomer = sale.isPaidByCustomer,
-                            canceled = sale.canceled,
-                            timestamp = sale.timestamp
+
+                        versionQueries.insertWithId(
+                            id = deliveryVersion.id,
+                            name = deliveryVersion.name,
+                            timestamp = deliveryVersion.timestamp
                         )
-                        saleId = saleQueries.getLastId().executeAsOne()
-                        deliveryQueries.insert(
-                            saleId = saleId,
-                            deliveryPrice = delivery.deliveryPrice.toDouble(),
-                            shippingDate = delivery.shippingDate,
-                            deliveryDate = delivery.deliveryDate,
-                            delivered = delivery.delivered,
-                            timestamp = delivery.timestamp
-                        )
+
+                        onSuccess(saleId, orderId, deliveryQueries.getLastId().executeAsOne())
                     }
-                    onSuccess(saleId, orderId, deliveryQueries.getLastId().executeAsOne())
                 } else {
                     val quantity = stockOrder.quantity - sale.quantity
                     var saleId = 0L
@@ -200,8 +244,21 @@ internal class DefaultSaleData @Inject constructor(
                                 delivered = delivery.delivered,
                                 timestamp = delivery.timestamp
                             )
+
+                            versionQueries.insertWithId(
+                                id = saleVersion.id,
+                                name = saleVersion.name,
+                                timestamp = saleVersion.timestamp
+                            )
+
+                            versionQueries.insertWithId(
+                                id = deliveryVersion.id,
+                                name = deliveryVersion.name,
+                                timestamp = deliveryVersion.timestamp
+                            )
+
+                            onSuccess(saleId, stockOrder.id, deliveryQueries.getLastId().executeAsOne())
                         }
-                        onSuccess(saleId, stockOrder.id, deliveryQueries.getLastId().executeAsOne())
                     }
                 }
             } else {
@@ -243,8 +300,21 @@ internal class DefaultSaleData @Inject constructor(
                             delivered = delivery.delivered,
                             timestamp = delivery.timestamp
                         )
+
+                        versionQueries.insertWithId(
+                            id = saleVersion.id,
+                            name = saleVersion.name,
+                            timestamp = saleVersion.timestamp
+                        )
+
+                        versionQueries.insertWithId(
+                            id = deliveryVersion.id,
+                            name = deliveryVersion.name,
+                            timestamp = deliveryVersion.timestamp
+                        )
+
+                        onSuccess(sale.id, stockOrder.id, delivery.id)
                     }
-                    onSuccess(sale.id, stockOrder.id, delivery.id)
                 } else {
                     val quantity = stockOrder.quantity - sale.quantity
 
@@ -278,8 +348,21 @@ internal class DefaultSaleData @Inject constructor(
                                 delivered = delivery.delivered,
                                 timestamp = delivery.timestamp
                             )
+
+                            versionQueries.insertWithId(
+                                id = saleVersion.id,
+                                name = saleVersion.name,
+                                timestamp = saleVersion.timestamp
+                            )
+
+                            versionQueries.insertWithId(
+                                id = deliveryVersion.id,
+                                name = deliveryVersion.name,
+                                timestamp = deliveryVersion.timestamp
+                            )
+
+                            onSuccess(sale.id, stockOrder.id, delivery.id)
                         }
-                        onSuccess(sale.id, stockOrder.id, delivery.id)
                     }
                 }
             }
@@ -321,12 +404,22 @@ internal class DefaultSaleData @Inject constructor(
 
     override suspend fun deleteById(
         id: Long,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
         try {
-            saleQueries.delete(id = id)
-            onSuccess()
+            saleQueries.transaction {
+                saleQueries.delete(id = id)
+
+                versionQueries.update(
+                    name = version.name,
+                    timestamp = version.timestamp,
+                    id = version.id
+                )
+
+                onSuccess()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             onError(3)

@@ -1,6 +1,7 @@
 package com.bruno13palhano.core.data.repository.sale
 
 import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockOrder
@@ -11,6 +12,8 @@ interface SaleData : DataOperations<Sale> {
         sale: Sale,
         stockOrder: StockOrder,
         delivery: Delivery,
+        saleVersion: DataVersion,
+        deliveryVersion: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: (saleId: Long, stockId: Long, deliveryId: Long) -> Unit
     )

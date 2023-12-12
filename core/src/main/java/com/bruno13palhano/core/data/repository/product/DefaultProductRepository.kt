@@ -37,7 +37,7 @@ internal class DefaultProductRepository @Inject constructor(
     ): Long {
         val productVersion = Versions.productVersion(timestamp = model.timestamp)
 
-        val id = productData.insert(model = model, onError = onError) {
+        val id = productData.insert(model = model, version = productVersion, onError = onError) {
             val netModel = Product(
                 id = it,
                 name = model.name,
@@ -51,17 +51,12 @@ internal class DefaultProductRepository @Inject constructor(
             )
 
             CoroutineScope(ioDispatcher).launch {
-                try { productNetwork.insert(data = netModel) }
-                catch (e: Exception) { onError(4) }
-            }
-        }
-
-        versionData.insert(model = productVersion, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
                 try {
+                    productNetwork.insert(data = netModel)
                     versionNetwork.insert(data = productVersion)
-                    onSuccess(id)
-                } catch (e: Exception) { onError(4) }
+                    onSuccess(netModel.id)
+                }
+                catch (e: Exception) { onError(4) }
             }
         }
 
@@ -75,19 +70,14 @@ internal class DefaultProductRepository @Inject constructor(
     ) {
         val productVersion = Versions.productVersion(timestamp = model.timestamp)
 
-        productData.update(model = model, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try { productNetwork.insert(data = model) }
-                catch (e: Exception) { onError(5) }
-            }
-        }
-
-        versionData.update(model = productVersion, onError = onError) {
+        productData.update(model = model, version = productVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
+                    productNetwork.insert(data = model)
                     versionNetwork.insert(data = productVersion)
                     onSuccess()
-                } catch (e: Exception) { onError(5) }
+                }
+                catch (e: Exception) { onError(5) }
             }
         }
     }
@@ -112,19 +102,14 @@ internal class DefaultProductRepository @Inject constructor(
     ) {
         val productVersion = Versions.productVersion(timestamp = timestamp)
 
-        productData.deleteById(id = id, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try { productNetwork.delete(id = id) }
-                catch (e: Exception) { onError(6) }
-            }
-        }
-
-        versionData.update(model = productVersion, onError = onError) {
+        productData.deleteById(id = id, version = productVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
+                    productNetwork.delete(id = id)
                     versionNetwork.update(data = productVersion)
                     onSuccess()
-                } catch (e: Exception) { onError(6) }
+                }
+                catch (e: Exception) { onError(6) }
             }
         }
     }
@@ -153,8 +138,8 @@ internal class DefaultProductRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { productData.deleteById(it, {}) {} }
-                saveList.forEach { productData.insert(it, {}) {} }
+                deleteIds.forEach { productData.deleteById(it, netVersion, {}) {} }
+                saveList.forEach { productData.insert(it, netVersion, {}) {} }
                 versionData.insert(netVersion, {}) {}
             }
         )

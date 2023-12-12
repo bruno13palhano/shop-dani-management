@@ -45,7 +45,7 @@ internal class DefaultSaleRepository @Inject constructor(
     ): Long {
         val saleVersion = Versions.saleVersion(timestamp = model.timestamp)
 
-        val id = saleData.insert(model = model, onError = onError) {
+        val id = saleData.insert(model = model, version = saleVersion, onError = onError) {
             val netModel = createSale(
                 sale = model,
                 saleId = it,
@@ -77,19 +77,14 @@ internal class DefaultSaleRepository @Inject constructor(
     ) {
         val saleVersion = Versions.saleVersion(timestamp = model.timestamp)
 
-        saleData.update(model = model, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try { saleNetwork.update(data = model) }
-                catch (e: Exception) { onError(5) }
-            }
-        }
-
-        versionData.update(model = saleVersion, onError = onError) {
+        saleData.update(model = model, version = saleVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
+                    saleNetwork.update(data = model)
                     versionNetwork.update(saleVersion)
                     onSuccess()
-                } catch (e: Exception) { onError(5) }
+                }
+                catch (e: Exception) { onError(5) }
             }
         }
     }
@@ -112,6 +107,8 @@ internal class DefaultSaleRepository @Inject constructor(
             sale = sale,
             stockOrder = stockOrder,
             delivery = delivery,
+            saleVersion = saleVersion,
+            deliveryVersion = deliveryVersion,
             onError = onError
         ) { saleId, stockOrderId, deliveryId ->
             val netStockOrder = createStockOrder(stockOrder = stockOrder, id = stockOrderId)
@@ -123,24 +120,13 @@ internal class DefaultSaleRepository @Inject constructor(
             )
 
             CoroutineScope(ioDispatcher).launch {
-                try { saleNetwork.insertItems(netSale, netStockOrder, netDelivery) }
-                catch (e: Exception) { onError(4) }
-            }
-        }
-
-        versionData.insert(model = saleVersion, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try { versionNetwork.insert(saleVersion) }
-                catch (e: Exception) { onError(4) }
-            }
-        }
-
-        versionData.insert(model = deliveryVersion, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
                 try {
+                    saleNetwork.insertItems(netSale, netStockOrder, netDelivery)
+                    versionNetwork.insert(saleVersion)
                     versionNetwork.insert(deliveryVersion)
                     onSuccess()
-                } catch (e: Exception) { onError(4) }
+                }
+                catch (e: Exception) { onError(4) }
             }
         }
     }
@@ -169,19 +155,14 @@ internal class DefaultSaleRepository @Inject constructor(
     ) {
         val saleVersion = Versions.saleVersion(timestamp = timestamp)
 
-        saleData.deleteById(id = id, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try { saleNetwork.delete(id = id) }
-                catch (e: Exception) { onError(6) }
-            }
-        }
-
-        versionData.update(model = saleVersion, onError = onError) {
+        saleData.deleteById(id = id, version = saleVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
+                    saleNetwork.delete(id = id)
                     versionNetwork.update(saleVersion)
                     onSuccess()
-                } catch (e: Exception) { onError(6) }
+                }
+                catch (e: Exception) { onError(6) }
             }
         }
     }
@@ -264,8 +245,8 @@ internal class DefaultSaleRepository @Inject constructor(
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { saleData.deleteById(it, {}) {} }
-                saveList.forEach { saleData.insert(it, {}) {} }
+                deleteIds.forEach { saleData.deleteById(it, netVersion, {}) {} }
+                saveList.forEach { saleData.insert(it, netVersion, {}) {} }
                 versionData.insert(netVersion, {}) {}
             }
         )
