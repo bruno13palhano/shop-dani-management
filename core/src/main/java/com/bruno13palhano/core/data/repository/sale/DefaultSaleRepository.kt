@@ -236,7 +236,7 @@ internal class DefaultSaleRepository @Inject constructor(
                 saveList.forEach { sale ->
                     items.forEach { item ->
                         deliveries.forEach { delivery ->
-                            if (sale.stockOrderId == item.id && sale.id == delivery.saleId) {
+                            if (sale.id == delivery.saleId) {
                                 saleNetwork.insertItems(sale, item, delivery)
                             }
                         }
