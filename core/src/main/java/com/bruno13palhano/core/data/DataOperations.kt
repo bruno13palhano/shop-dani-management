@@ -1,5 +1,6 @@
 package com.bruno13palhano.core.data
 
+import com.bruno13palhano.core.model.DataVersion
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -15,6 +16,7 @@ interface DataOperations<T> {
      */
     suspend fun insert(
         model: T,
+        version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long) -> Unit
     ): Long
@@ -23,13 +25,23 @@ interface DataOperations<T> {
      * Updates the [model] of type [T].
      * @param model the [model] to be updated.
      */
-    suspend fun update(model: T, onError: (error: Int) -> Unit, onSuccess: () -> Unit)
+    suspend fun update(
+        model: T,
+        version: DataVersion,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    )
 
     /**
      * Deletes the model of type [T] specified by this [id].
      * @param id the [id] of the model to be deleted.
      */
-    suspend fun deleteById(id: Long, onError: (error: Int) -> Unit, onSuccess: () -> Unit)
+    suspend fun deleteById(
+        id: Long,
+        version: DataVersion,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    )
 
     /**
      * Gets all models of type [T].
