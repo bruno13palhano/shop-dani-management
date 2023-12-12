@@ -28,23 +28,22 @@ import com.bruno13palhano.shopdanimanagement.ui.components.ItemContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.setAlarmNotification
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.ItemViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockItemViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemScreen(
     isEditable: Boolean,
-    isOrderedByCustomer: Boolean,
     productId: Long,
-    stockOrderItemId: Long,
+    stockItemId: Long,
     screenTitle: String,
     navigateUp: () -> Unit,
-    viewModel: ItemViewModel = hiltViewModel()
+    viewModel: StockItemViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
         if (isEditable) {
-            viewModel.getStockItem(stockOrderItemId)
+            viewModel.getStockItem(stockItemId)
         } else {
             viewModel.updateDate(currentDate)
             viewModel.updateValidity(currentDate)
@@ -164,7 +163,7 @@ fun ItemScreen(
             when (index) {
                 0 -> {
                     viewModel.deleteStockItem(
-                        stockOrderId = stockOrderItemId,
+                        stockOrderId = stockItemId,
                         onError = {}
                     ) {
 
@@ -181,11 +180,11 @@ fun ItemScreen(
             if (isItemNotEmpty) {
                 if (isEditable) {
                     viewModel.updateStockItem(
-                        stockItemId = stockOrderItemId,
+                        stockItemId = stockItemId,
                         onError = {}
                     ) {
                         setAlarmNotification(
-                            id = stockOrderItemId,
+                            id = stockItemId,
                             title = viewModel.name,
                             date = viewModel.validity,
                             description = viewModel.company,

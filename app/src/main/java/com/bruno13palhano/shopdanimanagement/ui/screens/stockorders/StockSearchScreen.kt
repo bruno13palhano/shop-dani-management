@@ -6,13 +6,13 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.ui.components.SearchContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockOrdersSearchViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockSearchViewModel
 
 @Composable
 fun StockSearchScreen(
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,
-    viewModel: StockOrdersSearchViewModel = hiltViewModel()
+    viewModel: StockSearchViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.getSearchCache()

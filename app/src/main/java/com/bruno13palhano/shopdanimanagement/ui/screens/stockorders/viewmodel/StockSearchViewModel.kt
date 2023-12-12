@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StockOrdersSearchViewModel @Inject constructor(
+class StockSearchViewModel @Inject constructor(
     @StockOrderRep private val stockRepository: StockRepository,
     @SearchCacheRep private val searchCacheRepository: SearchCacheRepository
 ) : ViewModel() {
