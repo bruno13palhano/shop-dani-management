@@ -13,7 +13,7 @@ import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.di.CatalogRep
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.CustomerRep
@@ -36,7 +36,7 @@ class FetchDataWork @AssistedInject constructor(
     @CategoryRep val categoryRepository: CategoryRepository,
     @CustomerRep val customerRepository: CustomerRepository,
     @ProductRep val productRepository: ProductRepository,
-    @StockOrderRep val stockOrderRepository: StockOrderRepository,
+    @StockOrderRep val stockRepository: StockRepository,
     @SaleRep val saleRepository: SaleRepository,
     @DeliveryRep val deliveryRepository: DeliveryRepository,
     @CatalogRep val catalogRepository: CatalogRepository,
@@ -48,7 +48,7 @@ class FetchDataWork @AssistedInject constructor(
             categorySynced = categoryRepository.sync(),
             productSynced = productRepository.sync(),
             customerSynced = customerRepository.sync(),
-            stockOrderSynced = stockOrderRepository.sync(),
+            stockOrderSynced = stockRepository.sync(),
             saleSynced = saleRepository.sync(),
             deliverySynced = deliveryRepository.sync(),
             catalogSynced = catalogRepository.sync()

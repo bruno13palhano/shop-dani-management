@@ -2,7 +2,7 @@ package com.bruno13palhano.core.network.access.impl
 
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.core.network.Service
 import com.bruno13palhano.core.network.access.SaleNetwork
 import com.bruno13palhano.core.network.model.SaleItemsNet
@@ -31,10 +31,10 @@ internal class SaleNetworkRetrofit @Inject constructor(
 
     }
 
-    override suspend fun insertItems(sale: Sale, stockOrder: StockOrder, delivery: Delivery) {
+    override suspend fun insertItems(sale: Sale, stockItem: StockItem, delivery: Delivery) {
         val saleItemsNet = SaleItemsNet(
             sale = sale.asNetwork(),
-            stockOrder = stockOrder.asNetwork(),
+            stockOrder = stockItem.asNetwork(),
             delivery = delivery.asNetwork()
         )
 

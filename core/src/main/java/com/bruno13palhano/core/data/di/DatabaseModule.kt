@@ -9,7 +9,7 @@ import cache.ProductCategoriesTableQueries
 import cache.SaleTableQueries
 import cache.SearchCacheTableQueries
 import cache.ShopDatabaseQueries
-import cache.StockOrderTableQueries
+import cache.StockTableQueries
 import cache.VersionTableQueries
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.database.DatabaseFactory
@@ -51,9 +51,9 @@ internal object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideStockOrderTable(
+    fun provideStockTable(
         database: ShopDatabase
-    ): StockOrderTableQueries = database.stockOrderTableQueries
+    ): StockTableQueries = database.stockTableQueries
 
     @Provides
     @Singleton

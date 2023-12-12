@@ -3,26 +3,26 @@ package com.bruno13palhano.core.data.repository.stockorder
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
-import cache.StockOrderTableQueries
+import cache.StockTableQueries
 import cache.VersionTableQueries
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.DataVersion
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import javax.inject.Inject
 
-class DefaultStockOrderData @Inject constructor(
-    private val stockOrderQueries: StockOrderTableQueries,
+class DefaultStockData @Inject constructor(
+    private val stockOrderQueries: StockTableQueries,
     private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-) : StockOrderData {
+) : StockData {
     override suspend fun insert(
-        model: StockOrder,
+        model: StockItem,
         version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long) -> Unit
@@ -39,7 +39,6 @@ class DefaultStockOrderData @Inject constructor(
                         quantity = model.quantity.toLong(),
                         purchasePrice = model.purchasePrice.toDouble(),
                         salePrice = model.salePrice.toDouble(),
-                        isOrderedByCustomer = model.isOrderedByCustomer,
                         isPaid = model.isPaid,
                         timestamp = model.timestamp
                     )
@@ -63,7 +62,6 @@ class DefaultStockOrderData @Inject constructor(
                         quantity = model.quantity.toLong(),
                         purchasePrice = model.purchasePrice.toDouble(),
                         salePrice = model.salePrice.toDouble(),
-                        isOrderedByCustomer = model.isOrderedByCustomer,
                         isPaid = model.isPaid,
                         timestamp = model.timestamp
                     )
@@ -87,7 +85,7 @@ class DefaultStockOrderData @Inject constructor(
     }
 
     override suspend fun update(
-        model: StockOrder,
+        model: StockItem,
         version: DataVersion,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
@@ -102,7 +100,6 @@ class DefaultStockOrderData @Inject constructor(
                     quantity = model.quantity.toLong(),
                     purchasePrice = model.purchasePrice.toDouble(),
                     salePrice = model.salePrice.toDouble(),
-                    isOrderedByCustomer = model.isOrderedByCustomer,
                     isPaid = model.isPaid,
                     timestamp = model.timestamp
                 )
@@ -121,30 +118,22 @@ class DefaultStockOrderData @Inject constructor(
         }
     }
 
-    override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
-        return stockOrderQueries.getItems(
-            isOrderedByCustomer = isOrderedByCustomer,
-            mapper = ::mapStockOrder
-        ).asFlow().mapToList(ioDispatcher)
+    override fun getItems(): Flow<List<StockItem>> {
+        return stockOrderQueries.getItems(mapper = ::mapStockOrder).asFlow().mapToList(ioDispatcher)
     }
 
-    override fun search(value: String, isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
+    override fun search(value: String): Flow<List<StockItem>> {
         return stockOrderQueries.search(
             name = value,
             company = value,
             description = value,
-            isOrderedByCustomer = isOrderedByCustomer,
             mapper = ::mapStockOrder
         ).asFlow().mapToList(ioDispatcher)
     }
 
-    override fun getByCategory(
-        category: String,
-        isOrderedByCustomer: Boolean
-    ): Flow<List<StockOrder>> {
+    override fun getByCategory(category: String): Flow<List<StockItem>> {
         return stockOrderQueries.getByCategory(
             category = category,
-            isOrderedByCustomer = isOrderedByCustomer,
             mapper = ::mapStockOrder
         ).asFlow().mapToList(ioDispatcher)
     }
@@ -177,29 +166,28 @@ class DefaultStockOrderData @Inject constructor(
         }
     }
 
-    override fun getAll(): Flow<List<StockOrder>> {
+    override fun getAll(): Flow<List<StockItem>> {
         return stockOrderQueries.getAll(mapper = ::mapStockOrder)
             .asFlow().mapToList(ioDispatcher)
     }
 
-    override fun getDebitStock(): Flow<List<StockOrder>> {
+    override fun getDebitStock(): Flow<List<StockItem>> {
         return stockOrderQueries.getDebitStock(mapper = ::mapStockOrder)
             .asFlow().mapToList(ioDispatcher)
     }
 
-    override fun getOutOfStock(): Flow<List<StockOrder>> {
+    override fun getOutOfStock(): Flow<List<StockItem>> {
         return stockOrderQueries.getOutOfStock(mapper = ::mapStockOrder)
             .asFlow().mapToList(ioDispatcher)
     }
 
-    override fun getStockOrderItems(isOrderedByCustomer: Boolean): Flow<List<StockOrder>> {
+    override fun getStockOrderItems(): Flow<List<StockItem>> {
         return stockOrderQueries.getStockOrderItems(
-            isOrderedByCustomer = isOrderedByCustomer,
             mapper = ::mapStockOrder
         ).asFlow().mapToList(ioDispatcher)
     }
 
-    override fun getDebitStockByPrice(isOrderedAsc: Boolean): Flow<List<StockOrder>> {
+    override fun getDebitStockByPrice(isOrderedAsc: Boolean): Flow<List<StockItem>> {
         return if (isOrderedAsc) {
             stockOrderQueries.getDebitStockByPriceAsc(mapper = ::mapStockOrder)
                 .asFlow().mapToList(ioDispatcher)
@@ -209,7 +197,7 @@ class DefaultStockOrderData @Inject constructor(
         }
     }
 
-    override fun getDebitStockByName(isOrderedAsc: Boolean): Flow<List<StockOrder>> {
+    override fun getDebitStockByName(isOrderedAsc: Boolean): Flow<List<StockItem>> {
         return if (isOrderedAsc) {
             stockOrderQueries.getDebitStockByNameAsc(mapper = ::mapStockOrder)
                 .asFlow().mapToList(ioDispatcher)
@@ -219,13 +207,13 @@ class DefaultStockOrderData @Inject constructor(
         }
     }
 
-    override fun getById(id: Long): Flow<StockOrder> {
+    override fun getById(id: Long): Flow<StockItem> {
         return stockOrderQueries.getById(id = id, mapper = ::mapStockOrder)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
     }
 
-    override fun getLast(): Flow<StockOrder> {
+    override fun getLast(): Flow<StockItem> {
         return stockOrderQueries.getLast(mapper = ::mapStockOrder)
             .asFlow().mapToOne(ioDispatcher)
             .catch { it.printStackTrace() }
@@ -243,10 +231,9 @@ class DefaultStockOrderData @Inject constructor(
         company: String,
         purchasePrice: Double,
         salePrice: Double,
-        isOrderedByCustomer: Boolean,
         isPaid: Boolean,
         timestamp: String
-    ) = StockOrder(
+    ) = StockItem(
         id = id,
         productId = productId,
         name = name,
@@ -258,7 +245,6 @@ class DefaultStockOrderData @Inject constructor(
         company = company,
         purchasePrice = purchasePrice.toFloat(),
         salePrice = salePrice.toFloat(),
-        isOrderedByCustomer = isOrderedByCustomer,
         isPaid = isPaid,
         timestamp = timestamp
     )

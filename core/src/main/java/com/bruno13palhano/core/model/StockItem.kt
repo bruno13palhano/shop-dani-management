@@ -1,6 +1,6 @@
 package com.bruno13palhano.core.model
 
-data class StockOrder(
+data class StockItem(
     override val id: Long,
     val productId: Long,
     val name: String,
@@ -12,7 +12,6 @@ data class StockOrder(
     val company: String,
     val purchasePrice: Float,
     val salePrice: Float,
-    val isOrderedByCustomer: Boolean,
     val isPaid: Boolean,
     override val timestamp: String
 ) : Model(id = id, timestamp = timestamp) {
@@ -20,7 +19,7 @@ data class StockOrder(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as StockOrder
+        other as StockItem
 
         if (id != other.id) return false
         if (productId != other.productId) return false
@@ -33,7 +32,6 @@ data class StockOrder(
         if (company != other.company) return false
         if (purchasePrice != other.purchasePrice) return false
         if (salePrice != other.salePrice) return false
-        if (isOrderedByCustomer != other.isOrderedByCustomer) return false
         if (isPaid != other.isPaid) return false
         if (timestamp != other.timestamp) return false
 
@@ -52,7 +50,6 @@ data class StockOrder(
         result = 31 * result + company.hashCode()
         result = 31 * result + purchasePrice.hashCode()
         result = 31 * result + salePrice.hashCode()
-        result = 31 * result + isOrderedByCustomer.hashCode()
         result = 31 * result + isPaid.hashCode()
         result = 31 * result + timestamp.hashCode()
         return result

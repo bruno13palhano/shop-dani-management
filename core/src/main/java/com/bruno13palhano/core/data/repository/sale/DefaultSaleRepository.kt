@@ -12,11 +12,11 @@ import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderData
+import com.bruno13palhano.core.data.repository.stockorder.StockData
 import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.core.network.access.SaleNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.di.DefaultSaleNet
@@ -32,7 +32,7 @@ import javax.inject.Inject
 internal class DefaultSaleRepository @Inject constructor(
     @DefaultSaleNet private val saleNetwork: SaleNetwork,
     @InternalSaleLight private val saleData: SaleData,
-    @InternalStockOrderLight private val stockOrderData: StockOrderData,
+    @InternalStockOrderLight private val stockData: StockData,
     @InternalDeliveryLight val deliveryData: DeliveryData,
     @InternalVersionLight private val versionData: VersionData,
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
@@ -95,7 +95,7 @@ internal class DefaultSaleRepository @Inject constructor(
 
     override suspend fun insertItems(
         sale: Sale,
-        stockOrder: StockOrder,
+        stockItem: StockItem,
         delivery: Delivery,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
@@ -105,13 +105,13 @@ internal class DefaultSaleRepository @Inject constructor(
 
         saleData.insertItems(
             sale = sale,
-            stockOrder = stockOrder,
+            stockItem = stockItem,
             delivery = delivery,
             saleVersion = saleVersion,
             deliveryVersion = deliveryVersion,
             onError = onError
         ) { saleId, stockOrderId, deliveryId ->
-            val netStockOrder = createStockOrder(stockOrder = stockOrder, id = stockOrderId)
+            val netStockOrder = createStockOrder(stockItem = stockItem, id = stockOrderId)
             val netSale = createSale(sale = sale, saleId = saleId, stockOrderId = stockOrderId)
             val netDelivery = createDelivery(
                 delivery = delivery,
@@ -230,7 +230,7 @@ internal class DefaultSaleRepository @Inject constructor(
             dataList = getDataList(saleData),
             networkList = getNetworkList(saleNetwork),
             onPush = { deleteIds, saveList, dtVersion ->
-                val items = getDataList(stockOrderData)
+                val items = getDataList(stockData)
                 val deliveries = getDataList(deliveryData)
                 deleteIds.forEach { saleNetwork.delete(it) }
                 saveList.forEach { sale ->
@@ -277,21 +277,20 @@ internal class DefaultSaleRepository @Inject constructor(
         timestamp = sale.timestamp
     )
 
-    private fun createStockOrder(stockOrder: StockOrder, id: Long) = StockOrder(
+    private fun createStockOrder(stockItem: StockItem, id: Long) = StockItem(
         id = id,
-        productId = stockOrder.productId,
-        name = stockOrder.name,
-        photo = stockOrder.photo,
-        date = stockOrder.date,
-        validity = stockOrder.validity,
-        quantity = stockOrder.quantity,
-        categories = stockOrder.categories,
-        company = stockOrder.company,
-        purchasePrice = stockOrder.purchasePrice,
-        salePrice = stockOrder.salePrice,
-        isOrderedByCustomer = stockOrder.isOrderedByCustomer,
-        isPaid = stockOrder.isPaid,
-        timestamp = stockOrder.timestamp
+        productId = stockItem.productId,
+        name = stockItem.name,
+        photo = stockItem.photo,
+        date = stockItem.date,
+        validity = stockItem.validity,
+        quantity = stockItem.quantity,
+        categories = stockItem.categories,
+        company = stockItem.company,
+        purchasePrice = stockItem.purchasePrice,
+        salePrice = stockItem.salePrice,
+        isPaid = stockItem.isPaid,
+        timestamp = stockItem.timestamp
     )
 
     private fun createDelivery(delivery: Delivery, deliveryId: Long, saleId: Long) = Delivery(

@@ -5,7 +5,7 @@ import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
 import cache.DeliveryTableQueries
 import cache.SaleTableQueries
-import cache.StockOrderTableQueries
+import cache.StockTableQueries
 import cache.VersionTableQueries
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
@@ -13,7 +13,7 @@ import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +23,7 @@ import javax.inject.Inject
 internal class DefaultSaleData @Inject constructor(
     private val saleQueries: SaleTableQueries,
     private val deliveryQueries: DeliveryTableQueries,
-    private val stockOrderQueries: StockOrderTableQueries,
+    private val stockOrderQueries: StockTableQueries,
     private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleData {
@@ -145,7 +145,7 @@ internal class DefaultSaleData @Inject constructor(
 
     override suspend fun insertItems(
         sale: Sale,
-        stockOrder: StockOrder,
+        stockItem: StockItem,
         delivery: Delivery,
         saleVersion: DataVersion,
         deliveryVersion: DataVersion,
@@ -156,26 +156,13 @@ internal class DefaultSaleData @Inject constructor(
             if (sale.isNew()) {
                 if (sale.isOrderedByCustomer) {
                     var saleId = 0L
-                    var orderId = 0L
 
                     saleQueries.transaction {
                         saleQueries.transaction {
-                            stockOrderQueries.insert(
-                                productId = stockOrder.productId,
-                                date = stockOrder.date,
-                                validity = stockOrder.validity,
-                                quantity = sale.quantity.toLong(),
-                                purchasePrice = stockOrder.purchasePrice.toDouble(),
-                                salePrice = stockOrder.salePrice.toDouble(),
-                                isOrderedByCustomer = true,
-                                isPaid = stockOrder.isPaid,
-                                timestamp = stockOrder.timestamp
-                            )
-                            orderId = stockOrderQueries.lastId().executeAsOne()
                             saleQueries.insert(
                                 productId = sale.productId,
                                 customerId = sale.customerId,
-                                stockOrderId = orderId,
+                                stockOrderId = 0L,
                                 quantity = sale.quantity.toLong(),
                                 salePrice = sale.salePrice.toDouble(),
                                 purchasePrice = sale.purchasePrice.toDouble(),
@@ -209,22 +196,22 @@ internal class DefaultSaleData @Inject constructor(
                             timestamp = deliveryVersion.timestamp
                         )
 
-                        onSuccess(saleId, orderId, deliveryQueries.getLastId().executeAsOne())
+                        onSuccess(saleId, 0L, deliveryQueries.getLastId().executeAsOne())
                     }
                 } else {
-                    val quantity = stockOrder.quantity - sale.quantity
+                    val quantity = stockItem.quantity - sale.quantity
                     var saleId = 0L
 
                     if (quantity >= 0) {
                         saleQueries.transaction {
                             stockOrderQueries.updateStockOrderQuantity(
-                                id = stockOrder.id,
+                                id = stockItem.id,
                                 quantity = quantity.toLong()
                             )
                             saleQueries.insert(
                                 productId = sale.productId,
                                 customerId = sale.customerId,
-                                stockOrderId = stockOrder.id,
+                                stockOrderId = stockItem.id,
                                 quantity = sale.quantity.toLong(),
                                 purchasePrice = sale.purchasePrice.toDouble(),
                                 salePrice = sale.salePrice.toDouble(),
@@ -257,25 +244,13 @@ internal class DefaultSaleData @Inject constructor(
                                 timestamp = deliveryVersion.timestamp
                             )
 
-                            onSuccess(saleId, stockOrder.id, deliveryQueries.getLastId().executeAsOne())
+                            onSuccess(saleId, stockItem.id, deliveryQueries.getLastId().executeAsOne())
                         }
                     }
                 }
             } else {
                 if (sale.isOrderedByCustomer) {
                     saleQueries.transaction {
-                        stockOrderQueries.insertWithId(
-                            id = stockOrder.id,
-                            productId = stockOrder.productId,
-                            date = stockOrder.date,
-                            validity = stockOrder.validity,
-                            quantity = sale.quantity.toLong(),
-                            purchasePrice = stockOrder.purchasePrice.toDouble(),
-                            salePrice = stockOrder.salePrice.toDouble(),
-                            isOrderedByCustomer = true,
-                            isPaid = stockOrder.isPaid,
-                            timestamp = stockOrder.timestamp
-                        )
                         saleQueries.insertWithId(
                             id = sale.id,
                             productId = sale.productId,
@@ -313,22 +288,22 @@ internal class DefaultSaleData @Inject constructor(
                             timestamp = deliveryVersion.timestamp
                         )
 
-                        onSuccess(sale.id, stockOrder.id, delivery.id)
+                        onSuccess(sale.id, 0L, delivery.id)
                     }
                 } else {
-                    val quantity = stockOrder.quantity - sale.quantity
+                    val quantity = stockItem.quantity - sale.quantity
 
                     if (quantity >= 0) {
                         saleQueries.transaction {
                             stockOrderQueries.updateStockOrderQuantity(
-                                id = stockOrder.id,
+                                id = stockItem.id,
                                 quantity = quantity.toLong()
                             )
                             saleQueries.insertWithId(
                                 id = sale.id,
                                 productId = sale.productId,
                                 customerId = sale.customerId,
-                                stockOrderId = stockOrder.id,
+                                stockOrderId = stockItem.id,
                                 quantity = sale.quantity.toLong(),
                                 purchasePrice = sale.purchasePrice.toDouble(),
                                 salePrice = sale.salePrice.toDouble(),
@@ -361,7 +336,7 @@ internal class DefaultSaleData @Inject constructor(
                                 timestamp = deliveryVersion.timestamp
                             )
 
-                            onSuccess(sale.id, stockOrder.id, delivery.id)
+                            onSuccess(sale.id, stockItem.id, delivery.id)
                         }
                     }
                 }

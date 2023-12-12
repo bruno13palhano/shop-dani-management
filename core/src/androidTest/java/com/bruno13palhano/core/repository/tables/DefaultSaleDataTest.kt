@@ -6,7 +6,7 @@ import com.bruno13palhano.core.data.repository.customer.DefaultCustomerData
 import com.bruno13palhano.core.data.repository.delivery.DefaultDeliveryData
 import com.bruno13palhano.core.data.repository.product.DefaultProductData
 import com.bruno13palhano.core.data.repository.sale.DefaultSaleData
-import com.bruno13palhano.core.data.repository.stockorder.DefaultStockOrderData
+import com.bruno13palhano.core.data.repository.stockorder.DefaultStockData
 import com.bruno13palhano.core.mocks.makeRandomCustomer
 import com.bruno13palhano.core.mocks.makeRandomDelivery
 import com.bruno13palhano.core.mocks.makeRandomProduct
@@ -16,7 +16,7 @@ import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -43,7 +43,7 @@ class DefaultSaleDataTest {
     private lateinit var updatedSale: Sale
     private lateinit var delivery4: Delivery
     private lateinit var customer4: Customer
-    private lateinit var fourthOrder: StockOrder
+    private lateinit var fourthOrder: StockItem
 
     @get:Rule
     val hiltTestRule = HiltAndroidRule(this)
@@ -490,7 +490,7 @@ class DefaultSaleDataTest {
             database.stockOrderTableQueries,
             Dispatchers.IO
         )
-        val stockOrderTable = DefaultStockOrderData(database.stockOrderTableQueries, Dispatchers.IO)
+        val stockOrderTable = DefaultStockData(database.stockOrderTableQueries, Dispatchers.IO)
         val customerTable = DefaultCustomerData(database.customerTableQueries, Dispatchers.IO)
         val deliveryTable = DefaultDeliveryData(database.deliveryTableQueries, Dispatchers.IO)
         val productTable = DefaultProductData(
@@ -626,7 +626,7 @@ class DefaultSaleDataTest {
 
         firstStockSale = makeRandomSale(
             id = 1L,
-            stockOrder = firstItem,
+            stockItem = firstItem,
             customer = customer1,
             delivery = delivery1,
             isPaidByCustomer = false,
@@ -634,7 +634,7 @@ class DefaultSaleDataTest {
         )
         secondStockSale = makeRandomSale(
             id = 2L,
-            stockOrder = secondItem,
+            stockItem = secondItem,
             customer = customer2,
             delivery = delivery2,
             isPaidByCustomer = false,
@@ -642,7 +642,7 @@ class DefaultSaleDataTest {
         )
         thirdStockSale = makeRandomSale(
             id = 3L,
-            stockOrder = thirdItem,
+            stockItem = thirdItem,
             customer = customer3,
             delivery = delivery3,
             isPaidByCustomer = false,
@@ -650,7 +650,7 @@ class DefaultSaleDataTest {
         )
         fourthOrderSale = makeRandomSale(
             id = 4L,
-            stockOrder = fourthOrder,
+            stockItem = fourthOrder,
             customer = customer4,
             delivery = delivery4,
             isPaidByCustomer = true,
@@ -658,7 +658,7 @@ class DefaultSaleDataTest {
         )
         fifthOrderSale = makeRandomSale(
             id = 5L,
-            stockOrder = fifthOrder,
+            stockItem = fifthOrder,
             customer = customer5,
             delivery = delivery5,
             isPaidByCustomer = true,
@@ -666,7 +666,7 @@ class DefaultSaleDataTest {
         )
         sixthOrderSale = makeRandomSale(
             id = 6L,
-            stockOrder = sixthOrder,
+            stockItem = sixthOrder,
             customer = customer6,
             delivery = delivery6,
             isPaidByCustomer = false,
@@ -675,7 +675,7 @@ class DefaultSaleDataTest {
         updatedSale = makeRandomSale(
             id = 1L,
             quantity = 1000000,
-            stockOrder = firstItem,
+            stockItem = firstItem,
             customer = customer1,
             delivery = delivery1,
             canceled = false

@@ -1,0 +1,126 @@
+import kotlin.Boolean;
+
+CREATE TABLE StockTable (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    productId INTEGER NOT NULL,
+    date INTEGER NOT NULL,
+    validity INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    purchasePrice REAL NOT NULL,
+    salePrice REAL NOT NULL,
+    isPaid INTEGER AS Boolean NOT NULL,
+    timestamp TEXT NOT NULL,
+    FOREIGN KEY (productId) REFERENCES product(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+insert:
+INSERT INTO StockTable(productId, date, validity, quantity, purchasePrice, salePrice,isPaid,
+    timestamp)
+VALUES(?,?,?,?,?,?, ?, ?);
+
+insertWithId:
+INSERT OR REPLACE INTO StockTable(id, productId, date, validity, quantity, purchasePrice,
+    salePrice, isPaid, timestamp)
+VALUES (?,?,?,?,?,?,?,?,?);
+
+update:
+UPDATE StockTable SET productId = ?, date = ?, validity = ?, quantity = ?, purchasePrice = ?,
+    salePrice = ?, isPaid = ?, timestamp = ? WHERE id = ?;
+
+delete:
+DELETE FROM StockTable WHERE id = ?;
+
+getAll:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId);
+
+getDebitStock:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId) WHERE S.isPaid = 0;
+
+getOutOfStock:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId) WHERE S.quantity = 0;
+
+getById:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId) WHERE S.id = :id;
+
+getLast:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId) WHERE S.id = last_insert_rowId();
+
+getItems:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId);
+
+getStockOrderItems:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId)
+WHERE S.quantity > 0;
+
+getDebitStockByPriceDesc:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId)
+WHERE isPaid = 0 ORDER BY S.purchasePrice DESC;
+
+getDebitStockByPriceAsc:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId)
+WHERE isPaid = 0 ORDER BY S.purchasePrice ASC;
+
+getDebitStockByNameDesc:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId)
+WHERE isPaid = 0 ORDER BY P.name DESC;
+
+getDebitStockByNameAsc:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId)
+WHERE isPaid = 0 ORDER BY P.name ASC;
+
+search:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM StockTable S INNER JOIN product P INNER JOIN ProductCategoriesTable PC
+ON(P.name LIKE '%' || :name || '%' OR P.company LIKE '%' || :company || '%'
+    OR P.description LIKE '%' || :description || '%')
+WHERE S.productId = P.id AND PC.productId = P.id;
+
+getByCategory:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
+    S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM StockTable S INNER JOIN product P INNER JOIN ProductCategoriesTable PC
+ON(PC.categories LIKE '%' || :category || '%') WHERE S.productId = P.id AND PC.productId = P.id
+    AND S.quantity > 0;
+
+getStockQuantity:
+SELECT quantity FROM StockTable WHERE id = ?;
+
+updateStockOrderQuantity:
+UPDATE StockTable SET quantity = ? WHERE id = ?;
+
+lastId:
+SELECT last_insert_rowid();

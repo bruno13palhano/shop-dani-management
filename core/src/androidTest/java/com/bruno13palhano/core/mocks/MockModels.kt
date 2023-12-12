@@ -7,7 +7,7 @@ import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import kotlin.random.Random
 
 private const val LENGTH = 10
@@ -137,7 +137,7 @@ fun makeRandomStockOrder(
     salePrice: Float = getRandomFloat(),
     isOrderedByCustomer: Boolean = getRandomBoolean(),
     isPaid: Boolean = getRandomBoolean()
-) = StockOrder(
+) = StockItem(
     id = id,
     productId = product.id,
     name = product.name,
@@ -155,7 +155,7 @@ fun makeRandomStockOrder(
 
 fun makeRandomSale(
     id: Long,
-    stockOrder: StockOrder = makeRandomStockOrder(id = id),
+    stockItem: StockItem = makeRandomStockOrder(id = id),
     delivery: Delivery = makeRandomDelivery(id = id, saleId = id),
     customer: Customer = makeRandomCustomer(id = id),
     quantity: Int = getRandomInt(),
@@ -165,21 +165,21 @@ fun makeRandomSale(
     canceled: Boolean = getRandomBoolean()
 ) = Sale(
     id = id,
-    productId = stockOrder.productId,
-    stockOrderId = stockOrder.id,
+    productId = stockItem.productId,
+    stockOrderId = stockItem.id,
     customerId = customer.id,
-    name = stockOrder.name,
+    name = stockItem.name,
     customerName = customer.name,
-    photo = stockOrder.photo,
+    photo = stockItem.photo,
     quantity = quantity,
-    purchasePrice = stockOrder.purchasePrice,
-    salePrice = stockOrder.salePrice,
+    purchasePrice = stockItem.purchasePrice,
+    salePrice = stockItem.salePrice,
     deliveryPrice = delivery.deliveryPrice,
-    categories = stockOrder.categories,
-    company = stockOrder.company,
+    categories = stockItem.categories,
+    company = stockItem.company,
     dateOfSale = dateOfSale,
     dateOfPayment = dateOfPayment,
-    isOrderedByCustomer = stockOrder.isOrderedByCustomer,
+    isOrderedByCustomer = stockItem.isOrderedByCustomer,
     isPaidByCustomer = isPaidByCustomer,
     canceled = canceled
 )

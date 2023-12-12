@@ -1,6 +1,6 @@
 package com.bruno13palhano.core.network.model
 
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import com.squareup.moshi.Json
 
 data class StockOrderNet(
@@ -11,12 +11,11 @@ data class StockOrderNet(
     @Json(name = "quantity") val quantity: Int,
     @Json(name = "purchasePrice") val purchasePrice: Float,
     @Json(name = "salePrice") val salePrice: Float,
-    @Json(name = "isOrderedByCustomer") val isOrderedByCustomer: Boolean,
     @Json(name = "isPaid") val isPaid: Boolean,
     @Json(name = "timestamp") val timestamp: String
 )
 
-internal fun StockOrderNet.asExternal() = StockOrder(
+internal fun StockOrderNet.asExternal() = StockItem(
     id = id,
     productId = productId,
     name = "",
@@ -28,12 +27,11 @@ internal fun StockOrderNet.asExternal() = StockOrder(
     company = "",
     purchasePrice = purchasePrice,
     salePrice = salePrice,
-    isOrderedByCustomer = isOrderedByCustomer,
     isPaid = isPaid,
     timestamp = timestamp
 )
 
-internal fun StockOrder.asNetwork() = StockOrderNet(
+internal fun StockItem.asNetwork() = StockOrderNet(
     id = id,
     productId = productId,
     date = date,
@@ -41,7 +39,6 @@ internal fun StockOrder.asNetwork() = StockOrderNet(
     quantity = quantity,
     purchasePrice = purchasePrice,
     salePrice = salePrice,
-    isOrderedByCustomer = isOrderedByCustomer,
     isPaid = isPaid,
     timestamp = timestamp
 )

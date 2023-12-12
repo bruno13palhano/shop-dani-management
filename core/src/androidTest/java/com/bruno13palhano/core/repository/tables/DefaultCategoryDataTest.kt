@@ -6,7 +6,7 @@ import com.bruno13palhano.core.data.repository.customer.DefaultCustomerData
 import com.bruno13palhano.core.data.repository.delivery.DefaultDeliveryData
 import com.bruno13palhano.core.data.repository.product.DefaultProductData
 import com.bruno13palhano.core.data.repository.sale.DefaultSaleData
-import com.bruno13palhano.core.data.repository.stockorder.DefaultStockOrderData
+import com.bruno13palhano.core.data.repository.stockorder.DefaultStockData
 import com.bruno13palhano.core.mocks.makeRandomCustomer
 import com.bruno13palhano.core.mocks.makeRandomDelivery
 import com.bruno13palhano.core.mocks.makeRandomProduct
@@ -15,7 +15,7 @@ import com.bruno13palhano.core.mocks.makeRandomStockOrder
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -39,7 +39,7 @@ class DefaultCategoryDataTest {
     private lateinit var delivery4: Delivery
     private lateinit var delivery5: Delivery
     private lateinit var delivery6: Delivery
-    private lateinit var firstItem: StockOrder
+    private lateinit var firstItem: StockItem
     private lateinit var product1: Product
 
     @get:Rule
@@ -337,7 +337,7 @@ class DefaultCategoryDataTest {
             database.stockOrderTableQueries,
             Dispatchers.IO
         )
-        val stockOrderTable = DefaultStockOrderData(database.stockOrderTableQueries, Dispatchers.IO)
+        val stockOrderTable = DefaultStockData(database.stockOrderTableQueries, Dispatchers.IO)
         val customerTable = DefaultCustomerData(database.customerTableQueries, Dispatchers.IO)
         deliveryTable = DefaultDeliveryData(database.deliveryTableQueries, Dispatchers.IO)
         val productTable = DefaultProductData(
@@ -469,7 +469,7 @@ class DefaultCategoryDataTest {
 
         val firstStockSale = makeRandomSale(
             id = 1L,
-            stockOrder = firstItem,
+            stockItem = firstItem,
             customer = customer1,
             delivery = delivery1,
             isPaidByCustomer = false,
@@ -477,7 +477,7 @@ class DefaultCategoryDataTest {
         )
         val secondStockSale = makeRandomSale(
             id = 2L,
-            stockOrder = secondItem,
+            stockItem = secondItem,
             customer = customer2,
             delivery = delivery2,
             isPaidByCustomer = false,
@@ -485,7 +485,7 @@ class DefaultCategoryDataTest {
         )
         val thirdStockSale = makeRandomSale(
             id = 3L,
-            stockOrder = thirdItem,
+            stockItem = thirdItem,
             customer = customer3,
             delivery = delivery3,
             isPaidByCustomer = false,
@@ -493,7 +493,7 @@ class DefaultCategoryDataTest {
         )
         val fourthOrderSale = makeRandomSale(
             id = 4L,
-            stockOrder = fourthOrder,
+            stockItem = fourthOrder,
             customer = customer4,
             delivery = delivery4,
             isPaidByCustomer = true,
@@ -501,7 +501,7 @@ class DefaultCategoryDataTest {
         )
         val fifthOrderSale = makeRandomSale(
             id = 5L,
-            stockOrder = fifthOrder,
+            stockItem = fifthOrder,
             customer = customer5,
             delivery = delivery5,
             isPaidByCustomer = true,
@@ -509,7 +509,7 @@ class DefaultCategoryDataTest {
         )
         val sixthOrderSale = makeRandomSale(
             id = 6L,
-            stockOrder = sixthOrder,
+            stockItem = sixthOrder,
             customer = customer6,
             delivery = delivery6,
             isPaidByCustomer = false,

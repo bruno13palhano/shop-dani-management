@@ -4,13 +4,13 @@ import com.bruno13palhano.core.data.DataOperations
 import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import kotlinx.coroutines.flow.Flow
 
 interface SaleData : DataOperations<Sale> {
     suspend fun insertItems(
         sale: Sale,
-        stockOrder: StockOrder,
+        stockItem: StockItem,
         delivery: Delivery,
         saleVersion: DataVersion,
         deliveryVersion: DataVersion,

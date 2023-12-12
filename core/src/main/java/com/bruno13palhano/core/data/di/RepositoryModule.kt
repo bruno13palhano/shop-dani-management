@@ -7,7 +7,7 @@ import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.repository.catalog.DefaultCatalogRepository
 import com.bruno13palhano.core.data.repository.category.DefaultCategoryRepository
 import com.bruno13palhano.core.data.repository.customer.DefaultCustomerRepository
@@ -15,15 +15,7 @@ import com.bruno13palhano.core.data.repository.delivery.DefaultDeliveryRepositor
 import com.bruno13palhano.core.data.repository.product.DefaultProductRepository
 import com.bruno13palhano.core.data.repository.sale.DefaultSaleRepository
 import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheRepository
-import com.bruno13palhano.core.data.repository.stockorder.DefaultStockOrderRepository
-import com.bruno13palhano.core.model.Catalog
-import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Customer
-import com.bruno13palhano.core.model.Delivery
-import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.data.repository.stockorder.DefaultStockRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -92,7 +84,7 @@ internal abstract class RepositoryModule {
     @StockOrderRep
     @Singleton
     @Binds
-    abstract fun bindStockOrderRepository(repository: DefaultStockOrderRepository): StockOrderRepository
+    abstract fun bindStockOrderRepository(repository: DefaultStockRepository): StockRepository
 
     @CatalogRep
     @Singleton

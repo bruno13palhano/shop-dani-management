@@ -14,8 +14,8 @@ import com.bruno13palhano.core.data.repository.sale.DefaultSaleData
 import com.bruno13palhano.core.data.repository.sale.SaleData
 import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheData
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheData
-import com.bruno13palhano.core.data.repository.stockorder.DefaultStockOrderData
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderData
+import com.bruno13palhano.core.data.repository.stockorder.DefaultStockData
+import com.bruno13palhano.core.data.repository.stockorder.StockData
 import com.bruno13palhano.core.data.repository.version.DefaultVersionData
 import com.bruno13palhano.core.data.repository.version.VersionData
 import dagger.Binds
@@ -89,7 +89,7 @@ internal abstract class InternalDataModule {
     @InternalStockOrderLight
     @Singleton
     @Binds
-    abstract fun bindInternalStockOrderData(data: DefaultStockOrderData): StockOrderData
+    abstract fun bindInternalStockOrderData(data: DefaultStockData): StockData
 
     @InternalCatalogLight
     @Singleton
