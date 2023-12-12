@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SaleContent
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SaleViewModel
@@ -143,6 +144,7 @@ fun SaleScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errorMessage = stringResource(id = R.string.empty_fields_error)
     val stockQuantityMessage = stringResource(id = R.string.only_x_items_error_label, viewModel.stockQuantity)
+    val errors = getErrors()
 
     val menuItems = arrayOf(
         stringResource(id = R.string.delete_label),
@@ -185,45 +187,39 @@ fun SaleScreen(
                 SaleItemMenu.delete -> {
                     viewModel.deleteSale(
                         saleId = saleId,
-                        onError = {}
+                        onError = { scope.launch { snackbarHostState.showSnackbar(errors[it]) } }
                     ) {
-
+                        scope.launch { navigateUp() }
                     }
                 }
                 SaleItemMenu.cancel -> {
                     viewModel.updateSale(
                         saleId = saleId,
                         canceled = true,
-                        onError = {}
+                        onError = { scope.launch { snackbarHostState.showSnackbar(errors[it]) } }
                     ) {
-
+                        scope.launch { navigateUp() }
                     }
                 }
             }
-            navigateUp()
         },
         onDoneButtonClick = {
             if (isSaleNotEmpty) {
                 if (isEdit) {
                     viewModel.updateSale(
                         saleId = saleId,
-                        onError = {},
+                        onError = { scope.launch { snackbarHostState.showSnackbar(errors[it]) } },
                         canceled = false
                     ) {
-
+                        scope.launch { navigateUp() }
                     }
                 } else {
                     viewModel.insertSale(
                         isOrderedByCustomer = isOrderedByCustomer,
                         currentDate = currentDate,
-                        onError = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = stockQuantityMessage
-                                )
-                            }
-                        }
+                        onError = { scope.launch { snackbarHostState.showSnackbar(errors[it]) } }
                     ) {
+                        scope.launch { navigateUp() }
                         setAlarmNotification(
                             id = stockOrderId,
                             title = viewModel.customerName,
@@ -233,7 +229,6 @@ fun SaleScreen(
                         )
                     }
                 }
-                navigateUp()
             } else {
                 scope.launch {
                     snackbarHostState.showSnackbar(errorMessage)

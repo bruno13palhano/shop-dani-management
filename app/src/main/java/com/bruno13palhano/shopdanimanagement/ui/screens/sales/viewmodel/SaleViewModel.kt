@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
@@ -19,7 +19,7 @@ import com.bruno13palhano.core.data.di.StockOrderRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerCheck
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SaleViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleRepository,
-    @StockOrderRep private val stockOrderRepository: StockOrderRepository,
+    @StockOrderRep private val stockRepository: StockRepository,
     @ProductRep private val productRepository: ProductRepository,
     @CustomerRep private val customerRepository: CustomerRepository,
 ) : ViewModel() {
@@ -152,7 +152,7 @@ class SaleViewModel @Inject constructor(
 
     fun getStockItem(stockId: Long) {
         viewModelScope.launch {
-            stockOrderRepository.getById(stockId).collect {
+            stockRepository.getById(stockId).collect {
                 stockOrderId = stockId
                 productId = it.productId
                 productName = it.name
@@ -194,10 +194,9 @@ class SaleViewModel @Inject constructor(
                     isOrderedByCustomer = isOrderedByCustomer,
                     canceled = false
                 ),
-                stockOrder = createStockOrder(
+                stockItem = createStockItem(
                     productId = productId,
-                    currentDate = currentDate,
-                    isOrderedByCustomer = isOrderedByCustomer
+                    currentDate = currentDate
                 ),
                 delivery = createDelivery(),
                 onError = onError,
@@ -298,11 +297,10 @@ class SaleViewModel @Inject constructor(
         timestamp = getCurrentTimestamp()
     )
 
-    private fun createStockOrder(
+    private fun createStockItem(
         productId: Long,
         currentDate: Long,
-        isOrderedByCustomer: Boolean
-    ) = StockOrder(
+    ) = StockItem(
         id = stockOrderId,
         productId = productId,
         name = productName,
@@ -314,7 +312,6 @@ class SaleViewModel @Inject constructor(
         company = company,
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
-        isOrderedByCustomer = isOrderedByCustomer,
         isPaid = isPaid,
         timestamp = getCurrentTimestamp()
     )

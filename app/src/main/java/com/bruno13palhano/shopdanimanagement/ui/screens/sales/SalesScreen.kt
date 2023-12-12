@@ -42,6 +42,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesVie
 
 @Composable
 fun SalesScreen(
+    screenTitle: String,
     onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit,
@@ -62,6 +63,7 @@ fun SalesScreen(
     var orderedByPrice by remember { mutableStateOf(false) }
 
     SalesContent(
+        screenTitle = screenTitle,
         saleList = saleList,
         menuItems = menuItems,
         onItemClick = onItemClick,
@@ -86,6 +88,7 @@ fun SalesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SalesContent(
+    screenTitle: String,
     saleList: List<CommonItem>,
     menuItems: Array<String>,
     onItemClick: (id: Long) -> Unit,
@@ -98,7 +101,7 @@ fun SalesContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.sales_label)) },
+                title = { Text(text = screenTitle) },
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(
