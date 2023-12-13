@@ -6,7 +6,7 @@ import com.squareup.moshi.Json
 data class SaleNet (
     @Json(name = "id") val id: Long,
     @Json(name = "productId") val productId: Long,
-    @Json(name = "stockOrderId") val stockOrderId: Long,
+    @Json(name = "stockId") val stockId: Long,
     @Json(name = "customerId") val customerId: Long,
     @Json(name = "quantity") val quantity: Int,
     @Json(name = "purchasePrice") val purchasePrice: Float,
@@ -26,7 +26,7 @@ data class SaleNet (
 internal fun SaleNet.asExternal() = Sale(
     id = id,
     productId = productId,
-    stockOrderId = stockOrderId,
+    stockId = stockId,
     customerId = customerId,
     name = "",
     customerName = "",
@@ -53,7 +53,7 @@ internal fun SaleNet.asExternal() = Sale(
 internal fun Sale.asNetwork() = SaleNet(
     id = id,
     productId = productId,
-    stockOrderId = stockOrderId,
+    stockId = stockId,
     customerId = customerId,
     quantity = quantity,
     purchasePrice = purchasePrice,

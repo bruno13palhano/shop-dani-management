@@ -3,7 +3,7 @@ package com.bruno13palhano.core.model
 data class Sale(
     override val id: Long,
     val productId: Long,
-    val stockOrderId: Long,
+    val stockId: Long,
     val customerId: Long,
     val name: String,
     val customerName: String,
@@ -34,7 +34,7 @@ data class Sale(
 
         if (id != other.id) return false
         if (productId != other.productId) return false
-        if (stockOrderId != other.stockOrderId) return false
+        if (stockId != other.stockId) return false
         if (customerId != other.customerId) return false
         if (name != other.name) return false
         if (customerName != other.customerName) return false
@@ -63,7 +63,7 @@ data class Sale(
     override fun hashCode(): Int {
         var result = id.hashCode()
         result = 31 * result + productId.hashCode()
-        result = 31 * result + stockOrderId.hashCode()
+        result = 31 * result + stockId.hashCode()
         result = 31 * result + customerId.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + customerName.hashCode()
