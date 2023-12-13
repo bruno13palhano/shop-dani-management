@@ -1,7 +1,7 @@
 package com.bruno13palhano.core.data.repository.stockorder
 
 import com.bruno13palhano.core.data.di.Dispatcher
-import com.bruno13palhano.core.data.di.InternalStockOrderLight
+import com.bruno13palhano.core.data.di.InternalStockLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.Versions
@@ -11,9 +11,9 @@ import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.model.StockItem
-import com.bruno13palhano.core.network.access.StockOrderNetwork
+import com.bruno13palhano.core.network.access.StockNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.DefaultStockOrderNet
+import com.bruno13palhano.core.network.di.DefaultStockNet
 import com.bruno13palhano.core.network.di.DefaultVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
@@ -24,8 +24,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class DefaultStockRepository @Inject constructor(
-    @DefaultStockOrderNet private val stockOrderNetwork: StockOrderNetwork,
-    @InternalStockOrderLight private val stockData: StockData,
+    @DefaultStockNet private val stockNetwork: StockNetwork,
+    @InternalStockLight private val stockData: StockData,
     @InternalVersionLight private val versionData: VersionData,
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
@@ -60,7 +60,7 @@ internal class DefaultStockRepository @Inject constructor(
 
             CoroutineScope(ioDispatcher).launch {
                 try {
-                    stockOrderNetwork.insert(data = netModel)
+                    stockNetwork.insert(data = netModel)
                     versionNetwork.insert(data = stockOrderVersion)
                     onSuccess(netModel.id)
                 }
@@ -81,7 +81,7 @@ internal class DefaultStockRepository @Inject constructor(
         stockData.update(model = model, version = stockOrderVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
-                    stockOrderNetwork.update(data = model)
+                    stockNetwork.update(data = model)
                     versionNetwork.insert(data = stockOrderVersion)
                     onSuccess()
                 }
@@ -117,7 +117,7 @@ internal class DefaultStockRepository @Inject constructor(
         stockData.deleteById(id = id, version = stockOrderVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
-                    stockOrderNetwork.delete(id = id)
+                    stockNetwork.delete(id = id)
                     versionNetwork.update(data = stockOrderVersion)
                     onSuccess()
                 }
@@ -163,10 +163,10 @@ internal class DefaultStockRepository @Inject constructor(
             dataVersion = getDataVersion(versionData, 3L),
             networkVersion = getNetworkVersion(versionNetwork, 3L),
             dataList = getDataList(stockData),
-            networkList = getNetworkList(stockOrderNetwork),
+            networkList = getNetworkList(stockNetwork),
             onPush = { deleteIds, saveList, dtVersion ->
-                deleteIds.forEach { stockOrderNetwork.delete(it) }
-                saveList.forEach { stockOrderNetwork.insert(it) }
+                deleteIds.forEach { stockNetwork.delete(it) }
+                saveList.forEach { stockNetwork.insert(it) }
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
