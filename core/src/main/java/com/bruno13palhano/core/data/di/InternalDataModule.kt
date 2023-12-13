@@ -30,9 +30,6 @@ internal annotation class InternalCategoryLight
 internal annotation class InternalCustomerLight
 
 @Qualifier
-internal annotation class InternalDeliveryLight
-
-@Qualifier
 internal annotation class InternalProductLight
 
 @Qualifier
@@ -42,7 +39,7 @@ internal annotation class InternalSaleLight
 internal annotation class InternalSearchCacheLight
 
 @Qualifier
-internal annotation class InternalStockOrderLight
+internal annotation class InternalStockLight
 
 @Qualifier
 internal annotation class InternalCatalogLight
@@ -79,10 +76,10 @@ internal abstract class InternalDataModule {
     @Binds
     abstract fun bindInternalSearchCacheData(data: DefaultSearchCacheData): SearchCacheData
 
-    @InternalStockOrderLight
+    @InternalStockLight
     @Singleton
     @Binds
-    abstract fun bindInternalStockOrderData(data: DefaultStockData): StockData
+    abstract fun bindInternalStockData(data: DefaultStockData): StockData
 
     @InternalCatalogLight
     @Singleton
