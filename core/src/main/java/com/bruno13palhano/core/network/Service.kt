@@ -98,6 +98,9 @@ internal interface Service {
     @PUT("items/update")
     suspend fun updateItem(@Body item: StockOrderNet)
 
+    @PUT("items/update/{id}/{quantity}")
+    suspend fun updateStockItemQuantity(@Path("id") id: Long, @Path("quantity") quantity: Int)
+
     @DELETE("items/delete/{id}")
     suspend fun deleteItem(@Path("id") id: Long)
 
