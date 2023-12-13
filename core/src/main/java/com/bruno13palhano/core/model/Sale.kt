@@ -8,6 +8,8 @@ data class Sale(
     val name: String,
     val customerName: String,
     val photo: ByteArray,
+    val address: String,
+    val phoneNumber: String,
     val quantity: Int,
     val purchasePrice: Float,
     val salePrice: Float,
@@ -16,8 +18,11 @@ data class Sale(
     val company: String,
     val dateOfSale: Long,
     val dateOfPayment: Long,
+    val shippingDate: Long,
+    val deliveryDate: Long,
     val isOrderedByCustomer: Boolean,
     val isPaidByCustomer: Boolean,
+    val delivered: Boolean,
     val canceled: Boolean,
     override val timestamp: String
 ) : Model(id = id, timestamp = timestamp) {
@@ -34,6 +39,8 @@ data class Sale(
         if (name != other.name) return false
         if (customerName != other.customerName) return false
         if (!photo.contentEquals(other.photo)) return false
+        if (address != other.address) return false
+        if (phoneNumber != other.phoneNumber) return false
         if (quantity != other.quantity) return false
         if (purchasePrice != other.purchasePrice) return false
         if (salePrice != other.salePrice) return false
@@ -42,8 +49,11 @@ data class Sale(
         if (company != other.company) return false
         if (dateOfSale != other.dateOfSale) return false
         if (dateOfPayment != other.dateOfPayment) return false
+        if (shippingDate != other.shippingDate) return false
+        if (deliveryDate != other.deliveryDate) return false
         if (isOrderedByCustomer != other.isOrderedByCustomer) return false
         if (isPaidByCustomer != other.isPaidByCustomer) return false
+        if (delivered != other.delivered) return false
         if (canceled != other.canceled) return false
         if (timestamp != other.timestamp) return false
 
@@ -58,6 +68,8 @@ data class Sale(
         result = 31 * result + name.hashCode()
         result = 31 * result + customerName.hashCode()
         result = 31 * result + photo.contentHashCode()
+        result = 31 * result + address.hashCode()
+        result = 31 * result + phoneNumber.hashCode()
         result = 31 * result + quantity
         result = 31 * result + purchasePrice.hashCode()
         result = 31 * result + salePrice.hashCode()
@@ -66,8 +78,11 @@ data class Sale(
         result = 31 * result + company.hashCode()
         result = 31 * result + dateOfSale.hashCode()
         result = 31 * result + dateOfPayment.hashCode()
+        result = 31 * result + shippingDate.hashCode()
+        result = 31 * result + deliveryDate.hashCode()
         result = 31 * result + isOrderedByCustomer.hashCode()
         result = 31 * result + isPaidByCustomer.hashCode()
+        result = 31 * result + delivered.hashCode()
         result = 31 * result + canceled.hashCode()
         result = 31 * result + timestamp.hashCode()
         return result
