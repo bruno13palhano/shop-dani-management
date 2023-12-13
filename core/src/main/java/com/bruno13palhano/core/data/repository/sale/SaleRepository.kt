@@ -1,9 +1,7 @@
 package com.bruno13palhano.core.data.repository.sale
 
 import com.bruno13palhano.core.data.RepositoryOperations
-import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.core.sync.Syncable
 import kotlinx.coroutines.flow.Flow
 
