@@ -37,7 +37,7 @@ annotation class SaleRep
 annotation class SearchCacheRep
 
 @Qualifier
-annotation class StockOrderRep
+annotation class StockRep
 
 @Qualifier
 annotation class CatalogRep
@@ -71,10 +71,10 @@ internal abstract class RepositoryModule {
     @Binds
     abstract fun bindSearchCacheRepository(repository: DefaultSearchCacheRepository): SearchCacheRepository
 
-    @StockOrderRep
+    @StockRep
     @Singleton
     @Binds
-    abstract fun bindStockOrderRepository(repository: DefaultStockRepository): StockRepository
+    abstract fun bindStockRepository(repository: DefaultStockRepository): StockRepository
 
     @CatalogRep
     @Singleton
