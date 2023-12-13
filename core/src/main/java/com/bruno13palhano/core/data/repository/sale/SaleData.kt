@@ -1,10 +1,17 @@
 package com.bruno13palhano.core.data.repository.sale
 
 import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Sale
 import kotlinx.coroutines.flow.Flow
 
 interface SaleData : DataOperations<Sale> {
+    suspend fun insert(
+        model: Sale,
+        version: DataVersion,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long, stockQuantity: Int) -> Unit
+    ): Long
     fun getByCustomerId(customerId: Long): Flow<List<Sale>>
     fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>>
     fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>>

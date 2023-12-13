@@ -1,25 +1,21 @@
 package com.bruno13palhano.core.data.repository.sale
 
 import com.bruno13palhano.core.data.di.Dispatcher
-import com.bruno13palhano.core.data.di.InternalDeliveryLight
 import com.bruno13palhano.core.data.di.InternalSaleLight
-import com.bruno13palhano.core.data.di.InternalStockOrderLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.Versions
-import com.bruno13palhano.core.data.repository.delivery.DeliveryData
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
-import com.bruno13palhano.core.data.repository.stockorder.StockData
 import com.bruno13palhano.core.data.repository.version.VersionData
-import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.core.network.access.SaleNetwork
+import com.bruno13palhano.core.network.access.StockNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.di.DefaultSaleNet
+import com.bruno13palhano.core.network.di.DefaultStockNet
 import com.bruno13palhano.core.network.di.DefaultVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
@@ -31,9 +27,8 @@ import javax.inject.Inject
 
 internal class DefaultSaleRepository @Inject constructor(
     @DefaultSaleNet private val saleNetwork: SaleNetwork,
+    @DefaultStockNet private val stockNetwork: StockNetwork,
     @InternalSaleLight private val saleData: SaleData,
-    @InternalStockOrderLight private val stockData: StockData,
-    @InternalDeliveryLight val deliveryData: DeliveryData,
     @InternalVersionLight private val versionData: VersionData,
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
@@ -44,26 +39,30 @@ internal class DefaultSaleRepository @Inject constructor(
         onSuccess: (id: Long) -> Unit
     ): Long {
         val saleVersion = Versions.saleVersion(timestamp = model.timestamp)
+        val stockVersion = Versions.stockVersion(timestamp = model.timestamp)
 
-        val id = saleData.insert(model = model, version = saleVersion, onError = onError) {
+        val id = saleData.insert(
+            model = model,
+            version = saleVersion,
+            onError = onError
+        ) { saleId, quantity ->
             val netModel = createSale(
                 sale = model,
-                saleId = it,
-                stockOrderId = model.stockOrderId
+                saleId = saleId,
+                stockOrderId = model.stockId
             )
 
             CoroutineScope(ioDispatcher).launch {
-                try { saleNetwork.insert(data = netModel) }
-                catch (e: Exception) { onError(4) }
-            }
-        }
-
-        versionData.insert(model = saleVersion, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
                 try {
-                    versionNetwork.insert(saleVersion)
-                    onSuccess(id)
-                } catch (e: Exception) { onError(4) }
+                    saleNetwork.insert(data = netModel)
+                    versionNetwork.insert(data = saleVersion)
+                    if (!netModel.isOrderedByCustomer) {
+                        stockNetwork.updateItemQuantity(id = netModel.stockId, quantity = quantity)
+                        versionNetwork.insert(data = stockVersion)
+                        onSuccess(netModel.id)
+                    }
+                }
+                catch (e: Exception) { onError(4) }
             }
         }
 
@@ -91,44 +90,6 @@ internal class DefaultSaleRepository @Inject constructor(
 
     override suspend fun cancelSale(saleId: Long) {
         saleData.cancelSale(saleId = saleId)
-    }
-
-    override suspend fun insertItems(
-        sale: Sale,
-        stockItem: StockItem,
-        delivery: Delivery,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
-        val saleVersion = Versions.saleVersion(timestamp = sale.timestamp)
-        val deliveryVersion = Versions.deliveryVersion(timestamp = delivery.timestamp)
-
-        saleData.insertItems(
-            sale = sale,
-            stockItem = stockItem,
-            delivery = delivery,
-            saleVersion = saleVersion,
-            deliveryVersion = deliveryVersion,
-            onError = onError
-        ) { saleId, stockOrderId, deliveryId ->
-            val netStockOrder = createStockOrder(stockItem = stockItem, id = stockOrderId)
-            val netSale = createSale(sale = sale, saleId = saleId, stockOrderId = stockOrderId)
-            val netDelivery = createDelivery(
-                delivery = delivery,
-                deliveryId = deliveryId,
-                saleId = saleId
-            )
-
-            CoroutineScope(ioDispatcher).launch {
-                try {
-                    saleNetwork.insertItems(netSale, netStockOrder, netDelivery)
-                    versionNetwork.insert(saleVersion)
-                    versionNetwork.insert(deliveryVersion)
-                    onSuccess()
-                }
-                catch (e: Exception) { onError(4) }
-            }
-        }
     }
 
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
@@ -230,23 +191,13 @@ internal class DefaultSaleRepository @Inject constructor(
             dataList = getDataList(saleData),
             networkList = getNetworkList(saleNetwork),
             onPush = { deleteIds, saveList, dtVersion ->
-                val items = getDataList(stockData)
-                val deliveries = getDataList(deliveryData)
                 deleteIds.forEach { saleNetwork.delete(it) }
-                saveList.forEach { sale ->
-                    items.forEach { item ->
-                        deliveries.forEach { delivery ->
-                            if (sale.id == delivery.saleId) {
-                                saleNetwork.insertItems(sale, item, delivery)
-                            }
-                        }
-                    }
-                }
+                saveList.forEach { saleNetwork.insert(it)}
                 versionNetwork.insert(dtVersion)
             },
             onPull = { deleteIds, saveList, netVersion ->
                 deleteIds.forEach { saleData.deleteById(it, netVersion, {}) {} }
-                saveList.forEach { saleData.insert(it, netVersion, {}) {} }
+                saveList.forEach { saleData.insert(it, netVersion, {}) { _, _ -> } }
                 versionData.insert(netVersion, {}) {}
             }
         )
@@ -258,11 +209,13 @@ internal class DefaultSaleRepository @Inject constructor(
     private fun createSale(sale: Sale, saleId: Long, stockOrderId: Long) = Sale(
         id = saleId,
         productId = sale.productId,
-        stockOrderId = stockOrderId,
+        stockId = stockOrderId,
         customerId = sale.customerId,
         name = sale.name,
         customerName = sale.customerName,
         photo = sale.photo,
+        address = sale.address,
+        phoneNumber = sale.phoneNumber,
         quantity = sale.quantity,
         purchasePrice = sale.purchasePrice,
         salePrice = sale.salePrice,
@@ -271,40 +224,12 @@ internal class DefaultSaleRepository @Inject constructor(
         company = sale.company,
         dateOfSale = sale.dateOfSale,
         dateOfPayment = sale.dateOfPayment,
+        shippingDate = sale.shippingDate,
+        deliveryDate = sale.deliveryDate,
         isOrderedByCustomer = sale.isOrderedByCustomer,
         isPaidByCustomer = sale.isPaidByCustomer,
+        delivered = sale.delivered,
         canceled = sale.canceled,
         timestamp = sale.timestamp
-    )
-
-    private fun createStockOrder(stockItem: StockItem, id: Long) = StockItem(
-        id = id,
-        productId = stockItem.productId,
-        name = stockItem.name,
-        photo = stockItem.photo,
-        date = stockItem.date,
-        validity = stockItem.validity,
-        quantity = stockItem.quantity,
-        categories = stockItem.categories,
-        company = stockItem.company,
-        purchasePrice = stockItem.purchasePrice,
-        salePrice = stockItem.salePrice,
-        isPaid = stockItem.isPaid,
-        timestamp = stockItem.timestamp
-    )
-
-    private fun createDelivery(delivery: Delivery, deliveryId: Long, saleId: Long) = Delivery(
-        id = deliveryId,
-        saleId = saleId,
-        customerName = delivery.customerName,
-        address = delivery.address,
-        phoneNumber = delivery.phoneNumber,
-        productName = delivery.productName,
-        price = delivery.price,
-        deliveryPrice = delivery.deliveryPrice,
-        shippingDate = delivery.shippingDate,
-        deliveryDate = delivery.deliveryDate,
-        delivered = delivery.delivered,
-        timestamp = delivery.timestamp
     )
 }
