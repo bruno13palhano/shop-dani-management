@@ -10,14 +10,12 @@ import androidx.work.WorkerParameters
 import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
 import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
-import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.di.CatalogRep
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.CustomerRep
-import com.bruno13palhano.core.data.di.DeliveryRep
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
@@ -38,7 +36,6 @@ class FetchDataWork @AssistedInject constructor(
     @ProductRep val productRepository: ProductRepository,
     @StockOrderRep val stockRepository: StockRepository,
     @SaleRep val saleRepository: SaleRepository,
-    @DeliveryRep val deliveryRepository: DeliveryRepository,
     @CatalogRep val catalogRepository: CatalogRepository,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
 ) : CoroutineWorker(context, params), Synchronizer {
@@ -50,7 +47,6 @@ class FetchDataWork @AssistedInject constructor(
             customerSynced = customerRepository.sync(),
             stockOrderSynced = stockRepository.sync(),
             saleSynced = saleRepository.sync(),
-            deliverySynced = deliveryRepository.sync(),
             catalogSynced = catalogRepository.sync()
         )
 
@@ -76,8 +72,7 @@ class FetchDataWork @AssistedInject constructor(
         customerSynced: Boolean,
         stockOrderSynced: Boolean,
         saleSynced: Boolean,
-        deliverySynced: Boolean,
         catalogSynced: Boolean
     ) = categorySynced && productSynced && customerSynced && stockOrderSynced && saleSynced
-            && deliverySynced && catalogSynced
+            && catalogSynced
 }
