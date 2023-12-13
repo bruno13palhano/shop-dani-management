@@ -3,7 +3,6 @@ package com.bruno13palhano.core.data.di
 import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
 import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
-import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
@@ -11,7 +10,6 @@ import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.repository.catalog.DefaultCatalogRepository
 import com.bruno13palhano.core.data.repository.category.DefaultCategoryRepository
 import com.bruno13palhano.core.data.repository.customer.DefaultCustomerRepository
-import com.bruno13palhano.core.data.repository.delivery.DefaultDeliveryRepository
 import com.bruno13palhano.core.data.repository.product.DefaultProductRepository
 import com.bruno13palhano.core.data.repository.sale.DefaultSaleRepository
 import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheRepository
@@ -28,9 +26,6 @@ annotation class CategoryRep
 
 @Qualifier
 annotation class CustomerRep
-
-@Qualifier
-annotation class DeliveryRep
 
 @Qualifier
 annotation class ProductRep
@@ -60,11 +55,6 @@ internal abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindCustomerRepository(repository: DefaultCustomerRepository): CustomerRepository
-
-    @DeliveryRep
-    @Singleton
-    @Binds
-    abstract fun bindDeliveryRepository(repository: DefaultDeliveryRepository): DeliveryRepository
 
     @ProductRep
     @Singleton

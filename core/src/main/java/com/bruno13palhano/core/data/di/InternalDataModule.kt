@@ -6,8 +6,6 @@ import com.bruno13palhano.core.data.repository.category.CategoryData
 import com.bruno13palhano.core.data.repository.category.DefaultCategoryData
 import com.bruno13palhano.core.data.repository.customer.CustomerData
 import com.bruno13palhano.core.data.repository.customer.DefaultCustomerData
-import com.bruno13palhano.core.data.repository.delivery.DefaultDeliveryData
-import com.bruno13palhano.core.data.repository.delivery.DeliveryData
 import com.bruno13palhano.core.data.repository.product.DefaultProductData
 import com.bruno13palhano.core.data.repository.product.ProductData
 import com.bruno13palhano.core.data.repository.sale.DefaultSaleData
@@ -65,11 +63,6 @@ internal abstract class InternalDataModule {
     @Singleton
     @Binds
     abstract fun bindInternalCustomerData(data: DefaultCustomerData): CustomerData
-
-    @InternalDeliveryLight
-    @Singleton
-    @Binds
-    abstract fun bindInternalDeliveryData(data: DefaultDeliveryData): DeliveryData
 
     @InternalProductLight
     @Singleton
