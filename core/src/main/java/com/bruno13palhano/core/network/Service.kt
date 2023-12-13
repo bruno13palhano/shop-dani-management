@@ -6,7 +6,6 @@ import com.bruno13palhano.core.network.model.CustomerNet
 import com.bruno13palhano.core.network.model.DataVersionNet
 import com.bruno13palhano.core.network.model.DeliveryNet
 import com.bruno13palhano.core.network.model.ProductNet
-import com.bruno13palhano.core.network.model.SaleItemsNet
 import com.bruno13palhano.core.network.model.SaleNet
 import com.bruno13palhano.core.network.model.StockOrderNet
 import retrofit2.http.Body
@@ -82,7 +81,7 @@ internal interface Service {
     suspend fun getAllSales(): List<SaleNet>
 
     @POST("sales/insert")
-    suspend fun insertSale(@Body saleItemsNet: SaleItemsNet)
+    suspend fun insertSale(@Body saleNet: SaleNet)
 
     @PUT("sales/update")
     suspend fun updateSale(@Body sale: SaleNet)
