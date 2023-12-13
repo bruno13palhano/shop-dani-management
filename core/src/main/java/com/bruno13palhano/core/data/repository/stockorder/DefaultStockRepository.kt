@@ -35,7 +35,7 @@ internal class DefaultStockRepository @Inject constructor(
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long) -> Unit
     ): Long {
-        val stockOrderVersion = Versions.stockOrderVersion(timestamp = model.timestamp)
+        val stockOrderVersion = Versions.stockVersion(timestamp = model.timestamp)
 
         val id = stockData.insert(
             model = model,
@@ -76,7 +76,7 @@ internal class DefaultStockRepository @Inject constructor(
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
-        val stockOrderVersion = Versions.stockOrderVersion(timestamp = model.timestamp)
+        val stockOrderVersion = Versions.stockVersion(timestamp = model.timestamp)
 
         stockData.update(model = model, version = stockOrderVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
@@ -112,7 +112,7 @@ internal class DefaultStockRepository @Inject constructor(
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
-        val stockOrderVersion = Versions.stockOrderVersion(timestamp = timestamp)
+        val stockOrderVersion = Versions.stockVersion(timestamp = timestamp)
 
         stockData.deleteById(id = id, version = stockOrderVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
