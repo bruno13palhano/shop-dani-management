@@ -12,7 +12,7 @@ import com.bruno13palhano.core.network.access.ProductNetwork
 import com.bruno13palhano.core.network.access.impl.ProductNetworkRetrofit
 import com.bruno13palhano.core.network.access.SaleNetwork
 import com.bruno13palhano.core.network.access.impl.SaleNetworkRetrofit
-import com.bruno13palhano.core.network.access.StockOrderNetwork
+import com.bruno13palhano.core.network.access.StockNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.access.impl.DataVersionNetworkRetrofit
 import com.bruno13palhano.core.network.access.impl.StockNetworkRetrofit
@@ -84,7 +84,7 @@ internal abstract class NetworkModule {
     @DefaultStockNet
     @Singleton
     @Binds
-    abstract fun bindStockNetwork(network: StockNetworkRetrofit): StockOrderNetwork
+    abstract fun bindStockNetwork(network: StockNetworkRetrofit): StockNetwork
 
     @DefaultVersionNet
     @Singleton
