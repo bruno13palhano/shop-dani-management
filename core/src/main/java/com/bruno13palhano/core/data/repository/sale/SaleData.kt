@@ -8,15 +8,6 @@ import com.bruno13palhano.core.model.StockItem
 import kotlinx.coroutines.flow.Flow
 
 interface SaleData : DataOperations<Sale> {
-    suspend fun insertItems(
-        sale: Sale,
-        stockItem: StockItem,
-        delivery: Delivery,
-        saleVersion: DataVersion,
-        deliveryVersion: DataVersion,
-        onError: (error: Int) -> Unit,
-        onSuccess: (saleId: Long, stockId: Long, deliveryId: Long) -> Unit
-    )
     fun getByCustomerId(customerId: Long): Flow<List<Sale>>
     fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>>
     fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>>

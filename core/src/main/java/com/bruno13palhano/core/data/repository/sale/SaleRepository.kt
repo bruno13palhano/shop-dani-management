@@ -8,13 +8,6 @@ import com.bruno13palhano.core.sync.Syncable
 import kotlinx.coroutines.flow.Flow
 
 interface SaleRepository : RepositoryOperations<Sale>, Syncable {
-    suspend fun insertItems(
-        sale: Sale,
-        stockItem: StockItem,
-        delivery: Delivery,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    )
     fun getByCustomerId(customerId: Long): Flow<List<Sale>>
     fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>>
     fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>>
