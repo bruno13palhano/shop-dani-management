@@ -15,7 +15,7 @@ import com.bruno13palhano.core.network.access.impl.SaleNetworkRetrofit
 import com.bruno13palhano.core.network.access.StockOrderNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.access.impl.DataVersionNetworkRetrofit
-import com.bruno13palhano.core.network.access.impl.StockOrderNetworkRetrofit
+import com.bruno13palhano.core.network.access.impl.StockNetworkRetrofit
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -42,7 +42,7 @@ internal annotation class DefaultProductNet
 internal annotation class DefaultSaleNet
 
 @Qualifier
-internal annotation class DefaultStockOrderNet
+internal annotation class DefaultStockNet
 
 @Qualifier
 internal annotation class DefaultVersionNet
@@ -81,10 +81,10 @@ internal abstract class NetworkModule {
     @Binds
     abstract fun bindSaleNetwork(network: SaleNetworkRetrofit): SaleNetwork
 
-    @DefaultStockOrderNet
+    @DefaultStockNet
     @Singleton
     @Binds
-    abstract fun bindStockOrderNetwork(network: StockOrderNetworkRetrofit): StockOrderNetwork
+    abstract fun bindStockNetwork(network: StockNetworkRetrofit): StockOrderNetwork
 
     @DefaultVersionNet
     @Singleton
