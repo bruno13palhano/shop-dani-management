@@ -20,7 +20,7 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
-import com.bruno13palhano.core.data.di.StockOrderRep
+import com.bruno13palhano.core.data.di.StockRep
 import com.bruno13palhano.core.sync.Synchronizer
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -34,7 +34,7 @@ class FetchDataWork @AssistedInject constructor(
     @CategoryRep val categoryRepository: CategoryRepository,
     @CustomerRep val customerRepository: CustomerRepository,
     @ProductRep val productRepository: ProductRepository,
-    @StockOrderRep val stockRepository: StockRepository,
+    @StockRep val stockRepository: StockRepository,
     @SaleRep val saleRepository: SaleRepository,
     @CatalogRep val catalogRepository: CatalogRepository,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
