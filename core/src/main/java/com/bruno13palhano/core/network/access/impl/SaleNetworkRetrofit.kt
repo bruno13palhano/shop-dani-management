@@ -1,11 +1,8 @@
 package com.bruno13palhano.core.network.access.impl
 
-import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.core.network.Service
 import com.bruno13palhano.core.network.access.SaleNetwork
-import com.bruno13palhano.core.network.model.SaleItemsNet
 import com.bruno13palhano.core.network.model.asExternal
 import com.bruno13palhano.core.network.model.asNetwork
 import javax.inject.Inject
@@ -28,16 +25,6 @@ internal class SaleNetworkRetrofit @Inject constructor(
         apiService.updateSale(data.asNetwork())
 
     override suspend fun insert(data: Sale) {
-
-    }
-
-    override suspend fun insertItems(sale: Sale, stockItem: StockItem, delivery: Delivery) {
-        val saleItemsNet = SaleItemsNet(
-            sale = sale.asNetwork(),
-            stockOrder = stockItem.asNetwork(),
-            delivery = delivery.asNetwork()
-        )
-
-        apiService.insertSale(saleItemsNet)
+        apiService.insertSale(data.asNetwork())
     }
 }
