@@ -7,4 +7,6 @@ object Errors {
     const val INSERT_SERVER_ERROR = 4
     const val UPDATE_SERVER_ERROR = 5
     const val DELETE_SERVER_ERROR = 6
+    const val FILL_MISSING_FIELDS = 7
+    const val INSUFFICIENT_ITEMS_STOCK = 8
 }
