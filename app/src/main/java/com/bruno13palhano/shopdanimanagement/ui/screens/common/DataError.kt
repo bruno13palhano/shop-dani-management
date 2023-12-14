@@ -31,6 +31,10 @@ sealed class DataError(val error: Int, @StringRes val resourceId: Int) {
         error = Errors.DELETE_SERVER_ERROR,
         resourceId = R.string.delete_server_error
     )
+    object FillMissingFields: DataError(
+        error = Errors.FILL_MISSING_FIELDS,
+        resourceId = R.string.empty_fields_error
+    )
 }
 
 @Composable
@@ -40,5 +44,6 @@ fun getErrors() = listOf(
     stringResource(id = DataError.DeleteDatabase.resourceId),
     stringResource(id = DataError.InsertServer.resourceId),
     stringResource(id = DataError.UpdateServer.resourceId),
-    stringResource(id = DataError.DeleteServer.resourceId)
+    stringResource(id = DataError.DeleteServer.resourceId),
+    stringResource(id = DataError.FillMissingFields.resourceId)
 )
