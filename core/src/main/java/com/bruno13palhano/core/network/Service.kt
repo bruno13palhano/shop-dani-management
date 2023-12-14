@@ -4,7 +4,6 @@ import com.bruno13palhano.core.network.model.CatalogNet
 import com.bruno13palhano.core.network.model.CategoryNet
 import com.bruno13palhano.core.network.model.CustomerNet
 import com.bruno13palhano.core.network.model.DataVersionNet
-import com.bruno13palhano.core.network.model.DeliveryNet
 import com.bruno13palhano.core.network.model.ProductNet
 import com.bruno13palhano.core.network.model.SaleNet
 import com.bruno13palhano.core.network.model.StockOrderNet
@@ -52,18 +51,6 @@ internal interface Service {
 
     @DELETE("customers/delete/{id}")
     suspend fun deleteCustomer(@Path("id") id: Long)
-
-    @POST("deliveries/insert")
-    suspend fun insertDelivery(@Body delivery: DeliveryNet)
-
-    @GET("deliveries/all")
-    suspend fun getAllDeliveries(): List<DeliveryNet>
-
-    @PUT("deliveries/update")
-    suspend fun updateDelivery(@Body delivery: DeliveryNet)
-
-    @DELETE("deliveries/delete/{id}")
-    suspend fun deleteDelivery(@Path("id") id: Long)
 
     @GET("products/all")
     suspend fun getAllProducts(): List<ProductNet>
