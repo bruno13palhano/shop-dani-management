@@ -149,7 +149,10 @@ fun ProductScreen(
                         onError = { error ->
                             scope.launch {
                                 if (error == DataError.DeleteDatabase.error) {
-                                    snackbarHostState.showSnackbar(errors[error])
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
                                 }
 
                                 navigateUp()
@@ -174,7 +177,10 @@ fun ProductScreen(
                         onError = { error ->
                             scope.launch {
                                 if (error == DataError.UpdateDatabase.error) {
-                                    snackbarHostState.showSnackbar(errors[error])
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
                                 }
 
                                 navigateUp()
@@ -188,7 +194,10 @@ fun ProductScreen(
                         onError = { error ->
                             scope.launch {
                                 if (error == DataError.InsertDatabase.error) {
-                                    snackbarHostState.showSnackbar(errors[error])
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
                                 }
 
                                 navigateUp()
