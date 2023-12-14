@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.di.CategoryRep
-import com.bruno13palhano.core.data.di.StockOrderRep
+import com.bruno13palhano.core.data.di.StockRep
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StockViewModel @Inject constructor(
-    @StockOrderRep private val stockRepository: StockRepository,
+    @StockRep private val stockRepository: StockRepository,
     @CategoryRep private val categoryRepository: CategoryRepository
 ) : ViewModel() {
     val categories = categoryRepository.getAll()

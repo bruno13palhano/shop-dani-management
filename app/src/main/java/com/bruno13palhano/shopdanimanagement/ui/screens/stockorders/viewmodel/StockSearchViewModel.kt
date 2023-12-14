@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.di.SearchCacheRep
-import com.bruno13palhano.core.data.di.StockOrderRep
+import com.bruno13palhano.core.data.di.StockRep
 import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StockSearchViewModel @Inject constructor(
-    @StockOrderRep private val stockRepository: StockRepository,
+    @StockRep private val stockRepository: StockRepository,
     @SearchCacheRep private val searchCacheRepository: SearchCacheRepository
 ) : ViewModel() {
     private val _searchCache = MutableStateFlow<List<SearchCache>>(emptyList())

@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.di.ProductRep
-import com.bruno13palhano.core.data.di.StockOrderRep
+import com.bruno13palhano.core.data.di.StockRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
@@ -23,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StockItemViewModel @Inject constructor(
     @ProductRep private val productRepository: ProductRepository,
-    @StockOrderRep private val stockRepository: StockRepository
+    @StockRep private val stockRepository: StockRepository
 ) : ViewModel() {
     private var productId by mutableLongStateOf(0L)
     var name by mutableStateOf("")
