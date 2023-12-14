@@ -31,7 +31,6 @@ object Versions {
     fun productVersion(timestamp: String) = DataVersion(2L, "PRODUCT", timestamp)
     fun stockVersion(timestamp: String) = DataVersion(3L, "STOCK", timestamp)
     fun saleVersion(timestamp: String) = DataVersion(4L, "SALE", timestamp)
-    fun deliveryVersion(timestamp: String) = DataVersion(5L, "DELIVERY", timestamp)
-    fun customerVersion(timestamp: String) = DataVersion(6L, "CUSTOMER", timestamp)
-    fun catalogVersion(timestamp: String) = DataVersion(7L, "CATALOG", timestamp)
+    fun customerVersion(timestamp: String) = DataVersion(5L, "CUSTOMER", timestamp)
+    fun catalogVersion(timestamp: String) = DataVersion(6L, "CATALOG", timestamp)
 }
