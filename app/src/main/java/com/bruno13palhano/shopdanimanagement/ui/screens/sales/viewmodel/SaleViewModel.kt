@@ -11,15 +11,13 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockRepository
+import com.bruno13palhano.core.data.repository.stock.StockRepository
 import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
-import com.bruno13palhano.core.data.di.StockOrderRep
+import com.bruno13palhano.core.data.di.StockRep
 import com.bruno13palhano.core.model.Category
-import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerCheck
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,14 +30,18 @@ import javax.inject.Inject
 @HiltViewModel
 class SaleViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleRepository,
-    @StockOrderRep private val stockRepository: StockRepository,
+    @StockRep private val stockRepository: StockRepository,
     @ProductRep private val productRepository: ProductRepository,
     @CustomerRep private val customerRepository: CustomerRepository,
 ) : ViewModel() {
-    private var stockOrderId by mutableLongStateOf(0L)
+    private var stockId by mutableLongStateOf(0L)
     private var productId by mutableLongStateOf(0L)
     private var customerId by mutableLongStateOf(0L)
+    private var shippingDate by mutableLongStateOf(0L)
+    private var deliveryDate by mutableLongStateOf(0L)
     private var isOrderedByCustomer by mutableStateOf(false)
+    private var delivered by mutableStateOf(false)
+
     var productName by mutableStateOf("")
         private set
     var customerName by mutableStateOf("")
@@ -153,7 +155,7 @@ class SaleViewModel @Inject constructor(
     fun getStockItem(stockId: Long) {
         viewModelScope.launch {
             stockRepository.getById(stockId).collect {
-                stockOrderId = stockId
+                this@SaleViewModel.stockId = stockId
                 productId = it.productId
                 productName = it.name
                 photo = it.photo
@@ -187,20 +189,17 @@ class SaleViewModel @Inject constructor(
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
-            saleRepository.insertItems(
-                sale = createSale(
+            saleRepository.insert(
+                model = createSale(
                     id = 0L,
                     productId = productId,
+                    shippingDate = currentDate,
+                    deliveryDate = currentDate,
                     isOrderedByCustomer = isOrderedByCustomer,
                     canceled = false
                 ),
-                stockItem = createStockItem(
-                    productId = productId,
-                    currentDate = currentDate
-                ),
-                delivery = createDelivery(),
                 onError = onError,
-                onSuccess = onSuccess,
+                onSuccess = { onSuccess() }
             )
         }
     }
@@ -210,18 +209,23 @@ class SaleViewModel @Inject constructor(
             saleRepository.getById(saleId).collect {
                 productId = it.productId
                 customerId = it.customerId
-                stockOrderId = it.stockOrderId
+                stockId = it.stockId
                 productName = it.name
                 customerName = it.customerName
                 photo = it.photo
+                address = it.address
+                phoneNumber = it.phoneNumber
                 quantity = it.quantity.toString()
                 purchasePrice = it.purchasePrice.toString()
                 salePrice = it.salePrice.toString()
                 deliveryPrice = it.deliveryPrice.toString()
+                shippingDate = it.shippingDate
+                deliveryDate = it.deliveryDate
                 category = setCategories(it.categories)
                 company = it.company
                 isPaidByCustomer = it.isPaidByCustomer
                 isOrderedByCustomer = it.isOrderedByCustomer
+                delivered = it.delivered
                 updateDateOfSale(it.dateOfSale)
                 updateDateOfPayment(it.dateOfPayment)
                 setCustomerChecked(it.customerId)
@@ -232,6 +236,8 @@ class SaleViewModel @Inject constructor(
     fun updateSale(
         saleId: Long,
         canceled: Boolean,
+        shippingDate: Long = this.shippingDate,
+        deliveryDate: Long = this.deliveryDate,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
@@ -240,6 +246,8 @@ class SaleViewModel @Inject constructor(
                 model = createSale(
                     id = saleId,
                     productId = productId,
+                    shippingDate = shippingDate,
+                    deliveryDate = deliveryDate,
                     isOrderedByCustomer = isOrderedByCustomer,
                     canceled = canceled
                 ),
@@ -273,16 +281,20 @@ class SaleViewModel @Inject constructor(
     private fun createSale(
         id: Long,
         productId: Long,
+        shippingDate: Long,
+        deliveryDate: Long,
         isOrderedByCustomer: Boolean,
         canceled: Boolean
     ) = Sale(
         id = id,
         productId = productId,
         customerId = customerId,
-        stockOrderId = stockOrderId,
+        stockId = stockId,
         name = productName,
         customerName = customerName,
         photo = photo,
+        address = address,
+        phoneNumber = phoneNumber,
         quantity = stringToInt(quantity),
         purchasePrice = stringToFloat(purchasePrice),
         salePrice = stringToFloat(salePrice),
@@ -291,43 +303,12 @@ class SaleViewModel @Inject constructor(
         company = company,
         dateOfSale = dateOfSale,
         dateOfPayment = dateOfPayment,
+        shippingDate = shippingDate,
+        deliveryDate = deliveryDate,
         isOrderedByCustomer = isOrderedByCustomer,
         isPaidByCustomer = isPaidByCustomer,
+        delivered = delivered,
         canceled = canceled,
-        timestamp = getCurrentTimestamp()
-    )
-
-    private fun createStockItem(
-        productId: Long,
-        currentDate: Long,
-    ) = StockItem(
-        id = stockOrderId,
-        productId = productId,
-        name = productName,
-        photo = photo,
-        date = currentDate,
-        validity = currentDate,
-        quantity = stockQuantity,
-        categories = emptyList(),
-        company = company,
-        purchasePrice = stringToFloat(purchasePrice),
-        salePrice = stringToFloat(salePrice),
-        isPaid = isPaid,
-        timestamp = getCurrentTimestamp()
-    )
-
-    private fun createDelivery() = Delivery(
-        id = 0L,
-        saleId = 0L,
-        customerName = customerName,
-        address = address,
-        phoneNumber = phoneNumber,
-        productName = productName,
-        price = stringToFloat(salePrice),
-        deliveryPrice = stringToFloat(deliveryPrice),
-        shippingDate = dateOfSale,
-        deliveryDate = dateOfSale,
-        delivered = false,
         timestamp = getCurrentTimestamp()
     )
 
