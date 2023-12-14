@@ -45,6 +45,7 @@ internal class DefaultSaleRepository @Inject constructor(
         val id = saleData.insert(
             model = model,
             version = saleVersion,
+            pushed = true,
             onError = onError
         ) { saleId, quantity ->
             val netModel = createSale(
@@ -198,7 +199,7 @@ internal class DefaultSaleRepository @Inject constructor(
             },
             onPull = { deleteIds, saveList, netVersion ->
                 deleteIds.forEach { saleData.deleteById(it, netVersion, {}) {} }
-                saveList.forEach { saleData.insert(it, netVersion, {}) { _, _ -> } }
+                saveList.forEach { saleData.insert(it, netVersion, false, {}) { _, _ -> } }
                 versionData.insert(netVersion, {}) {}
             }
         )

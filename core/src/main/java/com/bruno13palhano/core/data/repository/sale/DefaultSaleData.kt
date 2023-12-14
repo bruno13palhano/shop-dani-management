@@ -39,6 +39,7 @@ internal class DefaultSaleData @Inject constructor(
     override suspend fun insert(
         model: Sale,
         version: DataVersion,
+        pushed: Boolean,
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long, stockItem: Int) -> Unit
     ): Long {
@@ -70,17 +71,19 @@ internal class DefaultSaleData @Inject constructor(
                             timestamp = model.timestamp
                         )
                     } else {
-                        val stockItem = stockOrderQueries.getById(
-                            id = model.stockId,
-                            mapper = ::mapStockItem
-                        ).executeAsOne()
+                        if (pushed) {
+                            val stockItem = stockOrderQueries.getById(
+                                id = model.stockId,
+                                mapper = ::mapStockItem
+                            ).executeAsOne()
 
-                        quantity = stockItem.quantity - model.quantity
+                            quantity = stockItem.quantity - model.quantity
 
-                        stockOrderQueries.updateStockOrderQuantity(
-                            id = stockItem.id,
-                            quantity = quantity.toLong()
-                        )
+                            stockOrderQueries.updateStockOrderQuantity(
+                                id = stockItem.id,
+                                quantity = quantity.toLong()
+                            )
+                        }
 
                         newQuantity = stockOrderQueries.getById(
                             id = model.stockId, mapper = ::mapStockItem
@@ -144,17 +147,19 @@ internal class DefaultSaleData @Inject constructor(
                             timestamp = model.timestamp
                         )
                     } else {
-                        val stockItem = stockOrderQueries.getById(
-                            id = model.stockId,
-                            mapper = ::mapStockItem
-                        ).executeAsOne()
+                        if (pushed) {
+                            val stockItem = stockOrderQueries.getById(
+                                id = model.stockId,
+                                mapper = ::mapStockItem
+                            ).executeAsOne()
 
-                        quantity = stockItem.quantity - model.quantity
+                            quantity = stockItem.quantity - model.quantity
 
-                        stockOrderQueries.updateStockOrderQuantity(
-                            id = stockItem.id,
-                            quantity = quantity.toLong()
-                        )
+                            stockOrderQueries.updateStockOrderQuantity(
+                                id = stockItem.id,
+                                quantity = quantity.toLong()
+                            )
+                        }
 
                         newQuantity = stockOrderQueries.getById(
                             id = model.stockId, mapper = ::mapStockItem

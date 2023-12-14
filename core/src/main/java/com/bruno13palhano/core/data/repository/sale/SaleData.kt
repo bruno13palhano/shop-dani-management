@@ -9,6 +9,7 @@ interface SaleData : DataOperations<Sale> {
     suspend fun insert(
         model: Sale,
         version: DataVersion,
+        pushed: Boolean,
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long, stockQuantity: Int) -> Unit
     ): Long
