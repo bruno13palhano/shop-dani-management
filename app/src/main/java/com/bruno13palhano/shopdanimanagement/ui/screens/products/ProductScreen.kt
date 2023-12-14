@@ -28,6 +28,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductContent
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductMenuItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
@@ -47,8 +49,9 @@ fun ProductScreen(
 ) {
     LaunchedEffect(key1 = Unit) {
         if (isEditable) {
-            viewModel.getAllCategories {}
-            viewModel.getProduct(productId)
+            viewModel.getAllCategories {
+                viewModel.getProduct(productId)
+            }
         } else {
             viewModel.getAllCategories {
                 viewModel.setCategoryChecked(categoryId)
@@ -109,6 +112,7 @@ fun ProductScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val errorMessage = stringResource(id = R.string.empty_fields_error)
+    val errors = getErrors()
 
     ProductContent(
         isEditable = isEditable,
@@ -142,9 +146,17 @@ fun ProductScreen(
                 ProductMenuItem.delete -> {
                     viewModel.deleteProduct(
                         id = productId,
-                        onError = {}
-                    ) {
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.DeleteDatabase.error) {
+                                    snackbarHostState.showSnackbar(errors[error])
+                                }
 
+                                navigateUp()
+                            }
+                        }
+                    ) {
+                        scope.launch { navigateUp() }
                     }
                 }
             }
@@ -159,22 +171,35 @@ fun ProductScreen(
                 if (isEditable) {
                     viewModel.updateProduct(
                         id = productId,
-                        onError = {}
-                    ) {
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.UpdateDatabase.error) {
+                                    snackbarHostState.showSnackbar(errors[error])
+                                }
 
+                                navigateUp()
+                            }
+                        }
+                    ) {
+                        scope.launch { navigateUp() }
                     }
                 } else {
                     viewModel.insertProduct(
-                        onError = {}
-                    ) {
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.InsertDatabase.error) {
+                                    snackbarHostState.showSnackbar(errors[error])
+                                }
 
+                                navigateUp()
+                            }
+                        }
+                    ) {
+                        scope.launch { navigateUp() }
                     }
                 }
-                navigateUp()
             } else {
-                scope.launch {
-                    snackbarHostState.showSnackbar(errorMessage)
-                }
+                scope.launch { snackbarHostState.showSnackbar(errorMessage) }
             }
         },
         navigateUp = navigateUp
