@@ -3,7 +3,7 @@ package com.bruno13palhano.core.network.model
 import com.bruno13palhano.core.model.StockItem
 import com.squareup.moshi.Json
 
-data class StockOrderNet(
+data class StockItemNet(
     @Json(name = "id") val id: Long,
     @Json(name = "productId") val productId: Long,
     @Json(name = "date") val date: Long,
@@ -15,7 +15,7 @@ data class StockOrderNet(
     @Json(name = "timestamp") val timestamp: String
 )
 
-internal fun StockOrderNet.asExternal() = StockItem(
+internal fun StockItemNet.asExternal() = StockItem(
     id = id,
     productId = productId,
     name = "",
@@ -31,7 +31,7 @@ internal fun StockOrderNet.asExternal() = StockItem(
     timestamp = timestamp
 )
 
-internal fun StockItem.asNetwork() = StockOrderNet(
+internal fun StockItem.asNetwork() = StockItemNet(
     id = id,
     productId = productId,
     date = date,

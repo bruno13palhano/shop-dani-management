@@ -6,7 +6,7 @@ import com.bruno13palhano.core.network.model.CustomerNet
 import com.bruno13palhano.core.network.model.DataVersionNet
 import com.bruno13palhano.core.network.model.ProductNet
 import com.bruno13palhano.core.network.model.SaleNet
-import com.bruno13palhano.core.network.model.StockOrderNet
+import com.bruno13palhano.core.network.model.StockItemNet
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -77,13 +77,13 @@ internal interface Service {
     suspend fun deleteSale(@Path("id") id: Long)
 
     @GET("items/all")
-    suspend fun getAllItems(): List<StockOrderNet>
+    suspend fun getAllItems(): List<StockItemNet>
 
     @POST("items/insert")
-    suspend fun insertItem(@Body item: StockOrderNet)
+    suspend fun insertItem(@Body item: StockItemNet)
 
     @PUT("items/update")
-    suspend fun updateItem(@Body item: StockOrderNet)
+    suspend fun updateItem(@Body item: StockItemNet)
 
     @PUT("items/update/{id}/{quantity}")
     suspend fun updateStockItemQuantity(@Path("id") id: Long, @Path("quantity") quantity: Int)
