@@ -6,14 +6,14 @@ import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockRepository
+import com.bruno13palhano.core.data.repository.stock.StockRepository
 import com.bruno13palhano.core.data.repository.catalog.DefaultCatalogRepository
 import com.bruno13palhano.core.data.repository.category.DefaultCategoryRepository
 import com.bruno13palhano.core.data.repository.customer.DefaultCustomerRepository
 import com.bruno13palhano.core.data.repository.product.DefaultProductRepository
 import com.bruno13palhano.core.data.repository.sale.DefaultSaleRepository
 import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheRepository
-import com.bruno13palhano.core.data.repository.stockorder.DefaultStockRepository
+import com.bruno13palhano.core.data.repository.stock.DefaultStockRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

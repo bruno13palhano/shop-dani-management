@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.data.repository.stockorder
+package com.bruno13palhano.core.data.repository.stock
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList

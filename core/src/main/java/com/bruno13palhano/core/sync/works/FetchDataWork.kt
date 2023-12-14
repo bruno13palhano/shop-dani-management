@@ -12,7 +12,7 @@ import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockRepository
+import com.bruno13palhano.core.data.repository.stock.StockRepository
 import com.bruno13palhano.core.data.di.CatalogRep
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.CustomerRep

@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.data.repository.stockorder
+package com.bruno13palhano.core.data.repository.stock
 
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalStockLight

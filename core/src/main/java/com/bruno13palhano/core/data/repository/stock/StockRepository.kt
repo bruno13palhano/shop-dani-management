@@ -1,14 +1,15 @@
-package com.bruno13palhano.core.data.repository.stockorder
+package com.bruno13palhano.core.data.repository.stock
 
-import com.bruno13palhano.core.data.DataOperations
+import com.bruno13palhano.core.data.RepositoryOperations
 import com.bruno13palhano.core.model.StockItem
+import com.bruno13palhano.core.sync.Syncable
 import kotlinx.coroutines.flow.Flow
 
-interface StockData : DataOperations<StockItem> {
+interface StockRepository : RepositoryOperations<StockItem>, Syncable {
     fun getItems(): Flow<List<StockItem>>
     fun search(value: String): Flow<List<StockItem>>
     fun getByCategory(category: String): Flow<List<StockItem>>
-    suspend fun updateStockOrderQuantity(id: Long, quantity: Int)
+    suspend fun updateStockOrderQuantity(id: Long, quantity: Int, timestamp: String)
     fun getStockOrderItems(): Flow<List<StockItem>>
     fun getDebitStock(): Flow<List<StockItem>>
     fun getOutOfStock(): Flow<List<StockItem>>
