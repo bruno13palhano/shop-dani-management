@@ -6,8 +6,6 @@ import com.bruno13palhano.core.network.access.CategoryNetwork
 import com.bruno13palhano.core.network.access.impl.CategoryNetworkRetrofit
 import com.bruno13palhano.core.network.access.CustomerNetwork
 import com.bruno13palhano.core.network.access.impl.CustomerNetworkRetrofit
-import com.bruno13palhano.core.network.access.DeliveryNetwork
-import com.bruno13palhano.core.network.access.impl.DeliveryNetworkRetrofit
 import com.bruno13palhano.core.network.access.ProductNetwork
 import com.bruno13palhano.core.network.access.impl.ProductNetworkRetrofit
 import com.bruno13palhano.core.network.access.SaleNetwork
@@ -31,9 +29,6 @@ internal annotation class DefaultCategoryNet
 
 @Qualifier
 internal annotation class DefaultCustomerNet
-
-@Qualifier
-internal annotation class DefaultDeliveryNet
 
 @Qualifier
 internal annotation class DefaultProductNet
@@ -65,11 +60,6 @@ internal abstract class NetworkModule {
     @Singleton
     @Binds
     abstract fun bindCustomerNetwork(network: CustomerNetworkRetrofit): CustomerNetwork
-
-    @DefaultDeliveryNet
-    @Singleton
-    @Binds
-    abstract fun bindDeliveryNetwork(network: DeliveryNetworkRetrofit): DeliveryNetwork
 
     @DefaultProductNet
     @Singleton
