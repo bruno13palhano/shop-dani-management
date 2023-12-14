@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 internal class DefaultSaleData @Inject constructor(
     private val saleQueries: SaleTableQueries,
-    private val stockOrderQueries: StockTableQueries,
+    private val stockQueries: StockTableQueries,
     private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleData {
@@ -72,21 +72,22 @@ internal class DefaultSaleData @Inject constructor(
                         )
                     } else {
                         if (pushed) {
-                            val stockItem = stockOrderQueries.getById(
+                            val stockItem = stockQueries.getById(
                                 id = model.stockId,
                                 mapper = ::mapStockItem
                             ).executeAsOne()
 
                             quantity = stockItem.quantity - model.quantity
 
-                            stockOrderQueries.updateStockOrderQuantity(
+                            stockQueries.updateStockOrderQuantity(
                                 id = stockItem.id,
                                 quantity = quantity.toLong()
                             )
                         }
 
-                        newQuantity = stockOrderQueries.getById(
-                            id = model.stockId, mapper = ::mapStockItem
+                        newQuantity = stockQueries.getById(
+                            id = model.stockId,
+                            mapper = ::mapStockItem
                         ).executeAsOne().quantity
 
                         saleQueries.insert(
@@ -148,21 +149,22 @@ internal class DefaultSaleData @Inject constructor(
                         )
                     } else {
                         if (pushed) {
-                            val stockItem = stockOrderQueries.getById(
+                            val stockItem = stockQueries.getById(
                                 id = model.stockId,
                                 mapper = ::mapStockItem
                             ).executeAsOne()
 
                             quantity = stockItem.quantity - model.quantity
 
-                            stockOrderQueries.updateStockOrderQuantity(
+                            stockQueries.updateStockOrderQuantity(
                                 id = stockItem.id,
                                 quantity = quantity.toLong()
                             )
                         }
 
-                        newQuantity = stockOrderQueries.getById(
-                            id = model.stockId, mapper = ::mapStockItem
+                        newQuantity = stockQueries.getById(
+                            id = model.stockId,
+                            mapper = ::mapStockItem
                         ).executeAsOne().quantity
 
                         saleQueries.insertWithId(
@@ -215,8 +217,36 @@ internal class DefaultSaleData @Inject constructor(
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
+
+    }
+
+    override suspend fun update(
+        model: Sale,
+        version: DataVersion,
+        onError: (error: Int) -> Unit,
+        onSuccess: (itemQuantity: Int) -> Unit
+    ) {
+        var newStockQuantity = 0L
+
         try {
             saleQueries.transaction {
+                if (!model.isOrderedByCustomer) {
+                    val saleQuantity = saleQueries.getById(
+                        id = model.id,
+                        mapper = ::mapSale
+                    ).executeAsOne().quantity
+
+                    if (saleQuantity != model.quantity) {
+                        val stockQuantity =
+                            stockQueries.getStockQuantity(id = model.stockId).executeAsOne()
+                        newStockQuantity = stockQuantity + (saleQuantity - model.quantity)
+                        stockQueries.updateStockOrderQuantity(
+                            quantity = newStockQuantity,
+                            id = model.stockId
+                        )
+                    }
+                }
+
                 saleQueries.update(
                     productId = model.productId,
                     customerId = model.customerId,
@@ -243,7 +273,7 @@ internal class DefaultSaleData @Inject constructor(
                     id = version.id
                 )
 
-                onSuccess()
+                onSuccess(newStockQuantity.toInt())
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -254,9 +284,9 @@ internal class DefaultSaleData @Inject constructor(
     override suspend fun cancelSale(saleId: Long) {
         val sale = saleQueries.getById(id = saleId).executeAsOne()
         saleQueries.setCanceledSale(id = saleId)
-        stockOrderQueries.updateStockOrderQuantity(
+        stockQueries.updateStockOrderQuantity(
             id = sale.stockId,
-            quantity = stockOrderQueries.getStockQuantity(id = sale.stockId).executeAsOne()
+            quantity = stockQueries.getStockQuantity(id = sale.stockId).executeAsOne()
                     + sale.quantity
         )
     }

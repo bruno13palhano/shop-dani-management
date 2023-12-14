@@ -11,8 +11,14 @@ interface SaleData : DataOperations<Sale> {
         version: DataVersion,
         pushed: Boolean,
         onError: (error: Int) -> Unit,
-        onSuccess: (id: Long, stockQuantity: Int) -> Unit
+        onSuccess: (id: Long, itemQuantity: Int) -> Unit
     ): Long
+    suspend fun update(
+        model: Sale,
+        version: DataVersion,
+        onError: (error: Int) -> Unit,
+        onSuccess: (stockQuantity: Int) -> Unit
+    )
     fun getByCustomerId(customerId: Long): Flow<List<Sale>>
     fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>>
     fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>>

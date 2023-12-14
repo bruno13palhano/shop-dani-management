@@ -77,12 +77,17 @@ internal class DefaultSaleRepository @Inject constructor(
         onSuccess: () -> Unit
     ) {
         val saleVersion = Versions.saleVersion(timestamp = model.timestamp)
+        val stockVersion = Versions.stockVersion(timestamp = model.timestamp)
 
-        saleData.update(model = model, version = saleVersion, onError = onError) {
+        saleData.update(model = model, version = saleVersion, onError = onError) { newItemQuantity ->
             CoroutineScope(ioDispatcher).launch {
                 try {
                     saleNetwork.update(data = model)
                     versionNetwork.update(saleVersion)
+                    if (!model.isOrderedByCustomer) {
+                        stockNetwork.updateItemQuantity(id = model.stockId, quantity = newItemQuantity)
+                        versionNetwork.update(stockVersion)
+                    }
                     onSuccess()
                 }
                 catch (e: Exception) { onError(Errors.UPDATE_SERVER_ERROR) }
