@@ -160,8 +160,8 @@ internal class DefaultStockRepository @Inject constructor(
 
     override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
         synchronizer.syncData(
-            dataVersion = getDataVersion(versionData, 3L),
-            networkVersion = getNetworkVersion(versionNetwork, 3L),
+            dataVersion = getDataVersion(versionData, Versions.stockVersionId),
+            networkVersion = getNetworkVersion(versionNetwork, Versions.stockVersionId),
             dataList = getDataList(stockData),
             networkList = getNetworkList(stockNetwork),
             onPush = { deleteIds, saveList, dtVersion ->

@@ -186,8 +186,8 @@ internal class DefaultSaleRepository @Inject constructor(
 
     override suspend fun syncWith(synchronizer: Synchronizer) =
         synchronizer.syncData(
-            dataVersion = getDataVersion(versionData, 4L),
-            networkVersion = getNetworkVersion(versionNetwork, 4L),
+            dataVersion = getDataVersion(versionData, Versions.saleVersionId),
+            networkVersion = getNetworkVersion(versionNetwork, Versions.saleVersionId),
             dataList = getDataList(saleData),
             networkList = getNetworkList(saleNetwork),
             onPush = { deleteIds, saveList, dtVersion ->

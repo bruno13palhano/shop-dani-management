@@ -27,10 +27,52 @@ suspend fun <T : Model> getNetworkList(network: CrudNetwork<T>) =
     catch (ignored: Exception) { emptyList() }
 
 object Versions {
-    fun categoryVersion(timestamp: String) = DataVersion(1L, "CATEGORY", timestamp)
-    fun productVersion(timestamp: String) = DataVersion(2L, "PRODUCT", timestamp)
-    fun stockVersion(timestamp: String) = DataVersion(3L, "STOCK", timestamp)
-    fun saleVersion(timestamp: String) = DataVersion(4L, "SALE", timestamp)
-    fun customerVersion(timestamp: String) = DataVersion(5L, "CUSTOMER", timestamp)
-    fun catalogVersion(timestamp: String) = DataVersion(6L, "CATALOG", timestamp)
+    const val categoryVersionId = 1L
+    const val productVersionId = 2L
+    const val stockVersionId = 3L
+    const val saleVersionId = 4L
+    const val customerVersionId = 5L
+    const val catalogVersionId = 6L
+    private const val categoryName = "CATEGORY"
+    private const val productName = "PRODUCT"
+    private const val stockName = "STOCK"
+    private const val saleName = "SALE"
+    private const val customerName = "CUSTOMER"
+    private const val catalogName = "CATALOG"
+
+    fun categoryVersion(timestamp: String) = DataVersion(
+        id = categoryVersionId,
+        name = categoryName,
+        timestamp = timestamp
+    )
+
+    fun productVersion(timestamp: String) = DataVersion(
+        id = productVersionId,
+        name = productName,
+        timestamp = timestamp
+    )
+
+    fun stockVersion(timestamp: String) = DataVersion(
+        id = stockVersionId,
+        name = stockName,
+        timestamp = timestamp
+    )
+
+    fun saleVersion(timestamp: String) = DataVersion(
+        id = saleVersionId,
+        name = saleName,
+        timestamp = timestamp
+    )
+
+    fun customerVersion(timestamp: String) = DataVersion(
+        id = customerVersionId,
+        name = customerName,
+        timestamp = timestamp
+    )
+
+    fun catalogVersion(timestamp: String) = DataVersion(
+        id = catalogVersionId,
+        name = catalogName,
+        timestamp = timestamp
+    )
 }

@@ -126,8 +126,8 @@ internal class DefaultCustomerRepository @Inject constructor(
 
     override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
         synchronizer.syncData(
-            dataVersion = getDataVersion(versionData, 6L),
-            networkVersion = getNetworkVersion(versionNetwork, 6L),
+            dataVersion = getDataVersion(versionData, Versions.customerVersionId),
+            networkVersion = getNetworkVersion(versionNetwork, Versions.customerVersionId),
             dataList = getDataList(customerData),
             networkList = getNetworkList(customerNetwork),
             onPush = { deleteIds, saveList, dtVersion ->

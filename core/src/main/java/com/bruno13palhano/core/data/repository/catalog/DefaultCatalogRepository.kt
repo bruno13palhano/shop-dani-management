@@ -124,8 +124,8 @@ internal class DefaultCatalogRepository @Inject constructor(
 
     override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
         synchronizer.syncData(
-            dataVersion = getDataVersion(versionData, 7L),
-            networkVersion = getNetworkVersion(versionNetwork, 7L),
+            dataVersion = getDataVersion(versionData, Versions.catalogVersionId),
+            networkVersion = getNetworkVersion(versionNetwork, Versions.catalogVersionId),
             dataList = getDataList(catalogData),
             networkList = getNetworkList(catalogNetwork),
             onPush = { deleteIds, saveList, dtVersion ->
