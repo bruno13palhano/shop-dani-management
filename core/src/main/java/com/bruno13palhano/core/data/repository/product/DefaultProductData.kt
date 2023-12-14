@@ -10,6 +10,7 @@ import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.DataVersion
+import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.isNew
 import kotlinx.coroutines.CoroutineDispatcher
@@ -97,7 +98,7 @@ internal class DefaultProductData @Inject constructor(
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            onError(1)
+            onError(Errors.INSERT_DATABASE_ERROR)
         }
 
         return id
@@ -140,7 +141,7 @@ internal class DefaultProductData @Inject constructor(
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            onError(2)
+            onError(Errors.UPDATE_DATABASE_ERROR)
         }
     }
 
@@ -189,7 +190,7 @@ internal class DefaultProductData @Inject constructor(
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            onError(3)
+            onError(Errors.DELETE_DATABASE_ERROR)
         }
     }
 

@@ -10,6 +10,7 @@ import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.version.VersionData
+import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.network.access.SaleNetwork
 import com.bruno13palhano.core.network.access.StockNetwork
@@ -62,7 +63,7 @@ internal class DefaultSaleRepository @Inject constructor(
                         onSuccess(netModel.id)
                     }
                 }
-                catch (e: Exception) { onError(4) }
+                catch (e: Exception) { onError(Errors.INSERT_SERVER_ERROR) }
             }
         }
 
@@ -83,7 +84,7 @@ internal class DefaultSaleRepository @Inject constructor(
                     versionNetwork.update(saleVersion)
                     onSuccess()
                 }
-                catch (e: Exception) { onError(5) }
+                catch (e: Exception) { onError(Errors.UPDATE_SERVER_ERROR) }
             }
         }
     }
@@ -123,7 +124,7 @@ internal class DefaultSaleRepository @Inject constructor(
                     versionNetwork.update(saleVersion)
                     onSuccess()
                 }
-                catch (e: Exception) { onError(6) }
+                catch (e: Exception) { onError(Errors.DELETE_SERVER_ERROR) }
             }
         }
     }
