@@ -208,7 +208,12 @@ fun ProductScreen(
                     }
                 }
             } else {
-                scope.launch { snackbarHostState.showSnackbar(errorMessage) }
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = errorMessage,
+                        withDismissAction = true
+                    )
+                }
             }
         },
         navigateUp = navigateUp
