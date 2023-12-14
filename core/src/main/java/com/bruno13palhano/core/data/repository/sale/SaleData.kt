@@ -3,6 +3,7 @@ package com.bruno13palhano.core.data.repository.sale
 import com.bruno13palhano.core.data.DataOperations
 import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Sale
+import com.bruno13palhano.core.model.StockItem
 import kotlinx.coroutines.flow.Flow
 
 interface SaleData : DataOperations<Sale> {

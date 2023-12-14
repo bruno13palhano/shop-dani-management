@@ -26,16 +26,6 @@ internal class DefaultSaleData @Inject constructor(
     private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleData {
-
-    override suspend fun insert(
-        model: Sale,
-        version: DataVersion,
-        onError: (error: Int) -> Unit,
-        onSuccess: (id: Long) -> Unit
-    ): Long {
-        return 0L
-    }
-
     override suspend fun insert(
         model: Sale,
         version: DataVersion,
@@ -209,15 +199,6 @@ internal class DefaultSaleData @Inject constructor(
         }
 
         return id
-    }
-
-    override suspend fun update(
-        model: Sale,
-        version: DataVersion,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
-
     }
 
     override suspend fun update(

@@ -11,28 +11,6 @@ import kotlinx.coroutines.flow.Flow
  */
 interface DataOperations<T> {
     /**
-     * Insert a [model] of type [T].
-     * @param model the new [model] to be inserted.
-     */
-    suspend fun insert(
-        model: T,
-        version: DataVersion,
-        onError: (error: Int) -> Unit,
-        onSuccess: (id: Long) -> Unit
-    ): Long
-
-    /**
-     * Updates the [model] of type [T].
-     * @param model the [model] to be updated.
-     */
-    suspend fun update(
-        model: T,
-        version: DataVersion,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    )
-
-    /**
      * Deletes the model of type [T] specified by this [id].
      * @param id the [id] of the model to be deleted.
      */
