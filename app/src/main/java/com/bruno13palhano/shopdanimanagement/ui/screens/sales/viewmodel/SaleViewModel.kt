@@ -191,7 +191,7 @@ class SaleViewModel @Inject constructor(
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
-            if (stockQuantity < stringToInt(quantity)) {
+            if ((stockQuantity < stringToInt(quantity)) && !isOrderedByCustomer) {
                 onError(Errors.INSUFFICIENT_ITEMS_STOCK)
             } else {
                 saleRepository.insert(
