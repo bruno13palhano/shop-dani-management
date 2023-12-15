@@ -23,8 +23,10 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SaleContent
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
@@ -142,7 +144,6 @@ fun SaleScreen(
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val errorMessage = stringResource(id = R.string.empty_fields_error)
     val stockQuantityMessage = stringResource(id = R.string.only_x_items_error_label, viewModel.stockQuantity)
     val errors = getErrors()
 
@@ -187,7 +188,18 @@ fun SaleScreen(
                 SaleItemMenu.delete -> {
                     viewModel.deleteSale(
                         saleId = saleId,
-                        onError = { scope.launch { snackbarHostState.showSnackbar(errors[it]) } }
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.DeleteDatabase.error) {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true,
+                                    )
+                                }
+
+                                navigateUp()
+                            }
+                        }
                     ) {
                         scope.launch { navigateUp() }
                     }
@@ -196,7 +208,18 @@ fun SaleScreen(
                     viewModel.updateSale(
                         saleId = saleId,
                         canceled = true,
-                        onError = { scope.launch { snackbarHostState.showSnackbar(errors[it]) } }
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.UpdateDatabase.error) {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
+                                }
+
+                                navigateUp()
+                            }
+                        }
                     ) {
                         scope.launch { navigateUp() }
                     }
@@ -208,7 +231,23 @@ fun SaleScreen(
                 if (isEdit) {
                     viewModel.updateSale(
                         saleId = saleId,
-                        onError = { scope.launch { snackbarHostState.showSnackbar(errors[it]) } },
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.UpdateDatabase.error) {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
+                                } else if (error == Errors.INSUFFICIENT_ITEMS_STOCK) {
+                                    snackbarHostState.showSnackbar(
+                                        message = stockQuantityMessage,
+                                        withDismissAction = true
+                                    )
+                                }
+
+                                navigateUp()
+                            }
+                        },
                         canceled = false
                     ) {
                         scope.launch { navigateUp() }
@@ -217,7 +256,23 @@ fun SaleScreen(
                     viewModel.insertSale(
                         isOrderedByCustomer = isOrderedByCustomer,
                         currentDate = currentDate,
-                        onError = { scope.launch { snackbarHostState.showSnackbar(errors[it]) } }
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.InsertDatabase.error) {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
+                                } else if (error == Errors.INSUFFICIENT_ITEMS_STOCK) {
+                                    snackbarHostState.showSnackbar(
+                                        message = stockQuantityMessage,
+                                        withDismissAction = true
+                                    )
+                                }
+
+                                navigateUp()
+                            }
+                        }
                     ) {
                         scope.launch { navigateUp() }
                         setAlarmNotification(
@@ -231,7 +286,10 @@ fun SaleScreen(
                 }
             } else {
                 scope.launch {
-                    snackbarHostState.showSnackbar(errorMessage)
+                    snackbarHostState.showSnackbar(
+                        message = errors[DataError.FillMissingFields.error],
+                        withDismissAction = true
+                    )
                 }
             }
         },
