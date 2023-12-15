@@ -1,12 +1,12 @@
 package com.bruno13palhano.core.model
 
 object Errors {
-    const val INSERT_DATABASE_ERROR = 1
-    const val UPDATE_DATABASE_ERROR = 2
-    const val DELETE_DATABASE_ERROR = 3
-    const val INSERT_SERVER_ERROR = 4
-    const val UPDATE_SERVER_ERROR = 5
-    const val DELETE_SERVER_ERROR = 6
-    const val FILL_MISSING_FIELDS = 7
-    const val INSUFFICIENT_ITEMS_STOCK = 8
+    const val INSERT_DATABASE_ERROR = 0
+    const val UPDATE_DATABASE_ERROR = 1
+    const val DELETE_DATABASE_ERROR = 2
+    const val INSERT_SERVER_ERROR = 3
+    const val UPDATE_SERVER_ERROR = 4
+    const val DELETE_SERVER_ERROR = 5
+    const val FILL_MISSING_FIELDS = 6
+    const val INSUFFICIENT_ITEMS_STOCK = 7
 }
