@@ -11,11 +11,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerContent
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.CustomerViewModel
 import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import kotlinx.coroutines.launch
@@ -49,7 +49,7 @@ fun CustomerScreen(
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val errorMessage = stringResource(id = R.string.empty_fields_error)
+    val errors = getErrors()
 
     CustomerContent(
         screenTitle = screenTitle,
@@ -75,22 +75,41 @@ fun CustomerScreen(
                 if (isEditable) {
                     viewModel.updateCustomer(
                         id = customerId,
-                        onError = {}
-                    ) {
+                        onError = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = errors[it],
+                                    withDismissAction = true
+                                )
 
+                                navigateUp()
+                            }
+                        }
+                    ) {
+                        scope.launch { navigateUp() }
                     }
-                    navigateUp()
                 } else {
                     viewModel.insertCustomer(
-                        onError = {}
-                    ) {
+                        onError = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = errors[it],
+                                    withDismissAction = true
+                                )
 
+                                navigateUp()
+                            }
+                        }
+                    ) {
+                        scope.launch { navigateUp() }
                     }
-                    navigateUp()
                 }
             } else {
                 scope.launch {
-                    snackbarHostState.showSnackbar(errorMessage)
+                    snackbarHostState.showSnackbar(
+                        message = errors[DataError.FillMissingFields.error],
+                        withDismissAction = true
+                    )
                 }
             }
         },
