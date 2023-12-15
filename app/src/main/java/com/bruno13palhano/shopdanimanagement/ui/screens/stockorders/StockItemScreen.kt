@@ -25,6 +25,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.ItemContent
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.setAlarmNotification
@@ -137,7 +139,7 @@ fun ItemScreen(
     )
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val errorMessage = stringResource(id = R.string.empty_fields_error)
+    val errors = getErrors()
 
     ItemContent(
         screenTitle = screenTitle,
@@ -164,13 +166,22 @@ fun ItemScreen(
                 0 -> {
                     viewModel.deleteStockItem(
                         stockOrderId = stockItemId,
-                        onError = {}
-                    ) {
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.DeleteDatabase.error)
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
 
+                                navigateUp()
+                            }
+                        }
+                    ) {
+                        scope.launch { navigateUp() }
                     }
                 }
             }
-            navigateUp()
         },
         onOutsideClick = {
             keyboardController?.hide()
@@ -181,8 +192,20 @@ fun ItemScreen(
                 if (isEditable) {
                     viewModel.updateStockItem(
                         stockItemId = stockItemId,
-                        onError = {}
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.UpdateDatabase.error) {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
+                                }
+
+                                navigateUp()
+                            }
+                        }
                     ) {
+                        scope.launch { navigateUp() }
                         setAlarmNotification(
                             id = stockItemId,
                             title = viewModel.name,
@@ -191,12 +214,23 @@ fun ItemScreen(
                             context = context
                         )
                     }
-                    navigateUp()
                 } else {
                     viewModel.insertItems(
                         productId = productId,
-                        onError = {}
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.InsertDatabase.error) {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
+                                }
+
+                                navigateUp()
+                            }
+                        }
                     ) {
+                        scope.launch { navigateUp() }
                         setAlarmNotification(
                             id = productId,
                             title = viewModel.name,
@@ -205,11 +239,13 @@ fun ItemScreen(
                             context = context
                         )
                     }
-                    navigateUp()
                 }
             } else {
                 scope.launch {
-                    snackbarHostState.showSnackbar(errorMessage)
+                    snackbarHostState.showSnackbar(
+                        message = errors[DataError.FillMissingFields.error],
+                        withDismissAction = true
+                    )
                 }
             }
         },
