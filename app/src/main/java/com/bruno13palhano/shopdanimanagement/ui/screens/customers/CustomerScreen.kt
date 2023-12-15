@@ -75,12 +75,14 @@ fun CustomerScreen(
                 if (isEditable) {
                     viewModel.updateCustomer(
                         id = customerId,
-                        onError = {
+                        onError = { error ->
                             scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = errors[it],
-                                    withDismissAction = true
-                                )
+                                if (error == DataError.UpdateDatabase.error) {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
+                                }
 
                                 navigateUp()
                             }
@@ -90,12 +92,14 @@ fun CustomerScreen(
                     }
                 } else {
                     viewModel.insertCustomer(
-                        onError = {
+                        onError = { error ->
                             scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = errors[it],
-                                    withDismissAction = true
-                                )
+                                if (error == DataError.InsertDatabase.error) {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
+                                }
 
                                 navigateUp()
                             }
