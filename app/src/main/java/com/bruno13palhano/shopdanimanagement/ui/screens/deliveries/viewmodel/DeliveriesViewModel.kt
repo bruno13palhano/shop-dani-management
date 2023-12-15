@@ -2,8 +2,8 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
-import com.bruno13palhano.core.data.di.DeliveryRep
+import com.bruno13palhano.core.data.di.SaleRep
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Delivery
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DeliveriesViewModel @Inject constructor(
-    @DeliveryRep private val deliveryRepository: DeliveryRepository
+    @SaleRep private val saleRepository: SaleRepository
 ) : ViewModel() {
     private var _deliveries = MutableStateFlow(emptyList<Delivery>())
     val deliveries = _deliveries
@@ -26,16 +26,46 @@ class DeliveriesViewModel @Inject constructor(
 
     fun getAllDeliveries() {
         viewModelScope.launch {
-            deliveryRepository.getAll().collect {
-                _deliveries.value = it
+            saleRepository.getAll().collect {
+                _deliveries.value = it.map { sale ->
+                    Delivery(
+                        id = sale.id,
+                        saleId = sale.id,
+                        customerName = sale.customerName,
+                        address = sale.address,
+                        phoneNumber = sale.phoneNumber,
+                        productName = sale.name,
+                        price = sale.salePrice,
+                        deliveryPrice = sale.deliveryPrice,
+                        shippingDate = sale.shippingDate,
+                        deliveryDate = sale.deliveryDate,
+                        delivered = sale.delivered,
+                        timestamp = sale.timestamp
+                    )
+                }
             }
         }
     }
 
     fun getDeliveries(delivered: Boolean) {
         viewModelScope.launch {
-            deliveryRepository.getDeliveries(delivered).collect {
-                _deliveries.value = it
+            saleRepository.getDeliveries(delivered = delivered).collect {
+                _deliveries.value = it.map { sale ->
+                    Delivery(
+                        id = sale.id,
+                        saleId = sale.id,
+                        customerName = sale.customerName,
+                        address = sale.address,
+                        phoneNumber = sale.phoneNumber,
+                        productName = sale.name,
+                        price = sale.salePrice,
+                        deliveryPrice = sale.deliveryPrice,
+                        shippingDate = sale.shippingDate,
+                        deliveryDate = sale.deliveryDate,
+                        delivered = sale.delivered,
+                        timestamp = sale.timestamp
+                    )
+                }
             }
         }
     }
