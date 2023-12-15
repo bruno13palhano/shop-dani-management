@@ -22,6 +22,7 @@ fun NavGraphBuilder.ordersNavGraph(
         composable(route = OrdersDestinations.ORDERS_MAIN_ROUTE) {
             showBottomMenu(true)
             SalesScreen(
+                isOrders = true,
                 screenTitle = stringResource(id = R.string.orders_list_label),
                 onItemClick = {
                     navController.navigate(

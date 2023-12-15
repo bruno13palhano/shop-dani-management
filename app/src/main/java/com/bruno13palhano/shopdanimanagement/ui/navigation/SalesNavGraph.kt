@@ -27,6 +27,7 @@ fun NavGraphBuilder.salesNavGraph(
         composable(route = SalesDestinations.MAIN_SALES_ROUTE) {
             showBottomMenu(true)
             SalesScreen(
+                isOrders = false,
                 screenTitle = stringResource(id = R.string.sales_label),
                 onItemClick = { saleId ->
                     navController.navigate(
