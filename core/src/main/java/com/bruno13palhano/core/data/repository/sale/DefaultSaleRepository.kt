@@ -103,6 +103,10 @@ internal class DefaultSaleRepository @Inject constructor(
         return saleData.getByCustomerId(customerId = customerId)
     }
 
+    override fun getDeliveries(delivered: Boolean): Flow<List<Sale>> {
+        return saleData.getDeliveries(delivered = delivered)
+    }
+
     override fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>> {
         return saleData.getLastSales(offset = offset, limit = limit)
     }

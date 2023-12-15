@@ -3,7 +3,6 @@ package com.bruno13palhano.core.data.repository.sale
 import com.bruno13palhano.core.data.DataOperations
 import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockItem
 import kotlinx.coroutines.flow.Flow
 
 interface SaleData : DataOperations<Sale> {
@@ -21,6 +20,7 @@ interface SaleData : DataOperations<Sale> {
         onSuccess: (stockQuantity: Int) -> Unit
     )
     fun getByCustomerId(customerId: Long): Flow<List<Sale>>
+    fun getDeliveries(delivered: Boolean): Flow<List<Sale>>
     fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>>
     fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>>
     fun getAllOrdersSales(offset: Int, limit: Int): Flow<List<Sale>>

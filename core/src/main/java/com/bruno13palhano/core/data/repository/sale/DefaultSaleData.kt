@@ -278,6 +278,13 @@ internal class DefaultSaleData @Inject constructor(
             .catch { it.printStackTrace() }
     }
 
+    override fun getDeliveries(delivered: Boolean): Flow<List<Sale>> {
+        return saleQueries.getDeliveries(
+            delivered = delivered,
+            mapper = ::mapSale
+        ).asFlow().mapToList(ioDispatcher)
+    }
+
     override fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>> {
         return saleQueries.getLastSales(
             offset = offset.toLong(),

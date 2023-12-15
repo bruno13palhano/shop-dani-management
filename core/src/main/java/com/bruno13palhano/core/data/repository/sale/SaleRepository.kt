@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SaleRepository : RepositoryOperations<Sale>, Syncable {
     fun getByCustomerId(customerId: Long): Flow<List<Sale>>
+    fun getDeliveries(delivered: Boolean): Flow<List<Sale>>
     fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>>
     fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>>
     fun getAllOrdersSales(offset: Int, limit: Int): Flow<List<Sale>>
