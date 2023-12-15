@@ -82,6 +82,16 @@ INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
 WHERE S.customerId = :customerId;
 
+getDeliveries:
+SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
+    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
+    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C
+ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
+WHERE S.canceled = 0 AND S.delivered = :delivered;
+
 getLastSales:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
     C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
