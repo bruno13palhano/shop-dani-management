@@ -17,6 +17,7 @@ import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.di.StockRep
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerCheck
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
@@ -34,7 +35,7 @@ class SaleViewModel @Inject constructor(
     @ProductRep private val productRepository: ProductRepository,
     @CustomerRep private val customerRepository: CustomerRepository,
 ) : ViewModel() {
-    private var stockId by mutableLongStateOf(0L)
+    private var itemId by mutableLongStateOf(0L)
     private var productId by mutableLongStateOf(0L)
     private var customerId by mutableLongStateOf(0L)
     private var shippingDate by mutableLongStateOf(0L)
@@ -152,10 +153,10 @@ class SaleViewModel @Inject constructor(
         }
     }
 
-    fun getStockItem(stockId: Long) {
+    fun getStockItem(stockItemId: Long) {
         viewModelScope.launch {
-            stockRepository.getById(stockId).collect {
-                this@SaleViewModel.stockId = stockId
+            stockRepository.getById(stockItemId).collect {
+                itemId = stockItemId
                 productId = it.productId
                 productName = it.name
                 photo = it.photo
@@ -189,18 +190,22 @@ class SaleViewModel @Inject constructor(
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
-            saleRepository.insert(
-                model = createSale(
-                    id = 0L,
-                    productId = productId,
-                    shippingDate = currentDate,
-                    deliveryDate = currentDate,
-                    isOrderedByCustomer = isOrderedByCustomer,
-                    canceled = false
-                ),
-                onError = onError,
-                onSuccess = { onSuccess() }
-            )
+            if (stockQuantity < stringToInt(quantity)) {
+                onError(Errors.INSUFFICIENT_ITEMS_STOCK)
+            } else {
+                saleRepository.insert(
+                    model = createSale(
+                        id = 0L,
+                        productId = productId,
+                        shippingDate = currentDate,
+                        deliveryDate = currentDate,
+                        isOrderedByCustomer = isOrderedByCustomer,
+                        canceled = false
+                    ),
+                    onError = onError,
+                    onSuccess = { onSuccess() }
+                )
+            }
         }
     }
 
@@ -209,7 +214,7 @@ class SaleViewModel @Inject constructor(
             saleRepository.getById(saleId).collect {
                 productId = it.productId
                 customerId = it.customerId
-                stockId = it.stockId
+                itemId = it.stockId
                 productName = it.name
                 customerName = it.customerName
                 photo = it.photo
@@ -289,7 +294,7 @@ class SaleViewModel @Inject constructor(
         id = id,
         productId = productId,
         customerId = customerId,
-        stockId = stockId,
+        stockId = itemId,
         name = productName,
         customerName = customerName,
         photo = photo,
