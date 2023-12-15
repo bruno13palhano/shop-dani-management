@@ -6,9 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
-import com.bruno13palhano.core.data.di.DeliveryRep
-import com.bruno13palhano.core.model.Delivery
+import com.bruno13palhano.core.data.di.SaleRep
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
+import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,9 +17,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DeliveryViewModel @Inject constructor(
-    @DeliveryRep private val deliveryRepository: DeliveryRepository
+    @SaleRep private val saleRepository: SaleRepository
 ) : ViewModel() {
     private var saleId = 0L
+    private var productId = 0L
+    private var stockId = 0L
+    private var customerId = 0L
+    private var customerName = ""
+    private var photo = byteArrayOf()
+    private var quantity = 0
+    private var purchasePrice = 0F
+    private var salePrice = 0F
+    private var categories = listOf<Category>()
+    private var company = ""
+    private var dateOfSale = 0L
+    private var dateOfPayment = 0L
+    private var isOrderedByCustomer = false
+    private var isPaidByCustomer = false
+    private var canceled = false
+    private var timestamp = getCurrentTimestamp()
     var name by mutableStateOf("")
         private set
     var address by mutableStateOf("")
@@ -54,16 +71,32 @@ class DeliveryViewModel @Inject constructor(
         this.delivered = delivered
     }
 
-    fun getDeliveryById(deliveryId: Long) {
+    fun getDeliveryById(saleId: Long) {
         viewModelScope.launch {
-            deliveryRepository.getById(deliveryId).collect {
-                saleId = it.saleId
+            saleRepository.getById(saleId).collect {
+                this@DeliveryViewModel.saleId = it.id
+                productId = it.productId
+                stockId = it.stockId
+                customerId = it.customerId
+                customerName = it.customerName
+                photo = it.photo
+                quantity = it.quantity
+                purchasePrice = it.purchasePrice
+                salePrice = it.salePrice
+                dateOfSale = it.dateOfSale
+                dateOfPayment = it.dateOfPayment
+                isOrderedByCustomer = it.isOrderedByCustomer
+                isPaidByCustomer = it.isPaidByCustomer
+                canceled = it.canceled
+                timestamp = it.timestamp
                 name = it.customerName
                 address = it.address
                 phoneNumber = it.phoneNumber
-                productName = it.productName
-                price = it.price.toString()
+                productName = it.name
+                price = it.salePrice.toString()
                 deliveryPrice = it.deliveryPrice.toString()
+                categories = it.categories
+                company = it.company
                 shippingDate = it.shippingDate
                 deliveryDate = it.deliveryDate
                 delivered = it.delivered
@@ -72,28 +105,40 @@ class DeliveryViewModel @Inject constructor(
     }
 
     fun updateDelivery(
-        deliveryId: Long,
+        saleId: Long,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
-        val delivery = Delivery(
-            id = deliveryId,
-            saleId = saleId,
-            customerName = name,
+        val sale = Sale(
+            id = saleId,
+            productId = productId,
+            stockId = stockId,
+            customerId = customerId,
+            name = name,
+            customerName = customerName,
+            photo = photo,
             address = address,
             phoneNumber = phoneNumber,
-            productName = productName,
-            price = stringToFloat(price),
+            quantity = quantity,
+            purchasePrice = purchasePrice,
+            salePrice = salePrice,
             deliveryPrice = stringToFloat(deliveryPrice),
+            categories = categories,
+            company = company,
+            dateOfSale = dateOfSale,
+            dateOfPayment = dateOfPayment,
             shippingDate = shippingDate,
             deliveryDate = deliveryDate,
+            isOrderedByCustomer = isOrderedByCustomer,
+            isPaidByCustomer = isPaidByCustomer,
             delivered = delivered,
+            canceled = canceled,
             timestamp = getCurrentTimestamp()
         )
 
         viewModelScope.launch {
-            deliveryRepository.update(
-                model = delivery,
+            saleRepository.update(
+                model = sale,
                 onError = onError,
                 onSuccess = onSuccess
             )
