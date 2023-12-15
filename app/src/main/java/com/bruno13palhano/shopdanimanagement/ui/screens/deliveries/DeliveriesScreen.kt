@@ -35,7 +35,6 @@ import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleExpandedItem
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel.DeliveriesViewModel
 
