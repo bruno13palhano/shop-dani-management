@@ -61,8 +61,8 @@ internal class DefaultSaleRepository @Inject constructor(
                     if (!netModel.isOrderedByCustomer) {
                         stockNetwork.updateItemQuantity(id = netModel.stockId, quantity = quantity)
                         versionNetwork.insert(data = stockVersion)
-                        onSuccess(netModel.id)
                     }
+                    onSuccess(netModel.id)
                 }
                 catch (e: Exception) { onError(Errors.INSERT_SERVER_ERROR) }
             }
@@ -101,6 +101,14 @@ internal class DefaultSaleRepository @Inject constructor(
 
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
         return saleData.getByCustomerId(customerId = customerId)
+    }
+
+    override fun getOrdersByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return saleData.getOrdersByCustomerName(isOrderedAsc = isOrderedAsc)
+    }
+
+    override fun getOrdersBySalePrice(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return saleData.getOrdersBySalePrice(isOrderedAsc = isOrderedAsc)
     }
 
     override fun getDeliveries(delivered: Boolean): Flow<List<Sale>> {

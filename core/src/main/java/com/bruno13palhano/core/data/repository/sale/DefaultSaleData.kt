@@ -278,6 +278,26 @@ internal class DefaultSaleData @Inject constructor(
             .catch { it.printStackTrace() }
     }
 
+    override fun getOrdersByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return if (isOrderedAsc) {
+            saleQueries.getAllOrdersByCustomerNameAsc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            return saleQueries.getAllOrdersByCustomerNameDesc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        }
+    }
+
+    override fun getOrdersBySalePrice(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return if (isOrderedAsc) {
+            saleQueries.getAllOrdersBySalePriceAsc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        } else {
+            return saleQueries.getAllOrdersBySalePriceDesc(mapper = ::mapSale)
+                .asFlow().mapToList(ioDispatcher)
+        }
+    }
+
     override fun getDeliveries(delivered: Boolean): Flow<List<Sale>> {
         return saleQueries.getDeliveries(
             delivered = delivered,
