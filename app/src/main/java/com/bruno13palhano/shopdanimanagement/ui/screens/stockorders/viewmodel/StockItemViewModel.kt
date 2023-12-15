@@ -8,7 +8,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.product.ProductRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockRepository
+import com.bruno13palhano.core.data.repository.stock.StockRepository
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.StockRep
 import com.bruno13palhano.core.model.Category
@@ -48,7 +48,8 @@ class StockItemViewModel @Inject constructor(
         private set
 
     val isItemNotEmpty = snapshotFlow {
-        quantity.isNotEmpty() && purchasePrice.isNotEmpty() && salePrice.isNotEmpty()
+        quantity.isNotEmpty() && stringToInt(quantity) != 0 && purchasePrice.isNotEmpty()
+                && salePrice.isNotEmpty()
     }
         .stateIn(
             scope = viewModelScope,
