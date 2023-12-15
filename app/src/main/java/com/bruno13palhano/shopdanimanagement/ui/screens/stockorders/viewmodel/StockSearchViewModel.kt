@@ -3,7 +3,7 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockRepository
+import com.bruno13palhano.core.data.repository.stock.StockRepository
 import com.bruno13palhano.core.data.di.SearchCacheRep
 import com.bruno13palhano.core.data.di.StockRep
 import com.bruno13palhano.core.model.SearchCache
