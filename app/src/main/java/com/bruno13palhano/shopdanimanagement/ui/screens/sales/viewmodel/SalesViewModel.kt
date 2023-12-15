@@ -45,6 +45,14 @@ class SalesViewModel @Inject constructor(
         }
     }
 
+    fun getOrders() {
+        viewModelScope.launch {
+            saleRepository.getAllOrdersSales(offset = 0, limit = 100).collect {
+                _saleList.value = it
+            }
+        }
+    }
+
     fun getSalesByCustomerName(isOrderedAsc: Boolean) {
         viewModelScope.launch {
             saleRepository.getAllSalesByCustomerName(isOrderedAsc = isOrderedAsc).collect {
@@ -53,9 +61,25 @@ class SalesViewModel @Inject constructor(
         }
     }
 
+    fun getOrdersByCustomerName(isOrderedAsc: Boolean) {
+        viewModelScope.launch {
+            saleRepository.getOrdersByCustomerName(isOrderedAsc = isOrderedAsc).collect {
+                _saleList.value = it
+            }
+        }
+    }
+
     fun getSalesBySalePrice(isOrderedAsc: Boolean) {
         viewModelScope.launch {
             saleRepository.getAllSalesBySalePrice(isOrderedAsc = isOrderedAsc).collect {
+                _saleList.value = it
+            }
+        }
+    }
+
+    fun getOrdersBySalePrice(isOrderedAsc: Boolean) {
+        viewModelScope.launch {
+            saleRepository.getOrdersBySalePrice(isOrderedAsc = isOrderedAsc).collect {
                 _saleList.value = it
             }
         }

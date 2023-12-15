@@ -42,6 +42,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesVie
 
 @Composable
 fun SalesScreen(
+    isOrders: Boolean,
     screenTitle: String,
     onItemClick: (id: Long) -> Unit,
     onAddButtonClick: () -> Unit,
@@ -49,7 +50,11 @@ fun SalesScreen(
     viewModel: SalesViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {
-        viewModel.getSales()
+        if (isOrders) {
+            viewModel.getOrders()
+        } else {
+            viewModel.getSales()
+        }
     }
 
     val saleList by viewModel.saleList.collectAsStateWithLifecycle()
@@ -70,14 +75,28 @@ fun SalesScreen(
         onMoreOptionsItemClick = { index ->
             when (index) {
                 0 -> {
-                    viewModel.getSalesByCustomerName(isOrderedAsc = orderedByName)
+                    if (isOrders) {
+                        viewModel.getOrdersByCustomerName(isOrderedAsc = orderedByName)
+                    } else {
+                        viewModel.getSalesByCustomerName(isOrderedAsc = orderedByName)
+                    }
                     orderedByName = !orderedByName
                 }
                 1 -> {
-                    viewModel.getSalesBySalePrice(isOrderedAsc = orderedByPrice)
+                    if (isOrders) {
+                        viewModel.getOrdersBySalePrice(isOrderedAsc = orderedByPrice)
+                    } else {
+                        viewModel.getSalesBySalePrice(isOrderedAsc = orderedByPrice)
+                    }
                     orderedByPrice = !orderedByPrice
                 }
-                else -> { viewModel.getSales() }
+                else -> {
+                    if (isOrders) {
+                        viewModel.getOrders()
+                    } else {
+                        viewModel.getSales()
+                    }
+                }
             }
         },
         onAddButtonClick = onAddButtonClick,
