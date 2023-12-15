@@ -122,6 +122,46 @@ INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
 WHERE S.isOrderedByCustomer = 1 ORDER BY S.id DESC LIMIT :offset, :limit;
 
+getAllOrdersByCustomerNameAsc:
+SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
+    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
+    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C
+ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
+WHERE S.isOrderedByCustomer = 1 ORDER BY C.name ASC;
+
+getAllOrdersByCustomerNameDesc:
+SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
+    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
+    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C
+ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
+WHERE S.isOrderedByCustomer = 1 ORDER BY C.name DESC;
+
+getAllOrdersBySalePriceAsc:
+SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
+    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
+    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C
+ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
+WHERE S.isOrderedByCustomer = 1 ORDER BY S.salePrice ASC;
+
+getAllOrdersBySalePriceDesc:
+SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
+    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
+    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C
+ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
+WHERE S.isOrderedByCustomer = 1 ORDER BY S.salePrice DESC;
+
 getSalesByCustomerNameDesc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
     C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
