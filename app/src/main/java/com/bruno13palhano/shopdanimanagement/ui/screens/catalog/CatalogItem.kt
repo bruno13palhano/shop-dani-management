@@ -33,6 +33,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -41,6 +42,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,7 +60,10 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.viewmodel.CatalogItemViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 @Composable
@@ -76,6 +81,10 @@ fun CatalogItemScreen(
             viewModel.getProduct(id = productId)
         }
     }
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val errors = getErrors()
 
     val menuOptions = arrayOf(
         stringResource(id = R.string.delete_label),
@@ -98,9 +107,20 @@ fun CatalogItemScreen(
             when (index) {
                 0 -> {
                     viewModel.delete(
-                        onError = {}
-                    ) {
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.DeleteDatabase.error) {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
+                                }
 
+                                navigateUp()
+                            }
+                        }
+                    ) {
+                        scope.launch { navigateUp() }
                     }
                 }
             }
@@ -109,18 +129,38 @@ fun CatalogItemScreen(
         onDoneButtonClick = {
             if (catalogId == 0L) {
                 viewModel.insert(
-                    onError = {}
-                ) {
+                    onError = { error ->
+                        scope.launch {
+                            if (error == DataError.InsertDatabase.error) {
+                                snackbarHostState.showSnackbar(
+                                    message = errors[error],
+                                    withDismissAction = true
+                                )
+                            }
 
+                            navigateUp()
+                        }
+                    }
+                ) {
+                    scope.launch { navigateUp() }
                 }
-                navigateUp()
             } else {
                 viewModel.update(
-                    onError = {}
-                ) {
+                    onError = { error ->
+                        scope.launch {
+                            if (error == DataError.UpdateDatabase.error) {
+                                snackbarHostState.showSnackbar(
+                                    message = errors[error],
+                                    withDismissAction = true
+                                )
+                            }
 
+                            navigateUp()
+                        }
+                    }
+                ) {
+                    scope.launch { navigateUp() }
                 }
-                navigateUp()
             }
         },
         navigateUp = navigateUp
