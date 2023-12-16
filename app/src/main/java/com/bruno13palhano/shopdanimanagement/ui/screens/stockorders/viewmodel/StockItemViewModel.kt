@@ -14,6 +14,8 @@ import com.bruno13palhano.core.data.di.StockRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
+import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
+import com.bruno13palhano.shopdanimanagement.ui.screens.stringToInt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
@@ -188,16 +190,4 @@ class StockItemViewModel @Inject constructor(
         isPaid = isPaid,
         timestamp = getCurrentTimestamp()
     )
-
-    private fun stringToFloat(value: String): Float {
-        return try {
-            value.replace(",", ".").toFloat()
-        } catch (ignored: Exception) { 0F }
-    }
-
-    private fun stringToInt(value: String): Int {
-        return try {
-            value.toInt()
-        } catch (ignored: Exception) { 0 }
-    }
 }

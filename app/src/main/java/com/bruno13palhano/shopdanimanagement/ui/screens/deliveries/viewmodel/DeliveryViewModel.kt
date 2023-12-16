@@ -11,6 +11,7 @@ import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
+import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -143,11 +144,5 @@ class DeliveryViewModel @Inject constructor(
                 onSuccess = onSuccess
             )
         }
-    }
-
-    private fun stringToFloat(value: String): Float {
-        return try {
-            value.replace(",", ".").toFloat()
-        } catch (ignored: Exception) { 0F }
     }
 }
