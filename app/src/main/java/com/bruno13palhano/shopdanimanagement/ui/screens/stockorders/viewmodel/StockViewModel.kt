@@ -40,7 +40,7 @@ class StockViewModel @Inject constructor(
 
     fun getItems() {
         viewModelScope.launch {
-            stockRepository.getStockOrderItems().collect {
+            stockRepository.getStockItems().collect {
                 _stockList.value = it.map { stockOrder ->
                     Stock(
                         id = stockOrder.id,
