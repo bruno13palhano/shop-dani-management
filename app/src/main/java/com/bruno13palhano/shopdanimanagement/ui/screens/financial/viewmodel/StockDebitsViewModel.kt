@@ -2,9 +2,9 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
-import com.bruno13palhano.core.data.di.StockOrderRep
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.data.repository.stock.StockRepository
+import com.bruno13palhano.core.data.di.StockRep
+import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,9 +16,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StockDebitsViewModel @Inject constructor(
-    @StockOrderRep private val stockRepository: StockOrderRepository
+    @StockRep private val stockRepository: StockRepository
 ) : ViewModel() {
-    private val _debitItems = MutableStateFlow(emptyList<StockOrder>())
+    private val _debitItems = MutableStateFlow(emptyList<StockItem>())
     val debitItems = _debitItems
         .map {
             it.map { stockItem ->
