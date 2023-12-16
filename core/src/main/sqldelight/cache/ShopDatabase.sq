@@ -46,10 +46,10 @@ WHERE P.id = PC.productId;
 
 searchPerCategory:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
-FROM product P INNER JOIN ProductCategoriesTable PC
+FROM product P INNER JOIN ProductCategoriesTable PC INNER JOIN CategoryTable C
 ON(P.name LIKE '%' || :name || '%' OR P.description LIKE '%' || :description || '%'
     OR P.company LIKE '%' || :company || '%')
-WHERE P.id = PC.productId  AND PC.id = :categoryId;
+WHERE P.id = PC.productId  AND C.id = :categoryId;
 
 getByCategory:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
