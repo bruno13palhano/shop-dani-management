@@ -41,13 +41,13 @@ class StockViewModel @Inject constructor(
     fun getItems() {
         viewModelScope.launch {
             stockRepository.getStockItems().collect {
-                _stockList.value = it.map { stockOrder ->
+                _stockList.value = it.map { stockItem ->
                     Stock(
-                        id = stockOrder.id,
-                        name = stockOrder.name,
-                        photo = stockOrder.photo,
-                        purchasePrice = stockOrder.purchasePrice,
-                        quantity = stockOrder.quantity
+                        id = stockItem.id,
+                        name = stockItem.name,
+                        photo = stockItem.photo,
+                        purchasePrice = stockItem.purchasePrice,
+                        quantity = stockItem.quantity
                     )
                 }
             }
@@ -57,13 +57,13 @@ class StockViewModel @Inject constructor(
     fun getItemsByCategories(category: String) {
         viewModelScope.launch {
             stockRepository.getByCategory(category).collect {
-                _stockList.value = it.map { stockOrder ->
+                _stockList.value = it.map { stockItem ->
                     Stock(
-                        id = stockOrder.id,
-                        name = stockOrder.name,
-                        photo = stockOrder.photo,
-                        purchasePrice = stockOrder.purchasePrice,
-                        quantity = stockOrder.quantity
+                        id = stockItem.id,
+                        name = stockItem.name,
+                        photo = stockItem.photo,
+                        purchasePrice = stockItem.purchasePrice,
+                        quantity = stockItem.quantity
                     )
                 }
             }
