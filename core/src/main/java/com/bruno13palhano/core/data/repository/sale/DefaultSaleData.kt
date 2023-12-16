@@ -69,7 +69,7 @@ internal class DefaultSaleData @Inject constructor(
 
                             quantity = stockItem.quantity - model.quantity
 
-                            stockQueries.updateStockOrderQuantity(
+                            stockQueries.updateStockQuantity(
                                 id = stockItem.id,
                                 quantity = quantity.toLong()
                             )
@@ -146,7 +146,7 @@ internal class DefaultSaleData @Inject constructor(
 
                             quantity = stockItem.quantity - model.quantity
 
-                            stockQueries.updateStockOrderQuantity(
+                            stockQueries.updateStockQuantity(
                                 id = stockItem.id,
                                 quantity = quantity.toLong()
                             )
@@ -221,7 +221,7 @@ internal class DefaultSaleData @Inject constructor(
                         val stockQuantity =
                             stockQueries.getStockQuantity(id = model.stockId).executeAsOne()
                         newStockQuantity = stockQuantity + (saleQuantity - model.quantity)
-                        stockQueries.updateStockOrderQuantity(
+                        stockQueries.updateStockQuantity(
                             quantity = newStockQuantity,
                             id = model.stockId
                         )
@@ -265,7 +265,7 @@ internal class DefaultSaleData @Inject constructor(
     override suspend fun cancelSale(saleId: Long) {
         val sale = saleQueries.getById(id = saleId).executeAsOne()
         saleQueries.setCanceledSale(id = saleId)
-        stockQueries.updateStockOrderQuantity(
+        stockQueries.updateStockQuantity(
             id = sale.stockId,
             quantity = stockQueries.getStockQuantity(id = sale.stockId).executeAsOne()
                     + sale.quantity

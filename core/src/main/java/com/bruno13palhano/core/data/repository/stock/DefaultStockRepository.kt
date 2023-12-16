@@ -103,8 +103,8 @@ internal class DefaultStockRepository @Inject constructor(
         return stockData.getByCategory(category = category)
     }
 
-    override suspend fun updateStockOrderQuantity(id: Long, quantity: Int, timestamp: String) {
-        stockData.updateStockOrderQuantity(id = id, quantity = quantity)
+    override suspend fun updateStockQuantity(id: Long, quantity: Int, timestamp: String) {
+        stockData.updateStockQuantity(id = id, quantity = quantity)
     }
 
     override suspend fun deleteById(
@@ -139,8 +139,8 @@ internal class DefaultStockRepository @Inject constructor(
         return stockData.getOutOfStock()
     }
 
-    override fun getStockOrderItems(): Flow<List<StockItem>> {
-        return stockData.getStockOrderItems()
+    override fun getStockItems(): Flow<List<StockItem>> {
+        return stockData.getStockItems()
     }
 
     override fun getDebitStockByPrice(isOrderedAsc: Boolean): Flow<List<StockItem>> {

@@ -139,8 +139,8 @@ class DefaultStockData @Inject constructor(
         ).asFlow().mapToList(ioDispatcher)
     }
 
-    override suspend fun updateStockOrderQuantity(id: Long, quantity: Int) {
-        stockOrderQueries.updateStockOrderQuantity(quantity = quantity.toLong(), id = id)
+    override suspend fun updateStockQuantity(id: Long, quantity: Int) {
+        stockOrderQueries.updateStockQuantity(quantity = quantity.toLong(), id = id)
     }
 
     override suspend fun deleteById(
@@ -182,8 +182,8 @@ class DefaultStockData @Inject constructor(
             .asFlow().mapToList(ioDispatcher)
     }
 
-    override fun getStockOrderItems(): Flow<List<StockItem>> {
-        return stockOrderQueries.getStockOrderItems(
+    override fun getStockItems(): Flow<List<StockItem>> {
+        return stockOrderQueries.getStockItems(
             mapper = ::mapStockOrder
         ).asFlow().mapToList(ioDispatcher)
     }

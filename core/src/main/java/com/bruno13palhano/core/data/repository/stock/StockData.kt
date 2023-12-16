@@ -21,8 +21,8 @@ interface StockData : DataOperations<StockItem> {
     fun getItems(): Flow<List<StockItem>>
     fun search(value: String): Flow<List<StockItem>>
     fun getByCategory(category: String): Flow<List<StockItem>>
-    suspend fun updateStockOrderQuantity(id: Long, quantity: Int)
-    fun getStockOrderItems(): Flow<List<StockItem>>
+    suspend fun updateStockQuantity(id: Long, quantity: Int)
+    fun getStockItems(): Flow<List<StockItem>>
     fun getDebitStock(): Flow<List<StockItem>>
     fun getOutOfStock(): Flow<List<StockItem>>
     fun getDebitStockByPrice(isOrderedAsc: Boolean): Flow<List<StockItem>>
