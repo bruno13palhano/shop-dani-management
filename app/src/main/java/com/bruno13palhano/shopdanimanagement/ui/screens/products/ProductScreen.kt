@@ -163,7 +163,6 @@ fun ProductScreen(
                     }
                 }
             }
-            navigateUp()
         },
         onOutsideClick = {
             keyboardController?.hide()
