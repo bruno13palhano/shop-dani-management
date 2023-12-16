@@ -1,10 +1,10 @@
 package com.bruno13palhano.shopdanimanagement.delivery
 
-import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
-import com.bruno13palhano.shopdanimanagement.makeRandomDelivery
-import com.bruno13palhano.shopdanimanagement.repository.TestDeliveryRepository
+import com.bruno13palhano.shopdanimanagement.makeRandomSale
+import com.bruno13palhano.shopdanimanagement.repository.TestSaleRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel.DeliveriesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,31 +37,31 @@ class DeliveriesViewModelTest {
     @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var deliveryRepository: DeliveryRepository<Delivery>
+    private lateinit var saleRepository: SaleRepository
     private lateinit var sut: DeliveriesViewModel
-    private val deliveries = listOf(
-        makeRandomDelivery(id = 1L, delivered = true),
-        makeRandomDelivery(id = 2L, delivered = false),
-        makeRandomDelivery(id = 3L, delivered = true)
+    private val sales = listOf(
+        makeRandomSale(id = 1L, delivered = true),
+        makeRandomSale(id = 2L, delivered = false),
+        makeRandomSale(id = 3L, delivered = true)
     )
 
     @Before
     fun setup() {
-        deliveryRepository = TestDeliveryRepository()
-        sut = DeliveriesViewModel(deliveryRepository)
+        saleRepository = TestSaleRepository()
+        sut = DeliveriesViewModel(saleRepository)
     }
 
     @Test
     fun getAllDeliveries_shouldCallGetAllFromRepository() = runTest {
-        val deliveryRepository = mock<DeliveryRepository<Delivery>>()
-        val sut = DeliveriesViewModel(deliveryRepository)
+        val saleRepository = mock<SaleRepository>()
+        val sut = DeliveriesViewModel(saleRepository)
 
-        whenever(deliveryRepository.getAll()).doAnswer { flowOf() }
+        whenever(saleRepository.getAll()).doAnswer { flowOf() }
 
         sut.getAllDeliveries()
         advanceUntilIdle()
 
-        verify(deliveryRepository).getAll()
+        verify(saleRepository).getAll()
     }
 
     @Test
@@ -72,39 +72,69 @@ class DeliveriesViewModelTest {
         sut.getAllDeliveries()
         advanceUntilIdle()
 
-        assertEquals(mapToItem(deliveries), sut.deliveries.value)
+        assertEquals(sales.map { sale ->
+            Delivery(
+                id = sale.id,
+                saleId = sale.id,
+                customerName = sale.customerName,
+                address = sale.address,
+                phoneNumber = sale.phoneNumber,
+                productName = sale.name,
+                price = sale.salePrice,
+                deliveryPrice = sale.deliveryPrice,
+                shippingDate = sale.shippingDate,
+                deliveryDate = sale.deliveryDate,
+                delivered = sale.delivered,
+                timestamp = sale.timestamp
+            )
+        }, sut.deliveries.value)
 
         collectJob.cancel()
     }
 
     @Test
     fun getDeliveries_shouldCallGetDeliveriesFromRepository() = runTest {
-        val deliveryRepository = mock<DeliveryRepository<Delivery>>()
-        val sut = DeliveriesViewModel(deliveryRepository)
+        val saleRepository = mock<SaleRepository>()
+        val sut = DeliveriesViewModel(saleRepository)
 
-        whenever(deliveryRepository.getDeliveries(any())).doAnswer { flowOf() }
+        whenever(saleRepository.getDeliveries(any())).doAnswer { flowOf() }
 
         sut.getDeliveries(delivered = true)
         advanceUntilIdle()
 
-        verify(deliveryRepository).getDeliveries(any())
+        verify(saleRepository).getDeliveries(any())
     }
 
     @Test
     fun getDeliveries_shouldSetDeliveriesToDeliveriesProperty() = runTest {
         insertDeliveries()
-        val deliveredList = listOf(deliveries[0], deliveries[2])
+        val deliveredList = listOf(sales[0], sales[2])
         val collectJob = launch { sut.deliveries.collect() }
 
         sut.getDeliveries(delivered = true)
         advanceUntilIdle()
 
-        assertEquals(mapToItem(deliveredList), sut.deliveries.value)
+        assertEquals(deliveredList.map { sale ->
+            Delivery(
+                id = sale.id,
+                saleId = sale.id,
+                customerName = sale.customerName,
+                address = sale.address,
+                phoneNumber = sale.phoneNumber,
+                productName = sale.name,
+                price = sale.salePrice,
+                deliveryPrice = sale.deliveryPrice,
+                shippingDate = sale.shippingDate,
+                deliveryDate = sale.deliveryDate,
+                delivered = sale.delivered,
+                timestamp = sale.timestamp
+            )
+        }, sut.deliveries.value)
 
         collectJob.cancel()
     }
 
-    private suspend fun insertDeliveries() = deliveries.forEach { deliveryRepository.insert(it) }
+    private suspend fun insertDeliveries() = sales.forEach { saleRepository.insert(it, {}, {}) }
 
     private fun mapToItem(deliveries: List<Delivery>) = deliveries.map {
         CommonItem(
