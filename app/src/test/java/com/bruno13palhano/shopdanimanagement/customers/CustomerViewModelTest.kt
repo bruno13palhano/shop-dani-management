@@ -1,7 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.customers
 
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
-import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCustomer
 import com.bruno13palhano.shopdanimanagement.repository.TestCustomerRepository
@@ -36,7 +35,7 @@ class CustomerViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var customerRepository: CustomerRepository<Customer>
+    private lateinit var customerRepository: CustomerRepository
     private lateinit var sut: CustomerViewModel
 
     @Before
@@ -113,7 +112,7 @@ class CustomerViewModelTest {
 
     @Test
     fun getCustomer_shouldCallGetByIdFromRepository() = runTest {
-        val customerRepository = mock<CustomerRepository<Customer>>()
+        val customerRepository = mock<CustomerRepository>()
         val sut = CustomerViewModel(customerRepository)
 
         whenever(customerRepository.getById(any())).doAnswer { flowOf() }
@@ -127,7 +126,7 @@ class CustomerViewModelTest {
     @Test
     fun getCustomer_shouldSetCustomerProperties() = runTest {
         val customer = makeRandomCustomer(id = 1L)
-        customerRepository.insert(model = customer)
+        customerRepository.insert(model = customer, {}, {})
 
         sut.getCustomer(id = 1L)
         advanceUntilIdle()
@@ -141,23 +140,23 @@ class CustomerViewModelTest {
 
     @Test
     fun insertCustomer_shouldCallInsertFromRepository() = runTest {
-        val customerRepository = mock<CustomerRepository<Customer>>()
+        val customerRepository = mock<CustomerRepository>()
         val sut = CustomerViewModel(customerRepository)
 
-        sut.insertCustomer()
+        sut.insertCustomer({}, {})
         advanceUntilIdle()
 
-        verify(customerRepository).insert(any())
+        verify(customerRepository).insert(any(), {}, {})
     }
 
     @Test
     fun updateCustomer_shouldCallUpdateFromRepository() = runTest {
-        val customerRepository = mock<CustomerRepository<Customer>>()
+        val customerRepository = mock<CustomerRepository>()
         val sut = CustomerViewModel(customerRepository)
 
-        sut.updateCustomer(id = 1L)
+        sut.updateCustomer(id = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(customerRepository).update(any())
+        verify(customerRepository).update(any(), {}, {})
     }
 }

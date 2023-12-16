@@ -40,8 +40,8 @@ class CustomerInfoViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var customerRepository: CustomerRepository<Customer>
-    private lateinit var saleRepository: SaleRepository<Sale>
+    private lateinit var customerRepository: CustomerRepository
+    private lateinit var saleRepository: SaleRepository
     private lateinit var sut: CustomerInfoViewModel
 
     private val customers = listOf(
@@ -67,8 +67,8 @@ class CustomerInfoViewModelTest {
 
     @Test
     fun getCustomerInfo_shouldCallGetByCustomerIdFromSaleRepository() = runTest {
-        val customerRepository = mock<CustomerRepository<Customer>>()
-        val saleRepository = mock<SaleRepository<Sale>>()
+        val customerRepository = mock<CustomerRepository>()
+        val saleRepository = mock<SaleRepository>()
         val sut = CustomerInfoViewModel(customerRepository, saleRepository)
 
         whenever(customerRepository.getById(any())).doAnswer { flowOf() }
@@ -82,8 +82,8 @@ class CustomerInfoViewModelTest {
 
     @Test
     fun getCustomerInfo_shouldCallGetByIdFromCustomerRepository() = runTest {
-        val customerRepository = mock<CustomerRepository<Customer>>()
-        val saleRepository = mock<SaleRepository<Sale>>()
+        val customerRepository = mock<CustomerRepository>()
+        val saleRepository = mock<SaleRepository>()
         val sut = CustomerInfoViewModel(customerRepository, saleRepository)
 
         whenever(customerRepository.getById(any())).doAnswer { flowOf() }
@@ -116,8 +116,8 @@ class CustomerInfoViewModelTest {
 
     @Test
     fun getCustomerPurchases_shouldCallGetByCustomerIdFromSaleRepository() = runTest{
-        val customerRepository = mock<CustomerRepository<Customer>>()
-        val saleRepository = mock<SaleRepository<Sale>>()
+        val customerRepository = mock<CustomerRepository>()
+        val saleRepository = mock<SaleRepository>()
         val sut = CustomerInfoViewModel(customerRepository, saleRepository)
 
         whenever(saleRepository.getByCustomerId(any())).doAnswer { flowOf() }
@@ -146,6 +146,6 @@ class CustomerInfoViewModelTest {
         )
     }
 
-    private suspend fun insertCustomers() = customers.forEach { customerRepository.insert(it) }
-    private suspend fun insertSales() = sales.forEach { saleRepository.insert(it) }
+    private suspend fun insertCustomers() = customers.forEach { customerRepository.insert(it, {}, {}) }
+    private suspend fun insertSales() = sales.forEach { saleRepository.insert(it, {}, {}) }
 }

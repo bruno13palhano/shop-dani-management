@@ -3,7 +3,6 @@ package com.bruno13palhano.shopdanimanagement.customers
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.model.Customer
-import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCustomer
 import com.bruno13palhano.shopdanimanagement.makeRandomSearchCache
@@ -41,8 +40,8 @@ class SearchCustomersViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var customerRepository: CustomerRepository<Customer>
-    private lateinit var searchCacheRepository: SearchCacheRepository<SearchCache>
+    private lateinit var customerRepository: CustomerRepository
+    private lateinit var searchCacheRepository: SearchCacheRepository
     private lateinit var sut: SearchCustomersViewModel
 
     @Before
@@ -67,8 +66,8 @@ class SearchCustomersViewModelTest {
 
     @Test
     fun search_shouldCallSearchFromCustomerRepository() = runTest {
-        val searchCacheRepository = mock<SearchCacheRepository<SearchCache>>()
-        val customerRepository = mock<CustomerRepository<Customer>>()
+        val searchCacheRepository = mock<SearchCacheRepository>()
+        val customerRepository = mock<CustomerRepository>()
         val sut = SearchCustomersViewModel(customerRepository, searchCacheRepository)
 
         whenever(customerRepository.search(any())).doAnswer { flowOf() }
@@ -87,7 +86,7 @@ class SearchCustomersViewModelTest {
             makeRandomCustomer(id = 2L),
             makeRandomCustomer(id = 3L)
         )
-        customers.forEach { customerRepository.insert(it) }
+        customers.forEach { customerRepository.insert(it, {}, {}) }
 
         val collectJob = launch { sut.customers.collect() }
 
@@ -104,8 +103,8 @@ class SearchCustomersViewModelTest {
 
     @Test
     fun insert_shouldCallInsertFromSearchCacheRepository() = runTest {
-        val customerRepository = mock<CustomerRepository<Customer>>()
-        val searchCacheRepository = mock<SearchCacheRepository<SearchCache>>()
+        val customerRepository = mock<CustomerRepository>()
+        val searchCacheRepository = mock<SearchCacheRepository>()
         val sut = SearchCustomersViewModel(customerRepository, searchCacheRepository)
 
         val search = "test"
