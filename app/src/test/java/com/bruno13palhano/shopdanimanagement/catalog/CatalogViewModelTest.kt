@@ -38,7 +38,7 @@ class CatalogViewModelTest {
     @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var catalogRepository: CatalogRepository<Catalog>
+    private lateinit var catalogRepository: CatalogRepository
     private lateinit var sut: CatalogViewModel
 
     private var catalogItems = listOf(
@@ -68,7 +68,7 @@ class CatalogViewModelTest {
 
     @Test
     fun getAll_shouldCallGetAllFromCatalogRepository() = runTest {
-        val catalogRepository = mock<CatalogRepository<Catalog>>()
+        val catalogRepository = mock<CatalogRepository>()
         val sut = CatalogViewModel(catalogRepository)
 
         whenever(catalogRepository.getAll()).doAnswer { flowOf() }
@@ -93,7 +93,7 @@ class CatalogViewModelTest {
 
     @Test
     fun getOrderedByName_shouldCallGetOrderByNameFormRepositories() = runTest {
-        val catalogRepository = mock<CatalogRepository<Catalog>>()
+        val catalogRepository = mock<CatalogRepository>()
         val sut = CatalogViewModel(catalogRepository)
 
         whenever(catalogRepository.getOrderedByName(any())).doAnswer { flowOf() }
@@ -119,7 +119,7 @@ class CatalogViewModelTest {
 
     @Test
     fun getOrderedByPrice_shouldCallGetOrderedByPriceFromRepository() = runTest {
-        val catalogRepository = mock<CatalogRepository<Catalog>>()
+        val catalogRepository = mock<CatalogRepository>()
         val sut = CatalogViewModel(catalogRepository)
 
         whenever(catalogRepository.getOrderedByPrice(any())).doAnswer { flowOf() }
@@ -131,7 +131,7 @@ class CatalogViewModelTest {
     }
 
     private suspend fun insertCatalogItems() =
-        catalogItems.forEach { catalogRepository.insert(model = it) }
+        catalogItems.forEach { catalogRepository.insert(model = it, {}, {}) }
 
     private fun mapToItems(catalogItems: List<Catalog>) = catalogItems.map { item ->
         ExtendedItem(

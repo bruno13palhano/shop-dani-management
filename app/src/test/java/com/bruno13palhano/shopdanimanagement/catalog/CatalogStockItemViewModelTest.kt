@@ -2,8 +2,6 @@ package com.bruno13palhano.shopdanimanagement.catalog
 
 import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
 import com.bruno13palhano.core.data.repository.product.ProductRepository
-import com.bruno13palhano.core.model.Catalog
-import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCatalog
 import com.bruno13palhano.shopdanimanagement.makeRandomProduct
@@ -30,7 +28,7 @@ import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
-class CatalogItemViewModelTest {
+class CatalogStockItemViewModelTest {
 
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
@@ -39,8 +37,8 @@ class CatalogItemViewModelTest {
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var sut: CatalogItemViewModel
-    private lateinit var catalogRepository: CatalogRepository<Catalog>
-    private lateinit var productRepository: ProductRepository<Product>
+    private lateinit var catalogRepository: CatalogRepository
+    private lateinit var productRepository: ProductRepository
     private val catalogItems = listOf(
         makeRandomCatalog(id = 1L),
         makeRandomCatalog(id = 2L),
@@ -88,8 +86,8 @@ class CatalogItemViewModelTest {
 
     @Test
     fun getProduct_shouldCallGetByIdFromProductRepository() = runTest {
-        val productRepository = mock<ProductRepository<Product>>()
-        val catalogRepository = mock<CatalogRepository<Catalog>>()
+        val productRepository = mock<ProductRepository>()
+        val catalogRepository = mock<CatalogRepository>()
         val sut = CatalogItemViewModel(catalogRepository, productRepository)
 
         whenever(productRepository.getById(any())).doAnswer { flowOf() }
@@ -103,7 +101,7 @@ class CatalogItemViewModelTest {
     @Test
     fun getProduct_shouldSetNameAndPhotoProperty() = runTest {
         val product = makeRandomProduct(id = 1L)
-        productRepository.insert(model = product)
+        productRepository.insert(model = product, {}, {})
 
         sut.getProduct(id = 1L)
         advanceUntilIdle()
@@ -114,8 +112,8 @@ class CatalogItemViewModelTest {
 
     @Test
     fun getCatalogItem_shouldCallGetByIdFromCatalogRepository() = runTest {
-        val productRepository = mock<ProductRepository<Product>>()
-        val catalogRepository = mock<CatalogRepository<Catalog>>()
+        val productRepository = mock<ProductRepository>()
+        val catalogRepository = mock<CatalogRepository>()
         val sut = CatalogItemViewModel(catalogRepository, productRepository)
 
         whenever(catalogRepository.getById(any())).doAnswer { flowOf() }
@@ -144,39 +142,40 @@ class CatalogItemViewModelTest {
 
     @Test
     fun insert_shouldCallInsertFromCatalogRepository() = runTest {
-        val productRepository = mock<ProductRepository<Product>>()
-        val catalogRepository = mock<CatalogRepository<Catalog>>()
+        val productRepository = mock<ProductRepository>()
+        val catalogRepository = mock<CatalogRepository>()
         val sut = CatalogItemViewModel(catalogRepository, productRepository)
 
-        sut.insert()
+        sut.insert({}, {})
         advanceUntilIdle()
 
-        verify(catalogRepository).insert(any())
+        verify(catalogRepository).insert(any(), {}, {})
     }
 
     @Test
     fun update_shouldCallUpdateFromCatalogRepository() = runTest {
-        val productRepository = mock<ProductRepository<Product>>()
-        val catalogRepository = mock<CatalogRepository<Catalog>>()
+        val productRepository = mock<ProductRepository>()
+        val catalogRepository = mock<CatalogRepository>()
         val sut = CatalogItemViewModel(catalogRepository, productRepository)
 
-        sut.update()
+        sut.update({}, {})
         advanceUntilIdle()
 
-        verify(catalogRepository).update(any())
+        verify(catalogRepository).update(any(), {}, {})
     }
 
     @Test
     fun delete_shouldCallDeleteByIdFromCatalogRepository() = runTest {
-        val productRepository = mock<ProductRepository<Product>>()
-        val catalogRepository = mock<CatalogRepository<Catalog>>()
+        val productRepository = mock<ProductRepository>()
+        val catalogRepository = mock<CatalogRepository>()
         val sut = CatalogItemViewModel(catalogRepository, productRepository)
 
-        sut.delete()
+        sut.delete({}, {})
         advanceUntilIdle()
 
-        verify(catalogRepository).deleteById(any())
+        verify(catalogRepository).deleteById(any(), "", {}, {})
     }
 
-    private suspend fun insertCatalogItems() = catalogItems.forEach { catalogRepository.insert(it) }
+    private suspend fun insertCatalogItems() =
+        catalogItems.forEach { catalogRepository.insert(it, {}, {}) }
 }
