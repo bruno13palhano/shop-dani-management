@@ -2,11 +2,12 @@ package com.bruno13palhano.shopdanimanagement.repository
 
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class TestCustomerRepository : CustomerRepository<Customer> {
+class TestCustomerRepository : CustomerRepository {
     private val customers = mutableListOf<Customer>()
 
     override fun search(search: String): Flow<List<Customer>> {
@@ -34,9 +35,39 @@ class TestCustomerRepository : CustomerRepository<Customer> {
         }
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun insert(
+        model: Customer,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
+        customers.add(model)
+        onSuccess(model.id)
+        return model.id
+    }
+
+    override suspend fun update(
+        model: Customer,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        val index = getIndex(id = model.id, list = customers)
+        if (isIndexValid(index = index)) {
+            customers[index] = model
+            onSuccess()
+        }
+    }
+
+    override suspend fun deleteById(
+        id: Long,
+        timestamp: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val index = getIndex(id = id, list = customers)
-        if (isIndexValid(index = index)) customers.removeAt(index = index)
+        if (isIndexValid(index = index)) {
+            customers.removeAt(index = index)
+            onSuccess()
+        }
     }
 
     override fun getAll(): Flow<List<Customer>> = flowOf(customers)
@@ -48,13 +79,7 @@ class TestCustomerRepository : CustomerRepository<Customer> {
 
     override fun getLast(): Flow<Customer> = flowOf(customers.last())
 
-    override suspend fun update(model: Customer) {
-        val index = getIndex(id = model.id, list = customers)
-        if (isIndexValid(index = index)) customers[index] = model
-    }
-
-    override suspend fun insert(model: Customer): Long {
-        customers.add(model)
-        return model.id
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
     }
 }

@@ -2,23 +2,14 @@ package com.bruno13palhano.shopdanimanagement.repository
 
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.model.Product
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class TestProductRepository : ProductRepository<Product> {
+class TestProductRepository : ProductRepository {
     private val productList = mutableListOf<Product>()
-
-    override suspend fun insert(model: Product): Long {
-        productList.add(model)
-        return model.id
-    }
-
-    override suspend fun update(model: Product) {
-        val index = getIndex(id = model.id, list = productList)
-        if (isIndexValid(index = index)) productList[index] = model
-    }
 
     override fun search(value: String): Flow<List<Product>> {
         return flowOf(productList).map {
@@ -48,9 +39,39 @@ class TestProductRepository : ProductRepository<Product> {
         }
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun insert(
+        model: Product,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
+        productList.add(model)
+        onSuccess(model.id)
+        return model.id
+    }
+
+    override suspend fun update(
+        model: Product,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        val index = getIndex(id = model.id, list = productList)
+        if (isIndexValid(index = index)) {
+            productList[index] = model
+            onSuccess()
+        }
+    }
+
+    override suspend fun deleteById(
+        id: Long,
+        timestamp: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val index = getIndex(id = id, list = productList)
-        if (isIndexValid(index = index)) productList.removeAt(index)
+        if (isIndexValid(index = index)) {
+            productList.removeAt(index)
+            onSuccess()
+        }
     }
 
     override fun getAll(): Flow<List<Product>> = flowOf(productList)
@@ -61,4 +82,8 @@ class TestProductRepository : ProductRepository<Product> {
     }
 
     override fun getLast(): Flow<Product> = flowOf(productList.last())
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
+    }
 }

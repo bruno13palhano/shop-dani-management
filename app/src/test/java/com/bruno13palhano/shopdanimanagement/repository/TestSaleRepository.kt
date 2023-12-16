@@ -1,38 +1,37 @@
 package com.bruno13palhano.shopdanimanagement.repository
 
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
-import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
-class TestSaleRepository : SaleRepository<Sale> {
+class TestSaleRepository : SaleRepository {
     private val sales = mutableListOf<Sale>()
-
-    override suspend fun insert(model: Sale): Long {
-        sales.add(model)
-        return model.id
-    }
-
-    override suspend fun update(model: Sale) {
-        val index = getIndex(id = model.id, list = sales)
-        if (isIndexValid(index = index)) sales[index] = model
-    }
-
-    override suspend fun insertItems(
-        sale: Sale,
-        stockOrder: StockOrder,
-        delivery: Delivery,
-        onSuccess: () -> Unit,
-        onError: () -> Unit
-    ) {
-        sales.add(sale)
-    }
 
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
         return flowOf(sales.filter { it.customerId == customerId })
+    }
+
+    override fun getOrdersByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return if (isOrderedAsc) {
+            flowOf(sales.filter { it.isOrderedByCustomer }.sortedBy { it.customerName })
+        } else {
+            flowOf(sales.filter { it.isOrderedByCustomer }.sortedByDescending { it.customerName })
+        }
+    }
+
+    override fun getOrdersBySalePrice(isOrderedAsc: Boolean): Flow<List<Sale>> {
+        return if (isOrderedAsc) {
+            flowOf(sales.filter { it.isOrderedByCustomer }.sortedBy { it.salePrice })
+        } else {
+            flowOf(sales.filter { it.isOrderedByCustomer }.sortedByDescending { it.salePrice })
+        }
+    }
+
+    override fun getDeliveries(delivered: Boolean): Flow<List<Sale>> {
+        return flowOf(sales.filter { it.delivered == delivered })
     }
 
     override fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>> {
@@ -84,11 +83,13 @@ class TestSaleRepository : SaleRepository<Sale> {
             val sale = Sale(
                 id = currentSale.id,
                 productId = currentSale.productId,
-                stockOrderId = currentSale.stockOrderId,
+                stockId = currentSale.stockId,
                 customerId = currentSale.customerId,
                 name = currentSale.name,
                 customerName = currentSale.customerName,
                 photo = currentSale.photo,
+                address = currentSale.address,
+                phoneNumber = currentSale.phoneNumber,
                 quantity = currentSale.quantity,
                 purchasePrice = currentSale.purchasePrice,
                 salePrice = currentSale.salePrice,
@@ -97,9 +98,13 @@ class TestSaleRepository : SaleRepository<Sale> {
                 company = currentSale.company,
                 dateOfSale = currentSale.dateOfSale,
                 dateOfPayment = currentSale.dateOfPayment,
+                shippingDate = currentSale.shippingDate,
+                deliveryDate = currentSale.deliveryDate,
                 isOrderedByCustomer = currentSale.isOrderedByCustomer,
                 isPaidByCustomer = currentSale.isPaidByCustomer,
-                canceled = true
+                delivered = currentSale.delivered,
+                canceled = true,
+                timestamp = currentSale.timestamp
             )
 
             sales[index] = sale
@@ -171,9 +176,35 @@ class TestSaleRepository : SaleRepository<Sale> {
         }
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun insert(
+        model: Sale,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
+        sales.add(model)
+        onSuccess(model.id)
+        return model.id
+    }
+
+    override suspend fun update(model: Sale, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+        val index = getIndex(id = model.id, list = sales)
+        if (isIndexValid(index = index)) {
+            sales[index] = model
+            onSuccess()
+        }
+    }
+
+    override suspend fun deleteById(
+        id: Long,
+        timestamp: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val index = getIndex(id = id, list = sales)
-        if(isIndexValid(index = index)) sales.removeAt(index)
+        if(isIndexValid(index = index)) {
+            sales.removeAt(index)
+            onSuccess()
+        }
     }
 
     override fun getAll(): Flow<List<Sale>> = flow {
@@ -186,4 +217,8 @@ class TestSaleRepository : SaleRepository<Sale> {
     }
 
     override fun getLast(): Flow<Sale> = flowOf(sales.last())
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
+    }
 }

@@ -2,11 +2,12 @@ package com.bruno13palhano.shopdanimanagement.repository
 
 import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
 import com.bruno13palhano.core.model.Catalog
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 
-class TestCatalogRepository : CatalogRepository<Catalog> {
+class TestCatalogRepository : CatalogRepository {
     private val catalogList = mutableListOf<Catalog>()
 
     override fun getOrderedByName(isOrderedAsc: Boolean): Flow<List<Catalog>> {
@@ -25,9 +26,39 @@ class TestCatalogRepository : CatalogRepository<Catalog> {
         }
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun insert(
+        model: Catalog,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
+        catalogList.add(model)
+        onSuccess(model.id)
+        return model.id
+    }
+
+    override suspend fun update(
+        model: Catalog,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        val index = getIndex(id = model.id, list = catalogList)
+        if (isIndexValid(index = index)) {
+            catalogList[index] = model
+            onSuccess()
+        }
+    }
+
+    override suspend fun deleteById(
+        id: Long,
+        timestamp: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val index = getIndex(id = id, list = catalogList)
-        if (isIndexValid(index = index)) catalogList.removeAt(index)
+        if (isIndexValid(index = index)) {
+            catalogList.removeAt(index)
+            onSuccess()
+        }
     }
 
     override fun getAll(): Flow<List<Catalog>> = flowOf(catalogList)
@@ -39,13 +70,7 @@ class TestCatalogRepository : CatalogRepository<Catalog> {
 
     override fun getLast(): Flow<Catalog> = flowOf(catalogList.last())
 
-    override suspend fun update(model: Catalog) {
-        val index = getIndex(id = model.id, list = catalogList)
-        if (isIndexValid(index = index)) catalogList[index] = model
-    }
-
-    override suspend fun insert(model: Catalog): Long {
-        catalogList.add(model)
-        return model.id
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
     }
 }

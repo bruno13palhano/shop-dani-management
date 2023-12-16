@@ -1,71 +1,31 @@
 package com.bruno13palhano.shopdanimanagement.repository
 
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.stock.StockRepository
 import com.bruno13palhano.core.model.StockItem
+import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class TestStockOrderRepository : StockOrderRepository<StockItem> {
+class TestStockRepository : StockRepository {
     private val stockItemList = mutableListOf<StockItem>()
 
-    override suspend fun insert(model: StockItem): Long {
-        stockItemList.add(model)
-        return model.id
+    override fun getItems(): Flow<List<StockItem>> {
+        return flowOf(stockItemList)
     }
 
-    override suspend fun update(model: StockItem) {
-        val index = getIndex(id = model.id, list = stockItemList)
-        if (isIndexValid(index = index)) stockItemList[index] = model
+    override fun search(value: String): Flow<List<StockItem>> {
+        return flowOf(stockItemList.filter { item -> item.name == value || item.company == value })
     }
 
-    override fun getItems(isOrderedByCustomer: Boolean): Flow<List<StockItem>> {
-        return if (isOrderedByCustomer) {
-            flowOf(stockItemList.filter { it.isOrderedByCustomer })
-        } else {
-            flowOf(stockItemList.filter { !it.isOrderedByCustomer })
-        }
+    override fun getByCategory(category: String): Flow<List<StockItem>> {
+        return flowOf(
+            stockItemList.filter { item ->
+                item.categories.joinToString(", ") { it.category }.contains(category)
+            }
+        )
     }
 
-    override fun search(value: String, isOrderedByCustomer: Boolean): Flow<List<StockItem>> {
-        return if (isOrderedByCustomer) {
-            flowOf(
-                stockItemList.filter { order ->
-                    order.isOrderedByCustomer && (order.name == value || order.company == value)
-                }
-            )
-        } else {
-            flowOf(
-                stockItemList.filter { item ->
-                    !item.isOrderedByCustomer && (item.name == value || item.company == value)
-                }
-            )
-        }
-    }
-
-    override fun getByCategory(
-        category: String,
-        isOrderedByCustomer: Boolean
-    ): Flow<List<StockItem>> {
-        return if (isOrderedByCustomer) {
-            flowOf(
-                stockItemList.filter { order ->
-                    order.isOrderedByCustomer &&
-                            (order.categories.joinToString(", ") { it.category }
-                                .contains(category))
-                }
-            )
-        } else {
-            flowOf(
-                stockItemList.filter { item ->
-                    !item.isOrderedByCustomer &&
-                            (item.categories.joinToString(", ") { it.category }
-                                .contains(category))
-                }
-            )
-        }
-    }
-
-    override suspend fun updateStockOrderQuantity(id: Long, quantity: Int) {
+    override suspend fun updateStockQuantity(id: Long, quantity: Int, timestamp: String) {
         val index = getIndex(id = id, list = stockItemList)
 
         if (isIndexValid(index = index)) {
@@ -83,57 +43,76 @@ class TestStockOrderRepository : StockOrderRepository<StockItem> {
                 company = currentItem.company,
                 purchasePrice = currentItem.purchasePrice,
                 salePrice = currentItem.salePrice,
-                isOrderedByCustomer = currentItem.isOrderedByCustomer,
-                isPaid = currentItem.isPaid
+                isPaid = currentItem.isPaid,
+                timestamp = currentItem.timestamp
             )
 
             stockItemList[index] = item
         }
     }
 
-    override fun getStockOrderItems(isOrderedByCustomer: Boolean): Flow<List<StockItem>> {
-        return if (isOrderedByCustomer) {
-            flowOf(stockItemList.filter { it.quantity > 0 && it.isOrderedByCustomer })
-        } else {
-            flowOf(stockItemList.filter { it.quantity > 0 && !it.isOrderedByCustomer })
-        }
+    override fun getStockItems(): Flow<List<StockItem>> {
+        return flowOf(stockItemList.filter { it.quantity > 0 })
     }
 
     override fun getDebitStock(): Flow<List<StockItem>> =
-        flowOf(stockItemList.filter { !it.isPaid && !it.isOrderedByCustomer})
+        flowOf(stockItemList.filter { !it.isPaid })
 
     override fun getOutOfStock(): Flow<List<StockItem>> =
-        flowOf(stockItemList.filter { it.quantity == 0 && !it.isOrderedByCustomer})
+        flowOf(stockItemList.filter { it.quantity == 0 })
 
 
     override fun getDebitStockByPrice(isOrderedAsc: Boolean): Flow<List<StockItem>> {
         return if (isOrderedAsc) {
             flowOf(
-                stockItemList.filter { !it.isPaid && !it.isOrderedByCustomer}
-                    .sortedBy { it.purchasePrice }
+                stockItemList.filter { !it.isPaid }.sortedBy { it.purchasePrice }
             )
         } else {
-            flowOf(stockItemList.filter { !it.isPaid && !it.isOrderedByCustomer}
-                .sortedByDescending { it.purchasePrice })
+            flowOf(stockItemList.filter { !it.isPaid }.sortedByDescending { it.purchasePrice })
         }
     }
 
     override fun getDebitStockByName(isOrderedAsc: Boolean): Flow<List<StockItem>> {
         return if (isOrderedAsc) {
-            flowOf(
-                stockItemList.filter { !it.isPaid && !it.isOrderedByCustomer}.sortedBy { it.name }
-            )
+            flowOf(stockItemList.filter { !it.isPaid }.sortedBy { it.name })
         } else {
-            flowOf(
-                stockItemList.filter { !it.isPaid && !it.isOrderedByCustomer}
-                    .sortedByDescending { it.name }
-            )
+            flowOf(stockItemList.filter { !it.isPaid }.sortedByDescending { it.name })
         }
     }
 
-    override suspend fun deleteById(id: Long) {
+    override suspend fun insert(
+        model: StockItem,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ): Long {
+        stockItemList.add(model)
+        onSuccess(model.id)
+        return model.id
+    }
+
+    override suspend fun update(
+        model: StockItem,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        val index = getIndex(id = model.id, list = stockItemList)
+        if (isIndexValid(index = index)) {
+            stockItemList[index] = model
+            onSuccess()
+        }
+    }
+
+    override suspend fun deleteById(
+        id: Long,
+        timestamp: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val index = getIndex(id = id, list = stockItemList)
-        if (isIndexValid(index = index)) stockItemList.removeAt(index = index)
+        if (isIndexValid(index = index)) {
+            stockItemList.removeAt(index = index)
+            onSuccess()
+        }
     }
 
     override fun getAll(): Flow<List<StockItem>> = flowOf(stockItemList)
@@ -144,4 +123,8 @@ class TestStockOrderRepository : StockOrderRepository<StockItem> {
     }
 
     override fun getLast(): Flow<StockItem> = flowOf(stockItemList.last())
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO("Not yet implemented")
+    }
 }
