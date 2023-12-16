@@ -7,7 +7,7 @@ import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.model.StockItem
 import kotlin.random.Random
 
 private const val LENGTH = 10
@@ -21,7 +21,8 @@ fun makeRandomCatalog(
     title: String = getRandomString(),
     description: String = getRandomString(),
     discount: Long = getRandomLong(),
-    price: Float = getRandomFloat()
+    price: Float = getRandomFloat(),
+    timestamp: String = getRandomString()
 ) = Catalog(
     id = id,
     productId = productId,
@@ -30,10 +31,19 @@ fun makeRandomCatalog(
     title = title,
     description = description,
     discount = discount,
-    price = price
+    price = price,
+    timestamp = timestamp
 )
 
-fun makeRandomCategory(id: Long, name: String = getRandomString()) = Category(id = id, category = name)
+fun makeRandomCategory(
+    id: Long,
+    name: String = getRandomString(),
+    timestamp: String = getRandomString()
+) = Category(
+    id = id,
+    category = name,
+    timestamp = timestamp
+)
 
 fun makeRandomCustomer(
     id: Long,
@@ -41,40 +51,16 @@ fun makeRandomCustomer(
     photo: ByteArray = byteArrayOf(),
     email: String = getRandomString(),
     address: String = getRandomString(),
-    phoneNumber: String = getRandomString()
+    phoneNumber: String = getRandomString(),
+    timestamp: String = getRandomString()
 ) = Customer(
     id = id,
     name = name,
     photo = photo,
     email = email,
     address = address,
-    phoneNumber = phoneNumber
-)
-
-fun makeRandomDelivery(
-    id: Long,
-    saleId: Long = getRandomLong(),
-    customerName: String = getRandomString(),
-    address: String = getRandomString(),
-    phoneNumber: String = getRandomString(),
-    productName: String = getRandomString(),
-    price: Float = getRandomFloat(),
-    deliveryPrice: Float = getRandomFloat(),
-    shippingDate: Long = getRandomLong(),
-    deliveryDate: Long = getRandomLong(),
-    delivered: Boolean = getRandomBoolean()
-) = Delivery(
-    id = id,
-    saleId = saleId,
-    customerName = customerName,
-    address = address,
     phoneNumber = phoneNumber,
-    productName = productName,
-    price = price,
-    deliveryPrice = deliveryPrice,
-    shippingDate = shippingDate,
-    deliveryDate = deliveryDate,
-    delivered = delivered
+    timestamp = timestamp
 )
 
 fun makeRandomDelivery(
@@ -86,7 +72,8 @@ fun makeRandomDelivery(
     deliveryPrice: Float = getRandomFloat(),
     shippingDate: Long = getRandomLong(),
     deliveryDate: Long = getRandomLong(),
-    delivered: Boolean = getRandomBoolean()
+    delivered: Boolean = getRandomBoolean(),
+    timestamp: String = getRandomString()
 ) = Delivery(
     id = id,
     saleId = saleId,
@@ -98,7 +85,8 @@ fun makeRandomDelivery(
     deliveryPrice = deliveryPrice,
     shippingDate = shippingDate,
     deliveryDate = deliveryDate,
-    delivered = delivered
+    delivered = delivered,
+    timestamp = timestamp
 )
 
 fun makeRandomProduct(
@@ -113,7 +101,8 @@ fun makeRandomProduct(
         makeRandomCategory(2L),
         makeRandomCategory(3L)
     ),
-    company: String = getRandomString()
+    company: String = getRandomString(),
+    timestamp: String = getRandomString()
 ) = Product(
     id = id,
     name = name,
@@ -122,12 +111,13 @@ fun makeRandomProduct(
     photo = photo,
     date = date,
     categories = categories,
-    company = company
+    company = company,
+    timestamp = timestamp
 )
 
 fun makeRandomSearchCache(search: String = getRandomString()) = SearchCache(search = search)
 
-fun makeRandomStockOrder(
+fun makeRandomStockItem(
     id: Long,
     product: Product = makeRandomProduct(id = id),
     date: Long = getRandomLong(),
@@ -135,9 +125,9 @@ fun makeRandomStockOrder(
     quantity: Int = getRandomInt(),
     purchasePrice: Float = getRandomFloat(),
     salePrice: Float = getRandomFloat(),
-    isOrderedByCustomer: Boolean = getRandomBoolean(),
-    isPaid: Boolean = getRandomBoolean()
-) = StockOrder(
+    isPaid: Boolean = getRandomBoolean(),
+    timestamp: String = getRandomString()
+) = StockItem(
     id = id,
     productId = product.id,
     name = product.name,
@@ -149,39 +139,50 @@ fun makeRandomStockOrder(
     company = product.company,
     purchasePrice = purchasePrice,
     salePrice = salePrice,
-    isOrderedByCustomer = isOrderedByCustomer,
-    isPaid = isPaid
+    isPaid = isPaid,
+    timestamp = timestamp
 )
 
 fun makeRandomSale(
     id: Long,
-    stockOrder: StockOrder = makeRandomStockOrder(id = id),
+    stockItem: StockItem = makeRandomStockItem(id = id),
     delivery: Delivery = makeRandomDelivery(id = id, saleId = id),
     customer: Customer = makeRandomCustomer(id = id),
+    isOrderedByCustomer: Boolean = getRandomBoolean(),
     quantity: Int = getRandomInt(),
     dateOfSale: Long = getRandomLong(),
     dateOfPayment: Long = getRandomLong(),
+    shippingDate: Long = getRandomLong(),
+    deliveryDate: Long = getRandomLong(),
     isPaidByCustomer: Boolean = getRandomBoolean(),
-    canceled: Boolean = getRandomBoolean()
+    delivered: Boolean = getRandomBoolean(),
+    canceled: Boolean = getRandomBoolean(),
+    timestamp: String = getRandomString()
 ) = Sale(
     id = id,
-    productId = stockOrder.productId,
-    stockOrderId = stockOrder.id,
+    productId = stockItem.productId,
+    stockId = stockItem.id,
     customerId = customer.id,
-    name = stockOrder.name,
+    name = stockItem.name,
     customerName = customer.name,
-    photo = stockOrder.photo,
+    photo = stockItem.photo,
+    address = customer.address,
+    phoneNumber = customer.phoneNumber,
     quantity = quantity,
-    purchasePrice = stockOrder.purchasePrice,
-    salePrice = stockOrder.salePrice,
+    purchasePrice = stockItem.purchasePrice,
+    salePrice = stockItem.salePrice,
     deliveryPrice = delivery.deliveryPrice,
-    categories = stockOrder.categories,
-    company = stockOrder.company,
+    categories = stockItem.categories,
+    company = stockItem.company,
     dateOfSale = dateOfSale,
     dateOfPayment = dateOfPayment,
-    isOrderedByCustomer = stockOrder.isOrderedByCustomer,
+    shippingDate = shippingDate,
+    deliveryDate = deliveryDate,
+    isOrderedByCustomer = isOrderedByCustomer,
     isPaidByCustomer = isPaidByCustomer,
-    canceled = canceled
+    delivered = delivered,
+    canceled = canceled,
+    timestamp = timestamp
 )
 
 private fun getRandomString() = (1..LENGTH)
