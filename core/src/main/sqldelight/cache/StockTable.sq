@@ -66,7 +66,7 @@ SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categorie
 FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
 ON(P.id = PC.productId AND P.id = S.productId);
 
-getStockOrderItems:
+getStockItems:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.validity, S.quantity, PC.categories, P.company,
     S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
 FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
@@ -119,7 +119,7 @@ ON(PC.categories LIKE '%' || :category || '%') WHERE S.productId = P.id AND PC.p
 getStockQuantity:
 SELECT quantity FROM StockTable WHERE id = ?;
 
-updateStockOrderQuantity:
+updateStockQuantity:
 UPDATE StockTable SET quantity = ? WHERE id = ?;
 
 lastId:
