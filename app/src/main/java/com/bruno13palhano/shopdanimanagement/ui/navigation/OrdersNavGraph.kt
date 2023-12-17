@@ -54,6 +54,5 @@ fun NavGraphBuilder.ordersNavGraph(
 
 object OrdersDestinations {
     const val ORDERS_MAIN_ROUTE = "orders_main_route"
-    const val ORDERS_SEARCH_ITEM_ROUTE = "orders_search_item_route"
     const val ORDERS_EDIT_ITEM_ROUTE = "orders_edit_item_route"
 }
