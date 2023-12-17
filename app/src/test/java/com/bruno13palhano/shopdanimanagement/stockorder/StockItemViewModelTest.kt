@@ -1,15 +1,13 @@
 package com.bruno13palhano.shopdanimanagement.stockorder
 
 import com.bruno13palhano.core.data.repository.product.ProductRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockRepository
-import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.core.model.StockItem
+import com.bruno13palhano.core.data.repository.stock.StockRepository
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomProduct
-import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
+import com.bruno13palhano.shopdanimanagement.makeRandomStockItem
 import com.bruno13palhano.shopdanimanagement.repository.TestProductRepository
 import com.bruno13palhano.shopdanimanagement.repository.TestStockRepository
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.ItemViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockItemViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
@@ -32,7 +30,7 @@ import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
-class ItemViewModelTest {
+class StockItemViewModelTest {
 
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
@@ -40,15 +38,15 @@ class ItemViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var productRepository: ProductRepository<Product>
-    private lateinit var stockItemRepository: StockRepository<StockItem>
-    private lateinit var sut: ItemViewModel
+    private lateinit var productRepository: ProductRepository
+    private lateinit var stockItemRepository: StockRepository
+    private lateinit var sut: StockItemViewModel
 
     @Before
     fun setup() {
         productRepository = TestProductRepository()
         stockItemRepository = TestStockRepository()
-        sut = ItemViewModel(productRepository, stockItemRepository)
+        sut = StockItemViewModel(productRepository, stockItemRepository)
     }
 
     @Test
@@ -129,9 +127,9 @@ class ItemViewModelTest {
 
     @Test
     fun getProduct_shouldCallGetByIdFromProductRepository() = runTest {
-        val productRepository = mock<ProductRepository<Product>>()
-        val stockItemRepository = mock<StockRepository<StockItem>>()
-        val sut = ItemViewModel(productRepository, stockItemRepository)
+        val productRepository = mock<ProductRepository>()
+        val stockItemRepository = mock<StockRepository>()
+        val sut = StockItemViewModel(productRepository, stockItemRepository)
 
         whenever(productRepository.getById(any())).doAnswer { flowOf() }
 
@@ -144,7 +142,7 @@ class ItemViewModelTest {
     @Test
     fun getProduct_shouldSetItemPropertiesThatDependOnProduct() = runTest {
         val product = makeRandomProduct(id = 1L)
-        productRepository.insert(model = product)
+        productRepository.insert(model = product, {}, {})
 
         sut.getProduct(id = product.id)
         advanceUntilIdle()
@@ -158,8 +156,8 @@ class ItemViewModelTest {
 
     @Test
     fun getStockOrder_shouldSetStockOrderProperties() = runTest {
-        val stockOrder = makeRandomStockOrder(id = 1L)
-        stockItemRepository.insert(model = stockOrder)
+        val stockOrder = makeRandomStockItem(id = 1L)
+        stockItemRepository.insert(model = stockOrder, {}, {})
 
         sut.getStockItem(stockItemId = stockOrder.id)
         advanceUntilIdle()
@@ -178,9 +176,9 @@ class ItemViewModelTest {
 
     @Test
     fun getStockOrder_shouldCallGetByIdFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductRepository<Product>>()
-        val stockItemRepository = mock<StockRepository<StockItem>>()
-        val sut = ItemViewModel(productRepository, stockItemRepository)
+        val productRepository = mock<ProductRepository>()
+        val stockItemRepository = mock<StockRepository>()
+        val sut = StockItemViewModel(productRepository, stockItemRepository)
 
         whenever(stockItemRepository.getById(any())).doAnswer { flowOf() }
 
@@ -192,37 +190,37 @@ class ItemViewModelTest {
 
     @Test
     fun insertItems_shouldCallInsertFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductRepository<Product>>()
-        val stockItemRepository = mock<StockRepository<StockItem>>()
-        val sut = ItemViewModel(productRepository, stockItemRepository)
+        val productRepository = mock<ProductRepository>()
+        val stockItemRepository = mock<StockRepository>()
+        val sut = StockItemViewModel(productRepository, stockItemRepository)
 
-        sut.insertItems(productId = 1L, isOrderedByCustomer = true)
+        sut.insertItems(productId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(stockItemRepository).insert(any())
+        verify(stockItemRepository).insert(any(), {}, {})
     }
 
     @Test
     fun updateStockOrderItem_shouldCallUpdateFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductRepository<Product>>()
-        val stockItemRepository = mock<StockRepository<StockItem>>()
-        val sut = ItemViewModel(productRepository, stockItemRepository)
+        val productRepository = mock<ProductRepository>()
+        val stockItemRepository = mock<StockRepository>()
+        val sut = StockItemViewModel(productRepository, stockItemRepository)
 
-        sut.updateStockItem(stockItemId = 1L, isOrderedByCustomer = true)
+        sut.updateStockItem(stockItemId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(stockItemRepository).update(any())
+        verify(stockItemRepository).update(any(), {}, {})
     }
 
     @Test
     fun deleteStockOrderItem_shouldCallDeleteByIdFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductRepository<Product>>()
-        val stockItemRepository = mock<StockRepository<StockItem>>()
-        val sut = ItemViewModel(productRepository, stockItemRepository)
+        val productRepository = mock<ProductRepository>()
+        val stockItemRepository = mock<StockRepository>()
+        val sut = StockItemViewModel(productRepository, stockItemRepository)
 
-        sut.deleteStockItem(stockOrderId = 1L)
+        sut.deleteStockItem(stockOrderId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(stockItemRepository).deleteById(any())
+        verify(stockItemRepository).deleteById(any(), "", {}, {})
     }
 }
