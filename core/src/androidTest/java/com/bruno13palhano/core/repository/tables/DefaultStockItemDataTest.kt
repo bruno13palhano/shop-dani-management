@@ -1,12 +1,14 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.repository.stockorder.StockRepository
 import com.bruno13palhano.core.data.repository.product.DefaultProductData
-import com.bruno13palhano.core.data.repository.stockorder.DefaultStockData
+import com.bruno13palhano.core.data.repository.stock.DefaultStockData
+import com.bruno13palhano.core.data.repository.stock.StockData
+import com.bruno13palhano.core.mocks.makeRandomDataVersion
 import com.bruno13palhano.core.mocks.makeRandomProduct
 import com.bruno13palhano.core.mocks.makeRandomStockOrder
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.StockItem
 import com.google.common.truth.Truth.assertThat
@@ -25,13 +27,11 @@ import javax.inject.Inject
 class DefaultStockItemDataTest {
     @Inject
     lateinit var database: ShopDatabase
-    private lateinit var stockItemTable: StockRepository<StockItem>
+    private lateinit var  dataVersion: DataVersion
+    private lateinit var stockItemTable: StockData
     private lateinit var firstItem: StockItem
     private lateinit var secondItem: StockItem
     private lateinit var thirdItem: StockItem
-    private lateinit var firstOrder: StockItem
-    private lateinit var secondOrder: StockItem
-    private lateinit var thirdOrder: StockItem
     private lateinit var product1: Product
     private lateinit var product2: Product
     private lateinit var product3: Product
@@ -43,47 +43,51 @@ class DefaultStockItemDataTest {
     fun setup() = runTest {
         hiltTestRule.inject()
 
-        stockItemTable = DefaultStockData(database.stockOrderTableQueries, Dispatchers.IO)
+        stockItemTable = DefaultStockData(
+            database.stockTableQueries,
+            database.versionTableQueries,
+            Dispatchers.IO
+        )
 
         val productTable = DefaultProductData(
             database.shopDatabaseQueries,
             database.productCategoriesTableQueries,
+            database.versionTableQueries,
             Dispatchers.IO
         )
+
+        dataVersion = makeRandomDataVersion(id = 1L)
         product1 = makeRandomProduct(
             id = 1L,
             name = "Homem",
-            categories = listOf(Category(id = 1L, category = "Perfumes"))
+            categories = listOf(Category(id = 1L, category = "Perfumes", timestamp = ""))
         )
         product2 = makeRandomProduct(
             id = 2L,
             name = "Kaiak",
             categories = listOf(
-                Category(id = 2L, category = "Soaps"),
-                Category(id = 1L, category = "Perfumes")
+                Category(id = 2L, category = "Soaps", timestamp = ""),
+                Category(id = 1L, category = "Perfumes", timestamp = "")
             )
         )
         product3 = makeRandomProduct(
             id = 3L,
             name = "Luna",
-            categories = listOf(Category(id = 3L, category = "Others")
+            categories = listOf(Category(id = 3L, category = "Others", timestamp = "")
             )
         )
-        productTable.insert(product1)
-        productTable.insert(product2)
-        productTable.insert(product3)
+        productTable.insert(product1, dataVersion, {}, {})
+        productTable.insert(product2, dataVersion, {}, {})
+        productTable.insert(product3, dataVersion, {}, {})
 
-        firstItem = makeRandomStockOrder(id = 1L, product = product1, purchasePrice = 120.90F, isOrderedByCustomer = false, isPaid = false)
-        secondItem = makeRandomStockOrder(id = 2L, product = product2, purchasePrice = 150.99F, isOrderedByCustomer = false, isPaid = false)
-        thirdItem = makeRandomStockOrder(id = 3L, product = product3, purchasePrice = 210.80F, isOrderedByCustomer = false, isPaid = true)
-        firstOrder = makeRandomStockOrder(id = 1L, product = product1, isOrderedByCustomer = true)
-        secondOrder = makeRandomStockOrder(id = 2L, product = product2, isOrderedByCustomer = true)
-        thirdOrder = makeRandomStockOrder(id = 3L, product = product3, isOrderedByCustomer = true)
+        firstItem = makeRandomStockOrder(id = 1L, product = product1, purchasePrice = 120.90F, isPaid = false)
+        secondItem = makeRandomStockOrder(id = 2L, product = product2, purchasePrice = 150.99F, isPaid = false)
+        thirdItem = makeRandomStockOrder(id = 3L, product = product3, purchasePrice = 210.80F, isPaid = true)
     }
 
     @Test
     fun shouldInsertStockOrderInTheDatabase() = runTest {
-        stockItemTable.insert(firstItem)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             stockItemTable.getAll().collect {
@@ -95,14 +99,13 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldUpdateStockOrderInTheDatabase_ifStockOrderExists() = runTest {
-        stockItemTable.insert(firstItem)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
 
         val updatedStockItem = makeRandomStockOrder(
             id = 1L,
-            product = product1,
-            isOrderedByCustomer = false
+            product = product1
         )
-        stockItemTable.update(updatedStockItem)
+        stockItemTable.update(updatedStockItem, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             stockItemTable.getAll().collect {
@@ -114,8 +117,8 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldNotUpdateStockOrderInTheDatabase_ifStockOrderNotExists() = runTest {
-        stockItemTable.insert(firstItem)
-        stockItemTable.update(secondItem)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.update(secondItem, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             stockItemTable.getAll().collect {
@@ -129,7 +132,7 @@ class DefaultStockItemDataTest {
     fun shouldReturnAllStockItems_ifDatabaseNotEmpty() = runTest {
         insertAllItems()
         launch(Dispatchers.IO) {
-            stockItemTable.getItems(isOrderedByCustomer = false).collect {
+            stockItemTable.getItems().collect {
                 assertThat(it).containsExactly(firstItem, secondItem, thirdItem)
                 cancel()
             }
@@ -138,31 +141,8 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldReturnEmptyList_ifThereAreNoStockItemsInTheDatabase() = runTest {
-        insertAllOrders()
         launch(Dispatchers.IO) {
-            stockItemTable.getItems(isOrderedByCustomer = false).collect {
-                assertThat(it).isEmpty()
-                cancel()
-            }
-        }
-    }
-
-    @Test
-    fun shouldReturnAllOrders_ifDatabaseNotEmpty() = runTest {
-        insertAllOrders()
-        launch(Dispatchers.IO) {
-            stockItemTable.getItems(isOrderedByCustomer = true).collect {
-                assertThat(it).containsExactly(firstOrder, secondOrder, thirdOrder)
-                cancel()
-            }
-        }
-    }
-
-    @Test
-    fun shouldReturnEmptyList_ifThereAreNoOrdersInTheDatabase() = runTest {
-        insertAllItems()
-        launch(Dispatchers.IO) {
-            stockItemTable.getItems(isOrderedByCustomer = true).collect {
+            stockItemTable.getItems().collect {
                 assertThat(it).isEmpty()
                 cancel()
             }
@@ -171,13 +151,13 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldReturnAllStockItems_matchesWithThisSearch_ifDatabaseNotEmpty() = runTest {
-        stockItemTable.insert(firstItem)
-        stockItemTable.insert(secondOrder)
-        stockItemTable.insert(thirdItem)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.insert(secondItem, dataVersion, {}, {})
+        stockItemTable.insert(thirdItem, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
-            stockItemTable.search(value = product1.name, isOrderedByCustomer = false).collect {
-                assertThat(it).contains(firstItem)
+            stockItemTable.search(value = product1.name).collect {
+                assertThat(it).containsExactly(firstItem)
                 cancel()
             }
         }
@@ -185,41 +165,13 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldReturnAllStockItems_ifSearchIsEmpty_andDatabaseNotEmpty() = runTest {
-        stockItemTable.insert(firstItem)
-        stockItemTable.insert(secondOrder)
-        stockItemTable.insert(thirdItem)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.insert(secondItem, dataVersion, {}, {})
+        stockItemTable.insert(thirdItem, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
-            stockItemTable.search(value = "", isOrderedByCustomer = false).collect {
-                assertThat(it).containsExactly(firstItem, thirdItem)
-                cancel()
-            }
-        }
-    }
-
-    @Test
-    fun shouldReturnAllOrders_matchesWithThisSearch_ifDatabaseNotEmpty() = runTest {
-        stockItemTable.insert(firstItem)
-        stockItemTable.insert(secondOrder)
-        stockItemTable.insert(thirdOrder)
-
-        launch(Dispatchers.IO) {
-            stockItemTable.search(value = product2.name, isOrderedByCustomer = true).collect {
-                assertThat(it).contains(secondOrder)
-                cancel()
-            }
-        }
-    }
-
-    @Test
-    fun shouldReturnAllOrders_ifSearchIsEmpty_andDatabaseNotEmpty() = runTest {
-        stockItemTable.insert(firstItem)
-        stockItemTable.insert(secondOrder)
-        stockItemTable.insert(thirdOrder)
-
-        launch(Dispatchers.IO) {
-            stockItemTable.search(value = "", isOrderedByCustomer = true).collect {
-                assertThat(it).containsExactly(secondOrder, thirdOrder)
+            stockItemTable.search(value = "").collect {
+                assertThat(it).containsExactly(firstItem, secondItem, thirdItem)
                 cancel()
             }
         }
@@ -227,12 +179,12 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldReturnEmptyList_ifThereAreNoMatchesWithThisSearch() = runTest {
-        stockItemTable.insert(firstItem)
-        stockItemTable.insert(secondOrder)
-        stockItemTable.insert(thirdOrder)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.insert(secondItem, dataVersion, {}, {})
+        stockItemTable.insert(thirdItem, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
-            stockItemTable.search(value = " ", isOrderedByCustomer = true).collect {
+            stockItemTable.search(value = " ").collect {
                 assertThat(it).isEmpty()
                 cancel()
             }
@@ -243,7 +195,7 @@ class DefaultStockItemDataTest {
     fun shouldReturnAllStockItems_matchesWithThisCategory_ifDatabaseNotEmpty() = runTest {
         insertAllItems()
         launch(Dispatchers.IO) {
-            stockItemTable.getByCategory(isOrderedByCustomer = false, category = "Perfumes").collect {
+            stockItemTable.getByCategory(category = "Perfumes").collect {
                 assertThat(it).containsExactly(firstItem, secondItem)
                 cancel()
             }
@@ -254,7 +206,7 @@ class DefaultStockItemDataTest {
     fun shouldReturnEmptyList_ifThereAreNoItemsInThisCategory() = runTest {
         insertAllItems()
         launch(Dispatchers.IO) {
-            stockItemTable.getByCategory(isOrderedByCustomer = false, category = "test").collect {
+            stockItemTable.getByCategory(category = "test").collect {
                 assertThat(it).isEmpty()
                 cancel()
             }
@@ -263,60 +215,24 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldReturnAllStockItems_ifThisCategoryValueIsEmpty() = runTest {
-        stockItemTable.insert(firstItem)
-        stockItemTable.insert(secondOrder)
-        stockItemTable.insert(thirdItem)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.insert(secondItem, dataVersion, {}, {})
+        stockItemTable.insert(thirdItem, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
-            stockItemTable.getByCategory(isOrderedByCustomer = false, category = "").collect {
-                assertThat(it).containsExactly(firstItem, thirdItem)
+            stockItemTable.getByCategory(category = "").collect {
+                assertThat(it).containsExactly(firstItem, secondItem, thirdItem)
                 cancel()
             }
         }
     }
 
     @Test
-    fun shouldReturnAllOrders_matchesWithThisCategory_ifDatabaseNotEmpty() = runTest {
-        stockItemTable.insert(firstItem)
-        stockItemTable.insert(secondOrder)
-        stockItemTable.insert(thirdItem)
-
-        launch(Dispatchers.IO) {
-            stockItemTable.getByCategory(isOrderedByCustomer = true, category = "Perfumes").collect {
-                assertThat(it).contains(secondOrder)
-                cancel()
-            }
-        }
-    }
-
-    @Test
-    fun shouldReturnEmptyList_ifThereAreNoOrdersInThisCategory() = runTest {
-        insertAllOrders()
-        launch(Dispatchers.IO) {
-            stockItemTable.getByCategory(isOrderedByCustomer = true, category = "test").collect {
-                assertThat(it).isEmpty()
-                cancel()
-            }
-        }
-    }
-
-    @Test
-    fun shouldReturnAllOrders_ifThisCategoryValueIsEmpty() = runTest {
-        insertAllOrders()
-        launch(Dispatchers.IO) {
-            stockItemTable.getByCategory(isOrderedByCustomer = true, category = "").collect {
-                assertThat(it).containsExactly(firstOrder, secondOrder, thirdOrder)
-                cancel()
-            }
-        }
-    }
-
-    @Test
-    fun shouldUpdateStockOrderQuantityInTheDatabase_ifExists() = runTest {
+    fun shouldUpdateStockItemQuantityInTheDatabase_ifExists() = runTest {
         val quantity = 10
 
-        stockItemTable.insert(firstItem)
-        stockItemTable.updateStockOrderQuantity(id = firstItem.id, quantity = quantity)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.updateStockQuantity(id = firstItem.id, quantity = quantity)
 
         launch(Dispatchers.IO) {
             stockItemTable.getById(id = firstItem.id).collect {
@@ -327,11 +243,11 @@ class DefaultStockItemDataTest {
     }
 
     @Test
-    fun shouldNotUpdateStockOrderQuantityInTheDatabase_ifNotExists() = runTest {
+    fun shouldNotUpdateStockItemQuantityInTheDatabase_ifNotExists() = runTest {
         val quantity = 10
 
-        stockItemTable.insert(firstItem)
-        stockItemTable.updateStockOrderQuantity(id = secondItem.id, quantity = quantity)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.updateStockQuantity(id = secondItem.id, quantity = quantity)
 
         launch(Dispatchers.IO) {
             stockItemTable.getById(id = secondItem.id).collect {
@@ -342,15 +258,15 @@ class DefaultStockItemDataTest {
     }
 
     @Test
-    fun shouldDeleteStockOrderWithThisIdInTheDatabase_ifStockOrderExists() = runTest {
-        stockItemTable.insert(firstOrder)
-        stockItemTable.insert(secondOrder)
+    fun shouldDeleteStockItemWithThisIdInTheDatabase_ifStockOrderExists() = runTest {
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.insert(secondItem, dataVersion, {}, {})
 
-        stockItemTable.deleteById(firstOrder.id)
+        stockItemTable.deleteById(firstItem.id, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             stockItemTable.getAll().collect {
-                assertThat(it).doesNotContain(firstOrder)
+                assertThat(it).doesNotContain(firstItem)
                 cancel()
             }
         }
@@ -358,28 +274,28 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldNotDeleteStockOrderWithThisIdInTheDatabase_ifStockOrderNotExists() = runTest {
-        stockItemTable.insert(firstOrder)
-        stockItemTable.insert(secondOrder)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.insert(secondItem, dataVersion, {}, {})
 
-        stockItemTable.deleteById(thirdOrder.id)
+        stockItemTable.deleteById(thirdItem.id, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             stockItemTable.getAll().collect {
-                assertThat(it).containsExactly(firstOrder, secondOrder)
+                assertThat(it).containsExactly(firstItem, secondItem)
                 cancel()
             }
         }
     }
 
     @Test
-    fun shouldReturnAllStockOrderInTheDatabase_ifDatabaseNotEmpty() = runTest {
-        stockItemTable.insert(firstOrder)
-        stockItemTable.insert(secondOrder)
-        stockItemTable.insert(thirdItem)
+    fun shouldReturnAllStockItemsInTheDatabase_ifDatabaseNotEmpty() = runTest {
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.insert(secondItem, dataVersion, {}, {})
+        stockItemTable.insert(thirdItem, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             stockItemTable.getAll().collect {
-                assertThat(it).containsExactly(firstOrder, secondOrder, thirdItem)
+                assertThat(it).containsExactly(firstItem, secondItem, thirdItem)
                 cancel()
             }
         }
@@ -397,9 +313,9 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldReturnAllStockItemsNotPaid_ifDatabaseNotEmpty() = runTest {
-        stockItemTable.insert(firstItem)
-        stockItemTable.insert(secondItem)
-        stockItemTable.insert(thirdOrder)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.insert(secondItem, dataVersion, {}, {})
+        stockItemTable.insert(thirdItem, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             stockItemTable.getDebitStock().collect {
@@ -411,9 +327,7 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldReturnEmptyList_ifThereAreNoDebitInDatabase() = runTest {
-        stockItemTable.insert(firstOrder)
-        stockItemTable.insert(secondOrder)
-        stockItemTable.insert(thirdItem)
+        stockItemTable.insert(thirdItem, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             stockItemTable.getDebitStock().collect {
@@ -425,12 +339,12 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldReturnAllItemsOutOfStock_ifDatabaseNotEmpty() = runTest {
-        val item1 = makeRandomStockOrder(id = 1L, product = product1, quantity = 10, isOrderedByCustomer = false)
-        val item2 = makeRandomStockOrder(id = 2L, product = product2, quantity = 0, isOrderedByCustomer = false)
-        val item3 = makeRandomStockOrder(id = 3L, product = product3, quantity = 0, isOrderedByCustomer = false)
-        stockItemTable.insert(item1)
-        stockItemTable.insert(item2)
-        stockItemTable.insert(item3)
+        val item1 = makeRandomStockOrder(id = 1L, product = product1, quantity = 10)
+        val item2 = makeRandomStockOrder(id = 2L, product = product2, quantity = 0)
+        val item3 = makeRandomStockOrder(id = 3L, product = product3, quantity = 0)
+        stockItemTable.insert(item1, dataVersion, {}, {})
+        stockItemTable.insert(item2, dataVersion, {}, {})
+        stockItemTable.insert(item3, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             stockItemTable.getOutOfStock().collect {
@@ -453,15 +367,15 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldReturnAllStockItems_ifDatabaseIsNotEmpty() = runTest {
-        val item1 = makeRandomStockOrder(id = 1L, product = product1, quantity = 10, isOrderedByCustomer = false)
-        val item2 = makeRandomStockOrder(id = 2L, product = product2, quantity = 0, isOrderedByCustomer = false)
-        val item3 = makeRandomStockOrder(id = 3L, product = product3, quantity = 12, isOrderedByCustomer = false)
-        stockItemTable.insert(item1)
-        stockItemTable.insert(item2)
-        stockItemTable.insert(item3)
+        val item1 = makeRandomStockOrder(id = 1L, product = product1, quantity = 10)
+        val item2 = makeRandomStockOrder(id = 2L, product = product2, quantity = 0)
+        val item3 = makeRandomStockOrder(id = 3L, product = product3, quantity = 12)
+        stockItemTable.insert(item1, dataVersion, {}, {})
+        stockItemTable.insert(item2, dataVersion, {}, {})
+        stockItemTable.insert(item3, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
-            stockItemTable.getStockOrderItems(isOrderedByCustomer = false).collect {
+            stockItemTable.getStockItems().collect {
                 assertThat(it).containsExactly(item1, item3)
                 cancel()
             }
@@ -469,26 +383,9 @@ class DefaultStockItemDataTest {
     }
 
     @Test
-    fun shouldReturnAllOrders_ifDatabaseIsNotEmpty() = runTest {
-        val order1 = makeRandomStockOrder(id = 1L, product = product1, quantity = 10, isOrderedByCustomer = true)
-        val order2 = makeRandomStockOrder(id = 2L, product = product2, quantity = 0, isOrderedByCustomer =  true)
-        val order3 = makeRandomStockOrder(id = 3L, product = product3, quantity = 12, isOrderedByCustomer = true)
-        stockItemTable.insert(order1)
-        stockItemTable.insert(order2)
-        stockItemTable.insert(order3)
-
+    fun shouldReturnEmptyList_ifThereAreNoStockItemInDatabase() = runTest {
         launch(Dispatchers.IO) {
-            stockItemTable.getStockOrderItems(isOrderedByCustomer = true).collect {
-                assertThat(it).containsExactly(order1, order3)
-                cancel()
-            }
-        }
-    }
-
-    @Test
-    fun shouldReturnEmptyList_ifThereAreNoStockOrderInDatabase() = runTest {
-        launch(Dispatchers.IO) {
-            stockItemTable.getStockOrderItems(isOrderedByCustomer = true).collect {
+            stockItemTable.getStockItems().collect {
                 assertThat(it).isEmpty()
                 cancel()
             }
@@ -540,11 +437,11 @@ class DefaultStockItemDataTest {
     }
 
     @Test
-    fun shouldReturnStockOrderWithThisId() = runTest {
-        insertAllOrders()
+    fun shouldReturnStockItemWithThisId() = runTest {
+        insertAllItems()
         launch(Dispatchers.IO) {
-            stockItemTable.getById(id = secondOrder.id).collect {
-                assertThat(it).isEqualTo(secondOrder)
+            stockItemTable.getById(id = secondItem.id).collect {
+                assertThat(it).isEqualTo(secondItem)
                 cancel()
             }
         }
@@ -552,24 +449,18 @@ class DefaultStockItemDataTest {
 
     @Test
     fun shouldReturnLastItemInsertedInDatabase() = runTest {
-        insertAllOrders()
+        insertAllItems()
         launch(Dispatchers.IO) {
             stockItemTable.getLast().collect {
-                assertThat(it).isEqualTo(thirdOrder)
+                assertThat(it).isEqualTo(thirdItem)
                 cancel()
             }
         }
     }
 
     private suspend fun insertAllItems() {
-        stockItemTable.insert(firstItem)
-        stockItemTable.insert(secondItem)
-        stockItemTable.insert(thirdItem)
-    }
-
-    private suspend fun insertAllOrders() {
-        stockItemTable.insert(firstOrder)
-        stockItemTable.insert(secondOrder)
-        stockItemTable.insert(thirdOrder)
+        stockItemTable.insert(firstItem, dataVersion, {}, {})
+        stockItemTable.insert(secondItem, dataVersion, {}, {})
+        stockItemTable.insert(thirdItem, dataVersion, {}, {})
     }
 }
