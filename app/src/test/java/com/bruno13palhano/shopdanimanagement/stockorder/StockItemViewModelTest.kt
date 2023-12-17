@@ -197,7 +197,7 @@ class StockItemViewModelTest {
         sut.insertItems(productId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(stockItemRepository).insert(any(), {}, {})
+        verify(stockItemRepository).insert(any(), any(), any())
     }
 
     @Test
@@ -209,7 +209,7 @@ class StockItemViewModelTest {
         sut.updateStockItem(stockItemId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(stockItemRepository).update(any(), {}, {})
+        verify(stockItemRepository).update(any(), any(), any())
     }
 
     @Test
@@ -221,6 +221,6 @@ class StockItemViewModelTest {
         sut.deleteStockItem(stockOrderId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(stockItemRepository).deleteById(any(), "", {}, {})
+        verify(stockItemRepository).deleteById(any(), any(), any(), any())
     }
 }
