@@ -1,14 +1,10 @@
 package com.bruno13palhano.shopdanimanagement.financial
 
-import com.bruno13palhano.core.data.repository.delivery.DeliveryRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
-import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
-import com.bruno13palhano.shopdanimanagement.makeRandomDelivery
 import com.bruno13palhano.shopdanimanagement.makeRandomSale
-import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
-import com.bruno13palhano.shopdanimanagement.repository.TestDeliveryRepository
+import com.bruno13palhano.shopdanimanagement.makeRandomStockItem
 import com.bruno13palhano.shopdanimanagement.repository.TestSaleRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel.FinancialInfoViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,16 +31,14 @@ class FinancialInfoViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var saleRepository: SaleRepository<Sale>
-    private lateinit var deliveryRepository: DeliveryRepository<Delivery>
+    private lateinit var saleRepository: SaleRepository
     private lateinit var sut: FinancialInfoViewModel
 
     private val sales = listOf(
         makeRandomSale(
             id = 1L,
-            stockOrder = makeRandomStockOrder(
+            stockItem = makeRandomStockItem(
                 id = 1,
-                isOrderedByCustomer = false,
                 salePrice = 25F
             ),
             quantity = 1,
@@ -52,9 +46,8 @@ class FinancialInfoViewModelTest {
         ),
         makeRandomSale(
             id = 2L,
-            stockOrder = makeRandomStockOrder(
+            stockItem = makeRandomStockItem(
                 id = 2,
-                isOrderedByCustomer = false,
                 salePrice = 50F
             ),
             quantity = 1,
@@ -62,37 +55,30 @@ class FinancialInfoViewModelTest {
         ),
         makeRandomSale(
             id = 3L,
-            stockOrder = makeRandomStockOrder(
+            stockItem = makeRandomStockItem(
                 id = 3,
-                isOrderedByCustomer = true,
                 salePrice = 75F
             ),
+            isOrderedByCustomer = true,
             quantity = 1,
             canceled = false
         )
-    )
-    private val deliveries = listOf(
-        makeRandomDelivery(id = 1L, saleId = 1L),
-        makeRandomDelivery(id = 2L, saleId = 2L),
-        makeRandomDelivery(id = 3L, saleId = 3L)
     )
 
     @Before
     fun setup() {
         saleRepository = TestSaleRepository()
-        deliveryRepository = TestDeliveryRepository()
-        sut = FinancialInfoViewModel(saleRepository, deliveryRepository)
+        sut = FinancialInfoViewModel(saleRepository)
     }
 
     @Test
     fun financial_shouldSetSalesAndDeliveriesValues() = runTest {
         insertSales()
-        insertDeliveries()
 
         val collectJob = launch { sut.financial.collect() }
         advanceUntilIdle()
 
-        assertEquals(mapToInfo(sales, deliveries), sut.financial.value)
+        assertEquals(mapToInfo(sales), sut.financial.value)
 
         collectJob.cancel()
     }
@@ -100,12 +86,11 @@ class FinancialInfoViewModelTest {
     @Test
     fun entry_shouldSetChartProperties() = runTest {
         insertSales()
-        insertDeliveries()
 
         val collectJob = launch { sut.entry.collect() }
         advanceUntilIdle()
 
-        val info = mapToInfo(sales, deliveries)
+        val info = mapToInfo(sales)
         val expected = FinancialInfoViewModel.FinancialChartEntries(
             allSalesEntries = Pair(0F, info.allSales),
             stockSalesEntries = Pair(0F, info.stockSales),
@@ -117,10 +102,7 @@ class FinancialInfoViewModelTest {
         collectJob.cancel()
     }
 
-    private fun mapToInfo(
-        sales: List<Sale>,
-        deliveries: List<Delivery>
-    ): FinancialInfoViewModel.FinancialInfo {
+    private fun mapToInfo(sales: List<Sale>): FinancialInfoViewModel.FinancialInfo {
         var allSalesPurchasePrice = 0F
         var allSales = 0F
         var allDeliveriesPrice = 0F
@@ -138,7 +120,7 @@ class FinancialInfoViewModelTest {
             }
         }
 
-        deliveries.map {
+        sales.map {
             allDeliveriesPrice += it.deliveryPrice
         }
 
@@ -150,6 +132,5 @@ class FinancialInfoViewModelTest {
         )
     }
 
-    private suspend fun insertSales() = sales.forEach { saleRepository.insert(it) }
-    private suspend fun insertDeliveries() = deliveries.forEach { deliveryRepository.insert(it) }
+    private suspend fun insertSales() = sales.forEach { saleRepository.insert(it, {}, {}) }
 }

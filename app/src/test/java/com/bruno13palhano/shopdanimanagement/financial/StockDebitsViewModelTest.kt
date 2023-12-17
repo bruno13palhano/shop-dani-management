@@ -1,11 +1,11 @@
 package com.bruno13palhano.shopdanimanagement.financial
 
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
-import com.bruno13palhano.core.model.StockOrder
+import com.bruno13palhano.core.data.repository.stock.StockRepository
+import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomProduct
-import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
-import com.bruno13palhano.shopdanimanagement.repository.TestStockOrderRepository
+import com.bruno13palhano.shopdanimanagement.makeRandomStockItem
+import com.bruno13palhano.shopdanimanagement.repository.TestStockRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel.StockDebitsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,41 +38,38 @@ class StockDebitsViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var stockRepository: StockOrderRepository<StockOrder>
+    private lateinit var stockRepository: StockRepository
     private lateinit var sut: StockDebitsViewModel
 
     private val debits = listOf(
-        makeRandomStockOrder(
+        makeRandomStockItem(
             id = 1L,
             product = makeRandomProduct(id = 1L, name = "A"),
             purchasePrice = 25F,
-            isOrderedByCustomer = false,
             isPaid = false
         ),
-        makeRandomStockOrder(id = 2L,
+        makeRandomStockItem(id = 2L,
             purchasePrice = 50F,
             product = makeRandomProduct(id = 2L, name = "B"),
-            isOrderedByCustomer = false,
             isPaid = false
         ),
-        makeRandomStockOrder(
+        makeRandomStockItem(
             id = 3L,
             product = makeRandomProduct(id = 3L, name = "C"),
             purchasePrice = 75F,
-            isOrderedByCustomer = false,
             isPaid = true
         )
     )
 
     @Before
     fun setup() {
-        stockRepository = TestStockOrderRepository()
+        stockRepository = TestStockRepository()
         sut = StockDebitsViewModel(stockRepository)
     }
 
     @Test
     fun getDebitStock_shouldCallGetDebitStockFromRepository() = runTest {
-        val stockRepository = mock<StockOrderRepository<StockOrder>>()
+        val stockRepository = mock<StockRepository>()
         val sut = StockDebitsViewModel(stockRepository)
 
         whenever(stockRepository.getDebitStock()).doAnswer { flowOf() }
@@ -100,7 +97,7 @@ class StockDebitsViewModelTest {
 
     @Test
     fun getStockByPrice_shouldCallGetDebitStockByPriceFromRepository() = runTest {
-        val stockRepository = mock<StockOrderRepository<StockOrder>>()
+        val stockRepository = mock<StockRepository>()
         val sut = StockDebitsViewModel(stockRepository)
 
         whenever(stockRepository.getDebitStockByPrice(any())).doAnswer { flowOf() }
@@ -128,7 +125,7 @@ class StockDebitsViewModelTest {
 
     @Test
     fun getStockByName_shouldCallGetStockByNameFromRepository() = runTest {
-        val stockRepository = mock<StockOrderRepository<StockOrder>>()
+        val stockRepository = mock<StockRepository>()
         val sut = StockDebitsViewModel(stockRepository)
 
         whenever(stockRepository.getDebitStockByName(any())).doAnswer { flowOf() }
@@ -154,7 +151,7 @@ class StockDebitsViewModelTest {
         collectJob.cancel()
     }
 
-    private fun mapToStock(debits: List<StockOrder>) = debits.map {
+    private fun mapToStock(debits: List<StockItem>) = debits.map {
         Stock(
             id = it.id,
             name = it.name,
@@ -164,5 +161,5 @@ class StockDebitsViewModelTest {
         )
     }
 
-    private suspend fun insertDebits() = debits.forEach { stockRepository.insert(it) }
+    private suspend fun insertDebits() = debits.forEach { stockRepository.insert(it, {}, {}) }
 }
