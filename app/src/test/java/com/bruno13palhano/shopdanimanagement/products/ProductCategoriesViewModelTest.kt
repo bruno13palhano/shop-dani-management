@@ -63,7 +63,7 @@ class ProductCategoriesViewModelTest {
         sut.insertCategory({}, {})
         advanceUntilIdle()
 
-        verify(categoryRepository).insert(any(), {}, {})
+        verify(categoryRepository).insert(any(), any(), any())
     }
 
     @Test

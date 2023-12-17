@@ -151,7 +151,7 @@ class ProductViewModelTest {
         sut.insertProduct({}, {})
 
         advanceUntilIdle()
-        verify(productRep).insert(any(), {}, {})
+        verify(productRep).insert(any(), any(), any())
     }
 
     @Test
@@ -163,7 +163,7 @@ class ProductViewModelTest {
         sut.deleteProduct(id = 1L, {}, {})
 
         advanceUntilIdle()
-        verify(productRep).deleteById(id = 1L, timestamp = "", {}, {})
+        verify(productRep).deleteById(any(), any(), any(), any())
     }
 
     @Test
@@ -175,7 +175,7 @@ class ProductViewModelTest {
         sut.updateProduct(id = 1L, {}, {})
 
         advanceUntilIdle()
-        verify(productRep).update(any(), {}, {})
+        verify(productRep).update(any(), any(), any())
     }
 
     private fun assertProperties() {

@@ -78,7 +78,7 @@ class ProductListViewModelTest {
         sut.updateCategory(id = 1L)
         advanceUntilIdle()
 
-        verify(categoryRep).update(any(), {}, {})
+        verify(categoryRep).update(any(), any(), any())
     }
 
     @Test
