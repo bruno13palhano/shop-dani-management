@@ -146,7 +146,7 @@ class CustomerViewModelTest {
         sut.insertCustomer({}, {})
         advanceUntilIdle()
 
-        verify(customerRepository).insert(any(), {}, {})
+        verify(customerRepository).insert(any(), any(), any())
     }
 
     @Test
@@ -157,6 +157,6 @@ class CustomerViewModelTest {
         sut.updateCustomer(id = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(customerRepository).update(any(), {}, {})
+        verify(customerRepository).update(any(), any(), any())
     }
 }
