@@ -3,6 +3,7 @@ package com.bruno13palhano.core.mocks
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.model.Sale
@@ -178,6 +179,16 @@ fun makeRandomSale(
     isPaidByCustomer = isPaidByCustomer,
     delivered = delivered,
     canceled = canceled,
+    timestamp = timestamp
+)
+
+fun makeRandomDataVersion(
+    id: Long = getRandomLong(),
+    name: String = getRandomString(),
+    timestamp: String = getRandomString()
+) = DataVersion(
+    id = id,
+    name = name,
     timestamp = timestamp
 )
 
