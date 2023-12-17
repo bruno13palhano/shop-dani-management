@@ -22,12 +22,15 @@ private val listOfCategoryAdapter = object : ColumnAdapter<List<Category>, Strin
             emptyList()
         } else {
             databaseValue.split(",").map {
-                val params = it.split(":")
-                Category(id = params[0].toLong(), category = params[1])
+                val params = it.split("&")
+                Category(
+                    id = params[0].toLong(),
+                    category = params[1],
+                    timestamp = params[2]
+                )
             }
         }
 
-    override fun encode(value: List<Category>) = value.joinToString(",") {
-        "${it.id}:${it.category}"
-    }
+    override fun encode(value: List<Category>) =
+        value.joinToString(",") { "${it.id}&${it.category}" + "&${it.timestamp}" }
 }
