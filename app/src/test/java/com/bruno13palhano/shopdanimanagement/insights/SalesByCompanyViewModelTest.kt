@@ -5,7 +5,7 @@ import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomSale
-import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
+import com.bruno13palhano.shopdanimanagement.makeRandomStockItem
 import com.bruno13palhano.shopdanimanagement.repository.TestSaleRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.SalesByCompanyViewModel
 import com.bruno13palhano.shopdanimanagement.ui.screens.setChartEntries
@@ -39,28 +39,32 @@ class SalesByCompanyViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var saleRepository: SaleRepository<Sale>
+    private lateinit var saleRepository: SaleRepository
     private lateinit var sut: SalesByCompanyViewModel
 
     private val sales = listOf(
         makeRandomSale(
             id = 1L,
-            stockOrder = makeRandomStockOrder(id = 1L, isOrderedByCustomer = true),
+            stockItem = makeRandomStockItem(id = 1L),
+            isOrderedByCustomer = true,
             canceled = false
         ),
         makeRandomSale(
             id = 2L,
-            stockOrder = makeRandomStockOrder(id = 2L, isOrderedByCustomer = true),
+            stockItem = makeRandomStockItem(id = 2L),
+            isOrderedByCustomer = true,
             canceled = false
         ),
         makeRandomSale(
             id = 3L,
-            stockOrder = makeRandomStockOrder(id = 3L, isOrderedByCustomer = false),
+            stockItem = makeRandomStockItem(id = 3L),
+            isOrderedByCustomer = false,
             canceled = false
         ),
         makeRandomSale(
             id = 4L,
-            stockOrder = makeRandomStockOrder(id = 4L, isOrderedByCustomer = false),
+            stockItem = makeRandomStockItem(id = 4L),
+            isOrderedByCustomer = false,
             canceled = false
         )
     )
@@ -73,7 +77,7 @@ class SalesByCompanyViewModelTest {
 
     @Test
     fun getChartByRange_shouldCallGetAllFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository<Sale>>()
+        val saleRepository = mock<SaleRepository>()
         val sut = SalesByCompanyViewModel(saleRepository)
 
         whenever(saleRepository.getAll()).doAnswer { flowOf() }
@@ -98,7 +102,7 @@ class SalesByCompanyViewModelTest {
         collectJob.cancel()
     }
 
-    private suspend fun insertSales() = sales.forEach { saleRepository.insert(it) }
+    private suspend fun insertSales() = sales.forEach { saleRepository.insert(it, {}, {}) }
 
     private fun mapToEntries(sales: List<Sale>): SalesByCompanyViewModel.SalesCompanyEntries {
         val avonEntries = mutableListOf<Pair<String, Float>>()

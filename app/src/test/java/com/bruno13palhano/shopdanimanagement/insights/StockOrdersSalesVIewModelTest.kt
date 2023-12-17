@@ -41,7 +41,7 @@ class StockOrdersSalesVIewModelTest {
     val standardDispatcherRule = StandardDispatcherRule()
 
     private val currentDay = LocalDate.now()
-    private lateinit var saleRepository: SaleRepository<Sale>
+    private lateinit var saleRepository: SaleRepository
     private lateinit var sut: StockOrdersSalesViewModel
 
     private val sales = listOf(
@@ -72,7 +72,7 @@ class StockOrdersSalesVIewModelTest {
 
     @Test
     fun setStockOrderSalesRange_shouldCallGetLastSalesFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository<Sale>>()
+        val saleRepository = mock<SaleRepository>()
         val sut = StockOrdersSalesViewModel(saleRepository)
 
         whenever(saleRepository.getLastSales(any(), any())).doAnswer { flowOf() }
@@ -97,7 +97,7 @@ class StockOrdersSalesVIewModelTest {
         collectJob.cancel()
     }
 
-    private suspend fun insertSales() = sales.forEach { saleRepository.insert(it) }
+    private suspend fun insertSales() = sales.forEach { saleRepository.insert(it, {}, {}) }
 
     private fun mapToSalesEntries(sales: List<Sale>): StockOrdersSalesViewModel.ItemsSalesEntries {
         val stockEntries = mutableListOf<Pair<String, Float>>()
