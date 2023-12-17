@@ -117,7 +117,7 @@ class DeliveryViewModelTest {
         sut.updateDelivery(saleId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(saleRepository).update(any(), {}, {})
+        verify(saleRepository).update(any(), any(), any())
     }
 
     @Test
@@ -130,7 +130,7 @@ class DeliveryViewModelTest {
         sut.updateDelivery(saleId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(saleRepository).update(any(), {}, {})
+        verify(saleRepository).update(any(), any(), any())
     }
 
     @Test
@@ -143,7 +143,7 @@ class DeliveryViewModelTest {
         sut.updateDelivery(saleId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(saleRepository).update(any(), {}, {})
+        verify(saleRepository).update(any(), any(), any())
     }
 
     @Test
@@ -156,6 +156,6 @@ class DeliveryViewModelTest {
         sut.updateDelivery(saleId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(saleRepository).update(any(), {}, {})
+        verify(saleRepository).update(any(), any(), any())
     }
 }
