@@ -17,9 +17,7 @@ import com.bruno13palhano.shopdanimanagement.ui.notifications.receivers.ExpiredP
 import okio.IOException
 import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import kotlin.jvm.Throws
 
 private const val NOTIFICATION_ACTION_PREFIX = "com.bruno13palhano.shopdanimanagement"
@@ -29,9 +27,6 @@ val currentDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
 val dateFormat: DateFormat = SimpleDateFormat.getDateInstance().apply {
     timeZone = TimeZone.getTimeZone("UTC")
 }
-
-fun getCurrentTimestamp(): String = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-    .format(OffsetDateTime.now(ZoneOffset.UTC))
 
 fun setAlarmNotification(
     id: Long,
