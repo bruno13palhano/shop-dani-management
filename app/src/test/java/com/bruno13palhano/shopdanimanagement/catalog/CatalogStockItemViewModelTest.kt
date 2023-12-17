@@ -149,7 +149,7 @@ class CatalogStockItemViewModelTest {
         sut.insert({}, {})
         advanceUntilIdle()
 
-        verify(catalogRepository).insert(any(), {}, {})
+        verify(catalogRepository).insert(any(), any(), any())
     }
 
     @Test
@@ -161,7 +161,7 @@ class CatalogStockItemViewModelTest {
         sut.update({}, {})
         advanceUntilIdle()
 
-        verify(catalogRepository).update(any(), {}, {})
+        verify(catalogRepository).update(any(), any(), any())
     }
 
     @Test
@@ -173,7 +173,7 @@ class CatalogStockItemViewModelTest {
         sut.delete({}, {})
         advanceUntilIdle()
 
-        verify(catalogRepository).deleteById(any(), "", {}, {})
+        verify(catalogRepository).deleteById(any(), any(), any(), any())
     }
 
     private suspend fun insertCatalogItems() =
