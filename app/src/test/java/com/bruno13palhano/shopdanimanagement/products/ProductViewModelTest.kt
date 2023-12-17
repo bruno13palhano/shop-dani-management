@@ -28,8 +28,8 @@ import org.mockito.kotlin.mock
 @RunWith(MockitoJUnitRunner::class)
 class ProductViewModelTest {
 
-    private lateinit var productRepository: ProductRepository<Product>
-    private lateinit var categoryRepository: CategoryRepository<Category>
+    private lateinit var productRepository: ProductRepository
+    private lateinit var categoryRepository: CategoryRepository
     private lateinit var sut: ProductViewModel
 
     @get:Rule
@@ -44,9 +44,9 @@ class ProductViewModelTest {
     private var photo = byteArrayOf()
     private var date: Long = 0L
     private var categories = listOf(
-        Category(id = 1L, category = "Perfumes"),
-        Category(id = 2L, category = "Soaps"),
-        Category(id = 3L, category = "Others")
+        Category(id = 1L, category = "Perfumes", timestamp = ""),
+        Category(id = 2L, category = "Soaps", timestamp = ""),
+        Category(id = 3L, category = "Others", timestamp = "")
     )
     private var company = "Natura"
 
@@ -66,7 +66,7 @@ class ProductViewModelTest {
             CategoryCheck(id = 3L, category = "Others", isChecked = false)
         )
 
-        sut.getAllCategories()
+        sut.getAllCategories {}
 
         advanceUntilIdle()
 
@@ -76,7 +76,7 @@ class ProductViewModelTest {
     @Test
     fun getById_shouldSetProductProperties_ifProductExists() = runTest {
         val product = productFromProperties()
-        productRepository.insert(model = product)
+        productRepository.insert(model = product, {}, {})
 
         sut.getProduct(id = 1L)
 
@@ -128,7 +128,7 @@ class ProductViewModelTest {
     @Test
     fun setCategoryChecked_shouldChangeCategoryProperty() = runTest {
         insertCategories()
-        sut.getAllCategories()
+        sut.getAllCategories {}
 
         advanceUntilIdle()
 
@@ -144,38 +144,38 @@ class ProductViewModelTest {
 
     @Test
     fun whenInsertProduct_shouldCallInsertFromProductRepository() = runTest {
-        val productRep = mock<ProductRepository<Product>>()
-        val categoryRep = mock<CategoryRepository<Category>>()
+        val productRep = mock<ProductRepository>()
+        val categoryRep = mock<CategoryRepository>()
         val sut = ProductViewModel(productRep,  categoryRep)
 
-        sut.insertProduct()
+        sut.insertProduct({}, {})
 
         advanceUntilIdle()
-        verify(productRep).insert(any())
+        verify(productRep).insert(any(), {}, {})
     }
 
     @Test
     fun whenUpdateProduct_shouldCallUpdateFromProductRepository() = runTest {
-        val productRep = mock<ProductRepository<Product>>()
-        val categoryRep = mock<CategoryRepository<Category>>()
+        val productRep = mock<ProductRepository>()
+        val categoryRep = mock<CategoryRepository>()
         val sut = ProductViewModel(productRep,  categoryRep)
 
-        sut.deleteProduct(id = 1L)
+        sut.deleteProduct(id = 1L, {}, {})
 
         advanceUntilIdle()
-        verify(productRep).deleteById(id = 1L)
+        verify(productRep).deleteById(id = 1L, timestamp = "", {}, {})
     }
 
     @Test
     fun whenDeleteProduct_shouldCallDeleteByIdFromProductRepository() = runTest {
-        val productRep = mock<ProductRepository<Product>>()
-        val categoryRep = mock<CategoryRepository<Category>>()
+        val productRep = mock<ProductRepository>()
+        val categoryRep = mock<CategoryRepository>()
         val sut = ProductViewModel(productRep,  categoryRep)
 
-        sut.updateProduct(id = 1L)
+        sut.updateProduct(id = 1L, {}, {})
 
         advanceUntilIdle()
-        verify(productRep).update(any())
+        verify(productRep).update(any(), {}, {})
     }
 
     private fun assertProperties() {
@@ -188,7 +188,7 @@ class ProductViewModelTest {
     }
 
     private suspend fun insertCategories() {
-        categories.forEach { categoryRepository.insert(it) }
+        categories.forEach { categoryRepository.insert(it, {}, {}) }
     }
 
     private fun productFromProperties() = Product(
@@ -199,6 +199,7 @@ class ProductViewModelTest {
         photo = photo,
         date = date,
         categories = categories,
-        company = company
+        company = company,
+        timestamp = ""
     )
 }

@@ -32,13 +32,13 @@ class ProductCategoriesViewModelTest {
     @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var categoryRepository: CategoryRepository<Category>
+    private lateinit var categoryRepository: CategoryRepository
     private lateinit var sut: ProductCategoriesViewModel
 
     private var categories = listOf(
-        Category(id = 1L, category = "Perfumes"),
-        Category(id = 2L, category = "Soaps"),
-        Category(id = 3L, category = "Others")
+        Category(id = 1L, category = "Perfumes", timestamp = ""),
+        Category(id = 2L, category = "Soaps", timestamp = ""),
+        Category(id = 3L, category = "Others", timestamp = "")
     )
 
     @Before
@@ -57,13 +57,13 @@ class ProductCategoriesViewModelTest {
 
     @Test
     fun insertCategory_shouldCallInsertFromCategoryRepository() = runTest {
-        val categoryRepository = mock<CategoryRepository<Category>>()
+        val categoryRepository = mock<CategoryRepository>()
         val sut = ProductCategoriesViewModel(categoryRepository)
 
-        sut.insertCategory()
+        sut.insertCategory({}, {})
         advanceUntilIdle()
 
-        verify(categoryRepository).insert(any())
+        verify(categoryRepository).insert(any(), {}, {})
     }
 
     @Test
@@ -71,7 +71,7 @@ class ProductCategoriesViewModelTest {
         val name = "Test"
 
         sut.updateName(newName = name)
-        sut.insertCategory()
+        sut.insertCategory({}, {})
 
         assertEquals("", sut.newName)
     }
@@ -87,5 +87,6 @@ class ProductCategoriesViewModelTest {
         collectJob.cancel()
     }
 
-    private suspend fun insertCategories() = categories.forEach { categoryRepository.insert(it) }
+    private suspend fun insertCategories() =
+        categories.forEach { categoryRepository.insert(it, {}, {}) }
 }

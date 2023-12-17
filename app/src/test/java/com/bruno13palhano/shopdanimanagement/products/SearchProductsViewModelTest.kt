@@ -3,7 +3,6 @@ package com.bruno13palhano.shopdanimanagement.products
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomProduct
 import com.bruno13palhano.shopdanimanagement.makeRandomSearchCache
@@ -40,8 +39,8 @@ class SearchProductsViewModelTest {
     @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var productRepository: ProductRepository<Product>
-    private lateinit var searchCacheRepository: SearchCacheRepository<SearchCache>
+    private lateinit var productRepository: ProductRepository
+    private lateinit var searchCacheRepository: SearchCacheRepository
     private lateinit var sut: SearchProductsViewModel
     private val products: List<Product>  = listOf(
         makeRandomProduct(id = 1L, name = "Homem"),
@@ -64,8 +63,8 @@ class SearchProductsViewModelTest {
     @Test
     fun whenSearch_shouldDelegateToProductRepository() = runTest {
         val search = "A"
-        val productRep = mock<ProductRepository<Product>>()
-        val searchCacheRep = mock<SearchCacheRepository<SearchCache>>()
+        val productRep = mock<ProductRepository>()
+        val searchCacheRep = mock<SearchCacheRepository>()
         val sut = SearchProductsViewModel(productRep, searchCacheRep)
 
         whenever(productRep.search(any())).thenAnswer { flowOf(products) }
@@ -109,8 +108,8 @@ class SearchProductsViewModelTest {
     @Test
     fun whenSearchPerCategory_shouldDelegateToProductRepository() = runTest {
         val search = "B"
-        val productRep = mock<ProductRepository<Product>>()
-        val searchCacheRep = mock<SearchCacheRepository<SearchCache>>()
+        val productRep = mock<ProductRepository>()
+        val searchCacheRep = mock<SearchCacheRepository>()
         val sut = SearchProductsViewModel(productRep, searchCacheRep)
 
         whenever(productRep.searchPerCategory(any(), any())).thenAnswer { flowOf(products) }
@@ -153,8 +152,8 @@ class SearchProductsViewModelTest {
 
     @Test
     fun whenGetSearchCache_shouldDelegateToSearchCacheRepository() = runTest {
-        val productRep = mock<ProductRepository<Product>>()
-        val searchCacheRep = mock<SearchCacheRepository<SearchCache>>()
+        val productRep = mock<ProductRepository>()
+        val searchCacheRep = mock<SearchCacheRepository>()
         val sut = SearchProductsViewModel(productRep, searchCacheRep)
 
         whenever(searchCacheRep.getAll()).thenAnswer { flowOf(products) }
@@ -182,8 +181,8 @@ class SearchProductsViewModelTest {
     @Test
     fun whenInsertSearch_shouldDelegateToProductRepository() = runTest {
         val search = "C"
-        val productRep = mock<ProductRepository<Product>>()
-        val searchCacheRep = mock<SearchCacheRepository<SearchCache>>()
+        val productRep = mock<ProductRepository>()
+        val searchCacheRep = mock<SearchCacheRepository>()
         val sut = SearchProductsViewModel(productRep, searchCacheRep)
 
         sut.insertSearch(search = search)
@@ -204,6 +203,8 @@ class SearchProductsViewModelTest {
             )
         }
 
-    private suspend fun insertProducts() = products.forEach { productRepository.insert(it) }
-    private suspend fun insertSearchCache() = searchList.forEach { searchCacheRepository.insert(it) }
+    private suspend fun insertProducts() =
+        products.forEach { productRepository.insert(it, {}, {}) }
+    private suspend fun insertSearchCache() =
+        searchList.forEach { searchCacheRepository.insert(it) }
 }
