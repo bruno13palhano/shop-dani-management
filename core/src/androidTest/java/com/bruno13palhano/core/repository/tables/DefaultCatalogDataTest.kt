@@ -1,12 +1,14 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
+import com.bruno13palhano.core.data.repository.catalog.CatalogData
 import com.bruno13palhano.core.data.repository.catalog.DefaultCatalogData
 import com.bruno13palhano.core.data.repository.product.DefaultProductData
+import com.bruno13palhano.core.mocks.makeRandomDataVersion
 import com.bruno13palhano.core.mocks.makeRandomCatalog
 import com.bruno13palhano.core.mocks.makeRandomProduct
 import com.bruno13palhano.core.model.Catalog
+import com.bruno13palhano.core.model.DataVersion
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -23,10 +25,11 @@ import javax.inject.Inject
 @HiltAndroidTest
 class DefaultCatalogDataTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var catalogTable: CatalogRepository<Catalog>
+    private lateinit var catalogTable: CatalogData
     private lateinit var firstItem: Catalog
     private lateinit var secondItem: Catalog
     private lateinit var thirdItem: Catalog
+    private lateinit var dataVersion: DataVersion
 
     @get:Rule
     val hiltTestRule = HiltAndroidRule(this)
@@ -38,16 +41,22 @@ class DefaultCatalogDataTest {
         val productTable = DefaultProductData(
             database.shopDatabaseQueries,
             database.productCategoriesTableQueries,
+            database.versionTableQueries,
             Dispatchers.IO
         )
-        catalogTable = DefaultCatalogData(database.catalogTableQueries, Dispatchers.IO)
+        catalogTable = DefaultCatalogData(
+            database.catalogTableQueries,
+            database.versionTableQueries,
+            Dispatchers.IO
+        )
 
+        dataVersion = makeRandomDataVersion(id = 1L)
         val product1 = makeRandomProduct(id = 1L, name = "Homem")
         val product2 = makeRandomProduct(id = 2L, name = "Kaiak")
         val product3 = makeRandomProduct(id = 3L, name = "Luna")
-        productTable.insert(product1)
-        productTable.insert(product2)
-        productTable.insert(product3)
+        productTable.insert(product1, dataVersion, {}, {})
+        productTable.insert(product2, dataVersion, {}, {})
+        productTable.insert(product3, dataVersion, {}, {})
 
         firstItem = makeRandomCatalog(id = 1L, productId = 1L, name = product1.name, price = 100F)
         secondItem = makeRandomCatalog(id = 2L, productId = 2L, name = product2.name, price = 50F)
@@ -74,7 +83,7 @@ class DefaultCatalogDataTest {
         )
 
         insertAllCatalogs()
-        catalogTable.update(updatedItem)
+        catalogTable.update(updatedItem, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             catalogTable.getAll().collect { items ->
@@ -87,7 +96,7 @@ class DefaultCatalogDataTest {
     @Test
     fun shouldNotUpdateCatalogItemInTheDatabase_ifCatalogItemNotExists() = runTest {
         insertTwoCatalogs()
-        catalogTable.update(thirdItem)
+        catalogTable.update(thirdItem, dataVersion, {}, {})
         launch {
             catalogTable.getAll().collect { items ->
                 assertThat(items).doesNotContain(thirdItem)
@@ -99,7 +108,7 @@ class DefaultCatalogDataTest {
     @Test
     fun shouldDeleteCatalogItemWithThisIdInTheDatabase_ifCatalogItemExists() = runTest {
         insertAllCatalogs()
-        catalogTable.deleteById(firstItem.id)
+        catalogTable.deleteById(firstItem.id, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             catalogTable.getAll().collect { items ->
@@ -112,7 +121,7 @@ class DefaultCatalogDataTest {
     @Test
     fun shouldNotDeleteCatalogItemWithThisIdInTheDatabase_ifCatalogItemNotExists() = runTest {
         insertTwoCatalogs()
-        catalogTable.deleteById(thirdItem.id)
+        catalogTable.deleteById(thirdItem.id, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             catalogTable.getAll().collect { items ->
@@ -210,13 +219,13 @@ class DefaultCatalogDataTest {
     }
 
     private suspend fun insertTwoCatalogs() {
-        catalogTable.insert(firstItem)
-        catalogTable.insert(secondItem)
+        catalogTable.insert(firstItem, dataVersion, {}, {})
+        catalogTable.insert(secondItem, dataVersion, {}, {})
     }
 
     private suspend fun insertAllCatalogs() {
-        catalogTable.insert(firstItem)
-        catalogTable.insert(secondItem)
-        catalogTable.insert(thirdItem)
+        catalogTable.insert(firstItem, dataVersion, {}, {})
+        catalogTable.insert(secondItem, dataVersion, {}, {})
+        catalogTable.insert(thirdItem, dataVersion, {}, {})
     }
 }
