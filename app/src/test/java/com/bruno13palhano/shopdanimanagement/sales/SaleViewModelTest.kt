@@ -291,7 +291,7 @@ class SaleViewModelTest {
         sut.insertSale(isOrderedByCustomer = false, currentDate = 1000L, {}, {})
         advanceUntilIdle()
 
-        verify(saleRepository).insert(any(), {}, {})
+        verify(saleRepository).insert(any(), any(), any())
     }
 
     @Test
@@ -302,7 +302,7 @@ class SaleViewModelTest {
         sut.updateSale(saleId = 1L, false, onError = {}, onSuccess = {})
         advanceUntilIdle()
 
-        verify(saleRepository).update(any(), {}, {})
+        verify(saleRepository).update(any(), any(), any())
     }
 
     @Test
@@ -313,7 +313,7 @@ class SaleViewModelTest {
         sut.deleteSale(saleId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(saleRepository).deleteById(any(), "", {}, {})
+        verify(saleRepository).deleteById(any(), any(), any(), any())
     }
 
     @Test
