@@ -86,14 +86,14 @@ class StockViewModelTest {
             makeRandomStockItem(id = 3L)
         )
         items.forEach { stockItemRepository.insert(it, {}, {}) }
-        val expectedItem = items[1]
+        val expectedItem = listOf(items[1], items[2])
 
         val collectJob = launch { sut.stockList.collect() }
 
         sut.getItems()
         advanceUntilIdle()
 
-        assertEquals(mapToStock(listOf(expectedItem)), sut.stockList.value)
+        assertEquals(mapToStock(expectedItem), sut.stockList.value)
 
         collectJob.cancel()
     }
