@@ -23,7 +23,7 @@ delete:
 DELETE FROM VersionTable WHERE id = ?;
 
 getLast:
-SELECT VersionTable.* FROM VersionTable ORDER BY id LIMIT 1;
+SELECT VersionTable.* FROM VersionTable ORDER BY id DESC LIMIT 1;
 
 getLastId:
 SELECT last_insert_rowid();
