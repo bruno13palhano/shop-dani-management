@@ -11,6 +11,8 @@ import com.bruno13palhano.core.data.di.CatalogRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
+import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
+import com.bruno13palhano.shopdanimanagement.ui.screens.stringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -118,11 +120,4 @@ class CatalogItemViewModel @Inject constructor(
         price = stringToFloat(price),
         timestamp = getCurrentTimestamp()
     )
-
-    private fun stringToLong(value: String) = try { value.toLong() } catch (ignored: Exception) { 0L }
-    private fun stringToFloat(value: String): Float {
-        return try {
-            value.replace(",", ".").toFloat()
-        } catch (ignored: Exception) { 0F }
-    }
 }
