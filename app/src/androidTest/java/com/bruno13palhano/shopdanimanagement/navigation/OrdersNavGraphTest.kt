@@ -10,14 +10,13 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onFirst
-import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
-import androidx.test.espresso.Espresso
 import com.bruno13palhano.shopdanimanagement.MainActivity
+import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
 import com.bruno13palhano.shopdanimanagement.ui.navigation.ITEM_ID
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.navigation.OrdersDestinations
@@ -71,7 +70,7 @@ class OrdersNavGraphTest {
     }
 
     @Test
-    fun onItemClick_fromStockOrdersScreen_shouldNavigateToItemScreen() {
+    fun onItemClick_fromStockOrdersScreen_shouldNavigateToSaleScreen() {
         val expected = "${OrdersDestinations.ORDERS_EDIT_ITEM_ROUTE}/{$ITEM_ID}"
 
         composeRule.onNodeWithContentDescription("List of items")
@@ -79,16 +78,7 @@ class OrdersNavGraphTest {
             .onFirst()
             .performClick()
 
-        val route = navController.currentBackStackEntry?.destination?.route
-
-        assertEquals(expected, route)
-    }
-
-    @Test
-    fun onSearchClick_fromStockOrdersScreen_shouldNavigateToStockOrderSearchScreen() {
-        val expected = OrdersDestinations.ORDERS_SEARCH_ITEM_ROUTE
-
-        composeRule.onNodeWithContentDescription("Search").performClick()
+        composeRule.onNodeWithContentDescription("Edit").performClick()
 
         val route = navController.currentBackStackEntry?.destination?.route
 
@@ -96,52 +86,8 @@ class OrdersNavGraphTest {
     }
 
     @Test
-    fun onNavigateUp_fromStockOrdersScreen_shouldNavigateToHomeScreen() {
-        val expected = OrdersDestinations.ORDERS_MAIN_ROUTE
-
-        composeRule.onNodeWithContentDescription("Search").performClick()
-
-        composeRule.onNodeWithContentDescription("Up button").performClick()
-
-        val route = navController.currentBackStackEntry?.destination?.route
-
-        assertEquals(expected, route)
-    }
-
-    @Test
-    fun onItemClick_fromStockOrderSearchScreen_shouldNavigateToItemScreen() {
-        val expected = "${OrdersDestinations.ORDERS_EDIT_ITEM_ROUTE}/{$ITEM_ID}"
-
-        composeRule.onNodeWithContentDescription("Search").performClick()
-        composeRule.onNodeWithText("Search for products").performClick()
-        Espresso.closeSoftKeyboard()
-        composeRule.onNodeWithContentDescription("List of search")
-            .onChildren()
-            .onLast()
-            .performClick()
-
-        composeRule.onNodeWithContentDescription("List of items").assertIsDisplayed()
-            .onChildren()
-            .onFirst()
-            .performClick()
-
-
-        val route = navController.currentBackStackEntry?.destination?.route
-
-        assertEquals(expected, route)
-    }
-
-    @Test
-    fun onNavigateUp_fromStockOrderSearchScreen_shouldNavigateToStockOrderScreen() {
-        val expected = OrdersDestinations.ORDERS_MAIN_ROUTE
-
-        composeRule.onNodeWithContentDescription("Search").performClick()
-        composeRule.onNodeWithText("Search for products").performClick()
-        Espresso.closeSoftKeyboard()
-        composeRule.onNodeWithContentDescription("List of search")
-            .onChildren()
-            .onLast()
-            .performClick()
+    fun onNavigateUp_fromOrdersScreen_shouldNavigateToHomeScreen() {
+        val expected = HomeDestinations.HOME_MAIN_ROUTE
 
         composeRule.onNodeWithContentDescription("Up button").performClick()
 
