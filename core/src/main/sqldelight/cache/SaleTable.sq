@@ -70,7 +70,7 @@ SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.ad
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
-WHERE P.id = last_insert_rowid();
+ORDER BY S.id DESC LIMIT 1;
 
 getByCustomerId:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,

@@ -23,7 +23,7 @@ getById:
 SELECT CategoryTable. * FROM CategoryTable WHERE id = ?;
 
 getLast:
-SELECT CategoryTable. * FROM CategoryTable WHERE id = last_insert_rowid();
+SELECT CategoryTable. * FROM CategoryTable ORDER BY id DESC LIMIT 1;
 
 search:
 SELECT CategoryTable. * FROM CategoryTable WHERE name LIKE '%'||?||'%';

@@ -50,7 +50,7 @@ FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) WHERE C.id = ?;
 
 getLast:
 SELECT C.id, P.id, P.name, P.photo, C.title, C.description, C.discount, C.price, C.timestamp
-FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) WHERE C.id = last_insert_rowid();
+FROM product P INNER JOIN CatalogTable C ON(P.id = C.productId) ORDER BY C.id DESC LIMIT 1;
 
 getLastId:
 SELECT last_insert_rowid();

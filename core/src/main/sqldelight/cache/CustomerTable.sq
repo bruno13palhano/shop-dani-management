@@ -47,7 +47,7 @@ getById:
 SELECT CustomerTable. * FROM CustomerTable WHERE id = ?;
 
 getLast:
-SELECT CustomerTable. * FROM CustomerTable WHERE id = last_insert_rowid();
+SELECT CustomerTable. * FROM CustomerTable ORDER BY id DESC LIMIT 1;
 
 getLastId:
 SELECT last_insert_rowid();

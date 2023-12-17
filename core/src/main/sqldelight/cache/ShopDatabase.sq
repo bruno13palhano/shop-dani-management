@@ -35,7 +35,7 @@ FROM product P INNER JOIN ProductCategoriesTable PC ON P.id = PC.productId WHERE
 getLast:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
 FROM product P INNER JOIN ProductCategoriesTable PC ON P.id = PC.productId
-WHERE P.id = last_insert_rowid();
+ORDER BY P.id DESC LIMIT 1;
 
 search:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
