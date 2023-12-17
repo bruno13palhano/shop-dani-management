@@ -1,19 +1,20 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.repository.customer.DefaultCustomerData
-import com.bruno13palhano.core.data.repository.delivery.DefaultDeliveryData
 import com.bruno13palhano.core.data.repository.product.DefaultProductData
 import com.bruno13palhano.core.data.repository.sale.DefaultSaleData
-import com.bruno13palhano.core.data.repository.stockorder.DefaultStockData
+import com.bruno13palhano.core.data.repository.sale.SaleData
+import com.bruno13palhano.core.data.repository.stock.DefaultStockData
 import com.bruno13palhano.core.mocks.makeRandomCustomer
+import com.bruno13palhano.core.mocks.makeRandomDataVersion
 import com.bruno13palhano.core.mocks.makeRandomDelivery
 import com.bruno13palhano.core.mocks.makeRandomProduct
 import com.bruno13palhano.core.mocks.makeRandomSale
 import com.bruno13palhano.core.mocks.makeRandomStockOrder
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.StockItem
@@ -33,7 +34,7 @@ import javax.inject.Inject
 class DefaultSaleDataTest {
     @Inject
     lateinit var database: ShopDatabase
-    private lateinit var saleTable: SaleRepository<Sale>
+    private lateinit var saleTable: SaleData
     private lateinit var firstStockSale: Sale
     private lateinit var secondStockSale: Sale
     private lateinit var thirdStockSale: Sale
@@ -43,7 +44,8 @@ class DefaultSaleDataTest {
     private lateinit var updatedSale: Sale
     private lateinit var delivery4: Delivery
     private lateinit var customer4: Customer
-    private lateinit var fourthOrder: StockItem
+    private lateinit var fourthItem: StockItem
+    private lateinit var dataVersion: DataVersion
 
     @get:Rule
     val hiltTestRule = HiltAndroidRule(this)
@@ -68,7 +70,7 @@ class DefaultSaleDataTest {
     @Test
     fun shouldUpdateSaleInTheDatabase_ifExists() = runTest {
         insertSales(amount = 1)
-        saleTable.update(updatedSale)
+        saleTable.update(updatedSale, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             saleTable.getAll().collect {
@@ -81,7 +83,7 @@ class DefaultSaleDataTest {
     @Test
     fun shouldNotUpdateSaleInTheDatabase_ifNotExists() = runTest {
         insertSales(amount = 1)
-        saleTable.update(secondStockSale)
+        saleTable.update(secondStockSale, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             saleTable.getAll().collect {
@@ -113,11 +115,11 @@ class DefaultSaleDataTest {
     @Test
     fun shouldInsertOrderSaleDeliveryItems_inTheDatabase() = runTest {
         insertSales(amount = 3)
-        saleTable.insertItems(
-            sale = fourthOrderSale,
-            stockOrder = fourthOrder,
-            delivery = delivery4,
-            onSuccess = {},
+        saleTable.insert(
+            model = fourthOrderSale,
+            version = dataVersion,
+            pushed = true,
+            onSuccess = { _, _ -> },
             onError = {}
         )
 
@@ -448,37 +450,37 @@ class DefaultSaleDataTest {
     private suspend fun insertSales(amount: Int) {
         when(amount) {
             1 -> {
-                saleTable.insert(firstStockSale)
+                saleTable.insert(firstStockSale, dataVersion, true, {}, { _, _ -> })
             }
             2 -> {
-                saleTable.insert(firstStockSale)
-                saleTable.insert(secondStockSale)
+                saleTable.insert(firstStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(secondStockSale, dataVersion, true, {}, { _, _ -> })
             }
             3 -> {
-                saleTable.insert(firstStockSale)
-                saleTable.insert(secondStockSale)
-                saleTable.insert(thirdStockSale)
+                saleTable.insert(firstStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(secondStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(thirdStockSale, dataVersion, true, {}, { _, _ -> })
             }
             4 -> {
-                saleTable.insert(firstStockSale)
-                saleTable.insert(secondStockSale)
-                saleTable.insert(thirdStockSale)
-                saleTable.insert(fourthOrderSale)
+                saleTable.insert(firstStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(secondStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(thirdStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(fourthOrderSale, dataVersion, true, {}, { _, _ -> })
             }
             5 -> {
-                saleTable.insert(firstStockSale)
-                saleTable.insert(secondStockSale)
-                saleTable.insert(thirdStockSale)
-                saleTable.insert(fourthOrderSale)
-                saleTable.insert(fifthOrderSale)
+                saleTable.insert(firstStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(secondStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(thirdStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(fourthOrderSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(fifthOrderSale, dataVersion, true, {}, { _, _ -> })
             }
             else -> {
-                saleTable.insert(firstStockSale)
-                saleTable.insert(secondStockSale)
-                saleTable.insert(thirdStockSale)
-                saleTable.insert(fourthOrderSale)
-                saleTable.insert(fifthOrderSale)
-                saleTable.insert(sixthOrderSale)
+                saleTable.insert(firstStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(secondStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(thirdStockSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(fourthOrderSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(fifthOrderSale, dataVersion, true, {}, { _, _ -> })
+                saleTable.insert(sixthOrderSale, dataVersion, true, {}, { _, _ -> })
             }
         }
     }
@@ -486,83 +488,90 @@ class DefaultSaleDataTest {
     private suspend fun init() {
         saleTable = DefaultSaleData(
             database.saleTableQueries,
-            database.deliveryTableQueries,
-            database.stockOrderTableQueries,
+            database.stockTableQueries,
+            database.versionTableQueries,
             Dispatchers.IO
         )
-        val stockOrderTable = DefaultStockData(database.stockOrderTableQueries, Dispatchers.IO)
-        val customerTable = DefaultCustomerData(database.customerTableQueries, Dispatchers.IO)
-        val deliveryTable = DefaultDeliveryData(database.deliveryTableQueries, Dispatchers.IO)
+
+        dataVersion = makeRandomDataVersion(id = 1L)
+        val stockTable = DefaultStockData(
+            database.stockTableQueries,
+            database.versionTableQueries,
+            Dispatchers.IO
+        )
+        val customerTable = DefaultCustomerData(
+            database.customerTableQueries,
+            database.versionTableQueries,
+            Dispatchers.IO
+        )
         val productTable = DefaultProductData(
             database.shopDatabaseQueries,
             database.productCategoriesTableQueries,
+            database.versionTableQueries,
             Dispatchers.IO
         )
         val product1 = makeRandomProduct(
             id = 1L,
             name = "Homem",
-            categories = listOf(Category(id = 1L, category = "Perfumes"))
+            categories = listOf(Category(id = 1L, category = "Perfumes", timestamp = ""))
         )
         val product2 = makeRandomProduct(
             id = 2L,
             name = "Kaiak",
-            categories = listOf(Category(id = 2L, category = "Soaps"), Category(id = 1L, category = "Perfumes"))
+            categories = listOf(
+                Category(id = 2L, category = "Soaps", timestamp = ""),
+                Category(id = 1L, category = "Perfumes", timestamp = "")
+            )
         )
         val product3 = makeRandomProduct(
             id = 3L,
             name = "Luna",
-            categories = listOf(Category(id = 3L, category = "Others"))
+            categories = listOf(Category(id = 3L, category = "Others", timestamp = ""))
         )
-        productTable.insert(product1)
-        productTable.insert(product2)
-        productTable.insert(product3)
+        productTable.insert(product1, dataVersion, {}, {})
+        productTable.insert(product2, dataVersion, {}, {})
+        productTable.insert(product3, dataVersion, {}, {})
 
         val firstItem = makeRandomStockOrder(
             id = 1L,
             product = product1,
             salePrice = 120.90F,
-            isOrderedByCustomer = false,
             isPaid = false
         )
         val secondItem = makeRandomStockOrder(
             id = 2L,
             product = product2,
             salePrice = 150.99F,
-            isOrderedByCustomer = false,
             isPaid = false
         )
         val thirdItem = makeRandomStockOrder(
             id = 3L,
             product = product3,
             salePrice = 188.80F,
-            isOrderedByCustomer = false,
             isPaid = true
         )
-        fourthOrder = makeRandomStockOrder(
+        fourthItem = makeRandomStockOrder(
             id = 4L,
             product = product3,
             salePrice = 200.99F,
-            isOrderedByCustomer = true
         )
-        val fifthOrder = makeRandomStockOrder(
+        val fifthItem = makeRandomStockOrder(
             id = 5L,
             product = product2,
             salePrice = 210.99F,
-            isOrderedByCustomer = true
         )
-        val sixthOrder = makeRandomStockOrder(
+        val sixthItem = makeRandomStockOrder(
             id = 6L,
             product = product1,
             salePrice = 220.77F,
-            isOrderedByCustomer = true
         )
 
-        stockOrderTable.insert(firstItem)
-        stockOrderTable.insert(secondItem)
-        stockOrderTable.insert(thirdItem)
-        stockOrderTable.insert(fourthOrder)
-        stockOrderTable.insert(fifthOrder)
-        stockOrderTable.insert(sixthOrder)
+        stockTable.insert(firstItem, dataVersion, {}, {})
+        stockTable.insert(secondItem, dataVersion, {}, {})
+        stockTable.insert(thirdItem, dataVersion, {}, {})
+        stockTable.insert(fourthItem, dataVersion, {}, {})
+        stockTable.insert(fifthItem, dataVersion, {}, {})
+        stockTable.insert(sixthItem, dataVersion, {}, {})
 
         val customer1 = makeRandomCustomer(id = 1L, name = "Brenda")
         val customer2 = makeRandomCustomer(id = 2L, name = "Bruno")
@@ -571,12 +580,12 @@ class DefaultSaleDataTest {
         val customer5 = makeRandomCustomer(id = 5L, name = "Helena")
         val customer6 = makeRandomCustomer(id = 6L, name = "Josué")
 
-        customerTable.insert(customer1)
-        customerTable.insert(customer2)
-        customerTable.insert(customer3)
-        customerTable.insert(customer4)
-        customerTable.insert(customer5)
-        customerTable.insert(customer6)
+        customerTable.insert(customer1, dataVersion, {}, {})
+        customerTable.insert(customer2, dataVersion, {}, {})
+        customerTable.insert(customer3, dataVersion, {}, {})
+        customerTable.insert(customer4, dataVersion, {}, {})
+        customerTable.insert(customer5, dataVersion, {}, {})
+        customerTable.insert(customer6, dataVersion, {}, {})
 
         val delivery1 = makeRandomDelivery(
             id = 1L,
@@ -617,18 +626,12 @@ class DefaultSaleDataTest {
             deliveryPrice = 0.0F
         )
 
-        deliveryTable.insert(delivery1)
-        deliveryTable.insert(delivery2)
-        deliveryTable.insert(delivery3)
-        deliveryTable.insert(delivery4)
-        deliveryTable.insert(delivery5)
-        deliveryTable.insert(delivery6)
-
         firstStockSale = makeRandomSale(
             id = 1L,
             stockItem = firstItem,
             customer = customer1,
             delivery = delivery1,
+            isOrderedByCustomer = false,
             isPaidByCustomer = false,
             canceled = false
         )
@@ -637,6 +640,7 @@ class DefaultSaleDataTest {
             stockItem = secondItem,
             customer = customer2,
             delivery = delivery2,
+            isOrderedByCustomer = false,
             isPaidByCustomer = false,
             canceled = false
         )
@@ -645,30 +649,34 @@ class DefaultSaleDataTest {
             stockItem = thirdItem,
             customer = customer3,
             delivery = delivery3,
+            isOrderedByCustomer = false,
             isPaidByCustomer = false,
             canceled = true
         )
         fourthOrderSale = makeRandomSale(
             id = 4L,
-            stockItem = fourthOrder,
+            stockItem = fourthItem,
             customer = customer4,
             delivery = delivery4,
+            isOrderedByCustomer = true,
             isPaidByCustomer = true,
             canceled = false
         )
         fifthOrderSale = makeRandomSale(
             id = 5L,
-            stockItem = fifthOrder,
+            stockItem = fifthItem,
             customer = customer5,
             delivery = delivery5,
+            isOrderedByCustomer = true,
             isPaidByCustomer = true,
             canceled = false
         )
         sixthOrderSale = makeRandomSale(
             id = 6L,
-            stockItem = sixthOrder,
+            stockItem = sixthItem,
             customer = customer6,
             delivery = delivery6,
+            isOrderedByCustomer = true,
             isPaidByCustomer = false,
             canceled = true
         )
