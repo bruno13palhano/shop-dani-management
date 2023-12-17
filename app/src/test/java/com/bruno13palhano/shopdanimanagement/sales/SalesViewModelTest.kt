@@ -5,7 +5,7 @@ import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCustomer
 import com.bruno13palhano.shopdanimanagement.makeRandomSale
-import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
+import com.bruno13palhano.shopdanimanagement.makeRandomStockItem
 import com.bruno13palhano.shopdanimanagement.repository.TestSaleRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
@@ -39,25 +39,25 @@ class SalesViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var salesRepository: SaleRepository<Sale>
+    private lateinit var salesRepository: SaleRepository
     private lateinit var sut: SalesViewModel
 
     private val sales = listOf(
         makeRandomSale(
             id = 1L,
-            stockOrder = makeRandomStockOrder(id = 1L, salePrice = 50F),
+            stockItem = makeRandomStockItem(id = 1L, salePrice = 50F),
             customer = makeRandomCustomer(id = 1L, name = "Alex"),
             canceled = false
         ),
         makeRandomSale(
             id = 2L,
-            stockOrder = makeRandomStockOrder(id = 2L, salePrice = 100F),
+            stockItem = makeRandomStockItem(id = 2L, salePrice = 100F),
             customer = makeRandomCustomer(id = 2L, name = "Bruno"),
             canceled = true
         ),
         makeRandomSale(
             id = 3L,
-            stockOrder = makeRandomStockOrder(id = 3L, salePrice = 125F),
+            stockItem = makeRandomStockItem(id = 3L, salePrice = 125F),
             customer = makeRandomCustomer(id = 3L, "Carlos"),
             canceled = false
         )
@@ -71,7 +71,7 @@ class SalesViewModelTest {
 
     @Test
     fun getSales_shouldCallGetAllFromRepository() = runTest {
-        val salesRepository = mock<SaleRepository<Sale>>()
+        val salesRepository = mock<SaleRepository>()
         val sut = SalesViewModel(salesRepository)
 
         whenever(salesRepository.getAll()).doAnswer { flowOf() }
@@ -85,7 +85,7 @@ class SalesViewModelTest {
     @Test
     fun getSales_shouldSetSaleListProperty() = runTest {
         val expectedSales = listOf(sales[0], sales[2])
-        sales.forEach { salesRepository.insert(it) }
+        sales.forEach { salesRepository.insert(it, {}, {}) }
 
         val collectJob = launch { sut.saleList.collect() }
         sut.getSales()
@@ -98,7 +98,7 @@ class SalesViewModelTest {
 
     @Test
     fun getSalesByCustomerName_shouldCallGetAllSalesByCustomerNameFromRepository() = runTest {
-        val salesRepository = mock<SaleRepository<Sale>>()
+        val salesRepository = mock<SaleRepository>()
         val sut = SalesViewModel(salesRepository)
 
         whenever(salesRepository.getAllSalesByCustomerName(any())).doAnswer { flowOf() }
@@ -112,7 +112,7 @@ class SalesViewModelTest {
     @Test
     fun getSalesByCustomerName_shouldSetSaleListProperty() = runTest {
         val expectedSales = listOf(sales[2], sales[0])
-        sales.forEach { salesRepository.insert(it) }
+        sales.forEach { salesRepository.insert(it, {}, {}) }
 
         val collectJob = launch { sut.saleList.collect() }
         sut.getSalesByCustomerName(isOrderedAsc = false)
@@ -125,7 +125,7 @@ class SalesViewModelTest {
 
     @Test
     fun getSalesBySalePrice_shouldCallGetAllSalesBySalePriceFromRepository() = runTest {
-        val salesRepository = mock<SaleRepository<Sale>>()
+        val salesRepository = mock<SaleRepository>()
         val sut = SalesViewModel(salesRepository)
 
         whenever(salesRepository.getAllSalesBySalePrice(any())).doAnswer { flowOf() }
@@ -139,7 +139,7 @@ class SalesViewModelTest {
     @Test
     fun getSalesBySalePrice_shouldSetSaleListProperty() = runTest {
         val expectedSales = listOf(sales[2], sales[0])
-        sales.forEach { salesRepository.insert(it) }
+        sales.forEach { salesRepository.insert(it, {}, {}) }
 
         val collectJob = launch { sut.saleList.collect() }
         sut.getSalesBySalePrice(isOrderedAsc = false)

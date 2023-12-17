@@ -3,20 +3,17 @@ package com.bruno13palhano.shopdanimanagement.sales
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
-import com.bruno13palhano.core.data.repository.stockorder.StockOrderRepository
+import com.bruno13palhano.core.data.repository.stock.StockRepository
 import com.bruno13palhano.core.model.Customer
-import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.model.StockOrder
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomCustomer
 import com.bruno13palhano.shopdanimanagement.makeRandomProduct
 import com.bruno13palhano.shopdanimanagement.makeRandomSale
-import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
+import com.bruno13palhano.shopdanimanagement.makeRandomStockItem
 import com.bruno13palhano.shopdanimanagement.repository.TestCustomerRepository
 import com.bruno13palhano.shopdanimanagement.repository.TestProductRepository
 import com.bruno13palhano.shopdanimanagement.repository.TestSaleRepository
-import com.bruno13palhano.shopdanimanagement.repository.TestStockOrderRepository
+import com.bruno13palhano.shopdanimanagement.repository.TestStockRepository
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerCheck
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SaleViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,19 +47,19 @@ class SaleViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var saleRepository: SaleRepository<Sale>
-    private lateinit var stockOrderRepository: StockOrderRepository<StockOrder>
-    private lateinit var productRepository: ProductRepository<Product>
-    private lateinit var customerRepository: CustomerRepository<Customer>
+    private lateinit var saleRepository: SaleRepository
+    private lateinit var stockItemRepository: StockRepository
+    private lateinit var productRepository: ProductRepository
+    private lateinit var customerRepository: CustomerRepository
     private lateinit var sut: SaleViewModel
 
     @Before
     fun setup() {
         saleRepository = TestSaleRepository()
-        stockOrderRepository = TestStockOrderRepository()
+        stockItemRepository = TestStockRepository()
         productRepository = TestProductRepository()
         customerRepository = TestCustomerRepository()
-        sut = SaleViewModel(saleRepository, stockOrderRepository, productRepository, customerRepository)
+        sut = SaleViewModel(saleRepository, stockItemRepository, productRepository, customerRepository)
     }
 
     @Test
@@ -160,7 +157,7 @@ class SaleViewModelTest {
     @Test
     fun updateCustomerName_shouldCheckCustomer() = runTest {
         val customers = listOf(makeRandomCustomer(id = 1L), makeRandomCustomer(id = 2L))
-        customers.forEach { customerRepository.insert(it) }
+        customers.forEach { customerRepository.insert(it, {}, {}) }
 
         sut.getAllCustomers()
         advanceUntilIdle()
@@ -175,7 +172,7 @@ class SaleViewModelTest {
 
     @Test
     fun getAllCustomers_shouldCallGetAllFromCustomerRepository() = runTest {
-        val customerRepository = mock<CustomerRepository<Customer>>()
+        val customerRepository = mock<CustomerRepository>()
         val sut = makeSutFromMocks(customerRep = customerRepository)
 
         whenever(customerRepository.getAll()).doAnswer { flow {  } }
@@ -189,7 +186,7 @@ class SaleViewModelTest {
     @Test
     fun getAllCustomers_shouldSetAllCustomersProperty() = runTest {
         val customers = listOf(makeRandomCustomer(id = 1L), makeRandomCustomer(id = 2L))
-        customers.forEach { customerRepository.insert(it) }
+        customers.forEach { customerRepository.insert(it, {}, {}) }
 
         sut.getAllCustomers()
         advanceUntilIdle()
@@ -199,7 +196,7 @@ class SaleViewModelTest {
 
     @Test
     fun getProduct_shouldCallGetByIdFromProductRepository() = runTest {
-        val productRepository = mock<ProductRepository<Product>>()
+        val productRepository = mock<ProductRepository>()
         val sut = makeSutFromMocks(productRep = productRepository)
 
         whenever(productRepository.getById(any())).doAnswer { flowOf() }
@@ -213,7 +210,7 @@ class SaleViewModelTest {
     @Test
     fun getProduct_shouldSetSalePropertiesThatDependOnProduct() = runTest {
         val product = makeRandomProduct(id = 1L)
-        productRepository.insert(model = product)
+        productRepository.insert(model = product, {}, {})
 
         sut.getProduct(id = 1L)
         advanceUntilIdle()
@@ -226,23 +223,23 @@ class SaleViewModelTest {
 
     @Test
     fun getStockItem_shouldCallGetByIdFromStockOrderRepository() = runTest {
-        val stockOrderRepository = mock<StockOrderRepository<StockOrder>>()
-        val sut = makeSutFromMocks(stockOrderRep = stockOrderRepository)
+        val stockItemRepository = mock<StockRepository>()
+        val sut = makeSutFromMocks(stockItemRep = stockItemRepository)
 
-        whenever(stockOrderRepository.getById(any())).doAnswer { flowOf() }
+        whenever(stockItemRepository.getById(any())).doAnswer { flowOf() }
 
-        sut.getStockItem(stockId = 1L)
+        sut.getStockItem(stockItemId = 1L)
         advanceUntilIdle()
 
-        verify(stockOrderRepository).getById(any())
+        verify(stockItemRepository).getById(any())
     }
 
     @Test
     fun getStockItem_shouldSetSalePropertiesThatDependOnStockOrder() = runTest {
-        val item = makeRandomStockOrder(id = 1L)
-        stockOrderRepository.insert(model = item)
+        val item = makeRandomStockItem(id = 1L)
+        stockItemRepository.insert(model = item, {}, {})
 
-        sut.getStockItem(stockId = 1L)
+        sut.getStockItem(stockItemId = 1L)
         advanceUntilIdle()
 
         assertEquals(item.name, sut.productName)
@@ -256,7 +253,7 @@ class SaleViewModelTest {
 
     @Test
     fun getSale_shouldCallGetByIdFromSaleRepository() = runTest {
-        val saleRepository = mock<SaleRepository<Sale>>()
+        val saleRepository = mock<SaleRepository>()
         val sut = makeSutFromMocks(saleRep = saleRepository)
 
         whenever(saleRepository.getById(any())).doAnswer { flowOf() }
@@ -270,7 +267,7 @@ class SaleViewModelTest {
     @Test
     fun getSale_shouldSetSaleProperties() = runTest {
         val sale = makeRandomSale(id = 1L)
-        saleRepository.insert(model = sale)
+        saleRepository.insert(model = sale, {}, {})
 
         sut.getSale(saleId = 1L)
         advanceUntilIdle()
@@ -288,40 +285,40 @@ class SaleViewModelTest {
 
     @Test
     fun insertSale_shouldCallInsertItemsFromSaleRepository() = runTest {
-        val saleRepository = mock<SaleRepository<Sale>>()
+        val saleRepository = mock<SaleRepository>()
         val sut = makeSutFromMocks(saleRep = saleRepository)
 
         sut.insertSale(isOrderedByCustomer = false, currentDate = 1000L, {}, {})
         advanceUntilIdle()
 
-        verify(saleRepository).insertItems(any(), any(), any(), any(), any())
+        verify(saleRepository).insert(any(), {}, {})
     }
 
     @Test
     fun updateSale_shouldCallUpdateFromSaleRepository() = runTest {
-        val saleRepository = mock<SaleRepository<Sale>>()
+        val saleRepository = mock<SaleRepository>()
         val sut = makeSutFromMocks(saleRep = saleRepository)
 
-        sut.updateSale(saleId = 1L)
+        sut.updateSale(saleId = 1L, false, onError = {}, onSuccess = {})
         advanceUntilIdle()
 
-        verify(saleRepository).update(any())
+        verify(saleRepository).update(any(), {}, {})
     }
 
     @Test
     fun deleteSale_shouldCallDeleteByIdFromSaleRepository() = runTest {
-        val saleRepository = mock<SaleRepository<Sale>>()
+        val saleRepository = mock<SaleRepository>()
         val sut = makeSutFromMocks(saleRep = saleRepository)
 
-        sut.deleteSale(saleId = 1L)
+        sut.deleteSale(saleId = 1L, {}, {})
         advanceUntilIdle()
 
-        verify(saleRepository).deleteById(any())
+        verify(saleRepository).deleteById(any(), "", {}, {})
     }
 
     @Test
     fun cancelSale_shouldCallCancelSaleFromSaleRepository() = runTest {
-        val saleRepository = mock<SaleRepository<Sale>>()
+        val saleRepository = mock<SaleRepository>()
         val sut = makeSutFromMocks(saleRep = saleRepository)
 
         sut.cancelSale(saleId = 1L)
@@ -341,9 +338,9 @@ class SaleViewModelTest {
     }
 
     private fun makeSutFromMocks(
-        saleRep: SaleRepository<Sale> = mock(),
-        stockOrderRep: StockOrderRepository<StockOrder> = mock(),
-        productRep: ProductRepository<Product> = mock(),
-        customerRep: CustomerRepository<Customer> = mock()
-    ): SaleViewModel = SaleViewModel(saleRep, stockOrderRep, productRep, customerRep)
+        saleRep: SaleRepository = mock(),
+        stockItemRep: StockRepository = mock(),
+        productRep: ProductRepository = mock(),
+        customerRep: CustomerRepository = mock()
+    ): SaleViewModel = SaleViewModel(saleRep, stockItemRep, productRep, customerRep)
 }
