@@ -2,13 +2,8 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
-import com.bruno13palhano.core.data.di.CatalogRep
 import com.bruno13palhano.core.data.di.SaleRep
-import com.bruno13palhano.core.model.Catalog
-import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.setQuantity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -19,30 +14,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleRepository,
-    @CatalogRep private val catalogRepository: CatalogRepository
+    @SaleRep private val saleRepository: SaleRepository
 ) : ViewModel() {
     private val currentDay = LocalDate.now()
-
-    val catalogItems = catalogRepository.getAll()
-        .map {
-            it.map { catalogItem ->
-                ExtendedItem(
-                    id = catalogItem.id,
-                    photo = catalogItem.photo,
-                    title = catalogItem.title,
-                    firstSubtitle = catalogItem.name,
-                    secondSubtitle = catalogItem.price.toString(),
-                    description = catalogItem.description,
-                    footer = catalogItem.discount.toString()
-                )
-            }
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )
 
     val homeInfo = saleRepository.getAll().map { sales ->
         var salesPrice = 0F
