@@ -1,10 +1,12 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.repository.category.CategoryRepository
+import com.bruno13palhano.core.data.repository.category.CategoryData
 import com.bruno13palhano.core.data.repository.category.DefaultCategoryData
+import com.bruno13palhano.core.mocks.makeRandomDataVersion
 import com.bruno13palhano.core.mocks.makeRandomCategory
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.DataVersion
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -19,12 +21,13 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class CategoryLightTest {
+class DefaultCategoryDataTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var categoryTable: CategoryRepository<Category>
+    private lateinit var categoryTable: CategoryData
     private lateinit var firstCategory: Category
     private lateinit var secondCategory: Category
     private lateinit var thirdCategory: Category
+    private lateinit var dataVersion: DataVersion
 
     @get:Rule
     val hiltTestRule = HiltAndroidRule(this)
@@ -33,8 +36,13 @@ class CategoryLightTest {
     fun before() {
         hiltTestRule.inject()
 
-        categoryTable = DefaultCategoryData(database.categoryTableQueries, Dispatchers.IO)
+        categoryTable = DefaultCategoryData(
+            database.categoryTableQueries,
+            database.versionTableQueries,
+            Dispatchers.IO
+        )
 
+        dataVersion = makeRandomDataVersion(id = 1L)
         firstCategory = makeRandomCategory(id = 1L)
         secondCategory = makeRandomCategory(id = 2L)
         thirdCategory = makeRandomCategory(id = 3L)
@@ -42,7 +50,7 @@ class CategoryLightTest {
 
     @Test
     fun shouldInsertCategoryInTheDatabase() = runTest {
-        categoryTable.insert(firstCategory)
+        categoryTable.insert(firstCategory, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             categoryTable.getAll().collect { categories ->
@@ -55,8 +63,8 @@ class CategoryLightTest {
     @Test
     fun shouldUpdateCategoryInTheDatabase_IfCategoryExists() = runTest {
         val updateCategory = makeRandomCategory(id = 1L)
-        categoryTable.insert(firstCategory)
-        categoryTable.update(updateCategory)
+        categoryTable.insert(firstCategory, dataVersion, {}, {})
+        categoryTable.update(updateCategory, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             categoryTable.getAll().collect { categories ->
@@ -68,8 +76,8 @@ class CategoryLightTest {
 
     @Test
     fun shouldDoNotUpdateCategoryInTheDatabase_IfCategoryNotExists() = runTest {
-        categoryTable.insert(firstCategory)
-        categoryTable.update(secondCategory)
+        categoryTable.insert(firstCategory, dataVersion, {}, {})
+        categoryTable.update(secondCategory, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             categoryTable.getAll().collect { categories ->
@@ -82,7 +90,7 @@ class CategoryLightTest {
     @Test
     fun shouldDeleteCategoryWithThisIdInTheDatabase_ifCategoryExists() = runTest {
         insertTwoCategories()
-        categoryTable.deleteById(firstCategory.id)
+        categoryTable.deleteById(firstCategory.id, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             categoryTable.getAll().collect { categories ->
@@ -95,7 +103,7 @@ class CategoryLightTest {
     @Test
     fun shouldNotDeleteCategoryInTheDatabase_ifCategoryWithThisIdNotExists() = runTest {
         insertTwoCategories()
-        categoryTable.deleteById(thirdCategory.id)
+        categoryTable.deleteById(thirdCategory.id, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             categoryTable.getAll().collect { categories ->
@@ -140,6 +148,7 @@ class CategoryLightTest {
     @Test
     fun shouldReturnLastCategory_ifExists() = runTest {
         insertTwoCategories()
+
         launch(Dispatchers.IO) {
             categoryTable.getLast().collect { category ->
                 Assert.assertEquals(category, secondCategory)
@@ -154,9 +163,9 @@ class CategoryLightTest {
         val category2 = makeRandomCategory(id = 2L, name = "Perfumes")
         val category3 = makeRandomCategory(id = 3L, "Soaps")
 
-        categoryTable.insert(category1)
-        categoryTable.insert(category2)
-        categoryTable.insert(category3)
+        categoryTable.insert(category1, dataVersion, {}, {})
+        categoryTable.insert(category2, dataVersion, {}, {})
+        categoryTable.insert(category3, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             categoryTable.search(value = category1.category).collect { categories ->
@@ -189,13 +198,13 @@ class CategoryLightTest {
     }
 
     private suspend fun insertTwoCategories() {
-        categoryTable.insert(firstCategory)
-        categoryTable.insert(secondCategory)
+        categoryTable.insert(firstCategory, dataVersion, {}, {})
+        categoryTable.insert(secondCategory, dataVersion, {}, {})
     }
 
     private suspend fun insertAllCategories() {
-        categoryTable.insert(firstCategory)
-        categoryTable.insert(secondCategory)
-        categoryTable.insert(thirdCategory)
+        categoryTable.insert(firstCategory, dataVersion, {}, {})
+        categoryTable.insert(secondCategory, dataVersion, {}, {})
+        categoryTable.insert(thirdCategory, dataVersion, {}, {})
     }
 }
