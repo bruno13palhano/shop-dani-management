@@ -4,7 +4,7 @@ import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomSale
-import com.bruno13palhano.shopdanimanagement.makeRandomStockOrder
+import com.bruno13palhano.shopdanimanagement.makeRandomStockItem
 import com.bruno13palhano.shopdanimanagement.repository.TestSaleRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.home.HomeViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,7 +35,7 @@ class HomeViewModelTest {
     @get: Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
-    private lateinit var saleRepository: SaleRepository<Sale>
+    private lateinit var saleRepository: SaleRepository
     private lateinit var sut: HomeViewModel
 
     private val currentDay = LocalDate.now()
@@ -43,9 +43,8 @@ class HomeViewModelTest {
     private val sales = listOf(
         makeRandomSale(
             id = 1L,
-            stockOrder = makeRandomStockOrder(
+            stockItem = makeRandomStockItem(
                 id = 1,
-                isOrderedByCustomer = false,
                 salePrice = 25F
             ),
             quantity = 1,
@@ -53,9 +52,8 @@ class HomeViewModelTest {
         ),
         makeRandomSale(
             id = 2L,
-            stockOrder = makeRandomStockOrder(
+            stockItem = makeRandomStockItem(
                 id = 2,
-                isOrderedByCustomer = false,
                 salePrice = 50F
             ),
             quantity = 1,
@@ -63,12 +61,12 @@ class HomeViewModelTest {
         ),
         makeRandomSale(
             id = 3L,
-            stockOrder = makeRandomStockOrder(
+            stockItem = makeRandomStockItem(
                 id = 3,
-                isOrderedByCustomer = true,
                 salePrice = 75F
             ),
             quantity = 1,
+            isOrderedByCustomer = true,
             canceled = false
         )
     )
@@ -103,7 +101,7 @@ class HomeViewModelTest {
         collectJob.cancel()
     }
 
-    private suspend fun insertSales() = sales.forEach { saleRepository.insert(it) }
+    private suspend fun insertSales() = sales.forEach { saleRepository.insert(it, {}, {}) }
 
     private fun mapToInfo(sales: List<Sale>): HomeViewModel.HomeInfo {
         var salesPrice = 0F
