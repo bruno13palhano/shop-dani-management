@@ -1,11 +1,14 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.repository.product.ProductRepository
+import com.bruno13palhano.core.data.repository.category.CategoryData
+import com.bruno13palhano.core.data.repository.category.DefaultCategoryData
 import com.bruno13palhano.core.data.repository.product.DefaultProductData
-import com.bruno13palhano.core.data.repository.product.DefaultProductRepository
+import com.bruno13palhano.core.data.repository.product.ProductData
+import com.bruno13palhano.core.mocks.makeRandomDataVersion
 import com.bruno13palhano.core.mocks.makeRandomProduct
 import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Product
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -24,10 +27,15 @@ import javax.inject.Inject
 @HiltAndroidTest
 class DefaultProductDataTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var productRepository: ProductRepository<Product>
+    private lateinit var productTable: ProductData
+    private lateinit var categoryTable: CategoryData
     private lateinit var firstProduct: Product
     private lateinit var secondProduct: Product
     private lateinit var thirdProduct: Product
+    private lateinit var firstCategory: Category
+    private lateinit var secondCategory: Category
+    private lateinit var thirdCategory: Category
+    private lateinit var dataVersion: DataVersion
 
     @get:Rule
     val hiltTestRule = HiltAndroidRule(this)
@@ -36,31 +44,42 @@ class DefaultProductDataTest {
     fun before() {
         hiltTestRule.inject()
 
-        val productData = DefaultProductData(
+         productTable = DefaultProductData(
             productQueries = database.shopDatabaseQueries,
             productCategoriesQueries = database.productCategoriesTableQueries,
+            versionQueries = database.versionTableQueries,
             ioDispatcher = Dispatchers.IO
         )
-        productRepository = DefaultProductRepository(productData)
 
+        categoryTable = DefaultCategoryData(
+            database.categoryTableQueries,
+            database.versionTableQueries,
+            Dispatchers.IO
+        )
+
+        firstCategory = Category(id = 1L, category = "Perfumes", timestamp = "")
+        secondCategory = Category(id = 2L, category = "Soaps", timestamp = "")
+        thirdCategory = Category(id = 1L, "Others", timestamp = "")
+
+        dataVersion = makeRandomDataVersion(id = 1L)
         firstProduct = makeRandomProduct(
             id = 1L,
-            categories = listOf(Category(id = 1L, "Perfumes")),
+            categories = listOf(firstCategory),
             company = "Natura",
             description = "Top 10"
         )
         secondProduct = makeRandomProduct(
             id = 2L,
             categories = listOf(
-                Category(id = 1L, category = "Perfumes"),
-                Category(id = 2L, category = "Soaps")
+                firstCategory,
+                secondCategory
             ),
             company = "Natura",
             description = "Most sale"
         )
         thirdProduct = makeRandomProduct(
             id = 3L,
-            categories = listOf(Category(id = 1L, "Others")),
+            categories = listOf(thirdCategory),
             company = "Avon",
             description = "Light fragrance"
         )
@@ -68,9 +87,9 @@ class DefaultProductDataTest {
 
     @Test
     fun shouldInsertProductInTheDatabase() = runTest {
-        productRepository.insert(firstProduct)
+        productTable.insert(firstProduct, dataVersion, {}, {})
         launch {
-            productRepository.getAll().collect { products ->
+            productTable.getAll().collect { products ->
                 assertThat(products).contains(firstProduct)
                 cancel()
             }
@@ -80,30 +99,24 @@ class DefaultProductDataTest {
     @Test
     fun shouldUpdateProductInTheDatabase_ifProductExists() = runTest {
         val updatedProduct = makeRandomProduct(id =1L)
-        productRepository.insert(firstProduct)
-        productRepository.update(updatedProduct)
+        productTable.insert(firstProduct, dataVersion, {}, {})
+        productTable.update(updatedProduct, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
-            productRepository.getAll().collect { products ->
+            productTable.getAll().collect { products ->
                 assertThat(products).contains(updatedProduct)
                 cancel()
             }
         }
     }
 
-    @Test(expected = NullPointerException::class)
-    fun shouldThrowNullPointerException_ifProductNotExists() = runTest {
-        productRepository.insert(firstProduct)
-        productRepository.update(secondProduct)
-    }
-
     @Test
     fun shouldDeleteProductWithThisIdInTheDatabase_ifProductExists() = runTest {
         insertAllProducts()
-        productRepository.deleteById(firstProduct.id)
+        productTable.deleteById(firstProduct.id, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
-            productRepository.getAll().collect { products ->
+            productTable.getAll().collect { products ->
                 assertThat(products).doesNotContain(firstProduct)
                 cancel()
             }
@@ -112,13 +125,13 @@ class DefaultProductDataTest {
 
     @Test
     fun shouldNotDeleteProductWithThisIdInTheDatabase_ifProductNotExists() = runTest {
-        productRepository.insert(firstProduct)
-        productRepository.insert(secondProduct)
+        productTable.insert(firstProduct, dataVersion, {}, {})
+        productTable.insert(secondProduct, dataVersion, {}, {})
 
-        productRepository.deleteById(thirdProduct.id)
+        productTable.deleteById(thirdProduct.id, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
-            productRepository.getAll().collect { products ->
+            productTable.getAll().collect { products ->
                 assertThat(products).containsExactly(firstProduct, secondProduct)
                 cancel()
             }
@@ -129,7 +142,7 @@ class DefaultProductDataTest {
     fun shouldReturnAllProductsInTheDatabase_ifDatabaseIsNotEmpty() = runTest {
         insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.getAll().collect { products ->
+            productTable.getAll().collect { products ->
                 assertThat(products).containsExactly(firstProduct, secondProduct, thirdProduct)
                 cancel()
             }
@@ -139,7 +152,7 @@ class DefaultProductDataTest {
     @Test
     fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runTest {
         launch(Dispatchers.IO) {
-            productRepository.getAll().take(3).collect { products ->
+            productTable.getAll().take(3).collect { products ->
                 assertThat(products).isEmpty()
                 cancel()
             }
@@ -148,9 +161,9 @@ class DefaultProductDataTest {
 
     @Test
     fun shouldReturnProductWithThisId_ifExists() = runTest {
-        productRepository.insert(firstProduct)
+        productTable.insert(firstProduct, dataVersion, {}, {})
         launch(Dispatchers.IO) {
-            productRepository.getById(id = firstProduct.id).collect { product ->
+            productTable.getById(id = firstProduct.id).collect { product ->
                 Assert.assertEquals(product, firstProduct)
                 cancel()
             }
@@ -161,7 +174,7 @@ class DefaultProductDataTest {
     fun shouldReturnLastProduct_ifNotEmpty() = runTest {
         insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.getLast().collect { product ->
+            productTable.getLast().collect { product ->
                 Assert.assertEquals(product, thirdProduct)
                 cancel()
             }
@@ -174,7 +187,7 @@ class DefaultProductDataTest {
         insertAllProducts()
 
         launch(Dispatchers.IO) {
-            productRepository.search(value = search).collect { products ->
+            productTable.search(value = search).collect { products ->
                 assertThat(products).containsExactly(thirdProduct)
                 cancel()
             }
@@ -187,7 +200,7 @@ class DefaultProductDataTest {
         insertAllProducts()
 
         launch(Dispatchers.IO) {
-            productRepository.search(value = search).collect { products ->
+            productTable.search(value = search).collect { products ->
                 assertThat(products).containsExactly(thirdProduct)
                 cancel()
             }
@@ -200,7 +213,7 @@ class DefaultProductDataTest {
         insertAllProducts()
 
         launch(Dispatchers.IO) {
-            productRepository.search(value = search).collect { products ->
+            productTable.search(value = search).collect { products ->
                 assertThat(products).containsExactly(thirdProduct)
                 cancel()
             }
@@ -213,7 +226,7 @@ class DefaultProductDataTest {
         insertAllProducts()
 
         launch(Dispatchers.IO) {
-            productRepository.search(value = search).collect { products ->
+            productTable.search(value = search).collect { products ->
                 assertThat(products).containsExactly(firstProduct, secondProduct)
                 cancel()
             }
@@ -224,7 +237,7 @@ class DefaultProductDataTest {
     fun shouldReturnEmptyList_ifThereIsNothingThatMatchesWithThisSearch() = runTest {
         insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.search(value = "*").collect { products ->
+            productTable.search(value = "*").collect { products ->
                 assertThat(products).isEmpty()
                 cancel()
             }
@@ -235,7 +248,7 @@ class DefaultProductDataTest {
     fun shouldReturnAllProducts_ifThisSearchIsEmpty() = runTest {
         insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.search(value = "").collect { products ->
+            productTable.search(value = "").collect { products ->
                 assertThat(products).containsExactly(firstProduct, secondProduct, thirdProduct)
                 cancel()
             }
@@ -246,7 +259,7 @@ class DefaultProductDataTest {
     fun shouldReturnProductsInThisCategoryThatMatchesWithNameSearch() = runTest {
         insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.searchPerCategory(
+            productTable.searchPerCategory(
                 value = firstProduct.name,
                 categoryId = firstProduct.id
             ).collect { products ->
@@ -260,9 +273,9 @@ class DefaultProductDataTest {
     fun shouldReturnProductsInThisCategoryThatMatchesWithDescriptionSearch() = runTest {
         insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.searchPerCategory(
+            productTable.searchPerCategory(
                 value = firstProduct.description,
-                categoryId = firstProduct.id
+                categoryId = firstProduct.categories[0].id
             ).collect { products ->
                 assertThat(products).containsExactly(firstProduct)
                 cancel()
@@ -274,11 +287,11 @@ class DefaultProductDataTest {
     fun shouldReturnProductsInThisCategoryThatMatchesWithCompanySearch() = runTest {
         insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.searchPerCategory(
+            productTable.searchPerCategory(
                 value = firstProduct.company,
-                categoryId = firstProduct.id
+                categoryId = firstProduct.categories[0].id
             ).collect { products ->
-                assertThat(products).containsExactly(firstProduct)
+                assertThat(products).containsExactly(firstProduct, secondProduct)
                 cancel()
             }
         }
@@ -288,7 +301,7 @@ class DefaultProductDataTest {
     fun shouldReturnEmptyList_ifThereIsNothingThatMatchesWithThisSearchInThisCategory() = runTest {
         insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.searchPerCategory(
+            productTable.searchPerCategory(
                 value = "*",
                 categoryId = firstProduct.id
             ).collect { products ->
@@ -299,14 +312,14 @@ class DefaultProductDataTest {
     }
 
     @Test
-    fun shouldReturnAllProductsInThisCategory_ifThisSearchIsEmpty() = runTest {
+    fun shouldReturnAllProducts_ifThisSearchPerCategoryIsEmpty() = runTest {
         insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.searchPerCategory(
+            productTable.searchPerCategory(
                 value = "",
-                categoryId = thirdProduct.id
+                categoryId = thirdProduct.categories[0].id
             ).collect { products ->
-                assertThat(products).containsExactly(thirdProduct)
+                assertThat(products).containsExactly(firstProduct, secondProduct, thirdProduct)
                 cancel()
             }
         }
@@ -316,7 +329,7 @@ class DefaultProductDataTest {
     fun shouldReturnAllProductsInThisCategory_ifNotEmpty() = runTest {
         insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.getByCategory(category = "Perfumes").collect { products ->
+            productTable.getByCategory(category = "Perfumes").collect { products ->
                 assertThat(products).containsExactly(firstProduct, secondProduct)
                 cancel()
             }
@@ -327,7 +340,7 @@ class DefaultProductDataTest {
     fun shouldReturnEmptyList_ifThisCategoryIsEmpty() = runTest {
         insertAllProducts()
         launch(Dispatchers.IO) {
-            productRepository.getByCategory(category = "Make").collect { products ->
+            productTable.getByCategory(category = "Make").collect { products ->
                 assertThat(products).isEmpty()
                 cancel()
             }
@@ -335,8 +348,12 @@ class DefaultProductDataTest {
     }
 
     private suspend fun insertAllProducts() {
-        productRepository.insert(firstProduct)
-        productRepository.insert(secondProduct)
-        productRepository.insert(thirdProduct)
+        categoryTable.insert(firstCategory, dataVersion, {}, {})
+        categoryTable.insert(secondCategory, dataVersion, {}, {})
+        categoryTable.insert(thirdCategory, dataVersion, {}, {})
+
+        productTable.insert(firstProduct, dataVersion, {}, {})
+        productTable.insert(secondProduct, dataVersion, {}, {})
+        productTable.insert(thirdProduct, dataVersion, {}, {})
     }
 }
