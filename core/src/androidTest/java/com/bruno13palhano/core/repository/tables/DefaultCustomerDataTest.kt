@@ -1,10 +1,12 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.repository.customer.CustomerRepository
+import com.bruno13palhano.core.data.repository.customer.CustomerData
 import com.bruno13palhano.core.data.repository.customer.DefaultCustomerData
 import com.bruno13palhano.core.mocks.makeRandomCustomer
+import com.bruno13palhano.core.mocks.makeRandomDataVersion
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.model.DataVersion
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -20,10 +22,11 @@ import javax.inject.Inject
 @HiltAndroidTest
 class DefaultCustomerDataTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var customerTable: CustomerRepository<Customer>
+    private lateinit var customerTable: CustomerData
     private lateinit var firstCustomer: Customer
     private lateinit var secondCustomer: Customer
     private lateinit var thirdCustomer: Customer
+    private lateinit var dataVersion: DataVersion
 
     @get:Rule
     val hiltTestRule = HiltAndroidRule(this)
@@ -32,8 +35,13 @@ class DefaultCustomerDataTest {
     fun before() {
         hiltTestRule.inject()
 
-        customerTable = DefaultCustomerData(database.customerTableQueries, Dispatchers.IO)
+        customerTable = DefaultCustomerData(
+            database.customerTableQueries,
+            database.versionTableQueries,
+            Dispatchers.IO
+        )
 
+        dataVersion = makeRandomDataVersion(id = 1L)
         firstCustomer = makeRandomCustomer(id = 1L, name = "Alan", address = "Rua 15 de Novembro")
         secondCustomer = makeRandomCustomer(id = 2L, name = "Bruno", address = "Rua 13 de Maio")
         thirdCustomer = makeRandomCustomer(id = 3L, name = "Carlos", address = "Rua Walter Rodrigues")
@@ -41,7 +49,7 @@ class DefaultCustomerDataTest {
 
     @Test
     fun shouldInsertCustomerInTheDatabase() = runTest {
-        customerTable.insert(firstCustomer)
+        customerTable.insert(firstCustomer, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             customerTable.getAll().collect {
@@ -75,8 +83,8 @@ class DefaultCustomerDataTest {
     @Test
     fun shouldUpdateCustomerInTheDatabase_IfCustomerExists() = runTest {
         val updateCustomer = makeRandomCustomer(id = 1L)
-        customerTable.insert(firstCustomer)
-        customerTable.update(updateCustomer)
+        customerTable.insert(firstCustomer, dataVersion, {}, {})
+        customerTable.update(updateCustomer, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             customerTable.getAll().collect {
@@ -88,8 +96,8 @@ class DefaultCustomerDataTest {
 
     @Test
     fun shouldDoNotUpdateCustomerInTheDatabase_IfCustomerNotExists() = runTest {
-        customerTable.insert(firstCustomer)
-        customerTable.update(secondCustomer)
+        customerTable.insert(firstCustomer, dataVersion, {}, {})
+        customerTable.update(secondCustomer, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             customerTable.getAll().collect {
@@ -102,7 +110,7 @@ class DefaultCustomerDataTest {
     @Test
     fun shouldDeleteCustomerWhitThisIdInTheDatabase_ifCustomerExists() = runTest {
         insertTwoCustomers()
-        customerTable.deleteById(firstCustomer.id)
+        customerTable.deleteById(firstCustomer.id, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             customerTable.getAll().collect {
@@ -115,7 +123,7 @@ class DefaultCustomerDataTest {
     @Test
     fun shouldNotDeleteCustomerInTheDatabase_ifCustomerWithThisIdNotExists() = runTest {
         insertTwoCustomers()
-        customerTable.deleteById(thirdCustomer.id)
+        customerTable.deleteById(thirdCustomer.id, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             customerTable.getAll().collect {
@@ -128,9 +136,9 @@ class DefaultCustomerDataTest {
     @Test
     fun shouldReturnCustomersThatMatchesWithThisSearch() = runTest {
         val currentCustomer = makeRandomCustomer(id = 1L, "Bruno")
-        customerTable.insert(currentCustomer)
-        customerTable.insert(secondCustomer)
-        customerTable.insert(thirdCustomer)
+        customerTable.insert(currentCustomer, dataVersion, {}, {})
+        customerTable.insert(secondCustomer, dataVersion, {}, {})
+        customerTable.insert(thirdCustomer, dataVersion, {}, {})
 
         launch(Dispatchers.IO) {
             customerTable.search(search = currentCustomer.name).collect {
@@ -229,13 +237,13 @@ class DefaultCustomerDataTest {
     }
 
     private suspend fun insertTwoCustomers() {
-        customerTable.insert(firstCustomer)
-        customerTable.insert(secondCustomer)
+        customerTable.insert(firstCustomer, dataVersion, {}, {})
+        customerTable.insert(secondCustomer, dataVersion, {}, {})
     }
 
     private suspend fun insertAllCustomers() {
-        customerTable.insert(firstCustomer)
-        customerTable.insert(secondCustomer)
-        customerTable.insert(thirdCustomer)
+        customerTable.insert(firstCustomer, dataVersion, {}, {})
+        customerTable.insert(secondCustomer, dataVersion, {}, {})
+        customerTable.insert(thirdCustomer, dataVersion, {}, {})
     }
 }
