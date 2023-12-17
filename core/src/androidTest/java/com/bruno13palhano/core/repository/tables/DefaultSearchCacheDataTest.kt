@@ -1,8 +1,8 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheData
+import com.bruno13palhano.core.data.repository.searchcache.SearchCacheData
 import com.bruno13palhano.core.mocks.makeRandomSearchCache
 import com.bruno13palhano.core.model.SearchCache
 import com.google.common.truth.Truth.assertThat
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltAndroidTest
 class DefaultSearchCacheDataTest {
     @Inject lateinit var database: ShopDatabase
-    private lateinit var searchCacheTable: SearchCacheRepository<SearchCache>
+    private lateinit var searchCacheTable: SearchCacheData
     private lateinit var firstCache: SearchCache
     private lateinit var secondCache: SearchCache
     private lateinit var thirdCache: SearchCache
