@@ -5,7 +5,6 @@ import com.bruno13palhano.core.model.Delivery
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomSale
 import com.bruno13palhano.shopdanimanagement.repository.TestSaleRepository
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel.DeliveriesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -40,9 +39,9 @@ class DeliveriesViewModelTest {
     private lateinit var saleRepository: SaleRepository
     private lateinit var sut: DeliveriesViewModel
     private val sales = listOf(
-        makeRandomSale(id = 1L, delivered = true),
-        makeRandomSale(id = 2L, delivered = false),
-        makeRandomSale(id = 3L, delivered = true)
+        makeRandomSale(id = 1L, canceled = false, delivered = true),
+        makeRandomSale(id = 2L, canceled = false, delivered = false),
+        makeRandomSale(id = 3L, canceled = false, delivered = true)
     )
 
     @Before
@@ -135,14 +134,4 @@ class DeliveriesViewModelTest {
     }
 
     private suspend fun insertDeliveries() = sales.forEach { saleRepository.insert(it, {}, {}) }
-
-    private fun mapToItem(deliveries: List<Delivery>) = deliveries.map {
-        CommonItem(
-            id = it.id,
-            title = it.customerName,
-            photo = byteArrayOf(),
-            subtitle = it.productName,
-            description = it.address
-        )
-    }
 }
