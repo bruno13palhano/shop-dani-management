@@ -68,6 +68,7 @@ fun SalesScreen(
     var orderedByPrice by remember { mutableStateOf(false) }
 
     SalesContent(
+        isOrders = isOrders,
         screenTitle = screenTitle,
         saleList = saleList,
         menuItems = menuItems,
@@ -107,6 +108,7 @@ fun SalesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SalesContent(
+    isOrders: Boolean,
     screenTitle: String,
     saleList: List<CommonItem>,
     menuItems: Array<String>,
@@ -156,11 +158,13 @@ fun SalesContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddButtonClick) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(id = R.string.add_label)
-                )
+            if (!isOrders) {
+                FloatingActionButton(onClick = onAddButtonClick) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = stringResource(id = R.string.add_label)
+                    )
+                }
             }
         }
     ) {
