@@ -18,7 +18,7 @@ internal object ServiceModule {
     @Provides
     @Singleton
     fun provideApiService(): Service {
-        val BASE_URL = "http://10.0.0.111:8080"
+        val BASE_URL = "http://10.0.0.111:8080/v1"
 
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
