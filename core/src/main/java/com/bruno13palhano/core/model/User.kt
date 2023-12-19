@@ -6,6 +6,8 @@ data class User(
     val email: String,
     val password: String,
     val photo: ByteArray,
+    val role: String,
+    val enabled: Boolean,
     val timestamp: String
 ) {
     override fun equals(other: Any?): Boolean {
@@ -19,6 +21,8 @@ data class User(
         if (email != other.email) return false
         if (password != other.password) return false
         if (!photo.contentEquals(other.photo)) return false
+        if (role != other.role) return false
+        if (enabled != other.enabled) return false
         if (timestamp != other.timestamp) return false
 
         return true
@@ -30,6 +34,8 @@ data class User(
         result = 31 * result + email.hashCode()
         result = 31 * result + password.hashCode()
         result = 31 * result + photo.contentHashCode()
+        result = 31 * result + role.hashCode()
+        result = 31 * result + enabled.hashCode()
         result = 31 * result + timestamp.hashCode()
         return result
     }

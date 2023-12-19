@@ -10,6 +10,8 @@ data class UserNet(
     @Json(name = "email") val email: String,
     @Json(name = "password") val password: String,
     @Json(name = "photo") val photo: String,
+    @Json(name = "role") val role: String,
+    @Json(name = "enabled") val enabled: Boolean,
     @Json(name = "timestamp") val timestamp: String
 )
 
@@ -19,6 +21,8 @@ fun UserNet.asExternal() = User(
     email = email,
     password = password,
     photo = Base64.getDecoder().decode(photo),
+    role = role,
+    enabled = enabled,
     timestamp = timestamp
 )
 
@@ -28,5 +32,7 @@ fun User.asNetwork() = UserNet(
     email = email,
     password = password,
     photo = Base64.getEncoder().encodeToString(photo),
+    role = role,
+    enabled = enabled,
     timestamp = timestamp
 )
