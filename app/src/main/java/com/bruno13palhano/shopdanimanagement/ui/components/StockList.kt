@@ -36,7 +36,7 @@ import com.bruno13palhano.shopdanimanagement.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StockOrderListContent(
+fun StockListContent(
     isAddButtonEnabled: Boolean,
     screenTitle: String,
     itemList: List<Stock>,

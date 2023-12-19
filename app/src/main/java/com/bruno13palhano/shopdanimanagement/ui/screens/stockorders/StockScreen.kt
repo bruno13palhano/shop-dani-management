@@ -7,11 +7,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.StockOrderListContent
+import com.bruno13palhano.shopdanimanagement.ui.components.StockListContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockViewModel
 
 @Composable
-fun StockOrdersScreen(
+fun StockScreen(
     isOrderedByCustomer: Boolean,
     isAddButtonEnabled: Boolean,
     screenTitle: String,
@@ -38,7 +38,7 @@ fun StockOrdersScreen(
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     menuOptions.addAll(categories)
 
-    StockOrderListContent(
+    StockListContent(
         isAddButtonEnabled = isAddButtonEnabled,
         screenTitle = screenTitle,
         itemList = stockList,

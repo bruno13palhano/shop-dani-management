@@ -12,7 +12,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.ItemScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockOrdersScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockScreen
 
 fun NavGraphBuilder.stockNavGraph(
     navController: NavController,
@@ -24,7 +24,7 @@ fun NavGraphBuilder.stockNavGraph(
     ) {
         composable(route = StockDestinations.STOCK_MAIN_ROUTE) {
             showBottomMenu(true)
-            StockOrdersScreen(
+            StockScreen(
                 isOrderedByCustomer = false,
                 isAddButtonEnabled = true,
                 screenTitle = stringResource(id = R.string.stock_list_label),
