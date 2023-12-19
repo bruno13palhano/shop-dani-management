@@ -12,7 +12,6 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.St
 
 @Composable
 fun StockScreen(
-    isOrderedByCustomer: Boolean,
     isAddButtonEnabled: Boolean,
     screenTitle: String,
     onItemClick: (id: Long) -> Unit,
@@ -24,16 +23,11 @@ fun StockScreen(
     LaunchedEffect(key1 = Unit) { viewModel.getItems() }
 
     val menuOptions =
-        if (!isOrderedByCustomer) {
-            mutableListOf(
-                stringResource(id = R.string.all_products_label),
-                stringResource(id = R.string.out_of_stock_label)
-            )
-        } else {
-            mutableListOf(
-                stringResource(id = R.string.all_products_label)
-            )
-        }
+        mutableListOf(
+            stringResource(id = R.string.all_products_label),
+            stringResource(id = R.string.out_of_stock_label)
+        )
+
     val stockList by viewModel.stockList.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     menuOptions.addAll(categories)
@@ -46,24 +40,13 @@ fun StockScreen(
         onItemClick = onItemClick,
         onSearchClick = onSearchClick,
         onMenuItemClick = { index ->
-            if (!isOrderedByCustomer) {
-                when (index) {
-                    0 -> {
-                        viewModel.getItems()
-                    }
-                    1 -> { viewModel.getOutOfStock() }
-                    else -> {
-                        viewModel.getItemsByCategories(menuOptions[index])
-                    }
+            when (index) {
+                0 -> {
+                    viewModel.getItems()
                 }
-            } else {
-                when (index) {
-                    0 -> {
-                        viewModel.getItems()
-                    }
-                    else -> {
-                        viewModel.getItemsByCategories(menuOptions[index])
-                    }
+                1 -> { viewModel.getOutOfStock() }
+                else -> {
+                    viewModel.getItemsByCategories(menuOptions[index])
                 }
             }
         },

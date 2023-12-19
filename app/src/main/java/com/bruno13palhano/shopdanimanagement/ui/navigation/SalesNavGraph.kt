@@ -66,7 +66,6 @@ fun NavGraphBuilder.salesNavGraph(
         composable(route = SalesDestinations.SALES_STOCK_LIST_ROUTE) {
             showBottomMenu(true)
             StockScreen(
-                isOrderedByCustomer = false,
                 isAddButtonEnabled = false,
                 screenTitle = stringResource(id = R.string.stock_list_label),
                 onItemClick = { itemId ->
