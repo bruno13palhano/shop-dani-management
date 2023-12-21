@@ -9,6 +9,7 @@ import cache.SaleTableQueries
 import cache.SearchCacheTableQueries
 import cache.ShopDatabaseQueries
 import cache.StockTableQueries
+import cache.UsersTableQueries
 import cache.VersionTableQueries
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.database.DatabaseFactory
@@ -33,6 +34,10 @@ internal object DatabaseModule {
             driverFactory = DriverFactory(context = context)
         ).createDriver()
     }
+
+    @Provides
+    @Singleton
+    fun provideUsersTable(database: ShopDatabase): UsersTableQueries = database.usersTableQueries
 
     @Provides
     @Singleton
