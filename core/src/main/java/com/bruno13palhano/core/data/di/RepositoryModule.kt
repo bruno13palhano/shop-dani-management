@@ -14,12 +14,17 @@ import com.bruno13palhano.core.data.repository.product.DefaultProductRepository
 import com.bruno13palhano.core.data.repository.sale.DefaultSaleRepository
 import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheRepository
 import com.bruno13palhano.core.data.repository.stock.DefaultStockRepository
+import com.bruno13palhano.core.data.repository.user.DefaultUserRepository
+import com.bruno13palhano.core.data.repository.user.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
 import javax.inject.Singleton
+
+@Qualifier
+annotation class UserRep
 
 @Qualifier
 annotation class CategoryRep
@@ -45,6 +50,11 @@ annotation class CatalogRep
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class RepositoryModule {
+
+    @UserRep
+    @Singleton
+    @Binds
+    abstract fun bindUserRepository(repository: DefaultUserRepository): UserRepository
 
     @CategoryRep
     @Singleton
