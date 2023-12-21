@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import javax.inject.Inject
 
-class DefaultUserData @Inject constructor(
+internal class DefaultUserData @Inject constructor(
     private val usersTableQueries: UsersTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : UserData {
