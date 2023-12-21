@@ -10,20 +10,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.StockOrderListContent
+import com.bruno13palhano.shopdanimanagement.ui.components.StockListContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsContent
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun StockOrderListDynamicPreview() {
+fun StockListDynamicPreview() {
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            StockOrderListContent(
+            StockListContent(
                 isAddButtonEnabled = false,
                 screenTitle = stringResource(id = R.string.orders_list_label),
                 itemList = items,
@@ -41,7 +41,7 @@ fun StockOrderListDynamicPreview() {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun StockOrderListItemPreview() {
+fun StockListItemPreview() {
     ShopDaniManagementTheme(
         dynamicColor = false
     ) {
@@ -49,7 +49,7 @@ fun StockOrderListItemPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            StockOrderListContent(
+            StockListContent(
                 isAddButtonEnabled = true,
                 screenTitle = stringResource(id = R.string.stock_list_label),
                 itemList = items,
@@ -67,7 +67,7 @@ fun StockOrderListItemPreview() {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun StockDebitsDynamicPreview() {
+private fun StockDynamicPreview() {
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
