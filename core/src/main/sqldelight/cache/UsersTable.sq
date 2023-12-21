@@ -16,9 +16,8 @@ INSERT INTO UsersTable (username, password, email, photo, role, enabled, timesta
 VALUES (?,?,?,?,?,?,?);
 
 insertWithId:
-INSERT OR REPLACE INTO UsersTable (id, username, password, email, photo, photo, role, enabled,
-    timestamp)
-VALUES (?,?,?,?,?,?,?,?,?);
+INSERT OR REPLACE INTO UsersTable (id, username, password, email, photo, role, enabled, timestamp)
+VALUES (?,?,?,?,?,?,?,?);
 
 update:
 UPDATE UsersTable SET username = ?, password = ?, email = ?, photo = ?, enabled = ?, timestamp = ?
