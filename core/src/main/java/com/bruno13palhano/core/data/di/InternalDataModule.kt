@@ -14,6 +14,8 @@ import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheDat
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheData
 import com.bruno13palhano.core.data.repository.stock.DefaultStockData
 import com.bruno13palhano.core.data.repository.stock.StockData
+import com.bruno13palhano.core.data.repository.user.DefaultUserData
+import com.bruno13palhano.core.data.repository.user.UserData
 import com.bruno13palhano.core.data.repository.version.DefaultVersionData
 import com.bruno13palhano.core.data.repository.version.VersionData
 import dagger.Binds
@@ -22,6 +24,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
 import javax.inject.Singleton
+
+@Qualifier
+internal annotation class InternalUserLight
 
 @Qualifier
 internal annotation class InternalCategoryLight
@@ -50,6 +55,11 @@ internal annotation class InternalVersionLight
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class InternalDataModule {
+
+    @InternalUserLight
+    @Singleton
+    @Binds
+    abstract fun bindInternalUserData(data: DefaultUserData): UserData
 
     @InternalCategoryLight
     @Singleton
