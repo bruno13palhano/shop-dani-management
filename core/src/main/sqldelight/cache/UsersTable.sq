@@ -1,0 +1,28 @@
+import java.lang.Boolean;
+
+CREATE TABLE UsersTable (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL,
+    email TEXT NOT NULL,
+    photo BLOB NOT NULL,
+    role TEXT NOT NULL,
+    enabled INTEGER AS Boolean NOT NULL,
+    timestamp TEXT NOT NULL
+);
+
+insert:
+INSERT INTO UsersTable (username, password, email, photo, role, enabled, timestamp)
+VALUES (?,?,?,?,?,?,?);
+
+insertWithId:
+INSERT OR REPLACE INTO UsersTable (id, username, password, email, photo, photo, role, enabled,
+    timestamp)
+VALUES (?,?,?,?,?,?,?,?,?);
+
+update:
+UPDATE UsersTable SET username = ?, password = ?, email = ?, photo = ?, enabled = ?, timestamp = ?
+WHERE id = ?;
+
+delete:
+DELETE FROM UsersTable WHERE id = ?;
