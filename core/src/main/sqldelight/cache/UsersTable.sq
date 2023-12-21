@@ -25,3 +25,6 @@ WHERE id = ?;
 
 delete:
 DELETE FROM UsersTable WHERE id = ?;
+
+lastId:
+SELECT last_insert_rowid();
