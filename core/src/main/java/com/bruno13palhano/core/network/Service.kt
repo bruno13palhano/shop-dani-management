@@ -7,14 +7,24 @@ import com.bruno13palhano.core.network.model.DataVersionNet
 import com.bruno13palhano.core.network.model.ProductNet
 import com.bruno13palhano.core.network.model.SaleNet
 import com.bruno13palhano.core.network.model.StockItemNet
+import com.bruno13palhano.core.network.model.UserNet
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
 internal interface Service {
+    @POST("users/login")
+    suspend fun login(user: UserNet)
+
+    @GET("users/insert")
+    suspend fun createUser(user: UserNet)
+
+    @GET("users/update")
+    suspend fun updateUser(user: UserNet)
 
     @GET("catalog/all")
     suspend fun getCatalog(): List<CatalogNet>
