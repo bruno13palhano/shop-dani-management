@@ -11,15 +11,20 @@ import com.bruno13palhano.core.network.access.impl.ProductNetworkRetrofit
 import com.bruno13palhano.core.network.access.SaleNetwork
 import com.bruno13palhano.core.network.access.impl.SaleNetworkRetrofit
 import com.bruno13palhano.core.network.access.StockNetwork
+import com.bruno13palhano.core.network.access.UserNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.access.impl.DataVersionNetworkRetrofit
 import com.bruno13palhano.core.network.access.impl.StockNetworkRetrofit
+import com.bruno13palhano.core.network.access.impl.UserNetworkRetrofit
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
 import javax.inject.Singleton
+
+@Qualifier
+internal annotation class DefaultUserNet
 
 @Qualifier
 internal annotation class DefaultCatalogNet
@@ -45,6 +50,10 @@ internal annotation class DefaultVersionNet
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class NetworkModule {
+    @DefaultUserNet
+    @Singleton
+    @Binds
+    abstract fun bindUserNetwork(network: UserNetworkRetrofit): UserNetwork
 
     @DefaultCatalogNet
     @Singleton
