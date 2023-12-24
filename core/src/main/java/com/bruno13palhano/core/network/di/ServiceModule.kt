@@ -3,6 +3,7 @@ package com.bruno13palhano.core.network.di
 import android.content.Context
 import com.bruno13palhano.core.network.AuthenticatorInterceptor
 import com.bruno13palhano.core.network.Service
+import com.bruno13palhano.core.network.SessionManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -10,11 +11,19 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Qualifier
 import javax.inject.Singleton
+
+@Qualifier
+annotation class DefaultSessionManager
+
+@Qualifier
+annotation class DefaultAuthenticationInterceptor
 
 private const val BASE_URL = "http://10.0.0.111:8080/v1/"
 
@@ -24,7 +33,9 @@ internal object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideApiService(@ApplicationContext context: Context): Service {
+    fun provideApiService(
+        @DefaultAuthenticationInterceptor authenticatorInterceptor: Interceptor
+    ): Service {
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
@@ -33,7 +44,7 @@ internal object ServiceModule {
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
         val client = OkHttpClient.Builder()
-            .addInterceptor(AuthenticatorInterceptor(context))
+            .addInterceptor(authenticatorInterceptor)
             .addInterceptor(interceptor)
             .build()
         val retrofit = Retrofit.Builder()
@@ -46,4 +57,16 @@ internal object ServiceModule {
 
         return apiService
     }
+
+    @Singleton
+    @DefaultSessionManager
+    @Provides
+    fun provideSession(@ApplicationContext context: Context): SessionManager = SessionManager(context)
+
+    @Singleton
+    @DefaultAuthenticationInterceptor
+    @Provides
+    fun provideAuthenticationInterceptor(
+        @DefaultSessionManager sessionManager: SessionManager
+    ): Interceptor = AuthenticatorInterceptor(sessionManager)
 }
