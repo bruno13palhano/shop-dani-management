@@ -4,6 +4,7 @@ import com.bruno13palhano.core.model.User
 import com.bruno13palhano.core.network.Service
 import com.bruno13palhano.core.network.access.UserNetwork
 import com.bruno13palhano.core.network.model.asNetwork
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 internal class UserNetworkRetrofit @Inject constructor(
@@ -13,5 +14,5 @@ internal class UserNetworkRetrofit @Inject constructor(
 
     override suspend fun update(user: User) = apiService.updateUser(user = user.asNetwork())
 
-    override suspend fun login(user: User) = apiService.login(user = user.asNetwork())
+    override suspend fun login(user: User): ResponseBody = apiService.login(user = user.asNetwork())
 }
