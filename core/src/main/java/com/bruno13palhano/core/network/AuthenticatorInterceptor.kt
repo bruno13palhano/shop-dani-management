@@ -1,11 +1,15 @@
 package com.bruno13palhano.core.network
 
-import android.content.Context
+import com.bruno13palhano.core.network.di.DefaultSessionManager
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AuthenticatorInterceptor(context: Context) : Interceptor {
-    private val sessionManager = SessionManager(context)
+@Singleton
+class AuthenticatorInterceptor @Inject constructor(
+    @DefaultSessionManager private val sessionManager: SessionManager
+) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
