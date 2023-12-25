@@ -31,9 +31,21 @@ sealed class DataError(val error: Int, @StringRes val resourceId: Int) {
         error = Errors.DELETE_SERVER_ERROR,
         resourceId = R.string.delete_server_error
     )
+    object LoginDatabase: DataError(
+        error = Errors.LOGIN_DATABASE_ERROR,
+        resourceId = R.string.login_database_error
+    )
+    object LoginServer: DataError(
+        error = Errors.LOGIN_SERVER_ERROR,
+        resourceId = R.string.login_server_error
+    )
     object FillMissingFields: DataError(
         error = Errors.FILL_MISSING_FIELDS,
         resourceId = R.string.empty_fields_error
+    )
+    object InsufficientItemsStock: DataError(
+        error = Errors.INSUFFICIENT_ITEMS_STOCK,
+        resourceId = R.string.insufficient_items_stock
     )
 }
 
@@ -45,5 +57,8 @@ fun getErrors() = listOf(
     stringResource(id = DataError.InsertServer.resourceId),
     stringResource(id = DataError.UpdateServer.resourceId),
     stringResource(id = DataError.DeleteServer.resourceId),
-    stringResource(id = DataError.FillMissingFields.resourceId)
+    stringResource(id = DataError.LoginDatabase.resourceId),
+    stringResource(id = DataError.LoginServer.resourceId),
+    stringResource(id = DataError.FillMissingFields.resourceId),
+    stringResource(id = DataError.InsufficientItemsStock.resourceId)
 )
