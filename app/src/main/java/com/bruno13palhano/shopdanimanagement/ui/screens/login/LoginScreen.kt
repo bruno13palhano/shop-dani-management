@@ -19,6 +19,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -26,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -43,7 +46,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -56,7 +61,12 @@ fun LoginScreen(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val errors = getErrors()
+
     LoginContent(
+        snackbarHostState = snackbarHostState,
         username = viewModel.username,
         password = viewModel.password,
         showPassword = showPassword,
@@ -70,8 +80,19 @@ fun LoginScreen(
         onLogin = {
             if (isLoginValid) {
                 viewModel.login(
-                    onError = {},
-                    onSuccess = onSuccess
+                    onError = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = errors[it],
+                                withDismissAction = true
+                            )
+                        }
+                    },
+                    onSuccess = {
+                        scope.launch {
+                            onSuccess()
+                        }
+                    }
                 )
             }
         }
@@ -81,6 +102,7 @@ fun LoginScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginContent(
+    snackbarHostState: SnackbarHostState,
     username: String,
     password: String,
     showPassword: Boolean,
@@ -92,7 +114,7 @@ fun LoginContent(
 ) {
     Scaffold(
         modifier = Modifier.clickableNoEffect { onOutsideClick() },
-        snackbarHost = {},
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.login_label)) }
@@ -210,6 +232,7 @@ fun LoginPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             LoginContent(
+                snackbarHostState = SnackbarHostState(),
                 username = "bruno13palhano",
                 password = "12345678",
                 showPassword = true,
