@@ -7,8 +7,8 @@ object Errors {
     const val INSERT_SERVER_ERROR = 3
     const val UPDATE_SERVER_ERROR = 4
     const val DELETE_SERVER_ERROR = 5
-    const val FILL_MISSING_FIELDS = 6
-    const val INSUFFICIENT_ITEMS_STOCK = 7
-    const val LOGIN_DATABASE_ERROR = 8
-    const val LOGIN_SERVER_ERROR = 9
+    const val LOGIN_DATABASE_ERROR = 6
+    const val LOGIN_SERVER_ERROR = 7
+    const val FILL_MISSING_FIELDS = 8
+    const val INSUFFICIENT_ITEMS_STOCK = 9
 }
