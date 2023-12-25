@@ -9,8 +9,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginScreen
 
 fun NavGraphBuilder.loginNavGraph(
     navController: NavController,
-    showBottomMenu: (show: Boolean) -> Unit,
-    onIconMenuClick: () -> Unit
+    showBottomMenu: (show: Boolean) -> Unit
 ) {
     navigation(
         startDestination = LoginDestinations.LOGIN_MAIN_ROUTE,
