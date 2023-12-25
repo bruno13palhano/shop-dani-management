@@ -32,6 +32,15 @@ fun NavGraphBuilder.homeNavGraph(
                     )
                 },
                 onMenuClick = onIconMenuClick,
+                onUnauthenticated = {
+                    navController.navigate(route = LoginDestinations.LOGIN_MAIN_ROUTE) {
+                        popUpTo(route = HomeDestinations.HOME_MAIN_ROUTE) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             )
         }
 
