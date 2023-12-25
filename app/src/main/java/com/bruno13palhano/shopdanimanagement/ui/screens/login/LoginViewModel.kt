@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.User
+import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -24,10 +24,8 @@ class LoginViewModel @Inject constructor(
         private set
     var password by mutableStateOf("")
         private set
-    var showPassword by mutableStateOf(false)
-        private set
 
-    val isLoginValid = snapshotFlow { username.isNotEmpty() && password.isEmpty() }
+    val isLoginValid = snapshotFlow { username.isNotEmpty() && password.isNotEmpty() }
         .stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5_000),
@@ -45,13 +43,13 @@ class LoginViewModel @Inject constructor(
     fun login(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         val user = User(
             id = 0L,
-            username = username,
+            username = username.trim(),
             email = "",
-            password = password,
+            password = password.trim(),
             photo = byteArrayOf(),
             role = "",
             enabled = true,
-            timestamp = ""
+            timestamp = getCurrentTimestamp()
         )
 
         viewModelScope.launch {
