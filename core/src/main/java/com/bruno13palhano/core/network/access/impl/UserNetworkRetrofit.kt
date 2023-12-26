@@ -15,4 +15,6 @@ internal class UserNetworkRetrofit @Inject constructor(
     override suspend fun update(user: User) = apiService.updateUser(user = user.asNetwork())
 
     override suspend fun login(user: User): ResponseBody = apiService.login(user = user.asNetwork())
+
+    override suspend fun authenticated(token: String) = apiService.authenticated(token = token)
 }

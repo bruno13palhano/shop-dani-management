@@ -7,4 +7,5 @@ interface UserNetwork {
     suspend fun create(user: User)
     suspend fun update(user: User)
     suspend fun login(user: User): ResponseBody
+    suspend fun authenticated(token: String): Boolean
 }
