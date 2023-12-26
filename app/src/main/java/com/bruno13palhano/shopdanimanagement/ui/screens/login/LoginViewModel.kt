@@ -11,7 +11,9 @@ import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.User
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +22,9 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     @UserRep private val userRepository: UserRepository
 ): ViewModel() {
+    private val _loginState = MutableStateFlow<LoginState>(LoginState.SignedOut)
+    val loginStatus = _loginState.asStateFlow()
+
     var username by mutableStateOf("")
         private set
     var password by mutableStateOf("")
@@ -40,7 +45,7 @@ class LoginViewModel @Inject constructor(
         this.password = password
     }
 
-    fun login(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+    fun login(onError: (error: Int) -> Unit) {
         val user = User(
             id = 0L,
             username = username.trim(),
@@ -53,7 +58,17 @@ class LoginViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            userRepository.login(user = user, onError = onError, onSuccess = onSuccess)
+            _loginState.value = LoginState.InProgress
+            userRepository.login(
+                user = user,
+                onError = {
+                    onError(it)
+                    _loginState.value = LoginState.SignedOut
+                },
+                onSuccess = {
+                    _loginState.value = LoginState.SignedIn
+                }
+            )
         }
     }
 }

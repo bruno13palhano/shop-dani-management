@@ -25,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
@@ -55,6 +57,7 @@ fun LoginScreen(
     onSuccess: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    val loginStatus by viewModel.loginStatus.collectAsStateWithLifecycle()
     val isLoginValid by viewModel.isLoginValid.collectAsStateWithLifecycle()
     var showPassword by remember { mutableStateOf(false) }
 
@@ -65,38 +68,45 @@ fun LoginScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getErrors()
 
-    LoginContent(
-        snackbarHostState = snackbarHostState,
-        username = viewModel.username,
-        password = viewModel.password,
-        showPassword = showPassword,
-        onUsernameChange = viewModel::updateUsername,
-        onPasswordChange = viewModel::updatePassword,
-        onShowPasswordChange = { showPassword = it },
-        onOutsideClick = {
-            keyboardController?.hide()
-            focusManager.clearFocus(force = true)
-        },
-        onLogin = {
-            if (isLoginValid) {
-                viewModel.login(
-                    onError = {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = errors[it],
-                                withDismissAction = true
-                            )
-                        }
-                    },
-                    onSuccess = {
-                        scope.launch {
-                            onSuccess()
-                        }
+    when (loginStatus) {
+        LoginState.SignedOut -> {
+            LoginContent(
+                snackbarHostState = snackbarHostState,
+                username = viewModel.username,
+                password = viewModel.password,
+                showPassword = showPassword,
+                onUsernameChange = viewModel::updateUsername,
+                onPasswordChange = viewModel::updatePassword,
+                onShowPasswordChange = { showPassword = it },
+                onOutsideClick = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus(force = true)
+                },
+                onLogin = {
+                    if (isLoginValid) {
+                        viewModel.login(
+                            onError = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[it],
+                                        withDismissAction = true
+                                    )
+                                }
+                            }
+                        )
                     }
-                )
+                }
+            )
+        }
+        LoginState.InProgress -> {
+            CircularProgress()
+        }
+        LoginState.SignedIn -> {
+            LaunchedEffect(key1 = Unit) {
+                onSuccess()
             }
         }
-    )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
