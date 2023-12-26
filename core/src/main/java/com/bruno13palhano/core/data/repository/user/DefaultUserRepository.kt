@@ -75,6 +75,21 @@ internal class DefaultUserRepository @Inject constructor(
     }
 
     override fun isAuthenticated(): Boolean {
-        return sessionManager.fetchAuthToken() != null
+        val token = sessionManager.fetchAuthToken()
+
+        token?.let {
+            CoroutineScope(ioDispatcher).launch {
+                try {
+                    val authenticated = userNetwork.authenticated(it)
+                    if (!authenticated) {
+                        sessionManager.saveAuthToken(token = "")
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        return !token.isNullOrEmpty()
     }
 }
