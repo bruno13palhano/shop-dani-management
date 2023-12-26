@@ -74,6 +74,7 @@ fun HomeScreen(
     onOptionsItemClick: (route: String) -> Unit,
     onSalesItemClick: (id: Long, isOrderedByCustomer: Boolean) -> Unit,
     onMenuClick: () -> Unit,
+    onUnauthenticated: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val lastSalesEntry by viewModel.lastSales.collectAsStateWithLifecycle()
@@ -81,6 +82,12 @@ fun HomeScreen(
 
     val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
     var showProfit by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = Unit) {
+        if (!viewModel.isAuthenticated()) {
+            onUnauthenticated()
+        }
+    }
 
     LaunchedEffect(key1 = lastSalesEntry) {
         chart.setEntries(

@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.SaleRep
+import com.bruno13palhano.core.data.di.UserRep
+import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.setQuantity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleRepository
+    @SaleRep private val saleRepository: SaleRepository,
+    @UserRep private val userRepository: UserRepository
 ) : ViewModel() {
     private val currentDay = LocalDate.now()
 
@@ -96,6 +99,10 @@ class HomeViewModel @Inject constructor(
             started = WhileSubscribed(5_000),
             initialValue = listOf()
         )
+
+    fun isAuthenticated(): Boolean {
+        return userRepository.isAuthenticated()
+    }
 
     private fun setChartEntries(chart: MutableList<Pair<String, Float>>, days: Array<Int>) {
         for (i in days.size-1 downTo 0) {
