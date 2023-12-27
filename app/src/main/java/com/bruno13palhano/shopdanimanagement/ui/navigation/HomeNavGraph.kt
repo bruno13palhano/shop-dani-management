@@ -14,6 +14,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 fun NavGraphBuilder.homeNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
     onIconMenuClick: () -> Unit
 ) {
     navigation(
@@ -22,6 +23,7 @@ fun NavGraphBuilder.homeNavGraph(
     ) {
         composable(route = HomeDestinations.HOME_MAIN_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             HomeScreen(
                 onOptionsItemClick = { route ->
                     navController.navigate(route = route)
@@ -52,6 +54,7 @@ fun NavGraphBuilder.homeNavGraph(
             )
         ) { backStackEntry ->
             showBottomMenu(true)
+            gesturesEnabled(true)
             val saleId = backStackEntry.arguments?.getLong(ITEM_ID)
             val isOrdered = backStackEntry.arguments?.getBoolean(IS_ORDERED)
 
@@ -69,23 +72,28 @@ fun NavGraphBuilder.homeNavGraph(
 
         salesNavGraph(
             navController = navController,
-            showBottomMenu = showBottomMenu
+            showBottomMenu = showBottomMenu,
+            gesturesEnabled = gesturesEnabled
         )
         stockNavGraph(
             navController = navController,
-            showBottomMenu = showBottomMenu
+            showBottomMenu = showBottomMenu,
+            gesturesEnabled = gesturesEnabled
         )
         ordersNavGraph(
             navController = navController,
-            showBottomMenu = showBottomMenu
+            showBottomMenu = showBottomMenu,
+            gesturesEnabled = gesturesEnabled
         )
         deliveriesNAvGraph(
             navController = navController,
-            showBottomMenu = showBottomMenu
+            showBottomMenu = showBottomMenu,
+            gesturesEnabled = gesturesEnabled
         )
         catalogNavGraph(
             navController = navController,
-            showBottomMenu = showBottomMenu
+            showBottomMenu = showBottomMenu,
+            gesturesEnabled = gesturesEnabled
         )
     }
 }

@@ -18,7 +18,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesOptionsScreen
 
 fun NavGraphBuilder.salesNavGraph(
     navController: NavController,
-    showBottomMenu: (show: Boolean) -> Unit
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
     navigation(
         startDestination = SalesDestinations.MAIN_SALES_ROUTE,
@@ -26,6 +27,7 @@ fun NavGraphBuilder.salesNavGraph(
     ) {
         composable(route = SalesDestinations.MAIN_SALES_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             SalesScreen(
                 isOrders = false,
                 screenTitle = stringResource(id = R.string.sales_label),
@@ -42,6 +44,7 @@ fun NavGraphBuilder.salesNavGraph(
         }
         composable(route = SalesDestinations.SALES_OPTIONS_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             SalesOptionsScreen(
                 onOrdersOptionClick = {
                     navController.navigate(route = SalesDestinations.SALES_PRODUCTS_LIST_ROUTE)
@@ -54,6 +57,7 @@ fun NavGraphBuilder.salesNavGraph(
         }
         composable(route = SalesDestinations.SALES_SEARCH_STOCK_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             StockSearchScreen(
                 onItemClick = { stockItem ->
                     navController.navigate(
@@ -65,6 +69,7 @@ fun NavGraphBuilder.salesNavGraph(
         }
         composable(route = SalesDestinations.SALES_STOCK_LIST_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             StockScreen(
                 isAddButtonEnabled = false,
                 screenTitle = stringResource(id = R.string.stock_list_label),
@@ -82,6 +87,7 @@ fun NavGraphBuilder.salesNavGraph(
         }
         composable(route = SalesDestinations.SALES_PRODUCTS_LIST_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             ProductListScreen(
                 isEditable = false,
                 categoryId = 0L,
@@ -101,6 +107,7 @@ fun NavGraphBuilder.salesNavGraph(
         }
         composable(route = SalesDestinations.SALES_SEARCH_PRODUCT_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             SearchProductScreen(
                 isEditable = false,
                 categoryId = 0L,
@@ -121,6 +128,7 @@ fun NavGraphBuilder.salesNavGraph(
             )
         ) { backStackEntry ->
             showBottomMenu(true)
+            gesturesEnabled(true)
             val id = backStackEntry.arguments?.getLong(ITEM_ID)
             val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
             val isOrdered = backStackEntry.arguments?.getBoolean(IS_ORDERED)

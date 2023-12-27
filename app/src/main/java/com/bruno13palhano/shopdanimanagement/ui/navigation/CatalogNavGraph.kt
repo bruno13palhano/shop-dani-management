@@ -11,13 +11,16 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.CatalogScreen
 
 fun NavGraphBuilder.catalogNavGraph(
     navController: NavController,
-    showBottomMenu: (show: Boolean) -> Unit
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
     navigation(
         startDestination = CatalogDestination.CATALOG_MAIN_ROUTE,
         route = HomeDestinations.HOME_CATALOG_ROUTE
     ) {
         composable(route = CatalogDestination.CATALOG_MAIN_ROUTE) {
+            showBottomMenu(true)
+            gesturesEnabled(true)
             CatalogScreen(
                 onItemClick = { id ->
                     navController.navigate(
@@ -35,6 +38,7 @@ fun NavGraphBuilder.catalogNavGraph(
             )
         ) { backStackEntry ->
             showBottomMenu(true)
+            gesturesEnabled(true)
             val id = backStackEntry.arguments?.getLong(ITEM_ID)
             val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
             if (id != null && editable != null) {

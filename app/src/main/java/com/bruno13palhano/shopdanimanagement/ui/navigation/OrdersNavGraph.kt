@@ -13,7 +13,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesScreen
 
 fun NavGraphBuilder.ordersNavGraph(
     navController: NavController,
-    showBottomMenu: (show: Boolean) -> Unit
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
     navigation(
         startDestination = OrdersDestinations.ORDERS_MAIN_ROUTE,
@@ -21,6 +22,7 @@ fun NavGraphBuilder.ordersNavGraph(
     ) {
         composable(route = OrdersDestinations.ORDERS_MAIN_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             SalesScreen(
                 isOrders = true,
                 screenTitle = stringResource(id = R.string.orders_list_label),
@@ -38,6 +40,7 @@ fun NavGraphBuilder.ordersNavGraph(
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
             showBottomMenu(true)
+            gesturesEnabled(true)
             backStackEntry.arguments?.getLong(ITEM_ID)?.let { id ->
                 SaleScreen(
                     isEdit = true,

@@ -9,7 +9,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginScreen
 
 fun NavGraphBuilder.loginNavGraph(
     navController: NavController,
-    showBottomMenu: (show: Boolean) -> Unit
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
     navigation(
         startDestination = LoginDestinations.LOGIN_MAIN_ROUTE,
@@ -17,6 +18,7 @@ fun NavGraphBuilder.loginNavGraph(
     ) {
         composable(route = LoginDestinations.LOGIN_MAIN_ROUTE) {
             showBottomMenu(false)
+            gesturesEnabled(false)
             LoginScreen(
                 onSuccess = {
                     navController.navigate(route = HomeDestinations.HOME_MAIN_ROUTE) {
@@ -31,6 +33,7 @@ fun NavGraphBuilder.loginNavGraph(
         }
         composable(route = LoginDestinations.LOGIN_CREATE_ACCOUNT_ROUTE) {
             showBottomMenu(false)
+            gesturesEnabled(false)
         }
     }
 }

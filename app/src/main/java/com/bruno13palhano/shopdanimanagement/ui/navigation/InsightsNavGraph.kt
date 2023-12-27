@@ -14,6 +14,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.insights.StockOrdersSale
 fun NavGraphBuilder.insightsNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
     onIconMenuClick: () -> Unit
 ) {
     navigation(
@@ -22,6 +23,7 @@ fun NavGraphBuilder.insightsNavGraph(
     ) {
         composable(route = InsightsDestinations.INSIGHTS_MAIN_ROUTE) {
             showBottomMenu(false)
+            gesturesEnabled(true)
             InsightsScreen(
                 onItemClick = { route ->
                     navController.navigate(route = route)
@@ -39,21 +41,29 @@ fun NavGraphBuilder.insightsNavGraph(
             )
         }
         composable(route = InsightsDestinations.INSIGHTS_CHARTS_ROUTE) {
+            showBottomMenu(false)
+            gesturesEnabled(true)
             ChartsScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = InsightsDestinations.INSIGHTS_LAST_SALES_ROUTE) {
+            showBottomMenu(false)
+            gesturesEnabled(true)
             LastSalesScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = InsightsDestinations.INSIGHTS_STOCK_ORDERS_ROUTE) {
+            showBottomMenu(false)
+            gesturesEnabled(true)
             StockOrdersSalesScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = InsightsDestinations.INSIGHTS_COMPANY_SALES_ROUTE) {
+            showBottomMenu(false)
+            gesturesEnabled(true)
             SalesByCompanyScreen(
                 navigateUp = { navController.navigateUp() }
             )

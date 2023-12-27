@@ -17,6 +17,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductSc
 fun NavGraphBuilder.productsNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
     onIconMenuClick: () -> Unit
 ) {
     navigation(
@@ -25,6 +26,7 @@ fun NavGraphBuilder.productsNavGraph(
     ) {
         composable(route = ProductsDestinations.MAIN_PRODUCTS_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             ProductCategoriesScreen(
                 onItemClick = { categoryId ->
                     navController.navigate(
@@ -39,6 +41,7 @@ fun NavGraphBuilder.productsNavGraph(
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
             showBottomMenu(true)
+            gesturesEnabled(true)
             backStackEntry.arguments?.getLong(ITEM_ID)?.let { categoryId ->
                 ProductListScreen(
                     isEditable = true,
@@ -67,6 +70,7 @@ fun NavGraphBuilder.productsNavGraph(
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
             showBottomMenu(true)
+            gesturesEnabled(true)
             backStackEntry.arguments?.getLong(ITEM_ID)?.let { categoryId ->
                 SearchProductScreen(
                     isEditable = true,
@@ -88,6 +92,7 @@ fun NavGraphBuilder.productsNavGraph(
             )
         ) { backStackEntry ->
             showBottomMenu(true)
+            gesturesEnabled(true)
             val id = backStackEntry.arguments?.getLong(ITEM_ID)
             val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
             if (id != null && editable != null) {
@@ -106,6 +111,7 @@ fun NavGraphBuilder.productsNavGraph(
             )
         ) { backStackEntry ->
             showBottomMenu(true)
+            gesturesEnabled(true)
             val id = backStackEntry.arguments?.getLong(ITEM_ID)
             val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
 

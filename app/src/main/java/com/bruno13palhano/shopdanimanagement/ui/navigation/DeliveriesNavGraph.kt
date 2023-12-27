@@ -11,7 +11,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveryScree
 
 fun NavGraphBuilder.deliveriesNAvGraph(
     navController: NavController,
-    showBottomMenu: (show: Boolean) -> Unit
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
     navigation(
         startDestination = DeliveriesDestinations.DELIVERIES_MAIN_ROUTE,
@@ -19,6 +20,7 @@ fun NavGraphBuilder.deliveriesNAvGraph(
     ) {
         composable(route = DeliveriesDestinations.DELIVERIES_MAIN_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             DeliveriesScreen(
                 onItemClick = { deliveryId ->
                     navController.navigate(
@@ -33,6 +35,7 @@ fun NavGraphBuilder.deliveriesNAvGraph(
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
             showBottomMenu(true)
+            gesturesEnabled(true)
             backStackEntry.arguments?.getLong(ITEM_ID)?.let { deliveryId ->
                 DeliveryScreen(
                     deliveryId = deliveryId,

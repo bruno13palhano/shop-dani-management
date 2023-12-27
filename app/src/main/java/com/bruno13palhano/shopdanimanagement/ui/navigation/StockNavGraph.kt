@@ -16,7 +16,8 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockScreen
 
 fun NavGraphBuilder.stockNavGraph(
     navController: NavController,
-    showBottomMenu: (show: Boolean) -> Unit
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
     navigation(
         startDestination = StockDestinations.STOCK_MAIN_ROUTE,
@@ -24,6 +25,7 @@ fun NavGraphBuilder.stockNavGraph(
     ) {
         composable(route = StockDestinations.STOCK_MAIN_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             StockScreen(
                 isAddButtonEnabled = true,
                 screenTitle = stringResource(id = R.string.stock_list_label),
@@ -43,6 +45,7 @@ fun NavGraphBuilder.stockNavGraph(
         }
         composable(route = StockDestinations.STOCK_SEARCH_ITEM_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             StockSearchScreen(
                 onItemClick = { stockId ->
                     navController.navigate(
@@ -54,6 +57,7 @@ fun NavGraphBuilder.stockNavGraph(
         }
         composable(route = StockDestinations.STOCK_ITEM_LIST_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             ProductListScreen(
                 isEditable = false,
                 categoryId = 0L,
@@ -73,6 +77,7 @@ fun NavGraphBuilder.stockNavGraph(
         }
         composable(route = StockDestinations.STOCK_SEARCH_PRODUCT_ROUTE) {
             showBottomMenu(true)
+            gesturesEnabled(true)
             SearchProductScreen(
                 isEditable = false,
                 categoryId = 0L,
@@ -93,6 +98,7 @@ fun NavGraphBuilder.stockNavGraph(
             )
         ) { backStackEntry ->
             showBottomMenu(true)
+            gesturesEnabled(true)
             val id = backStackEntry.arguments?.getLong(ITEM_ID)
             val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
             val isOrdered = backStackEntry.arguments?.getBoolean(IS_ORDERED)

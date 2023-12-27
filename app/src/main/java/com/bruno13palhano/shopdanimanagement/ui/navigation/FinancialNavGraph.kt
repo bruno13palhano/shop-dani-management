@@ -20,6 +20,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.ItemScreen
 fun NavGraphBuilder.financialNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
     onIconMenuClick: () -> Unit
 ) {
     navigation(
@@ -28,6 +29,7 @@ fun NavGraphBuilder.financialNavGraph(
     ) {
         composable(route = FinancialDestinations.FINANCIAL_MAIN_ROUTE) {
             showBottomMenu(false)
+            gesturesEnabled(true)
             FinancialScreen(
                 onItemClick = { route ->
                     navController.navigate(route)
@@ -46,18 +48,21 @@ fun NavGraphBuilder.financialNavGraph(
         }
         composable(route = FinancialDestinations.FINANCIAL_INFO_ROUTE) {
             showBottomMenu(false)
+            gesturesEnabled(true)
             FinancialInfoScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = FinancialDestinations.FINANCIAL_CANCELED_SALES_ROUTE) {
             showBottomMenu(false)
+            gesturesEnabled(true)
             CanceledSalesScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = FinancialDestinations.FINANCIAL_STOCK_DEBITS_ROUTE) {
             showBottomMenu(false)
+            gesturesEnabled(true)
             StockDebitsScreen(
                 onItemClick = { stockItemId ->
                     navController.navigate(
@@ -69,6 +74,7 @@ fun NavGraphBuilder.financialNavGraph(
         }
         composable(route = FinancialDestinations.FINANCIAL_CUSTOMERS_DEBITS_ROUTE) {
             showBottomMenu(false)
+            gesturesEnabled(true)
             CustomersDebitScreen(
                 onItemClick = { saleId ->
                     navController.navigate(
@@ -83,6 +89,7 @@ fun NavGraphBuilder.financialNavGraph(
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
             showBottomMenu(false)
+            gesturesEnabled(true)
             backStackEntry.arguments?.getLong(ITEM_ID)?.let { saleId ->
                 SaleScreen(
                     isEdit = true,
@@ -99,6 +106,7 @@ fun NavGraphBuilder.financialNavGraph(
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
             showBottomMenu(false)
+            gesturesEnabled(true)
             backStackEntry.arguments?.getLong(ITEM_ID)?.let { stockItemId ->
                 ItemScreen(
                     isEditable = true,
