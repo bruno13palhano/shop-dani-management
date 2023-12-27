@@ -71,4 +71,8 @@ class LoginViewModel @Inject constructor(
             )
         }
     }
+
+    fun logout() {
+        userRepository.logout()
+    }
 }

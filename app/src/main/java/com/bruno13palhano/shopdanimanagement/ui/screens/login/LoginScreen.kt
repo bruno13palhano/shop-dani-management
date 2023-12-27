@@ -70,6 +70,9 @@ fun LoginScreen(
 
     when (loginStatus) {
         LoginState.SignedOut -> {
+            LaunchedEffect(key1 = Unit) {
+                viewModel.logout()
+            }
             LoginContent(
                 snackbarHostState = snackbarHostState,
                 username = viewModel.username,
