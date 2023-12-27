@@ -73,6 +73,7 @@ import kotlinx.coroutines.launch
 fun DrawerMenu(
     drawerState: DrawerState,
     navController: NavHostController,
+    gesturesEnabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val items = listOf(
@@ -89,6 +90,7 @@ fun DrawerMenu(
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = gesturesEnabled,
         drawerContent = {
             ModalDrawerSheet(
                 drawerShape = RectangleShape
@@ -136,9 +138,11 @@ fun DrawerMenu(
                                 selectedItem = screen
                                 navController.navigate(screen.route) {
                                     popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
                                         if (screen.route == MainDestinations.LOGIN_ROUTE) {
+                                            saveState = false
                                             inclusive = true
+                                        } else {
+                                            saveState = true
                                         }
                                     }
                                     restoreState = true
