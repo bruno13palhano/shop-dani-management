@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Insights
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlaylistAdd
@@ -77,7 +78,8 @@ fun DrawerMenu(
     val items = listOf(
         Screen.Home,
         Screen.Financial,
-        Screen.Insights
+        Screen.Insights,
+        Screen.Logout
     )
     val orientation = LocalConfiguration.current.orientation
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -135,6 +137,9 @@ fun DrawerMenu(
                                 navController.navigate(screen.route) {
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
+                                        if (screen.route == MainDestinations.LOGIN_ROUTE) {
+                                            inclusive = true
+                                        }
                                     }
                                     restoreState = true
                                     launchSingleTop = true
@@ -200,6 +205,7 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
     object Insights: Screen(MainDestinations.INSIGHTS_ROUTE, Icons.Filled.Insights, R.string.insights_label)
     object Products: Screen(MainDestinations.PRODUCTS_ROUTE, Icons.Filled.PlaylistAdd, R.string.products_label)
     object Customers: Screen(MainDestinations.CUSTOMERS_ROUTE, Icons.Filled.Person, R.string.customers_label)
+    object Logout: Screen(MainDestinations.LOGIN_ROUTE, Icons.Filled.Logout, R.string.logout_label)
 }
 
 @Composable
