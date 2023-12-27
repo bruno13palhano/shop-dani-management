@@ -10,42 +10,50 @@ fun MainNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = MainDestinations.HOME_ROUTE,
+    isLogged: Boolean,
     showBottomMenu: (show: Boolean) -> Unit = {},
+    gesturesEnabled: (enabled: Boolean) -> Unit = {},
     onIconMenuClick: () -> Unit,
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination,
+        startDestination = if (isLogged) startDestination else MainDestinations.LOGIN_ROUTE,
         modifier = modifier
     ) {
         homeNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu,
-            onIconMenuClick = onIconMenuClick
+            onIconMenuClick = onIconMenuClick,
+            gesturesEnabled = gesturesEnabled
         )
         financialNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu,
-            onIconMenuClick = onIconMenuClick
+            onIconMenuClick = onIconMenuClick,
+            gesturesEnabled = gesturesEnabled
         )
         insightsNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu,
-            onIconMenuClick = onIconMenuClick
+            onIconMenuClick = onIconMenuClick,
+            gesturesEnabled = gesturesEnabled
         )
         productsNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu,
             onIconMenuClick = onIconMenuClick,
+            gesturesEnabled = gesturesEnabled
         )
         customersNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu,
             onIconMenuClick = onIconMenuClick,
+            gesturesEnabled = gesturesEnabled
         )
         loginNavGraph(
             navController = navController,
-            showBottomMenu = showBottomMenu
+            showBottomMenu = showBottomMenu,
+            gesturesEnabled = gesturesEnabled
         )
     }
 }
