@@ -49,11 +49,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.InfoItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
+import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginState
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -75,19 +77,20 @@ fun HomeScreen(
     onSalesItemClick: (id: Long, isOrderedByCustomer: Boolean) -> Unit,
     onMenuClick: () -> Unit,
     onUnauthenticated: () -> Unit,
+    showBottomMenu: (show: Boolean) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.isAuthenticated()
+    }
+
+    val state by viewModel.loginState.collectAsStateWithLifecycle()
+
     val lastSalesEntry by viewModel.lastSales.collectAsStateWithLifecycle()
     val homeInfo by viewModel.homeInfo.collectAsStateWithLifecycle()
 
     val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
     var showProfit by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(key1 = Unit) {
-        if (!viewModel.isAuthenticated()) {
-            onUnauthenticated()
-        }
-    }
 
     LaunchedEffect(key1 = lastSalesEntry) {
         chart.setEntries(
@@ -97,15 +100,27 @@ fun HomeScreen(
         )
     }
 
-    HomeContent(
-        homeInfo = homeInfo,
-        lastSalesEntry = chart,
-        onOptionsItemClick = onOptionsItemClick,
-        showProfit = showProfit,
-        onSalesItemClick = onSalesItemClick,
-        onShowProfitChange = { showProfit = it },
-        onMenuClick = onMenuClick
-    )
+    when (state) {
+        LoginState.SignedIn -> {
+            showBottomMenu(true)
+            HomeContent(
+                homeInfo = homeInfo,
+                lastSalesEntry = chart,
+                onOptionsItemClick = onOptionsItemClick,
+                showProfit = showProfit,
+                onSalesItemClick = onSalesItemClick,
+                onShowProfitChange = { showProfit = it },
+                onMenuClick = onMenuClick
+            )
+        }
+        LoginState.InProgress -> {
+            CircularProgress()
+        }
+        LoginState.SignedOut -> {
+            onUnauthenticated()
+            showBottomMenu(false)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
