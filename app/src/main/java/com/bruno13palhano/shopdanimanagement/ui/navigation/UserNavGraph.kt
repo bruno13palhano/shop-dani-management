@@ -6,39 +6,45 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.user.UserScreen
 
-fun NavGraphBuilder.loginNavGraph(
+fun NavGraphBuilder.userNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
     navigation(
-        startDestination = LoginDestinations.LOGIN_MAIN_ROUTE,
-        route = MainDestinations.LOGIN_ROUTE
+        startDestination = UserDestinations.USER_MAIN_ROUTE,
+        route = MainDestinations.USER_ROUTE
     ) {
-        composable(route = LoginDestinations.LOGIN_MAIN_ROUTE) {
+        composable(route = UserDestinations.USER_MAIN_ROUTE) {
+            showBottomMenu(false)
+            gesturesEnabled(true)
+            UserScreen(
+                onLogout = {
+                    navController.navigate(route = UserDestinations.USER_LOGIN_ROUTE) {
+                        popUpTo(0)
+                    }
+                },
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+        composable(route = UserDestinations.USER_LOGIN_ROUTE) {
             showBottomMenu(false)
             gesturesEnabled(false)
             LoginScreen(
                 onSuccess = {
                     navController.navigate(route = HomeDestinations.HOME_MAIN_ROUTE) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            inclusive = true
-                        }
+                        popUpTo(0)
                         launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )
         }
-        composable(route = LoginDestinations.LOGIN_CREATE_ACCOUNT_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(false)
-        }
     }
 }
 
-object LoginDestinations {
-    const val LOGIN_MAIN_ROUTE = "login_main_route"
-    const val LOGIN_CREATE_ACCOUNT_ROUTE = "login_create_account_route"
+object UserDestinations {
+    const val USER_MAIN_ROUTE = "user_main_route"
+    const val USER_LOGIN_ROUTE = "user_login_route"
 }
