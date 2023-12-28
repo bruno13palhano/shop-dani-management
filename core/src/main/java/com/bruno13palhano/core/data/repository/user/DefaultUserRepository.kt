@@ -14,7 +14,9 @@ import com.bruno13palhano.core.sync.Sync
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -91,5 +93,33 @@ internal class DefaultUserRepository @Inject constructor(
         }
 
         return !token.isNullOrEmpty()
+    }
+
+    override fun authenticated(): Flow<Boolean> {
+        val token = sessionManager.fetchAuthToken()
+
+        token?.let {
+            CoroutineScope(ioDispatcher).launch {
+                try {
+                    val authenticated = userNetwork.authenticated(it)
+                    if (!authenticated) {
+                        sessionManager.saveAuthToken(token = "")
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        return flow {
+            while (true) {
+                emit(!token.isNullOrEmpty())
+                delay(1000)
+            }
+        }
+    }
+
+    override fun logout() {
+        sessionManager.saveAuthToken(token = "")
     }
 }
