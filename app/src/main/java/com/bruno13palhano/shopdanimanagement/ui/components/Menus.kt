@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Insights
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlaylistAdd
@@ -80,7 +80,7 @@ fun DrawerMenu(
         Screen.Home,
         Screen.Financial,
         Screen.Insights,
-        Screen.Logout
+        Screen.User
     )
     val orientation = LocalConfiguration.current.orientation
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -138,12 +138,7 @@ fun DrawerMenu(
                                 selectedItem = screen
                                 navController.navigate(screen.route) {
                                     popUpTo(navController.graph.findStartDestination().id) {
-                                        if (screen.route == MainDestinations.LOGIN_ROUTE) {
-                                            saveState = false
-                                            inclusive = true
-                                        } else {
-                                            saveState = true
-                                        }
+                                        saveState = true
                                     }
                                     restoreState = true
                                     launchSingleTop = true
@@ -209,7 +204,7 @@ sealed class Screen(val route: String, val icon: ImageVector, @StringRes val res
     object Insights: Screen(MainDestinations.INSIGHTS_ROUTE, Icons.Filled.Insights, R.string.insights_label)
     object Products: Screen(MainDestinations.PRODUCTS_ROUTE, Icons.Filled.PlaylistAdd, R.string.products_label)
     object Customers: Screen(MainDestinations.CUSTOMERS_ROUTE, Icons.Filled.Person, R.string.customers_label)
-    object Logout: Screen(MainDestinations.LOGIN_ROUTE, Icons.Filled.Logout, R.string.logout_label)
+    object User: Screen(MainDestinations.USER_ROUTE, Icons.Filled.AccountCircle, R.string.account_label)
 }
 
 @Composable
