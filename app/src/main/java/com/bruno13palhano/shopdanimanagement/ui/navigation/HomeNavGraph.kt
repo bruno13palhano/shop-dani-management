@@ -22,7 +22,6 @@ fun NavGraphBuilder.homeNavGraph(
         route = MainDestinations.HOME_ROUTE,
     ) {
         composable(route = HomeDestinations.HOME_MAIN_ROUTE) {
-            showBottomMenu(true)
             gesturesEnabled(true)
             HomeScreen(
                 onOptionsItemClick = { route ->
@@ -42,7 +41,8 @@ fun NavGraphBuilder.homeNavGraph(
                         launchSingleTop = true
                         restoreState = true
                     }
-                }
+                },
+                showBottomMenu = showBottomMenu
             )
         }
 
