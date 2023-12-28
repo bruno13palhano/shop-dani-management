@@ -10,21 +10,20 @@ fun MainNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = MainDestinations.HOME_ROUTE,
-    isLogged: Boolean,
     showBottomMenu: (show: Boolean) -> Unit = {},
     gesturesEnabled: (enabled: Boolean) -> Unit = {},
     onIconMenuClick: () -> Unit,
 ) {
     NavHost(
         navController = navController,
-        startDestination = if (isLogged) startDestination else MainDestinations.LOGIN_ROUTE,
+        startDestination = startDestination,
         modifier = modifier
     ) {
         homeNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu,
             onIconMenuClick = onIconMenuClick,
-            gesturesEnabled = gesturesEnabled
+            gesturesEnabled = gesturesEnabled,
         )
         financialNavGraph(
             navController = navController,
@@ -55,12 +54,18 @@ fun MainNavGraph(
             showBottomMenu = showBottomMenu,
             gesturesEnabled = gesturesEnabled
         )
+        userNavGraph(
+            navController = navController,
+            showBottomMenu = showBottomMenu,
+            gesturesEnabled = gesturesEnabled
+        )
     }
 }
 
 object MainDestinations {
     const val HOME_ROUTE = "home_route"
     const val LOGIN_ROUTE = "login_route"
+    const val USER_ROUTE = "user_route"
     const val INSIGHTS_ROUTE = "insights_route"
     const val FINANCIAL_ROUTE = "financial_route"
     const val PRODUCTS_ROUTE = "products_route"
