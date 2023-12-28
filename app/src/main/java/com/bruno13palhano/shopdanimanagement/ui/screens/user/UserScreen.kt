@@ -61,7 +61,7 @@ fun UserContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.user_label)) },
+                title = { Text(text = stringResource(id = R.string.account_label)) },
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(
