@@ -6,11 +6,15 @@ import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
+import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginState
 import com.bruno13palhano.shopdanimanagement.ui.screens.setQuantity
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -19,6 +23,8 @@ class HomeViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleRepository,
     @UserRep private val userRepository: UserRepository
 ) : ViewModel() {
+    private var _loginState = MutableStateFlow<LoginState>(LoginState.InProgress)
+    val loginState = _loginState.asStateFlow()
     private val currentDay = LocalDate.now()
 
     val homeInfo = saleRepository.getAll().map { sales ->
@@ -100,8 +106,16 @@ class HomeViewModel @Inject constructor(
             initialValue = listOf()
         )
 
-    fun isAuthenticated(): Boolean {
-        return userRepository.isAuthenticated()
+    fun isAuthenticated() {
+        viewModelScope.launch {
+            userRepository.authenticated().collect {
+                if (it) {
+                    _loginState.value = LoginState.SignedIn
+                } else {
+                    _loginState.value = LoginState.SignedOut
+                }
+            }
+        }
     }
 
     private fun setChartEntries(chart: MutableList<Pair<String, Float>>, days: Array<Int>) {
