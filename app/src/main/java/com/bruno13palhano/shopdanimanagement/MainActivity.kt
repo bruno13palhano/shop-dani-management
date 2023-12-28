@@ -37,7 +37,8 @@ class MainActivity : ComponentActivity() {
             ShopDaniManagementTheme {
                 val navController = rememberNavController()
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-                var showBottomBar by rememberSaveable { mutableStateOf(true) }
+                var showBottomBar by rememberSaveable { mutableStateOf(false) }
+                var gesturesEnabled by rememberSaveable { mutableStateOf(false) }
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -45,7 +46,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     DrawerMenu(
                         navController = navController,
-                        drawerState = drawerState
+                        drawerState = drawerState,
+                        gesturesEnabled = gesturesEnabled
                     ) {
                         val coroutineScope = rememberCoroutineScope()
 
@@ -55,9 +57,8 @@ class MainActivity : ComponentActivity() {
                             MainNavGraph(
                                 modifier = Modifier.padding(it),
                                 navController = navController,
-                                showBottomMenu = {show ->
-                                    showBottomBar = show
-                                }
+                                showBottomMenu = { show -> showBottomBar = show },
+                                gesturesEnabled = { enabled -> gesturesEnabled = enabled }
                             ) {
                                 coroutineScope.launch {
                                     drawerState.open()
