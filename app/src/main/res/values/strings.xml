@@ -3,7 +3,7 @@
     <string name="app_logo_label">App logo</string>
     <string name="login_label">Login</string>
     <string name="logout_label">Logout</string>
-    <string name="user_label">User</string>
+    <string name="account_label">Account</string>
     <string name="home_label">Home</string>
     <string name="insights_label">Insights</string>
     <string name="financial_label">Financial</string>
