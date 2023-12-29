@@ -44,6 +44,7 @@
     <string name="edit_product_label">Edit Product</string>
     <string name="username_label">Username</string>
     <string name="password_label">Password</string>
+    <string name="repeat_password_label">Repeat the password</string>
     <string name="name_label">Name</string>
     <string name="title_label">Title</string>
     <string name="code_label">Code</string>
@@ -61,6 +62,7 @@
     <string name="customer_name_label">Customer name</string>
     <string name="enter_username_label">Enter username</string>
     <string name="enter_password_label">Enter password</string>
+    <string name="enter_repeat_password_label">Enter the password again</string>
     <string name="enter_name_label">Enter name</string>
     <string name="enter_title_label">Enter title</string>
     <string name="enter_code_label">Enter code</string>
