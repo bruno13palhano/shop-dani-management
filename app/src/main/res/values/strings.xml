@@ -5,6 +5,7 @@
     <string name="logout_label">Logout</string>
     <string name="account_label">Account</string>
     <string name="create_account_label">Create account</string>
+    <string name="already_have_account_label">Already hava an account?</string>
     <string name="home_label">Home</string>
     <string name="insights_label">Insights</string>
     <string name="financial_label">Financial</string>
@@ -21,6 +22,7 @@
     <string name="info_label">Info</string>
     <string name="expand_item_label">Expand item</string>
     <string name="up_button_label">Up button</string>
+    <string name="profile_picture">Profile picture</string>
     <string name="product_image_label">Product image</string>
     <string name="category_image_label">Category image</string>
     <string name="categories_label">Categories</string>
