@@ -23,6 +23,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -55,6 +57,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     onSuccess: () -> Unit,
+    onCreateAccountClick: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val loginStatus by viewModel.loginStatus.collectAsStateWithLifecycle()
@@ -85,6 +88,7 @@ fun LoginScreen(
                     keyboardController?.hide()
                     focusManager.clearFocus(force = true)
                 },
+                onCreateAccountClick = onCreateAccountClick,
                 onLogin = {
                     if (isLoginValid) {
                         viewModel.login(
@@ -123,7 +127,8 @@ fun LoginContent(
     onPasswordChange: (password: String) -> Unit,
     onShowPasswordChange: (showPassword: Boolean) -> Unit,
     onOutsideClick: () -> Unit,
-    onLogin: () -> Unit
+    onCreateAccountClick: () -> Unit,
+    onLogin: () -> Unit,
 ) {
     Scaffold(
         modifier = Modifier.clickableNoEffect { onOutsideClick() },
@@ -230,6 +235,14 @@ fun LoginContent(
                     )
                 }
             )
+            TextButton(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(end = 8.dp),
+                onClick = onCreateAccountClick
+            ) {
+                Text(text = stringResource(id = R.string.create_account_label))
+            }
         }
     }
 }
@@ -253,6 +266,31 @@ fun LoginPreview() {
                 onPasswordChange = {},
                 onShowPasswordChange = {},
                 onOutsideClick = {},
+                onCreateAccountClick = {},
+                onLogin = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun LoginDynamicPreview() {
+    ShopDaniManagementTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            LoginContent(
+                snackbarHostState = SnackbarHostState(),
+                username = "bruno13palhano",
+                password = "12345678",
+                showPassword = false,
+                onUsernameChange = {},
+                onPasswordChange = {},
+                onShowPasswordChange = {},
+                onOutsideClick = {},
+                onCreateAccountClick = {},
                 onLogin = {}
             )
         }
