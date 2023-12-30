@@ -26,6 +26,9 @@ internal interface Service {
     @PUT("users/update")
     suspend fun updateUser(@Body user: UserNet)
 
+    @GET("users/user/{username}")
+    suspend fun getUser(@Path("username") username: String): UserNet
+
     @POST("users/authenticated")
     suspend fun authenticated(@Body token: String): Boolean
 
