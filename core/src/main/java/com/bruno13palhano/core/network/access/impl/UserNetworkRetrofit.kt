@@ -11,7 +11,8 @@ import javax.inject.Inject
 internal class UserNetworkRetrofit @Inject constructor(
     private val apiService: Service
 ) : UserNetwork{
-    override suspend fun create(user: User) = apiService.createUser(user = user.asNetwork())
+    override suspend fun create(user: User) =
+        apiService.createUser(user = user.asNetwork()).asExternal()
 
     override suspend fun update(user: User) = apiService.updateUser(user = user.asNetwork())
 

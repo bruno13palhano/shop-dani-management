@@ -21,7 +21,7 @@ internal interface Service {
     suspend fun login(@Body user: UserNet): ResponseBody
 
     @POST("users/insert")
-    suspend fun createUser(@Body user: UserNet)
+    suspend fun createUser(@Body user: UserNet): UserNet
 
     @PUT("users/update")
     suspend fun updateUser(@Body user: UserNet)
