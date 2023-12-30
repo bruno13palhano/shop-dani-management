@@ -100,6 +100,7 @@
     <string name="update_server_error">Failed to update data on the server.</string>
     <string name="delete_server_error">Failed to delete data on the server.</string>
     <string name="empty_fields_error">Fill in the missing fields.</string>
+    <string name="wrong_password_validation_label">Password must be the same</string>
     <string name="insufficient_items_stock">Insufficient items in stock.</string>
     <string name="login_database_error">Failed to login to database.</string>
     <string name="login_server_error">Failed to login to the server.</string>
