@@ -46,8 +46,7 @@ internal class DefaultUserRepository @Inject constructor(
     ) {
         CoroutineScope(ioDispatcher).launch {
             try {
-                userNetwork.create(user = user)
-                saveUser(username = user.username, onError = onError, onSuccess = onSuccess)
+                createUser(user = user, onError = onError, onSuccess = onSuccess)
             } catch (e: Exception) {
                 onError(Errors.INSERT_SERVER_ERROR)
             }
@@ -124,6 +123,15 @@ internal class DefaultUserRepository @Inject constructor(
     private suspend fun saveToken(user: User) {
         val token = userNetwork.login(user = user).string()
         sessionManager.saveAuthToken(token = token)
+    }
+
+    private suspend fun createUser(
+        user: User,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ) {
+        val newUser = userNetwork.create(user = user)
+        userData.insert(user = newUser, onError = onError, onSuccess = onSuccess)
     }
 
     private suspend fun saveUser(
