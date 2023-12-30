@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.User
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -31,9 +32,9 @@ class CreateAccountViewModel @Inject constructor(
     var repeatPassword by mutableStateOf("")
         private set
 
-    val isValid = snapshotFlow {
+    val isFieldsNotEmpty = snapshotFlow {
         username.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()
-                && repeatPassword.isNotEmpty() && (password == repeatPassword)
+                && repeatPassword.isNotEmpty()
     }.stateIn(
         scope = viewModelScope,
         started = WhileSubscribed(5_000),
@@ -64,25 +65,29 @@ class CreateAccountViewModel @Inject constructor(
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
-        val user = User(
-            id = 0L,
-            username = username,
-            email = email,
-            password = password,
-            photo = photo,
-            role = "",
-            enabled = true,
-            timestamp = getCurrentTimestamp()
-        )
-        viewModelScope.launch {
-            userRepository.create(
-                user = user,
-                onError =  {
-                    onError(it)
-                },
-            ) {
-                onSuccess()
+        if (password == repeatPassword) {
+            val user = User(
+                id = 0L,
+                username = username,
+                email = email,
+                password = password,
+                photo = photo,
+                role = "",
+                enabled = true,
+                timestamp = getCurrentTimestamp()
+            )
+            viewModelScope.launch {
+                userRepository.create(
+                    user = user,
+                    onError =  {
+                        onError(it)
+                    },
+                ) {
+                    onSuccess()
+                }
             }
+        } else {
+            onError(DataError.WrongPasswordValidation.error)
         }
     }
 }

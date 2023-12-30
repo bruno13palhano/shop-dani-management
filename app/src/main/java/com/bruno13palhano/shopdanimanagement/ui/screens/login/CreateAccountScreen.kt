@@ -76,8 +76,7 @@ fun CreateAccountScreen(
     navigateUp: () -> Unit,
     viewModel: CreateAccountViewModel = hiltViewModel()
 ) {
-
-    val isValid by viewModel.isValid.collectAsStateWithLifecycle()
+    val isValid by viewModel.isFieldsNotEmpty.collectAsStateWithLifecycle()
     var showPassword by remember { mutableStateOf(false) }
     var showRepeatPassword by remember { mutableStateOf(false) }
     val context = LocalContext.current
