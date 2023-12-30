@@ -47,6 +47,10 @@ sealed class DataError(val error: Int, @StringRes val resourceId: Int) {
         error = Errors.INSUFFICIENT_ITEMS_STOCK,
         resourceId = R.string.insufficient_items_stock
     )
+    object  WrongPasswordValidation: DataError(
+        error = Errors.WRONG_PASSWORD_VALIDATION,
+        resourceId = R.string.wrong_password_validation_label
+    )
 }
 
 @Composable
@@ -60,5 +64,6 @@ fun getErrors() = listOf(
     stringResource(id = DataError.LoginDatabase.resourceId),
     stringResource(id = DataError.LoginServer.resourceId),
     stringResource(id = DataError.FillMissingFields.resourceId),
-    stringResource(id = DataError.InsufficientItemsStock.resourceId)
+    stringResource(id = DataError.InsufficientItemsStock.resourceId),
+    stringResource(id = DataError.WrongPasswordValidation.resourceId)
 )
