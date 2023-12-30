@@ -30,10 +30,9 @@ internal class DefaultUserRepository @Inject constructor(
     override suspend fun login(user: User, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         CoroutineScope(ioDispatcher).launch {
             try {
-                val token = userNetwork.login(user = user).string()
-                sessionManager.saveAuthToken(token = token)
+                saveToken(user = user)
+                saveUser(username = user.username, onError = onError, onSuccess = { onSuccess() })
                 Sync.initialize(context)
-                onSuccess()
             } catch (e: Exception) {
                 onError(Errors.LOGIN_SERVER_ERROR)
             }
@@ -48,8 +47,7 @@ internal class DefaultUserRepository @Inject constructor(
         CoroutineScope(ioDispatcher).launch {
             try {
                 userNetwork.create(user = user)
-                userData.insert(user = user, onError = onError, onSuccess = onSuccess)
-                onSuccess(0L)
+                saveUser(username = user.username, onError = onError, onSuccess = onSuccess)
             } catch (e: Exception) {
                 onError(Errors.INSERT_SERVER_ERROR)
             }
@@ -121,5 +119,23 @@ internal class DefaultUserRepository @Inject constructor(
 
     override fun logout() {
         sessionManager.saveAuthToken(token = "")
+    }
+
+    private suspend fun saveToken(user: User) {
+        val token = userNetwork.login(user = user).string()
+        sessionManager.saveAuthToken(token = token)
+    }
+
+    private suspend fun saveUser(
+        username: String,
+        onError: (error: Int) -> Unit,
+        onSuccess: (id: Long) -> Unit
+    ) {
+        val newUser = userNetwork.getByUsername(username = username)
+        userData.insert(
+            user = newUser,
+            onError = onError,
+            onSuccess = onSuccess
+        )
     }
 }
