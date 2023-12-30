@@ -21,10 +21,9 @@ fun NavGraphBuilder.loginNavGraph(
             gesturesEnabled(false)
             LoginScreen(
                 onSuccess = {
-                    navController.navigate(route = HomeDestinations.HOME_MAIN_ROUTE) {
+                    navController.navigate(route = MainDestinations.HOME_ROUTE) {
                         popUpTo(0)
                         launchSingleTop = true
-                        restoreState = true
                     }
                 },
                 onCreateAccountClick = {

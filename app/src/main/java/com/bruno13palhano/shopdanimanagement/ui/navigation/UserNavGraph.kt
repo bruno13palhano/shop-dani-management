@@ -4,8 +4,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.ui.screens.login.CreateAccountScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.UserScreen
 
 fun NavGraphBuilder.userNavGraph(
@@ -22,36 +20,8 @@ fun NavGraphBuilder.userNavGraph(
             gesturesEnabled(true)
             UserScreen(
                 onLogout = {
-                    navController.navigate(route = UserDestinations.USER_LOGIN_ROUTE) {
+                    navController.navigate(route = MainDestinations.LOGIN_ROUTE) {
                         popUpTo(0)
-                    }
-                },
-                navigateUp = { navController.navigateUp() }
-            )
-        }
-        composable(route = UserDestinations.USER_LOGIN_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(false)
-            LoginScreen(
-                onSuccess = {
-                    navController.navigate(route = HomeDestinations.HOME_MAIN_ROUTE) {
-                        popUpTo(0)
-                        launchSingleTop = true
-                    }
-                },
-                onCreateAccountClick = {
-                    navController.navigate(route = UserDestinations.USER_CREATE_ACCOUNT_ROUTE)
-                }
-            )
-        }
-        composable(route = UserDestinations.USER_CREATE_ACCOUNT_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(false)
-            CreateAccountScreen(
-                onSuccess = {
-                    navController.navigate(route = HomeDestinations.HOME_MAIN_ROUTE) {
-                        popUpTo(0)
-                        launchSingleTop = true
                     }
                 },
                 navigateUp = { navController.navigateUp() }
@@ -62,6 +32,4 @@ fun NavGraphBuilder.userNavGraph(
 
 object UserDestinations {
     const val USER_MAIN_ROUTE = "user_main_route"
-    const val USER_LOGIN_ROUTE = "user_login_route"
-    const val USER_CREATE_ACCOUNT_ROUTE = "user_create_account_route"
 }
