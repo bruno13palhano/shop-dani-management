@@ -11,4 +11,5 @@ object Errors {
     const val LOGIN_SERVER_ERROR = 7
     const val FILL_MISSING_FIELDS = 8
     const val INSUFFICIENT_ITEMS_STOCK = 9
+    const val WRONG_PASSWORD_VALIDATION = 10
 }
