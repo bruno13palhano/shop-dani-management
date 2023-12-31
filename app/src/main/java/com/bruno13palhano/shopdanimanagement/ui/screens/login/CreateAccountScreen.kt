@@ -280,7 +280,10 @@ fun CreateAccountContent(
                         contentDescription = stringResource(id = R.string.email_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Done
+                ),
                 keyboardActions = KeyboardActions(onDone = {
                     defaultKeyboardAction(ImeAction.Done)
                 }),
