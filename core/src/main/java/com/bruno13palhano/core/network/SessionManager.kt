@@ -20,6 +20,7 @@ class SessionManager @Inject constructor(
 
     companion object {
         const val USER_TOKEN = "user_token"
+        const val CURRENT_USER_ID = "current_user_id"
     }
 
     fun saveAuthToken(token: String) {
@@ -28,7 +29,17 @@ class SessionManager @Inject constructor(
         editor.apply()
     }
 
+    fun saveCurrentUserId(id: Long) {
+        val editor = preferences.edit()
+        editor.putLong(CURRENT_USER_ID, id)
+        editor.apply()
+    }
+
     fun fetchAuthToken(): String? {
         return preferences.getString(USER_TOKEN, null)
+    }
+
+    fun fetchCurrentUserId(): Long {
+        return preferences.getLong(CURRENT_USER_ID, 0L)
     }
 }
