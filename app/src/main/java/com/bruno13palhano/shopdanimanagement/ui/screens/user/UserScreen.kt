@@ -1,17 +1,38 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.user
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Title
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -21,21 +42,58 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
+import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
+import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
+import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
+import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun UserScreen(
     onLogout: () -> Unit,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    viewModel: UserViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val galleryLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) { uri ->
+            uri?.let {
+                getBytes(context, it)?.let { imageByteArray ->
+                    viewModel.updatePhoto(photo = imageByteArray)
+                }
+            }
+        }
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     val menuItems = arrayOf(
         stringResource(id = R.string.logout_label)
     )
 
     UserContent(
         menuItems = menuItems,
+        photo = viewModel.photo,
+        username = viewModel.username,
+        email = viewModel.email,
+        role = viewModel.role,
+        onUsernameChange = viewModel::updateUsername,
+        onEmailChange = viewModel::updateEmail,
+        onRoleChange = viewModel::updateRole,
+        onPhotoClick = { galleryLauncher.launch(arrayOf("image/*")) },
         onMoreOptionsItemClick = { index ->
             when (index) {
                 0 -> {
@@ -43,7 +101,13 @@ fun UserScreen(
                 }
                 else -> {}
             }
-
+        },
+        onOutsideClick = {
+            keyboardController?.hide()
+            focusManager.clearFocus(force = true)
+        },
+        onDoneClick = {
+            navigateUp()
         },
         navigateUp = navigateUp
     )
@@ -53,12 +117,23 @@ fun UserScreen(
 @Composable
 fun UserContent(
     menuItems: Array<String>,
+    photo: ByteArray,
+    username: String,
+    email: String,
+    role: String,
+    onUsernameChange: (username: String) -> Unit,
+    onEmailChange: (email: String) -> Unit,
+    onRoleChange: (role: String) -> Unit,
+    onPhotoClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
+    onOutsideClick: () -> Unit,
+    onDoneClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     Scaffold(
+        modifier = Modifier.clickableNoEffect { onOutsideClick() },
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.account_label)) },
@@ -95,10 +170,176 @@ fun UserContent(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onDoneClick) {
+                Icon(
+                    imageVector = Icons.Filled.Done,
+                    contentDescription = stringResource(id = R.string.done_label)
+                )
+            }
         }
     ) {
-        Column(modifier = Modifier.padding(it)) {
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ElevatedCard(
+                modifier = Modifier
+                    .padding(16.dp),
+                onClick = onPhotoClick,
+                shape = RoundedCornerShape(5)
+            ) {
+                if (photo.isEmpty()) {
+                    Image(
+                        modifier = Modifier
+                            .size(200.dp)
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(5)),
+                        imageVector = Icons.Filled.Image,
+                        contentDescription = stringResource(id = R.string.customer_photo_label),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Image(
+                        modifier = Modifier
+                            .size(200.dp)
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(5)),
+                        painter = rememberAsyncImagePainter(model = photo),
+                        contentDescription = stringResource(id = R.string.customer_photo_label),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .fillMaxWidth()
+                    .clearFocusOnKeyboardDismiss(),
+                value = username,
+                onValueChange = onUsernameChange,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Title,
+                        contentDescription = stringResource(id = R.string.username_label)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.username_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.enter_username_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .fillMaxWidth()
+                    .clearFocusOnKeyboardDismiss(),
+                value = email,
+                onValueChange = onEmailChange,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Email,
+                        contentDescription = stringResource(id = R.string.email_label)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.email_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.enter_email_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .fillMaxWidth()
+                    .clearFocusOnKeyboardDismiss(),
+                value = role,
+                onValueChange = onRoleChange,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.AdminPanelSettings,
+                        contentDescription = stringResource(id = R.string.role_label)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.role_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.role_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            )
+        }
+    }
+}
 
+@Preview
+@Composable
+fun UserPreview() {
+    ShopDaniManagementTheme(
+        dynamicColor = false
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            UserContent(
+                menuItems = arrayOf(),
+                photo = byteArrayOf(),
+                username = "bruno",
+                email = "test@gmail.com",
+                role = "",
+                onUsernameChange = {},
+                onEmailChange = {},
+                onRoleChange = {},
+                onPhotoClick = {},
+                onMoreOptionsItemClick = {},
+                onOutsideClick = {},
+                onDoneClick = {},
+                navigateUp = {}
+            )
         }
     }
 }
