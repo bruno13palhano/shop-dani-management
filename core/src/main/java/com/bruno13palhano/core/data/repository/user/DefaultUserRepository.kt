@@ -73,6 +73,12 @@ internal class DefaultUserRepository @Inject constructor(
         return userData.getById(userId, onError = onError, onSuccess = onSuccess)
     }
 
+    override fun getCurrentUser(onError: (error: Int) -> Unit, onSuccess: () -> Unit): Flow<User> {
+        val userId = sessionManager.fetchCurrentUserId()
+
+        return userData.getById(userId = userId, onError = onError, onSuccess = onSuccess)
+    }
+
     override fun isAuthenticated(): Boolean {
         val token = sessionManager.fetchAuthToken()
 
@@ -118,6 +124,7 @@ internal class DefaultUserRepository @Inject constructor(
 
     override fun logout() {
         sessionManager.saveAuthToken(token = "")
+        sessionManager.saveCurrentUserId(id = 0L)
     }
 
     private suspend fun saveToken(user: User) {
@@ -140,6 +147,7 @@ internal class DefaultUserRepository @Inject constructor(
         onSuccess: (id: Long) -> Unit
     ) {
         val newUser = userNetwork.getByUsername(username = username)
+        sessionManager.saveCurrentUserId(id = newUser.id)
         userData.insert(
             user = newUser,
             onError = onError,
