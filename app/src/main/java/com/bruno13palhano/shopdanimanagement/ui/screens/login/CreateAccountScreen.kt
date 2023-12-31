@@ -38,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,6 +63,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
@@ -76,6 +78,7 @@ fun CreateAccountScreen(
     navigateUp: () -> Unit,
     viewModel: CreateAccountViewModel = hiltViewModel()
 ) {
+    val loginState by viewModel.loginState.collectAsStateWithLifecycle()
     val isValid by viewModel.isFieldsNotEmpty.collectAsStateWithLifecycle()
     var showPassword by remember { mutableStateOf(false) }
     var showRepeatPassword by remember { mutableStateOf(false) }
@@ -95,49 +98,60 @@ fun CreateAccountScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getErrors()
 
-    CreateAccountContent(
-        snackbarHostState = snackbarHostState,
-        username = viewModel.username,
-        email = viewModel.email,
-        password = viewModel.password,
-        repeatPassword = viewModel.repeatPassword,
-        photo = viewModel.photo,
-        showPassword = showPassword,
-        showRepeatPassword = showRepeatPassword,
-        onUsernameChange = viewModel::updateUsername,
-        onEmailChange = viewModel::updateEmail,
-        onPasswordChange = viewModel::updatePassword,
-        onRepeatPasswordChange = viewModel::updateRepeatPassword,
-        onShowPasswordChange = { showPassword = it },
-        onShowRepeatPasswordChange = { showRepeatPassword = it },
-        onImageClick = { galleryLauncher.launch(arrayOf("image/*")) },
-        onOutsideClick = {
-            keyboardController?.hide()
-            focusManager.clearFocus(force = true)
-        },
-        onDoneClick = {
-            if (isValid) {
-                viewModel.createAccount(
-                    onError = {
+    when (loginState) {
+        LoginState.SignedOut -> {
+            CreateAccountContent(
+                snackbarHostState = snackbarHostState,
+                username = viewModel.username,
+                email = viewModel.email,
+                password = viewModel.password,
+                repeatPassword = viewModel.repeatPassword,
+                photo = viewModel.photo,
+                showPassword = showPassword,
+                showRepeatPassword = showRepeatPassword,
+                onUsernameChange = viewModel::updateUsername,
+                onEmailChange = viewModel::updateEmail,
+                onPasswordChange = viewModel::updatePassword,
+                onRepeatPasswordChange = viewModel::updateRepeatPassword,
+                onShowPasswordChange = { showPassword = it },
+                onShowRepeatPasswordChange = { showRepeatPassword = it },
+                onImageClick = { galleryLauncher.launch(arrayOf("image/*")) },
+                onOutsideClick = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus(force = true)
+                },
+                onDoneClick = {
+                    if (isValid) {
+                        viewModel.createAccount(
+                            onError = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[it],
+                                        withDismissAction = true
+                                    )
+                                }
+                            }
+                        )
+                    } else {
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                message = errors[it],
-                                withDismissAction = true
+                                message = errors[DataError.FillMissingFields.error]
                             )
                         }
-                    },
-                    onSuccess = onSuccess
-                )
-            } else {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = errors[DataError.FillMissingFields.error]
-                    )
-                }
+                    }
+                },
+                navigateUp = navigateUp
+            )
+        }
+        LoginState.InProgress -> {
+            CircularProgress()
+        }
+        LoginState.SignedIn -> {
+            LaunchedEffect(key1 = Unit) {
+                onSuccess()
             }
-        },
-        navigateUp = navigateUp
-    )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
