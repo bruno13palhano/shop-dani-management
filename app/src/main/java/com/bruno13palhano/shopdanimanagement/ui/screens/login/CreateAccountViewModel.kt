@@ -12,7 +12,9 @@ import com.bruno13palhano.core.model.User
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,6 +23,9 @@ import javax.inject.Inject
 class CreateAccountViewModel @Inject constructor(
     @UserRep private val userRepository: UserRepository
 ) : ViewModel() {
+    private val _loginState = MutableStateFlow<LoginState>(LoginState.SignedOut)
+    val loginState = _loginState.asStateFlow()
+
     var photo by mutableStateOf(byteArrayOf())
         private set
     var username by mutableStateOf("")
@@ -61,11 +66,9 @@ class CreateAccountViewModel @Inject constructor(
         this.repeatPassword = repeatPassword
     }
 
-    fun createAccount(
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
+    fun createAccount(onError: (error: Int) -> Unit) {
         if (password == repeatPassword) {
+            _loginState.value = LoginState.InProgress
             val user = User(
                 id = 0L,
                 username = username,
@@ -79,15 +82,17 @@ class CreateAccountViewModel @Inject constructor(
             viewModelScope.launch {
                 userRepository.create(
                     user = user,
-                    onError =  {
+                    onError = {
                         onError(it)
+                        _loginState.value = LoginState.SignedOut
                     },
                 ) {
-                    onSuccess()
+                    _loginState.value = LoginState.SignedIn
                 }
             }
         } else {
             onError(DataError.WrongPasswordValidation.error)
+            _loginState.value = LoginState.SignedOut
         }
     }
 }
