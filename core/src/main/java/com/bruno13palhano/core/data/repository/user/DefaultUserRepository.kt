@@ -58,7 +58,6 @@ internal class DefaultUserRepository @Inject constructor(
             try {
                 userNetwork.update(user = user)
                 userData.update(user = user, onError = onError, onSuccess = onSuccess)
-                onSuccess()
             } catch (e: Exception) {
                 onError(Errors.UPDATE_SERVER_ERROR)
             }
@@ -125,6 +124,21 @@ internal class DefaultUserRepository @Inject constructor(
     override fun logout() {
         sessionManager.saveAuthToken(token = "")
         sessionManager.saveCurrentUserId(id = 0L)
+    }
+
+    override suspend fun updateUserPassword(
+        user: User,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        CoroutineScope(ioDispatcher).launch {
+            try {
+                userNetwork.updateUserPassword(user)
+                userData.updateUserPassword(user = user, onError = onError, onSuccess = onSuccess)
+            } catch (e: Exception) {
+                onError(Errors.UPDATE_SERVER_ERROR)
+            }
+        }
     }
 
     private suspend fun saveToken(user: User) {

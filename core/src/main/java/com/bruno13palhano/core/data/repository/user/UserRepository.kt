@@ -12,4 +12,5 @@ interface UserRepository {
     fun isAuthenticated(): Boolean
     fun authenticated(): Flow<Boolean>
     fun logout()
+    suspend fun updateUserPassword(user: User, onError: (error: Int) -> Unit, onSuccess: () -> Unit)
 }

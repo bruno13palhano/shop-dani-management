@@ -22,4 +22,7 @@ internal class UserNetworkRetrofit @Inject constructor(
 
     override suspend fun getByUsername(username: String): User =
         apiService.getUser(username = username).asExternal()
+
+    override suspend fun updateUserPassword(user: User) =
+        apiService.updateUserPassword(user = user.asNetwork())
 }
