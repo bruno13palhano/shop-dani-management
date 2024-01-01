@@ -61,6 +61,7 @@
     <string name="sale_price_label">Sale price</string>
     <string name="is_paid_label">Is product paid</string>
     <string name="role_label">Role</string>
+    <string name="change_password_label">Change password</string>
     <string name="product_name_label">Product name</string>
     <string name="customer_name_label">Customer name</string>
     <string name="enter_username_label">Enter username</string>
