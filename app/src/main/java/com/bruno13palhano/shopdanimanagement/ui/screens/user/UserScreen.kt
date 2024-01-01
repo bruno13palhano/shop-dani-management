@@ -66,7 +66,8 @@ import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
 fun UserScreen(
-    onLogout: () -> Unit,
+    onLogoutClick: () -> Unit,
+    onChangePasswordClick: () -> Unit,
     navigateUp: () -> Unit,
     viewModel: UserViewModel = hiltViewModel()
 ) {
@@ -104,10 +105,10 @@ fun UserScreen(
         onMoreOptionsItemClick = { index ->
             when (index) {
                 0 -> {
-                    onLogout()
+                    onLogoutClick()
                 }
                 1 -> {
-
+                    onChangePasswordClick()
                 }
                 else -> {}
             }
