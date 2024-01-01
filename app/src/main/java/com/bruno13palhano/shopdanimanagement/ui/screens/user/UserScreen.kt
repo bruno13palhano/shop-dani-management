@@ -36,6 +36,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,6 +69,10 @@ fun UserScreen(
     navigateUp: () -> Unit,
     viewModel: UserViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getCurrentUser()
+    }
+
     val context = LocalContext.current
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) { uri ->
@@ -81,7 +86,8 @@ fun UserScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val menuItems = arrayOf(
-        stringResource(id = R.string.logout_label)
+        stringResource(id = R.string.logout_label),
+        stringResource(id = R.string.change_password_label)
     )
 
     UserContent(
@@ -98,6 +104,9 @@ fun UserScreen(
             when (index) {
                 0 -> {
                     onLogout()
+                }
+                1 -> {
+
                 }
                 else -> {}
             }
