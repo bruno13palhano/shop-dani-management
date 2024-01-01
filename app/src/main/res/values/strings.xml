@@ -47,6 +47,8 @@
     <string name="username_label">Username</string>
     <string name="password_label">Password</string>
     <string name="repeat_password_label">Repeat the password</string>
+    <string name="new_password_label">New password</string>
+    <string name="repeat_new_password_label">Repeat the new password</string>
     <string name="name_label">Name</string>
     <string name="title_label">Title</string>
     <string name="code_label">Code</string>
@@ -67,6 +69,8 @@
     <string name="enter_username_label">Enter username</string>
     <string name="enter_password_label">Enter password</string>
     <string name="enter_repeat_password_label">Enter the password again</string>
+    <string name="enter_new_password_label">Enter the new password</string>
+    <string name="enter_repeat_new_password_label">Enter the new password again</string>
     <string name="enter_name_label">Enter name</string>
     <string name="enter_title_label">Enter title</string>
     <string name="enter_code_label">Enter code</string>
