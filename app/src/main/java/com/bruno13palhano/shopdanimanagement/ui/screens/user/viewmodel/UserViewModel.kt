@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.user
+package com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
