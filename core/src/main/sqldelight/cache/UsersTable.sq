@@ -23,6 +23,9 @@ update:
 UPDATE UsersTable SET username = ?, password = ?, email = ?, photo = ?, enabled = ?, timestamp = ?
 WHERE id = ?;
 
+updatePassword:
+UPDATE UsersTable SET password = ?, timestamp = ? WHERE id = ?;
+
 delete:
 DELETE FROM UsersTable WHERE id = ?;
 
