@@ -20,7 +20,7 @@ INSERT OR REPLACE INTO UsersTable (id, username, password, email, photo, role, e
 VALUES (?,?,?,?,?,?,?,?);
 
 update:
-UPDATE UsersTable SET username = ?, password = ?, email = ?, photo = ?, enabled = ?, timestamp = ?
+UPDATE UsersTable SET username = ?, photo = ?, timestamp = ?
 WHERE id = ?;
 
 updatePassword:

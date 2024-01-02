@@ -59,10 +59,7 @@ internal class DefaultUserData @Inject constructor(
         try {
             usersTableQueries.update(
                 username = user.username,
-                password = user.password,
-                email = user.email,
                 photo = user.photo,
-                enabled = user.enabled,
                 timestamp = user.timestamp,
                 id = user.id
             )
