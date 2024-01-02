@@ -10,9 +10,12 @@ import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.User
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,12 +24,12 @@ import javax.inject.Inject
 class ChangePasswordViewModel @Inject constructor(
     @UserRep private val userRepository: UserRepository
 ) : ViewModel() {
+    private var _updateState = MutableStateFlow<UserState>(UserState.Fail)
+    val updateState = _updateState.asStateFlow()
+
     private var userId = 0L
     private var username = ""
     private var email = ""
-    private var photo = byteArrayOf()
-    private var role = ""
-    private var enabled = false
     private var timestamp = ""
 
     var newPassword by mutableStateOf("")
@@ -57,36 +60,41 @@ class ChangePasswordViewModel @Inject constructor(
                 userId = it.id
                 username = it.username
                 email = it.email
-                photo = it.photo
-                role = it.role
-                enabled = it.enabled
                 timestamp = getCurrentTimestamp()
             }
         }
     }
 
-    fun changePassword(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+    fun changePassword(onError: (error: Int) -> Unit) {
         if(newPassword == repeatNewPassword) {
+            _updateState.value = UserState.InProgress
+
             val user = User(
                 id = userId,
                 username = username,
                 email = email,
                 password = newPassword,
-                photo = photo,
-                role = role,
-                enabled = enabled,
+                photo = byteArrayOf(),
+                role = "",
+                enabled = true,
                 timestamp = timestamp
             )
 
             viewModelScope.launch {
                 userRepository.updateUserPassword(
                     user = user,
-                    onError = onError,
-                    onSuccess = onSuccess
+                    onError = {
+                        onError(it)
+                        _updateState.value = UserState.Fail
+                    },
+                    onSuccess = {
+                        _updateState.value = UserState.Success
+                    }
                 )
             }
         } else {
             onError(DataError.WrongPasswordValidation.error)
+            _updateState.value = UserState.Fail
         }
     }
 }

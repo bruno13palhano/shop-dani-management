@@ -48,9 +48,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel.ChangePasswordViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
@@ -61,6 +63,11 @@ fun ChangePasswordScreen(
     navigateUp: () -> Unit,
     viewModel: ChangePasswordViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getCurrentUser()
+    }
+
+    val updateState by viewModel.updateState.collectAsStateWithLifecycle()
     val isFieldsNotEmpty by viewModel.isFieldsNotEmpty.collectAsStateWithLifecycle()
     var showNewPassword by remember { mutableStateOf(false) }
     var showRepeatNewPassword by remember { mutableStateOf(false) }
@@ -72,49 +79,51 @@ fun ChangePasswordScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getErrors()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getCurrentUser()
-    }
-
-    ChangePasswordContent(
-        snackbarHostState = snackbarHostState,
-        newPassword = viewModel.newPassword,
-        repeatNewPassword = viewModel.repeatNewPassword,
-        showNewPassword = showNewPassword,
-        showRepeatNewPassword = showRepeatNewPassword,
-        onNewPasswordChange = viewModel::updateNewPassword,
-        onRepeatNewPasswordChange = viewModel::updateRepeatNewPassword,
-        onShowNewPasswordChange = { showNewPassword = it},
-        onShowRepeatNewPasswordChange = { showRepeatNewPassword = it },
-        onOutsideClick = {
-            keyboardController?.hide()
-            focusManger.clearFocus(force = true)
-        },
-        onDoneClick = {
-            if (isFieldsNotEmpty) {
-                viewModel.changePassword(
-                    onError = {
+    when (updateState) {
+        UserState.Fail -> {
+            ChangePasswordContent(
+                snackbarHostState = snackbarHostState,
+                newPassword = viewModel.newPassword,
+                repeatNewPassword = viewModel.repeatNewPassword,
+                showNewPassword = showNewPassword,
+                showRepeatNewPassword = showRepeatNewPassword,
+                onNewPasswordChange = viewModel::updateNewPassword,
+                onRepeatNewPasswordChange = viewModel::updateRepeatNewPassword,
+                onShowNewPasswordChange = { showNewPassword = it },
+                onShowRepeatNewPasswordChange = { showRepeatNewPassword = it },
+                onOutsideClick = {
+                    keyboardController?.hide()
+                    focusManger.clearFocus(force = true)
+                },
+                onDoneClick = {
+                    if (isFieldsNotEmpty) {
+                        viewModel.changePassword(
+                            onError = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[it],
+                                        withDismissAction = true
+                                    )
+                                }
+                            }
+                        )
+                    } else {
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                message = errors[it],
+                                message = errors[DataError.FillMissingFields.error],
                                 withDismissAction = true
                             )
                         }
                     }
-                ) {
-                    scope.launch { navigateUp() }
-                }
-            } else {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = errors[DataError.FillMissingFields.error],
-                        withDismissAction = true
-                    )
-                }
-            }
-        },
-        navigateUp = navigateUp
-    )
+                },
+                navigateUp = navigateUp
+            )
+        }
+
+        UserState.InProgress -> { CircularProgress() }
+
+        UserState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
