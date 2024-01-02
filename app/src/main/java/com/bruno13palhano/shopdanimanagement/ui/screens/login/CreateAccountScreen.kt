@@ -69,6 +69,7 @@ import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
+import com.bruno13palhano.shopdanimanagement.ui.screens.login.viewmodel.CreateAccountViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import kotlinx.coroutines.launch
 

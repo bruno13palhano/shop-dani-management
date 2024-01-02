@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.login
+package com.bruno13palhano.shopdanimanagement.ui.screens.login.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +10,7 @@ import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.User
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
+import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
