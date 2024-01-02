@@ -22,15 +22,21 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -40,20 +46,38 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
+import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel.ChangePasswordViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun ChangePasswordScreen(
     navigateUp: () -> Unit,
     viewModel: ChangePasswordViewModel = hiltViewModel()
 ) {
+    val isFieldsNotEmpty by viewModel.isFieldsNotEmpty.collectAsStateWithLifecycle()
     var showNewPassword by remember { mutableStateOf(false) }
     var showRepeatNewPassword by remember { mutableStateOf(false) }
 
+    val focusManger = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val errors = getErrors()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getCurrentUser()
+    }
+
     ChangePasswordContent(
+        snackbarHostState = snackbarHostState,
         newPassword = viewModel.newPassword,
         repeatNewPassword = viewModel.repeatNewPassword,
         showNewPassword = showNewPassword,
@@ -62,7 +86,33 @@ fun ChangePasswordScreen(
         onRepeatNewPasswordChange = viewModel::updateRepeatNewPassword,
         onShowNewPasswordChange = { showNewPassword = it},
         onShowRepeatNewPasswordChange = { showRepeatNewPassword = it },
-        onDoneClick = {},
+        onOutsideClick = {
+            keyboardController?.hide()
+            focusManger.clearFocus(force = true)
+        },
+        onDoneClick = {
+            if (isFieldsNotEmpty) {
+                viewModel.changePassword(
+                    onError = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = errors[it],
+                                withDismissAction = true
+                            )
+                        }
+                    }
+                ) {
+                    scope.launch { navigateUp() }
+                }
+            } else {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = errors[DataError.FillMissingFields.error],
+                        withDismissAction = true
+                    )
+                }
+            }
+        },
         navigateUp = navigateUp
     )
 }
@@ -70,6 +120,7 @@ fun ChangePasswordScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangePasswordContent(
+    snackbarHostState: SnackbarHostState,
     newPassword: String,
     repeatNewPassword: String,
     showNewPassword: Boolean,
@@ -78,10 +129,13 @@ fun ChangePasswordContent(
     onRepeatNewPasswordChange: (repeatNewPassword: String) -> Unit,
     onShowNewPasswordChange: (show: Boolean) -> Unit,
     onShowRepeatNewPasswordChange: (show: Boolean) -> Unit,
+    onOutsideClick: () -> Unit,
     onDoneClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
     Scaffold(
+        modifier = Modifier.clickableNoEffect { onOutsideClick() },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.change_password_label)) },
@@ -236,6 +290,7 @@ fun ChangePasswordPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ChangePasswordContent(
+                snackbarHostState = SnackbarHostState(),
                 newPassword = "12345678",
                 repeatNewPassword = "12345678",
                 showNewPassword = true,
@@ -244,6 +299,7 @@ fun ChangePasswordPreview() {
                 onRepeatNewPasswordChange = {},
                 onShowNewPasswordChange = {},
                 onShowRepeatNewPasswordChange = {},
+                onOutsideClick = {},
                 onDoneClick = {},
                 navigateUp = {}
             )
