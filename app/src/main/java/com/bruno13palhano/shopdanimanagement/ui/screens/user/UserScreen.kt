@@ -151,7 +151,7 @@ fun UserScreen(
 
         UserState.InProgress -> { CircularProgress() }
 
-        UserState.Success -> { navigateUp() }
+        UserState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
     }
 }
 
