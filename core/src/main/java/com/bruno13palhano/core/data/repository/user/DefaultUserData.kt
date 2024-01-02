@@ -63,6 +63,7 @@ internal class DefaultUserData @Inject constructor(
                 timestamp = user.timestamp,
                 id = user.id
             )
+            onSuccess()
         } catch (e: Exception) {
             e.printStackTrace()
             onError(Errors.UPDATE_DATABASE_ERROR)
