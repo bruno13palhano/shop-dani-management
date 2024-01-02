@@ -8,9 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.User
+import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,14 +35,6 @@ class UserViewModel @Inject constructor(
         this.username = username
     }
 
-    fun updateEmail(email: String) {
-        this.email = email
-    }
-
-    fun updateRole(role: String) {
-        this.role = role
-    }
-
     fun getCurrentUser() {
         viewModelScope.launch {
             userRepository.getCurrentUser(onError = {}, onSuccess = {}).collect {
@@ -56,7 +47,20 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun updateUser() {
+    fun updateUser(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+        val user = User(
+            id = userId,
+            username = username,
+            email = email,
+            password = "",
+            photo = photo,
+            enabled = true,
+            role = role,
+            timestamp = getCurrentTimestamp()
+        )
 
+        viewModelScope.launch {
+            userRepository.update(user = user, onError = onError, onSuccess = onSuccess)
+        }
     }
 }
