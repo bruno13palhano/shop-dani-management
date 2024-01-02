@@ -86,11 +86,7 @@ internal class DefaultUserData @Inject constructor(
         onSuccess: () -> Unit
     ) {
         try {
-            usersTableQueries.updatePassword(
-                password = user.password,
-                timestamp = user.timestamp,
-                id = user.id
-            )
+            usersTableQueries.updatePassword(timestamp = user.timestamp, id = user.id)
             onSuccess()
         } catch (e: Exception) {
             e.printStackTrace()
