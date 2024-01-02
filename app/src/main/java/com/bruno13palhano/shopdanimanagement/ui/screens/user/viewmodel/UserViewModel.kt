@@ -8,8 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.User
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,6 +20,9 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
     @UserRep private val userRepository: UserRepository
 ): ViewModel() {
+    private var _updateState = MutableStateFlow<UserState>(UserState.Fail)
+    val updateState = _updateState.asStateFlow()
+
     private var userId = 0L
     var photo by mutableStateOf(byteArrayOf())
         private set
@@ -47,7 +53,7 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun updateUser(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+    fun updateUser(onError: (error: Int) -> Unit) {
         val user = User(
             id = userId,
             username = username,
@@ -60,7 +66,17 @@ class UserViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            userRepository.update(user = user, onError = onError, onSuccess = onSuccess)
+            _updateState.value = UserState.InProgress
+            userRepository.update(
+                user = user,
+                onError = {
+                    onError(it)
+                    _updateState.value = UserState.Fail
+                },
+                onSuccess = {
+                    _updateState.value = UserState.Success
+                }
+            )
         }
     }
 }
