@@ -32,6 +32,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -40,6 +42,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,18 +54,22 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserState
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel.UserViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun UserScreen(
@@ -74,6 +81,8 @@ fun UserScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.getCurrentUser()
     }
+
+    val updateState by viewModel.updateState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val galleryLauncher =
@@ -87,54 +96,75 @@ fun UserScreen(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val errors = getErrors()
+
     val menuItems = arrayOf(
         stringResource(id = R.string.logout_label),
         stringResource(id = R.string.change_password_label)
     )
 
-    UserContent(
-        menuItems = menuItems,
-        photo = viewModel.photo,
-        username = viewModel.username,
-        email = viewModel.email,
-        role = viewModel.role,
-        onUsernameChange = viewModel::updateUsername,
-        onEmailChange = viewModel::updateEmail,
-        onRoleChange = viewModel::updateRole,
-        onPhotoClick = { galleryLauncher.launch(arrayOf("image/*")) },
-        onMoreOptionsItemClick = { index ->
-            when (index) {
-                0 -> {
-                    onLogoutClick()
-                }
-                1 -> {
-                    onChangePasswordClick()
-                }
-                else -> {}
-            }
-        },
-        onOutsideClick = {
-            keyboardController?.hide()
-            focusManager.clearFocus(force = true)
-        },
-        onDoneClick = {
-            navigateUp()
-        },
-        navigateUp = navigateUp
-    )
+    when (updateState) {
+        UserState.Fail -> {
+            UserContent(
+                snackbarHostState = snackbarHostState,
+                menuItems = menuItems,
+                photo = viewModel.photo,
+                username = viewModel.username,
+                email = viewModel.email,
+                role = viewModel.role,
+                onUsernameChange = viewModel::updateUsername,
+                onPhotoClick = { galleryLauncher.launch(arrayOf("image/*")) },
+                onMoreOptionsItemClick = { index ->
+                    when (index) {
+                        0 -> {
+                            onLogoutClick()
+                        }
+
+                        1 -> {
+                            onChangePasswordClick()
+                        }
+
+                        else -> {}
+                    }
+                },
+                onOutsideClick = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus(force = true)
+                },
+                onDoneClick = {
+                    viewModel.updateUser(
+                        onError = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = errors[it],
+                                    withDismissAction = true
+                                )
+                            }
+                        }
+                    )
+                },
+                navigateUp = navigateUp
+            )
+        }
+
+        UserState.InProgress -> { CircularProgress() }
+
+        UserState.Success -> { navigateUp() }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserContent(
+    snackbarHostState: SnackbarHostState,
     menuItems: Array<String>,
     photo: ByteArray,
     username: String,
     email: String,
     role: String,
     onUsernameChange: (username: String) -> Unit,
-    onEmailChange: (email: String) -> Unit,
-    onRoleChange: (role: String) -> Unit,
     onPhotoClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
     onOutsideClick: () -> Unit,
@@ -145,6 +175,7 @@ fun UserContent(
 
     Scaffold(
         modifier = Modifier.clickableNoEffect { onOutsideClick() },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.account_label)) },
@@ -263,30 +294,18 @@ fun UserContent(
                     .fillMaxWidth()
                     .clearFocusOnKeyboardDismiss(),
                 value = email,
-                onValueChange = onEmailChange,
+                onValueChange = {},
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Email,
                         contentDescription = stringResource(id = R.string.email_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
+                readOnly = true,
                 label = {
                     Text(
                         text = stringResource(id = R.string.email_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_email_label),
                         fontStyle = FontStyle.Italic
                     )
                 }
@@ -297,25 +316,16 @@ fun UserContent(
                     .fillMaxWidth()
                     .clearFocusOnKeyboardDismiss(),
                 value = role,
-                onValueChange = onRoleChange,
+                onValueChange = {},
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.AdminPanelSettings,
                         contentDescription = stringResource(id = R.string.role_label)
                     )
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
                 singleLine = true,
+                readOnly = true,
                 label = {
-                    Text(
-                        text = stringResource(id = R.string.role_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
                     Text(
                         text = stringResource(id = R.string.role_label),
                         fontStyle = FontStyle.Italic
@@ -337,14 +347,13 @@ fun UserPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             UserContent(
+                snackbarHostState = SnackbarHostState(),
                 menuItems = arrayOf(),
                 photo = byteArrayOf(),
                 username = "bruno",
                 email = "test@gmail.com",
                 role = "",
                 onUsernameChange = {},
-                onEmailChange = {},
-                onRoleChange = {},
                 onPhotoClick = {},
                 onMoreOptionsItemClick = {},
                 onOutsideClick = {},
