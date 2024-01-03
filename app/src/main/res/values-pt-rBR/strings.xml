@@ -111,6 +111,11 @@
     <string name="insufficient_items_stock">Quantidade de items insuficiente.</string>
     <string name="login_database_error">Falha ao logar no banco de dados.</string>
     <string name="login_server_error">Falha ao logar no servidor.</string>
+    <string name="user_null_or_invalid_label">Usuário inválido ou nulo!</string>
+    <string name="username_already_exist_label">Nome de usuário já existe!</string>
+    <string name="email_already_exist_label">O email já existe!</string>
+    <string name="incorrect_username_or_password_label">Usuário ou senha incorretos!</string>
+    <string name="ok_code_label">OK</string>
     <string name="only_x_items_error_label">Há apenas %d items no estoque.</string>
     <string name="search_label">Pesquisar</string>
     <string name="search_products_label">Pesquisar por produtos</string>

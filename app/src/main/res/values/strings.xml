@@ -110,6 +110,11 @@
     <string name="insufficient_items_stock">Insufficient items in stock.</string>
     <string name="login_database_error">Failed to login to database.</string>
     <string name="login_server_error">Failed to login to the server.</string>
+    <string name="user_null_or_invalid_label">User is null or invalid!</string>
+    <string name="username_already_exist_label">Username is already exist!</string>
+    <string name="email_already_exist_label">Email is already exist!</string>
+    <string name="incorrect_username_or_password_label">Incorrect username or password!</string>
+    <string name="ok_code_label">OK</string>
     <string name="only_x_items_error_label">There\'s only %d items on stock.</string>
     <string name="search_label">Search</string>
     <string name="search_products_label">Search for products</string>
