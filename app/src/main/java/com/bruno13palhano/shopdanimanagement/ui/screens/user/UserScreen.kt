@@ -65,7 +65,7 @@ import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserState
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getUserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel.UserViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
@@ -98,7 +98,7 @@ fun UserScreen(
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val errors = getErrors()
+    val errors = getUserResponse()
 
     val menuItems = arrayOf(
         stringResource(id = R.string.logout_label),

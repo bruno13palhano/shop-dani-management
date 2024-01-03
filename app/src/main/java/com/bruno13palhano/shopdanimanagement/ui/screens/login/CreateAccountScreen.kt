@@ -66,8 +66,8 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserResponse
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getUserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import com.bruno13palhano.shopdanimanagement.ui.screens.login.viewmodel.CreateAccountViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
@@ -97,7 +97,7 @@ fun CreateAccountScreen(
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val errors = getErrors()
+    val errors = getUserResponse()
 
     when (loginState) {
         LoginState.SignedOut -> {
@@ -136,7 +136,7 @@ fun CreateAccountScreen(
                     } else {
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                message = errors[DataError.FillMissingFields.error]
+                                message = errors[UserResponse.FillMissingFields.code]
                             )
                         }
                     }

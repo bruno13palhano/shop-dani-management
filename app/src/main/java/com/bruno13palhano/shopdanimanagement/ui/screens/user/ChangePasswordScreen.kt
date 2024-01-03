@@ -51,9 +51,9 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserState
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getUserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel.ChangePasswordViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import kotlinx.coroutines.launch
@@ -77,7 +77,7 @@ fun ChangePasswordScreen(
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val errors = getErrors()
+    val errors = getUserResponse()
 
     when (updateState) {
         UserState.Fail -> {
@@ -110,7 +110,7 @@ fun ChangePasswordScreen(
                     } else {
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                message = errors[DataError.FillMissingFields.error],
+                                message = errors[UserResponse.FillMissingFields.code],
                                 withDismissAction = true
                             )
                         }

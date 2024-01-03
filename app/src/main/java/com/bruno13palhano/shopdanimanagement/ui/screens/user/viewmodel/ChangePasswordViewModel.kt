@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.User
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -93,7 +93,7 @@ class ChangePasswordViewModel @Inject constructor(
                 )
             }
         } else {
-            onError(DataError.WrongPasswordValidation.error)
+            onError(UserResponse.WrongPasswordValidation.code)
             _updateState.value = UserState.Fail
         }
     }

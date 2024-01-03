@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.User
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -92,7 +92,7 @@ class CreateAccountViewModel @Inject constructor(
                 }
             }
         } else {
-            onError(DataError.WrongPasswordValidation.error)
+            onError(UserResponse.WrongPasswordValidation.code)
             _loginState.value = LoginState.SignedOut
         }
     }
