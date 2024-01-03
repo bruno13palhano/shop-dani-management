@@ -1,8 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.common
 
 import androidx.annotation.StringRes
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.shopdanimanagement.R
 
@@ -47,23 +45,4 @@ sealed class DataError(val error: Int, @StringRes val resourceId: Int) {
         error = Errors.INSUFFICIENT_ITEMS_STOCK,
         resourceId = R.string.insufficient_items_stock
     )
-    object  WrongPasswordValidation: DataError(
-        error = Errors.WRONG_PASSWORD_VALIDATION,
-        resourceId = R.string.wrong_password_validation_label
-    )
 }
-
-@Composable
-fun getErrors() = listOf(
-    stringResource(id = DataError.InsertDatabase.resourceId),
-    stringResource(id = DataError.UpdateDatabase.resourceId),
-    stringResource(id = DataError.DeleteDatabase.resourceId),
-    stringResource(id = DataError.InsertServer.resourceId),
-    stringResource(id = DataError.UpdateServer.resourceId),
-    stringResource(id = DataError.DeleteServer.resourceId),
-    stringResource(id = DataError.LoginDatabase.resourceId),
-    stringResource(id = DataError.LoginServer.resourceId),
-    stringResource(id = DataError.FillMissingFields.resourceId),
-    stringResource(id = DataError.InsufficientItemsStock.resourceId),
-    stringResource(id = DataError.WrongPasswordValidation.resourceId)
-)
