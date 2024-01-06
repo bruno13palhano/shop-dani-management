@@ -8,7 +8,7 @@ import com.bruno13palhano.core.network.model.ProductNet
 import com.bruno13palhano.core.network.model.SaleNet
 import com.bruno13palhano.core.network.model.StockItemNet
 import com.bruno13palhano.core.network.model.UserNet
-import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -18,16 +18,16 @@ import retrofit2.http.Path
 
 internal interface Service {
     @POST("users/login")
-    suspend fun login(@Body user: UserNet): ResponseBody
+    suspend fun login(@Body user: UserNet): Response<Unit>
 
     @POST("users/insert")
-    suspend fun createUser(@Body user: UserNet): UserNet
+    suspend fun createUser(@Body user: UserNet): Response<UserNet>
 
     @PUT("users/update")
-    suspend fun updateUser(@Body user: UserNet)
+    suspend fun updateUser(@Body user: UserNet): Response<Int>
 
     @PUT("users/update/password")
-    suspend fun updateUserPassword(@Body user: UserNet)
+    suspend fun updateUserPassword(@Body user: UserNet): Response<Int>
 
     @GET("users/user/{username}")
     suspend fun getUser(@Path("username") username: String): UserNet
