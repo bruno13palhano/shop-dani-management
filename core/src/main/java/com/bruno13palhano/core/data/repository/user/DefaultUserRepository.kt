@@ -4,12 +4,14 @@ import android.content.Context
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalUserLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
-import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.User
+import com.bruno13palhano.core.model.UserCodeResponse
 import com.bruno13palhano.core.network.access.UserNetwork
 import com.bruno13palhano.core.network.di.DefaultUserNet
 import com.bruno13palhano.core.network.SessionManager
 import com.bruno13palhano.core.network.di.DefaultSessionManager
+import com.bruno13palhano.core.network.model.UserNet
+import com.bruno13palhano.core.network.model.asExternal
 import com.bruno13palhano.core.sync.Sync
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,7 +20,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
+
+private const val CODE_RESPONSE = "CODE"
+private const val AUTHORIZATION = "Authorization"
 
 internal class DefaultUserRepository @Inject constructor(
     @DefaultUserNet private val userNetwork: UserNetwork,
@@ -30,11 +36,23 @@ internal class DefaultUserRepository @Inject constructor(
     override suspend fun login(user: User, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         CoroutineScope(ioDispatcher).launch {
             try {
-                saveToken(user = user)
-                saveUser(username = user.username, onError = onError, onSuccess = { onSuccess() })
-                Sync.initialize(context)
+                val response = userNetwork.login(user = user)
+                response.headers()[CODE_RESPONSE]?.let {
+                    val responseCode = it.toInt()
+                    if (responseCode == UserCodeResponse.OK) {
+                        saveToken(response = response)
+                        saveUser(
+                            username = user.username,
+                            onError = onError, onSuccess = { onSuccess() }
+                        )
+                        Sync.initialize(context)
+                    } else {
+                        onError(it.toInt())
+                    }
+                }
             } catch (e: Exception) {
-                onError(Errors.LOGIN_SERVER_ERROR)
+                e.printStackTrace()
+                onError(UserCodeResponse.LOGIN_SERVER_ERROR)
             }
         }
     }
@@ -46,9 +64,17 @@ internal class DefaultUserRepository @Inject constructor(
     ) {
         CoroutineScope(ioDispatcher).launch {
             try {
-                createUser(user = user, onError = onError, onSuccess = onSuccess)
+                val response = userNetwork.create(user = user)
+                response.headers()[CODE_RESPONSE]?.let {
+                    val responseCode = it.toInt()
+                    if (responseCode == UserCodeResponse.OK) {
+                        createUser(response = response, onError = onError, onSuccess = onSuccess)
+                    } else {
+                        onError(responseCode)
+                    }
+                }
             } catch (e: Exception) {
-                onError(Errors.INSERT_SERVER_ERROR)
+                onError(UserCodeResponse.INSERT_SERVER_ERROR)
             }
         }
     }
@@ -56,10 +82,17 @@ internal class DefaultUserRepository @Inject constructor(
     override suspend fun update(user: User, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         CoroutineScope(ioDispatcher).launch {
             try {
-                userNetwork.update(user = user)
-                userData.update(user = user, onError = onError, onSuccess = onSuccess)
+                val a = userNetwork.update(user = user).headers()[CODE_RESPONSE]
+                a?.let {
+                    val responseCode = it.toInt()
+                    if (responseCode == UserCodeResponse.OK) {
+                        userData.update(user = user, onError = onError, onSuccess = onSuccess)
+                    } else {
+                        onError(it.toInt())
+                    }
+                }
             } catch (e: Exception) {
-                onError(Errors.UPDATE_SERVER_ERROR)
+                onError(UserCodeResponse.UPDATE_SERVER_ERROR)
             }
         }
     }
@@ -133,26 +166,42 @@ internal class DefaultUserRepository @Inject constructor(
     ) {
         CoroutineScope(ioDispatcher).launch {
             try {
-                userNetwork.updateUserPassword(user)
-                userData.updateUserPassword(user = user, onError = onError, onSuccess = onSuccess)
+                val response = userNetwork.updateUserPassword(user)
+                response.headers()[CODE_RESPONSE]?.let {
+                    val responseCode = it.toInt()
+                    if (responseCode == UserCodeResponse.OK) {
+                        userData.updateUserPassword(
+                            user = user,
+                            onError = onError,
+                            onSuccess = onSuccess
+                        )
+                    } else {
+                        onError(responseCode)
+                    }
+                }
             } catch (e: Exception) {
-                onError(Errors.UPDATE_SERVER_ERROR)
+                onError(UserCodeResponse.UPDATE_SERVER_ERROR)
             }
         }
     }
 
-    private suspend fun saveToken(user: User) {
-        val token = userNetwork.login(user = user).string()
-        sessionManager.saveAuthToken(token = token)
+    private fun saveToken(response: Response<Unit>) {
+        val token = response.headers()[AUTHORIZATION]
+
+        if (token != null) {
+            sessionManager.saveAuthToken(token = token)
+        }
     }
 
     private suspend fun createUser(
-        user: User,
+        response: Response<UserNet>,
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long) -> Unit
     ) {
-        val newUser = userNetwork.create(user = user)
-        userData.insert(user = newUser, onError = onError, onSuccess = onSuccess)
+        val newUser = response.body()?.asExternal()
+        if (newUser != null) {
+            userData.insert(user = newUser, onError = onError, onSuccess = onSuccess)
+        }
     }
 
     private suspend fun saveUser(
