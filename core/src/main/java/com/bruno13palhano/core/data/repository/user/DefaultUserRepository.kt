@@ -37,8 +37,8 @@ internal class DefaultUserRepository @Inject constructor(
         CoroutineScope(ioDispatcher).launch {
             try {
                 val response = userNetwork.login(user = user)
-                response.headers()[CODE_RESPONSE]?.let {
-                    val responseCode = it.toInt()
+                response.headers()[CODE_RESPONSE]?.let { code ->
+                    val responseCode = codeToInt(code = code)
                     if (responseCode == UserCodeResponse.OK) {
                         saveToken(response = response)
                         saveUser(
@@ -47,7 +47,7 @@ internal class DefaultUserRepository @Inject constructor(
                         )
                         Sync.initialize(context)
                     } else {
-                        onError(it.toInt())
+                        onError(responseCode)
                     }
                 }
             } catch (e: Exception) {
@@ -65,8 +65,8 @@ internal class DefaultUserRepository @Inject constructor(
         CoroutineScope(ioDispatcher).launch {
             try {
                 val response = userNetwork.create(user = user)
-                response.headers()[CODE_RESPONSE]?.let {
-                    val responseCode = it.toInt()
+                response.headers()[CODE_RESPONSE]?.let { code ->
+                    val responseCode = codeToInt(code = code)
                     if (responseCode == UserCodeResponse.OK) {
                         createUser(response = response, onError = onError, onSuccess = onSuccess)
                     } else {
@@ -82,13 +82,13 @@ internal class DefaultUserRepository @Inject constructor(
     override suspend fun update(user: User, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         CoroutineScope(ioDispatcher).launch {
             try {
-                val a = userNetwork.update(user = user).headers()[CODE_RESPONSE]
-                a?.let {
-                    val responseCode = it.toInt()
+                val response = userNetwork.update(user = user).headers()[CODE_RESPONSE]
+                response?.let { code ->
+                    val responseCode = codeToInt(code = code)
                     if (responseCode == UserCodeResponse.OK) {
                         userData.update(user = user, onError = onError, onSuccess = onSuccess)
                     } else {
-                        onError(it.toInt())
+                        onError(responseCode)
                     }
                 }
             } catch (e: Exception) {
@@ -167,8 +167,8 @@ internal class DefaultUserRepository @Inject constructor(
         CoroutineScope(ioDispatcher).launch {
             try {
                 val response = userNetwork.updateUserPassword(user)
-                response.headers()[CODE_RESPONSE]?.let {
-                    val responseCode = it.toInt()
+                response.headers()[CODE_RESPONSE]?.let { code ->
+                    val responseCode = codeToInt(code = code)
                     if (responseCode == UserCodeResponse.OK) {
                         userData.updateUserPassword(
                             user = user,
@@ -217,4 +217,6 @@ internal class DefaultUserRepository @Inject constructor(
             onSuccess = onSuccess
         )
     }
+
+    private fun codeToInt(code: String) = try { code.toInt() } catch (e: Exception) { 0 }
 }
