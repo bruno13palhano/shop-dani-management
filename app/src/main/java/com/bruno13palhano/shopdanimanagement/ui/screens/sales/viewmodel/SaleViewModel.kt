@@ -77,6 +77,13 @@ class SaleViewModel @Inject constructor(
         private set
     private var isPaid by mutableStateOf(false)
 
+    val notifySale = snapshotFlow { !isPaidByCustomer }
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(),
+            initialValue = true
+        )
+
     val isSaleNotEmpty = snapshotFlow {
         quantity.isNotEmpty() && stringToInt(quantity) != 0 && purchasePrice.isNotEmpty()
                 && salePrice.isNotEmpty()

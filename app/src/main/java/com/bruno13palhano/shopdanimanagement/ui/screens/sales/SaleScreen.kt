@@ -63,6 +63,7 @@ fun SaleScreen(
     }
 
     val isSaleNotEmpty by viewModel.isSaleNotEmpty.collectAsStateWithLifecycle()
+    val notifySale by viewModel.notifySale.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val focusManager = LocalFocusManager.current
@@ -282,13 +283,16 @@ fun SaleScreen(
                         }
                     ) {
                         scope.launch { navigateUp() }
-                        setAlarmNotification(
-                            id = stockOrderId,
-                            title = title,
-                            date = viewModel.dateOfPayment,
-                            description = description,
-                            context = context
-                        )
+
+                        if (notifySale) {
+                            setAlarmNotification(
+                                id = stockOrderId,
+                                title = title,
+                                date = viewModel.dateOfPayment,
+                                description = description,
+                                context = context
+                            )
+                        }
                     }
                 }
             } else {
