@@ -7,6 +7,7 @@
 * Persist data local/server.
 * Sync data.
 * Informative charts.
+* Manager your profits.
 * Notifications.
 
 ## Some Screenshots
