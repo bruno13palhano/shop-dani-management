@@ -1,11 +1,13 @@
 package com.bruno13palhano.shopdanimanagement.home
 
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
+import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.StandardDispatcherRule
 import com.bruno13palhano.shopdanimanagement.makeRandomSale
 import com.bruno13palhano.shopdanimanagement.makeRandomStockItem
 import com.bruno13palhano.shopdanimanagement.repository.TestSaleRepository
+import com.bruno13palhano.shopdanimanagement.repository.TestUserRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.home.HomeViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -36,6 +38,7 @@ class HomeViewModelTest {
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var saleRepository: SaleRepository
+    private lateinit var userRepository: UserRepository
     private lateinit var sut: HomeViewModel
 
     private val currentDay = LocalDate.now()
@@ -74,7 +77,8 @@ class HomeViewModelTest {
     @Before
     fun setup() {
         saleRepository = TestSaleRepository()
-        sut = HomeViewModel(saleRepository)
+        userRepository = TestUserRepository()
+        sut = HomeViewModel(saleRepository, userRepository)
     }
 
     @Test
