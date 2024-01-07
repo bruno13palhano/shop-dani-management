@@ -141,6 +141,9 @@ fun ItemScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getErrors()
 
+    val title = stringResource(id = R.string.stock_expired_item_label)
+    val description = stringResource(id = R.string.stock_expired_item_tag, viewModel.name)
+
     ItemContent(
         screenTitle = screenTitle,
         snackbarHostState = snackbarHostState,
@@ -233,9 +236,9 @@ fun ItemScreen(
                         scope.launch { navigateUp() }
                         setAlarmNotification(
                             id = productId,
-                            title = viewModel.name,
+                            title = title,
                             date = viewModel.validity,
-                            description = viewModel.company,
+                            description = description,
                             context = context
                         )
                     }

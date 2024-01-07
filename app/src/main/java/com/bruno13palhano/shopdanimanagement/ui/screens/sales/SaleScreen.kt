@@ -152,6 +152,13 @@ fun SaleScreen(
         stringResource(id = R.string.cancel_label)
     )
 
+    val title = stringResource(id = R.string.sale_payment_label)
+    val description = stringResource(
+        id = R.string.sale_payment_tag,
+        viewModel.customerName,
+        viewModel.salePrice
+    )
+
     SaleContent(
         isEdit = isEdit,
         screenTitle = screenTitle,
@@ -277,9 +284,9 @@ fun SaleScreen(
                         scope.launch { navigateUp() }
                         setAlarmNotification(
                             id = stockOrderId,
-                            title = viewModel.customerName,
+                            title = title,
                             date = viewModel.dateOfPayment,
-                            description = viewModel.company,
+                            description = description,
                             context = context
                         )
                     }
