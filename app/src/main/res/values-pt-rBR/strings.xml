@@ -29,6 +29,10 @@
     <string name="categories_label">Categorias</string>
     <string name="analytics_label">Análise</string>
     <string name="analytics_image_label">Análise imagem</string>
+    <string name="stock_expired_item_label">Item fora do prazo de validade.</string>
+    <string name="sale_payment_label">Hoje é dia de receber pagamentos.</string>
+    <string name="stock_expired_item_tag">%s está fora do prazo de validade.</string>
+    <string name="sale_payment_tag">%s, valor R$%s.</string>
     <string name="gifts_label">Presentes</string>
     <string name="infant_label">Infantil</string>
     <string name="perfumes_label">Perfumes</string>
