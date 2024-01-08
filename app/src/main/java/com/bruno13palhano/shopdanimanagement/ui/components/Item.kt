@@ -69,6 +69,7 @@ fun ItemContent(
     photo: ByteArray,
     quantity: String,
     date: String,
+    dateOfPayment: String,
     purchasePrice: String,
     salePrice: String,
     validity: String,
@@ -80,6 +81,7 @@ fun ItemContent(
     onSalePriceChange: (salePrice: String) -> Unit,
     onIsPaidChange: (isPaid: Boolean) -> Unit,
     onDateClick: () -> Unit,
+    onDateOfPaymentClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
     onValidityClick: () -> Unit,
     onOutsideClick: () -> Unit,
@@ -259,6 +261,38 @@ fun ItemContent(
                 label = {
                     Text(
                         text = stringResource(id = R.string.date_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.enter_date_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .fillMaxWidth()
+                    .onFocusChanged { focusState ->
+                        if (focusState.hasFocus) {
+                            onDateOfPaymentClick()
+                        }
+                    },
+                value = dateOfPayment,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.EditCalendar,
+                        contentDescription = stringResource(id = R.string.date_of_payment_label)
+                    )
+                },
+                onValueChange = {},
+                singleLine = true,
+                readOnly = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.date_of_payment_label),
                         fontStyle = FontStyle.Italic
                     )
                 },

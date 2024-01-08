@@ -48,6 +48,7 @@ fun ItemScreen(
             viewModel.getStockItem(stockItemId)
         } else {
             viewModel.updateDate(currentDate)
+            viewModel.updateDateOfPayment(currentDate)
             viewModel.updateValidity(currentDate)
             viewModel.getProduct(productId)
         }
@@ -61,6 +62,8 @@ fun ItemScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     var datePickerState = rememberDatePickerState()
     var showDatePickerDialog by remember { mutableStateOf(false) }
+    var dateOfPaymentPickerState = rememberDatePickerState()
+    var showDateOfPaymentPickerDialog by remember { mutableStateOf(false) }
     var validityPickerState = rememberDatePickerState()
     var showValidityPickerDialog by remember { mutableStateOf(false) }
 
@@ -94,6 +97,41 @@ fun ItemScreen(
             )
             DatePicker(
                 state = datePickerState,
+                showModeToggle = orientation == Configuration.ORIENTATION_PORTRAIT
+            )
+        }
+    }
+
+    if (showDateOfPaymentPickerDialog) {
+        DatePickerDialog(
+            onDismissRequest = {
+                showDateOfPaymentPickerDialog = false
+                focusManager.clearFocus(force = true)
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        dateOfPaymentPickerState.selectedDateMillis?.let {
+                            viewModel.updateDateOfPayment(it)
+                        }
+                        showDateOfPaymentPickerDialog = false
+                        focusManager.clearFocus(force = true)
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.date_of_payment_label))
+                }
+            }
+        ) {
+            dateOfPaymentPickerState = rememberDatePickerState(
+                initialSelectedDateMillis = viewModel.dateOfPayment,
+                initialDisplayMode = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    DisplayMode.Picker
+                } else {
+                    DisplayMode.Input
+                }
+            )
+            DatePicker(
+                state = dateOfPaymentPickerState,
                 showModeToggle = orientation == Configuration.ORIENTATION_PORTRAIT
             )
         }
@@ -152,6 +190,7 @@ fun ItemScreen(
         photo = viewModel.photo,
         quantity = viewModel.quantity,
         date = dateFormat.format(viewModel.date),
+        dateOfPayment = dateFormat.format(viewModel.dateOfPayment),
         purchasePrice = viewModel.purchasePrice,
         salePrice = viewModel.salePrice,
         validity = dateFormat.format(viewModel.validity),
@@ -163,6 +202,7 @@ fun ItemScreen(
         onSalePriceChange = viewModel::updateSalePrice,
         onIsPaidChange = viewModel::updateIsPaid,
         onDateClick = { showDatePickerDialog = true },
+        onDateOfPaymentClick = { showDateOfPaymentPickerDialog = true },
         onValidityClick = { showValidityPickerDialog = true },
         onMoreOptionsItemClick = { index ->
             when (index) {

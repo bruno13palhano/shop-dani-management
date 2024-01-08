@@ -34,6 +34,8 @@ class StockItemViewModel @Inject constructor(
         private set
     var date by mutableLongStateOf(0L)
         private set
+    var dateOfPayment by mutableLongStateOf(0L)
+        private set
     var quantity by mutableStateOf("")
         private set
     var validity by mutableLongStateOf(0L)
@@ -65,6 +67,10 @@ class StockItemViewModel @Inject constructor(
 
     fun updateDate(date: Long) {
         this.date = date
+    }
+
+    fun updateDateOfPayment(dateOfPayment: Long) {
+        this.dateOfPayment = dateOfPayment
     }
 
     fun updateValidity(validity: Long) {
@@ -120,6 +126,7 @@ class StockItemViewModel @Inject constructor(
                 photo = it.photo
                 quantity = it.quantity.toString()
                 date = it.date
+                dateOfPayment = it.dateOfPayment
                 validity = it.validity
                 category = setCategories(it.categories)
                 company = it.company
@@ -166,6 +173,7 @@ class StockItemViewModel @Inject constructor(
         photo = photo,
         quantity = stringToInt(quantity),
         date = date,
+        dateOfPayment = dateOfPayment,
         validity = validity,
         categories = emptyList(),
         company = company,
@@ -182,6 +190,7 @@ class StockItemViewModel @Inject constructor(
         photo = photo,
         quantity = stringToInt(quantity),
         date = date,
+        dateOfPayment = dateOfPayment,
         validity = validity,
         categories = emptyList(),
         company = company,
