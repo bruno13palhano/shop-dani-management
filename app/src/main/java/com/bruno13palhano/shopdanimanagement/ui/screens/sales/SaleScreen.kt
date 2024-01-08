@@ -155,7 +155,7 @@ fun SaleScreen(
 
     val title = stringResource(id = R.string.sale_payment_label)
     val description = stringResource(
-        id = R.string.sale_payment_tag,
+        id = R.string.payment_tag,
         viewModel.customerName,
         viewModel.salePrice
     )
