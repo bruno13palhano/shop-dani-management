@@ -6,6 +6,7 @@ data class StockItem(
     val name: String,
     val photo: ByteArray,
     val date: Long,
+    val dateOfPayment: Long,
     val validity: Long,
     val quantity: Int,
     val categories: List<Category>,
@@ -26,6 +27,7 @@ data class StockItem(
         if (name != other.name) return false
         if (!photo.contentEquals(other.photo)) return false
         if (date != other.date) return false
+        if (dateOfPayment != other.dateOfPayment) return false
         if (validity != other.validity) return false
         if (quantity != other.quantity) return false
         if (categories != other.categories) return false
@@ -33,9 +35,7 @@ data class StockItem(
         if (purchasePrice != other.purchasePrice) return false
         if (salePrice != other.salePrice) return false
         if (isPaid != other.isPaid) return false
-        if (timestamp != other.timestamp) return false
-
-        return true
+        return timestamp == other.timestamp
     }
 
     override fun hashCode(): Int {
@@ -44,6 +44,7 @@ data class StockItem(
         result = 31 * result + name.hashCode()
         result = 31 * result + photo.contentHashCode()
         result = 31 * result + date.hashCode()
+        result = 31 * result + dateOfPayment.hashCode()
         result = 31 * result + validity.hashCode()
         result = 31 * result + quantity
         result = 31 * result + categories.hashCode()
