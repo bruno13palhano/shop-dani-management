@@ -16,9 +16,12 @@ import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.shopdanimanagement.ui.components.CategoryCheck
 import com.bruno13palhano.shopdanimanagement.ui.components.CompanyCheck
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -29,6 +32,9 @@ class ProductViewModel @Inject constructor(
     @ProductRep private val productRepository: ProductRepository,
     @CategoryRep private val categoryRepository: CategoryRepository
 ) : ViewModel() {
+    private var _productState = MutableStateFlow<UiState>(UiState.Fail)
+    val productState = _productState.asStateFlow()
+
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),
         CompanyCheck(Company.NATURA, false)
@@ -134,12 +140,16 @@ class ProductViewModel @Inject constructor(
             }
     }
 
-    fun insertProduct(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+    fun insertProduct(onError: (error: Int) -> Unit) {
+        _productState.value = UiState.InProgress
         viewModelScope.launch {
             productRepository.insert(
                 model = createProduct(id = 0L),
-                onError = onError,
-                onSuccess =  { onSuccess() }
+                onError = {
+                    onError(it)
+                    _productState.value = UiState.Fail
+                },
+                onSuccess =  { _productState.value = UiState.Success }
             )
         }
     }
@@ -183,31 +193,31 @@ class ProductViewModel @Inject constructor(
         allCompanies = companiesCheck
     }
 
-    fun updateProduct(
-        id: Long,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
+    fun updateProduct(id: Long, onError: (error: Int) -> Unit) {
+        _productState.value = UiState.InProgress
         viewModelScope.launch {
             productRepository.update(
                 model = createProduct(id = id),
-                onError = onError,
-                onSuccess = onSuccess
+                onError = {
+                    onError(it)
+                    _productState.value = UiState.Fail
+                },
+                onSuccess = { _productState.value = UiState.Success }
             )
         }
     }
 
-    fun deleteProduct(
-        id: Long,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
+    fun deleteProduct(id: Long, onError: (error: Int) -> Unit) {
+        _productState.value = UiState.InProgress
         viewModelScope.launch {
             productRepository.deleteById(
                 id = id,
                 timestamp = getCurrentTimestamp(),
-                onError = onError,
-                onSuccess = onSuccess
+                onError = {
+                    onError(it)
+                    _productState.value = UiState.Fail
+                },
+                onSuccess = { _productState.value = UiState.Success }
             )
         }
     }
