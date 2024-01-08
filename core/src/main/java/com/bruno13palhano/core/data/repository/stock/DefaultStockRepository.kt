@@ -49,6 +49,7 @@ internal class DefaultStockRepository @Inject constructor(
                 name = model.name,
                 photo = model.photo,
                 date = model.date,
+                dateOfPayment = model.dateOfPayment,
                 validity = model.validity,
                 quantity = model.quantity,
                 categories = model.categories,
