@@ -55,6 +55,7 @@ fun ItemScreen(
     }
 
     val isItemNotEmpty by viewModel.isItemNotEmpty.collectAsStateWithLifecycle()
+    val notifyItem by viewModel.notifyItem.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
     val context = LocalContext.current
     val orientation = configuration.orientation
@@ -179,8 +180,14 @@ fun ItemScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getErrors()
 
-    val title = stringResource(id = R.string.stock_expired_item_label)
-    val description = stringResource(id = R.string.stock_expired_item_tag, viewModel.name)
+    val expiredTitle = stringResource(id = R.string.stock_expired_item_label)
+    val expiredDescription = stringResource(id = R.string.stock_expired_item_tag, viewModel.name)
+    val debitTitle = stringResource(id = R.string.stock_payment_label)
+    val debitDescription = stringResource(
+        id = R.string.payment_tag,
+        viewModel.name,
+        viewModel.purchasePrice
+    )
 
     ItemContent(
         screenTitle = screenTitle,
@@ -249,6 +256,17 @@ fun ItemScreen(
                         }
                     ) {
                         scope.launch { navigateUp() }
+
+                        if (notifyItem) {
+                            setAlarmNotification(
+                                id = stockItemId,
+                                title = debitTitle,
+                                date = viewModel.dateOfPayment,
+                                description = debitDescription,
+                                context = context
+                            )
+                        }
+
                         setAlarmNotification(
                             id = stockItemId,
                             title = viewModel.name,
@@ -274,11 +292,22 @@ fun ItemScreen(
                         }
                     ) {
                         scope.launch { navigateUp() }
+
+                        if (notifyItem) {
+                            setAlarmNotification(
+                                id = stockItemId,
+                                title = debitTitle,
+                                date = viewModel.dateOfPayment,
+                                description = debitDescription,
+                                context = context
+                            )
+                        }
+
                         setAlarmNotification(
                             id = productId,
-                            title = title,
+                            title = expiredTitle,
                             date = viewModel.validity,
-                            description = description,
+                            description = expiredDescription,
                             context = context
                         )
                     }

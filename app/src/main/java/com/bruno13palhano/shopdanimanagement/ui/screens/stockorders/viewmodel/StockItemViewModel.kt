@@ -51,6 +51,13 @@ class StockItemViewModel @Inject constructor(
     var isPaid by mutableStateOf(false)
         private set
 
+    val notifyItem = snapshotFlow { !isPaid }
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(),
+            initialValue = true
+        )
+
     val isItemNotEmpty = snapshotFlow {
         quantity.isNotEmpty() && stringToInt(quantity) != 0 && purchasePrice.isNotEmpty()
                 && salePrice.isNotEmpty()
