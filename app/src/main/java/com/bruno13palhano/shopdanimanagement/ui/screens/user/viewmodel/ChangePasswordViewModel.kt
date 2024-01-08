@@ -10,7 +10,7 @@ import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.User
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserResponse
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserState
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class ChangePasswordViewModel @Inject constructor(
     @UserRep private val userRepository: UserRepository
 ) : ViewModel() {
-    private var _updateState = MutableStateFlow<UserState>(UserState.Fail)
+    private var _updateState = MutableStateFlow<UiState>(UiState.Fail)
     val updateState = _updateState.asStateFlow()
 
     private var userId = 0L
@@ -67,7 +67,7 @@ class ChangePasswordViewModel @Inject constructor(
 
     fun changePassword(onError: (error: Int) -> Unit) {
         if(newPassword == repeatNewPassword) {
-            _updateState.value = UserState.InProgress
+            _updateState.value = UiState.InProgress
 
             val user = User(
                 id = userId,
@@ -85,16 +85,16 @@ class ChangePasswordViewModel @Inject constructor(
                     user = user,
                     onError = {
                         onError(it)
-                        _updateState.value = UserState.Fail
+                        _updateState.value = UiState.Fail
                     },
                     onSuccess = {
-                        _updateState.value = UserState.Success
+                        _updateState.value = UiState.Success
                     }
                 )
             }
         } else {
             onError(UserResponse.WrongPasswordValidation.code)
-            _updateState.value = UserState.Fail
+            _updateState.value = UiState.Fail
         }
     }
 }

@@ -52,7 +52,7 @@ import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserResponse
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserState
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getUserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel.ChangePasswordViewModel
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
@@ -80,7 +80,7 @@ fun ChangePasswordScreen(
     val errors = getUserResponse()
 
     when (updateState) {
-        UserState.Fail -> {
+        UiState.Fail -> {
             ChangePasswordContent(
                 snackbarHostState = snackbarHostState,
                 newPassword = viewModel.newPassword,
@@ -120,9 +120,9 @@ fun ChangePasswordScreen(
             )
         }
 
-        UserState.InProgress -> { CircularProgress() }
+        UiState.InProgress -> { CircularProgress() }
 
-        UserState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
     }
 }
 

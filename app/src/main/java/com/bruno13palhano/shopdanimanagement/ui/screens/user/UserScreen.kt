@@ -64,7 +64,7 @@ import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserState
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getUserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel.UserViewModel
@@ -106,7 +106,7 @@ fun UserScreen(
     )
 
     when (updateState) {
-        UserState.Fail -> {
+        UiState.Fail -> {
             UserContent(
                 snackbarHostState = snackbarHostState,
                 menuItems = menuItems,
@@ -149,9 +149,9 @@ fun UserScreen(
             )
         }
 
-        UserState.InProgress -> { CircularProgress() }
+        UiState.InProgress -> { CircularProgress() }
 
-        UserState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
     }
 }
 
