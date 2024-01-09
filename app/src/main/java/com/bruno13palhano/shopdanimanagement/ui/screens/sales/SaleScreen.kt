@@ -25,8 +25,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.SaleContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
@@ -62,6 +64,7 @@ fun SaleScreen(
         }
     }
 
+    val saleState by viewModel.saleState.collectAsStateWithLifecycle()
     val isSaleNotEmpty by viewModel.isSaleNotEmpty.collectAsStateWithLifecycle()
     val notifySale by viewModel.notifySale.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -160,152 +163,155 @@ fun SaleScreen(
         viewModel.salePrice
     )
 
-    SaleContent(
-        isEdit = isEdit,
-        screenTitle = screenTitle,
-        snackbarHostState = snackbarHostState,
-        menuItems = menuItems,
-        productName = viewModel.productName,
-        customerName = viewModel.customerName,
-        photo = viewModel.photo,
-        quantity = viewModel.quantity,
-        dateOfSale = dateFormat.format(viewModel.dateOfSale),
-        dateOfPayment = dateFormat.format(viewModel.dateOfPayment),
-        purchasePrice = viewModel.purchasePrice,
-        salePrice = viewModel.salePrice,
-        deliveryPrice = viewModel.deliveryPrice,
-        category = viewModel.category,
-        company = viewModel.company,
-        isPaidByCustomer = viewModel.isPaidByCustomer,
-        onQuantityChange = viewModel::updateQuantity,
-        onPurchasePriceChange = viewModel::updatePurchasePrice,
-        onSalePriceChange = viewModel::updateSalePrice,
-        onDeliveryPriceChange = viewModel::updateDeliveryPrice,
-        onIsPaidByCustomerChange = viewModel::updateIsPaidByCustomer,
-        onDateOfSaleClick = { showDateOfSalePickerDialog = true },
-        onDateOfPaymentClick = { showDateOfPaymentPickerDialog = true },
-        customers = viewModel.allCustomers,
-        onDismissCustomer = { focusManager.clearFocus(force = true) },
-        onCustomerSelected = viewModel::updateCustomerName,
-        onOutsideClick = {
-            keyboardController?.hide()
-            focusManager.clearFocus(force = true)
-        },
-        onMoreOptionsItemClick = { index ->
-            when (index) {
-                SaleItemMenu.delete -> {
-                    viewModel.deleteSale(
-                        saleId = saleId,
-                        onError = { error ->
-                            scope.launch {
-                                if (error == DataError.DeleteDatabase.error) {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[error],
-                                        withDismissAction = true,
-                                    )
-                                }
+    when (saleState) {
+        UiState.Fail -> {
+            SaleContent(
+                isEdit = isEdit,
+                screenTitle = screenTitle,
+                snackbarHostState = snackbarHostState,
+                menuItems = menuItems,
+                productName = viewModel.productName,
+                customerName = viewModel.customerName,
+                photo = viewModel.photo,
+                quantity = viewModel.quantity,
+                dateOfSale = dateFormat.format(viewModel.dateOfSale),
+                dateOfPayment = dateFormat.format(viewModel.dateOfPayment),
+                purchasePrice = viewModel.purchasePrice,
+                salePrice = viewModel.salePrice,
+                deliveryPrice = viewModel.deliveryPrice,
+                category = viewModel.category,
+                company = viewModel.company,
+                isPaidByCustomer = viewModel.isPaidByCustomer,
+                onQuantityChange = viewModel::updateQuantity,
+                onPurchasePriceChange = viewModel::updatePurchasePrice,
+                onSalePriceChange = viewModel::updateSalePrice,
+                onDeliveryPriceChange = viewModel::updateDeliveryPrice,
+                onIsPaidByCustomerChange = viewModel::updateIsPaidByCustomer,
+                onDateOfSaleClick = { showDateOfSalePickerDialog = true },
+                onDateOfPaymentClick = { showDateOfPaymentPickerDialog = true },
+                customers = viewModel.allCustomers,
+                onDismissCustomer = { focusManager.clearFocus(force = true) },
+                onCustomerSelected = viewModel::updateCustomerName,
+                onOutsideClick = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus(force = true)
+                },
+                onMoreOptionsItemClick = { index ->
+                    when (index) {
+                        SaleItemMenu.delete -> {
+                            viewModel.deleteSale(
+                                saleId = saleId,
+                                onError = { error ->
+                                    scope.launch {
+                                        if (error == DataError.DeleteDatabase.error) {
+                                            snackbarHostState.showSnackbar(
+                                                message = errors[error],
+                                                withDismissAction = true,
+                                            )
+                                        }
 
-                                navigateUp()
-                            }
+                                        navigateUp()
+                                    }
+                                }
+                            )
                         }
-                    ) {
-                        scope.launch { navigateUp() }
-                    }
-                }
-                SaleItemMenu.cancel -> {
-                    viewModel.updateSale(
-                        saleId = saleId,
-                        canceled = true,
-                        onError = { error ->
-                            scope.launch {
-                                if (error == DataError.UpdateDatabase.error) {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[error],
-                                        withDismissAction = true
-                                    )
+
+                        SaleItemMenu.cancel -> {
+                            viewModel.updateSale(
+                                saleId = saleId,
+                                canceled = true,
+                                onError = { error ->
+                                    scope.launch {
+                                        if (error == DataError.UpdateDatabase.error) {
+                                            snackbarHostState.showSnackbar(
+                                                message = errors[error],
+                                                withDismissAction = true
+                                            )
+                                        }
+
+                                        navigateUp()
+                                    }
                                 }
-
-                                navigateUp()
-                            }
-                        }
-                    ) {
-                        scope.launch { navigateUp() }
-                    }
-                }
-            }
-        },
-        onDoneButtonClick = {
-            if (isSaleNotEmpty) {
-                if (isEdit) {
-                    viewModel.updateSale(
-                        saleId = saleId,
-                        onError = { error ->
-                            scope.launch {
-                                if (error == DataError.UpdateDatabase.error) {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[error],
-                                        withDismissAction = true
-                                    )
-                                } else if (error == Errors.INSUFFICIENT_ITEMS_STOCK) {
-                                    snackbarHostState.showSnackbar(
-                                        message = stockQuantityMessage,
-                                        withDismissAction = true
-                                    )
-                                }
-
-                                navigateUp()
-                            }
-                        },
-                        canceled = false
-                    ) {
-                        scope.launch { navigateUp() }
-                    }
-                } else {
-                    viewModel.insertSale(
-                        isOrderedByCustomer = isOrderedByCustomer,
-                        currentDate = currentDate,
-                        onError = { error ->
-                            scope.launch {
-                                if (error == DataError.InsertDatabase.error) {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[error],
-                                        withDismissAction = true
-                                    )
-                                } else if (error == Errors.INSUFFICIENT_ITEMS_STOCK) {
-                                    snackbarHostState.showSnackbar(
-                                        message = stockQuantityMessage,
-                                        withDismissAction = true
-                                    )
-                                }
-
-                                navigateUp()
-                            }
-                        }
-                    ) {
-                        scope.launch { navigateUp() }
-
-                        if (notifySale) {
-                            setAlarmNotification(
-                                id = stockOrderId,
-                                title = title,
-                                date = viewModel.dateOfPayment,
-                                description = description,
-                                context = context
                             )
                         }
                     }
-                }
-            } else {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = errors[DataError.FillMissingFields.error],
-                        withDismissAction = true
-                    )
-                }
+                },
+                onDoneButtonClick = {
+                    if (isSaleNotEmpty) {
+                        if (isEdit) {
+                            viewModel.updateSale(
+                                saleId = saleId,
+                                onError = { error ->
+                                    scope.launch {
+                                        if (error == DataError.UpdateDatabase.error) {
+                                            snackbarHostState.showSnackbar(
+                                                message = errors[error],
+                                                withDismissAction = true
+                                            )
+                                        } else if (error == Errors.INSUFFICIENT_ITEMS_STOCK) {
+                                            snackbarHostState.showSnackbar(
+                                                message = stockQuantityMessage,
+                                                withDismissAction = true
+                                            )
+                                        }
+
+                                        navigateUp()
+                                    }
+                                },
+                                canceled = false
+                            )
+                        } else {
+                            viewModel.insertSale(
+                                isOrderedByCustomer = isOrderedByCustomer,
+                                currentDate = currentDate,
+                                onError = { error ->
+                                    scope.launch {
+                                        if (error == DataError.InsertDatabase.error) {
+                                            snackbarHostState.showSnackbar(
+                                                message = errors[error],
+                                                withDismissAction = true
+                                            )
+                                        } else if (error == Errors.INSUFFICIENT_ITEMS_STOCK) {
+                                            snackbarHostState.showSnackbar(
+                                                message = stockQuantityMessage,
+                                                withDismissAction = true
+                                            )
+                                        }
+
+                                        navigateUp()
+                                    }
+                                }
+                            )
+                        }
+                    } else {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = errors[DataError.FillMissingFields.error],
+                                withDismissAction = true
+                            )
+                        }
+                    }
+                },
+                navigateUp = navigateUp
+            )
+        }
+
+        UiState.InProgress -> { CircularProgress() }
+
+        UiState.Success -> {
+            LaunchedEffect(key1 = Unit) { navigateUp() }
+
+            if (notifySale) {
+                setAlarmNotification(
+                    id = stockOrderId,
+                    title = title,
+                    date = viewModel.dateOfPayment,
+                    description = description,
+                    context = context
+                )
             }
-        },
-        navigateUp = navigateUp
-    )
+        }
+    }
 }
 
 private object SaleItemMenu {

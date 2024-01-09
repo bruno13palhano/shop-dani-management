@@ -20,11 +20,14 @@ import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerCheck
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToInt
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -37,6 +40,9 @@ class SaleViewModel @Inject constructor(
     @ProductRep private val productRepository: ProductRepository,
     @CustomerRep private val customerRepository: CustomerRepository,
 ) : ViewModel() {
+    private var _saleState = MutableStateFlow<UiState>(UiState.Fail)
+    val saleState = _saleState.asStateFlow()
+
     private var itemId by mutableLongStateOf(0L)
     private var productId by mutableLongStateOf(0L)
     private var customerId by mutableLongStateOf(0L)
@@ -193,15 +199,12 @@ class SaleViewModel @Inject constructor(
         }
     }
 
-    fun insertSale(
-        isOrderedByCustomer: Boolean,
-        currentDate: Long,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
+    fun insertSale(isOrderedByCustomer: Boolean, currentDate: Long, onError: (error: Int) -> Unit) {
+        _saleState.value = UiState.InProgress
         viewModelScope.launch {
             if ((stockQuantity < stringToInt(quantity)) && !isOrderedByCustomer) {
                 onError(Errors.INSUFFICIENT_ITEMS_STOCK)
+                _saleState.value = UiState.Fail
             } else {
                 saleRepository.insert(
                     model = createSale(
@@ -212,8 +215,11 @@ class SaleViewModel @Inject constructor(
                         isOrderedByCustomer = isOrderedByCustomer,
                         canceled = false
                     ),
-                    onError = onError,
-                    onSuccess = { onSuccess() }
+                    onError = {
+                        onError(it)
+                        _saleState.value = UiState.Fail
+                    },
+                    onSuccess = { _saleState.value = UiState.Success }
                 )
             }
         }
@@ -253,9 +259,9 @@ class SaleViewModel @Inject constructor(
         canceled: Boolean,
         shippingDate: Long = this.shippingDate,
         deliveryDate: Long = this.deliveryDate,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
+        onError: (error: Int) -> Unit
     ) {
+        _saleState.value = UiState.InProgress
         viewModelScope.launch {
             saleRepository.update(
                 model = createSale(
@@ -266,23 +272,26 @@ class SaleViewModel @Inject constructor(
                     isOrderedByCustomer = isOrderedByCustomer,
                     canceled = canceled
                 ),
-                onError = onError,
-                onSuccess = onSuccess
+                onError = {
+                    onError(it)
+                    _saleState.value = UiState.Fail
+                },
+                onSuccess = { _saleState.value = UiState.Success }
             )
         }
     }
 
-    fun deleteSale(
-        saleId: Long,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
+    fun deleteSale(saleId: Long, onError: (error: Int) -> Unit) {
+        _saleState.value = UiState.InProgress
         viewModelScope.launch {
             saleRepository.deleteById(
                 id = saleId,
                 timestamp = getCurrentTimestamp(),
-                onError = onError,
-                onSuccess = onSuccess
+                onError = {
+                    onError(it)
+                    _saleState.value = UiState.Fail
+                },
+                onSuccess = { _saleState.value = UiState.Success }
             )
         }
     }
