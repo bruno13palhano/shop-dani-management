@@ -24,8 +24,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.ItemContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
@@ -54,6 +56,7 @@ fun ItemScreen(
         }
     }
 
+    val stockItemState by viewModel.stockItemState.collectAsStateWithLifecycle()
     val isItemNotEmpty by viewModel.isItemNotEmpty.collectAsStateWithLifecycle()
     val notifyItem by viewModel.notifyItem.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
@@ -189,138 +192,145 @@ fun ItemScreen(
         viewModel.purchasePrice
     )
 
-    ItemContent(
-        screenTitle = screenTitle,
-        snackbarHostState = snackbarHostState,
-        menuItems = menuItems,
-        name = viewModel.name,
-        photo = viewModel.photo,
-        quantity = viewModel.quantity,
-        date = dateFormat.format(viewModel.date),
-        dateOfPayment = dateFormat.format(viewModel.dateOfPayment),
-        purchasePrice = viewModel.purchasePrice,
-        salePrice = viewModel.salePrice,
-        validity = dateFormat.format(viewModel.validity),
-        category = viewModel.category,
-        company = viewModel.company,
-        isPaid = viewModel.isPaid,
-        onQuantityChange = viewModel::updateQuantity,
-        onPurchasePriceChange = viewModel::updatePurchasePrice,
-        onSalePriceChange = viewModel::updateSalePrice,
-        onIsPaidChange = viewModel::updateIsPaid,
-        onDateClick = { showDatePickerDialog = true },
-        onDateOfPaymentClick = { showDateOfPaymentPickerDialog = true },
-        onValidityClick = { showValidityPickerDialog = true },
-        onMoreOptionsItemClick = { index ->
-            when (index) {
-                0 -> {
-                    viewModel.deleteStockItem(
-                        stockOrderId = stockItemId,
-                        onError = { error ->
-                            scope.launch {
-                                if (error == DataError.DeleteDatabase.error)
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[error],
-                                        withDismissAction = true
-                                    )
+    when (stockItemState) {
+        UiState.Fail -> {
+            ItemContent(
+                screenTitle = screenTitle,
+                snackbarHostState = snackbarHostState,
+                menuItems = menuItems,
+                name = viewModel.name,
+                photo = viewModel.photo,
+                quantity = viewModel.quantity,
+                date = dateFormat.format(viewModel.date),
+                dateOfPayment = dateFormat.format(viewModel.dateOfPayment),
+                purchasePrice = viewModel.purchasePrice,
+                salePrice = viewModel.salePrice,
+                validity = dateFormat.format(viewModel.validity),
+                category = viewModel.category,
+                company = viewModel.company,
+                isPaid = viewModel.isPaid,
+                onQuantityChange = viewModel::updateQuantity,
+                onPurchasePriceChange = viewModel::updatePurchasePrice,
+                onSalePriceChange = viewModel::updateSalePrice,
+                onIsPaidChange = viewModel::updateIsPaid,
+                onDateClick = { showDatePickerDialog = true },
+                onDateOfPaymentClick = { showDateOfPaymentPickerDialog = true },
+                onValidityClick = { showValidityPickerDialog = true },
+                onMoreOptionsItemClick = { index ->
+                    when (index) {
+                        0 -> {
+                            viewModel.deleteStockItem(
+                                stockOrderId = stockItemId,
+                                onError = { error ->
+                                    scope.launch {
+                                        if (error == DataError.DeleteDatabase.error)
+                                            snackbarHostState.showSnackbar(
+                                                message = errors[error],
+                                                withDismissAction = true
+                                            )
 
-                                navigateUp()
-                            }
-                        }
-                    ) {
-                        scope.launch { navigateUp() }
-                    }
-                }
-            }
-        },
-        onOutsideClick = {
-            keyboardController?.hide()
-            focusManager.clearFocus(force = true)
-        },
-        onDoneButtonClick = {
-            if (isItemNotEmpty) {
-                if (isEditable) {
-                    viewModel.updateStockItem(
-                        stockItemId = stockItemId,
-                        onError = { error ->
-                            scope.launch {
-                                if (error == DataError.UpdateDatabase.error) {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[error],
-                                        withDismissAction = true
-                                    )
+                                        navigateUp()
+                                    }
                                 }
-
-                                navigateUp()
-                            }
-                        }
-                    ) {
-                        scope.launch { navigateUp() }
-
-                        if (notifyItem) {
-                            setAlarmNotification(
-                                id = stockItemId,
-                                title = debitTitle,
-                                date = viewModel.dateOfPayment,
-                                description = debitDescription,
-                                context = context
                             )
                         }
+                    }
+                },
+                onOutsideClick = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus(force = true)
+                },
+                onDoneButtonClick = {
+                    if (isItemNotEmpty) {
+                        if (isEditable) {
+                            viewModel.updateStockItem(
+                                stockItemId = stockItemId,
+                                onError = { error ->
+                                    scope.launch {
+                                        if (error == DataError.UpdateDatabase.error) {
+                                            snackbarHostState.showSnackbar(
+                                                message = errors[error],
+                                                withDismissAction = true
+                                            )
+                                        }
 
+                                        navigateUp()
+                                    }
+                                }
+                            )
+                        } else {
+                            viewModel.insertItems(
+                                productId = productId,
+                                onError = { error ->
+                                    scope.launch {
+                                        if (error == DataError.InsertDatabase.error) {
+                                            snackbarHostState.showSnackbar(
+                                                message = errors[error],
+                                                withDismissAction = true
+                                            )
+                                        }
+
+                                        navigateUp()
+                                    }
+                                }
+                            )
+                        }
+                    } else {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = errors[DataError.FillMissingFields.error],
+                                withDismissAction = true
+                            )
+                        }
+                    }
+                },
+                navigateUp = navigateUp
+            )
+        }
+
+        UiState.InProgress -> { CircularProgress() }
+
+        UiState.Success -> {
+            LaunchedEffect(key1 = Unit) {
+                navigateUp()
+                if (isEditable) {
+                    if (notifyItem) {
                         setAlarmNotification(
                             id = stockItemId,
-                            title = viewModel.name,
-                            date = viewModel.validity,
-                            description = viewModel.company,
+                            title = debitTitle,
+                            date = viewModel.dateOfPayment,
+                            description = debitDescription,
                             context = context
                         )
                     }
+
+                    setAlarmNotification(
+                        id = stockItemId,
+                        title = viewModel.name,
+                        date = viewModel.validity,
+                        description = viewModel.company,
+                        context = context
+                    )
                 } else {
-                    viewModel.insertItems(
-                        productId = productId,
-                        onError = { error ->
-                            scope.launch {
-                                if (error == DataError.InsertDatabase.error) {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[error],
-                                        withDismissAction = true
-                                    )
-                                }
-
-                                navigateUp()
-                            }
-                        }
-                    ) {
-                        scope.launch { navigateUp() }
-
-                        if (notifyItem) {
-                            setAlarmNotification(
-                                id = stockItemId,
-                                title = debitTitle,
-                                date = viewModel.dateOfPayment,
-                                description = debitDescription,
-                                context = context
-                            )
-                        }
-
+                    if (notifyItem) {
                         setAlarmNotification(
-                            id = productId,
-                            title = expiredTitle,
-                            date = viewModel.validity,
-                            description = expiredDescription,
+                            id = stockItemId,
+                            title = debitTitle,
+                            date = viewModel.dateOfPayment,
+                            description = debitDescription,
                             context = context
                         )
                     }
-                }
-            } else {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = errors[DataError.FillMissingFields.error],
-                        withDismissAction = true
+
+                    setAlarmNotification(
+                        id = productId,
+                        title = expiredTitle,
+                        date = viewModel.validity,
+                        description = expiredDescription,
+                        context = context
                     )
                 }
             }
-        },
-        navigateUp = navigateUp
-    )
+        }
+    }
 }

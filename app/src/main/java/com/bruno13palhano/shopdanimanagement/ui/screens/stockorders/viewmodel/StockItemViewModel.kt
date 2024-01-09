@@ -13,11 +13,14 @@ import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.StockRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.StockItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToInt
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +30,9 @@ class StockItemViewModel @Inject constructor(
     @ProductRep private val productRepository: ProductRepository,
     @StockRep private val stockRepository: StockRepository
 ) : ViewModel() {
+    private var _stockItemState = MutableStateFlow<UiState>(UiState.Fail)
+    val stockItemState = _stockItemState.asStateFlow()
+
     private var productId by mutableLongStateOf(0L)
     var name by mutableStateOf("")
         private set
@@ -111,16 +117,16 @@ class StockItemViewModel @Inject constructor(
     private fun setCategories(categories: List<Category>) =
         categories.joinToString(", ") { category -> category.category }
 
-    fun insertItems(
-        productId: Long,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
+    fun insertItems(productId: Long, onError: (error: Int) -> Unit) {
+        _stockItemState.value = UiState.InProgress
         viewModelScope.launch {
             stockRepository.insert(
-                model = createStockItem(productId),
-                onError = onError,
-                onSuccess = { onSuccess() }
+                model = createStockItem(productId = productId),
+                onError = {
+                    onError(it)
+                    _stockItemState.value = UiState.Fail
+                },
+                onSuccess = { _stockItemState.value = UiState.Success }
             )
         }
     }
@@ -144,31 +150,31 @@ class StockItemViewModel @Inject constructor(
         }
     }
 
-    fun updateStockItem(
-        stockItemId: Long,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
+    fun updateStockItem(stockItemId: Long, onError: (error: Int) -> Unit) {
+        _stockItemState.value = UiState.InProgress
         viewModelScope.launch {
             stockRepository.update(
-                model = updateStockItem(stockItemId),
-                onError = onError,
-                onSuccess = onSuccess
+                model = updateStockItem(stockItemId = stockItemId),
+                onError = {
+                    onError(it)
+                    _stockItemState.value = UiState.Fail
+                },
+                onSuccess = { _stockItemState.value = UiState.Success }
             )
         }
     }
 
-    fun deleteStockItem(
-        stockOrderId: Long,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
+    fun deleteStockItem(stockOrderId: Long, onError: (error: Int) -> Unit) {
+        _stockItemState.value = UiState.InProgress
         viewModelScope.launch {
             stockRepository.deleteById(
                 id = stockOrderId,
                 timestamp = getCurrentTimestamp(),
-                onError = onError,
-                onSuccess = onSuccess
+                onError = {
+                    onError(it)
+                    _stockItemState.value = UiState.Fail
+                },
+                onSuccess = { _stockItemState.value = UiState.Success }
             )
         }
     }
@@ -190,8 +196,8 @@ class StockItemViewModel @Inject constructor(
         timestamp = getCurrentTimestamp()
     )
 
-    private fun updateStockItem(stockOrderId: Long) = StockItem(
-        id = stockOrderId,
+    private fun updateStockItem(stockItemId: Long) = StockItem(
+        id = stockItemId,
         productId = productId,
         name = name,
         photo = photo,
