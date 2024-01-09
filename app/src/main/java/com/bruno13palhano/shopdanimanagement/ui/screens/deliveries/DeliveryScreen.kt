@@ -52,10 +52,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel.DeliveryViewModel
@@ -75,6 +78,7 @@ fun DeliveryScreen(
 
     val configuration = LocalConfiguration.current
     val focusManager = LocalFocusManager.current
+    val deliveryState by viewModel.deliveryState.collectAsStateWithLifecycle()
     var shippingDatePickerState = rememberDatePickerState()
     var showShippingDatePickerDialog by remember { mutableStateOf(false) }
     var deliveryDatePickerState = rememberDatePickerState()
@@ -154,42 +158,48 @@ fun DeliveryScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getErrors()
 
-    DeliveryContent(
-        name = viewModel.name,
-        address = viewModel.address,
-        phoneNumber = viewModel.phoneNumber,
-        productName = viewModel.productName,
-        price = viewModel.price,
-        deliveryPrice = viewModel.deliveryPrice,
-        shippingDate = dateFormat.format(viewModel.shippingDate),
-        deliveryDate = dateFormat.format(viewModel.deliveryDate),
-        delivered = viewModel.delivered,
-        onDeliveryPriceChange = viewModel::updateDeliveryPrice,
-        onDeliveredChange = viewModel::updateDelivered,
-        onShippingDateClick = { showShippingDatePickerDialog = true },
-        onDeliveryDateClick = { showDeliveryDatePickerDialog = true },
-        onOutsideClick = { focusManager.clearFocus(force = true) },
-        onDoneButtonClick = {
-            viewModel.updateDelivery(
-                saleId = deliveryId,
-                onError = { error ->
-                    scope.launch {
-                        if (error == DataError.UpdateDatabase.error) {
-                            snackbarHostState.showSnackbar(
-                                message = errors[error],
-                                withDismissAction = true
-                            )
-                        }
+    when (deliveryState) {
+        UiState.Fail -> {
+            DeliveryContent(
+                name = viewModel.name,
+                address = viewModel.address,
+                phoneNumber = viewModel.phoneNumber,
+                productName = viewModel.productName,
+                price = viewModel.price,
+                deliveryPrice = viewModel.deliveryPrice,
+                shippingDate = dateFormat.format(viewModel.shippingDate),
+                deliveryDate = dateFormat.format(viewModel.deliveryDate),
+                delivered = viewModel.delivered,
+                onDeliveryPriceChange = viewModel::updateDeliveryPrice,
+                onDeliveredChange = viewModel::updateDelivered,
+                onShippingDateClick = { showShippingDatePickerDialog = true },
+                onDeliveryDateClick = { showDeliveryDatePickerDialog = true },
+                onOutsideClick = { focusManager.clearFocus(force = true) },
+                onDoneButtonClick = {
+                    viewModel.updateDelivery(
+                        saleId = deliveryId,
+                        onError = { error ->
+                            scope.launch {
+                                if (error == DataError.UpdateDatabase.error) {
+                                    snackbarHostState.showSnackbar(
+                                        message = errors[error],
+                                        withDismissAction = true
+                                    )
+                                }
 
-                        navigateUp()
-                    }
-                }
-            ) {
-                scope.launch { navigateUp() }
-            }
-        },
-        navigateUp = navigateUp
-    )
+                                navigateUp()
+                            }
+                        }
+                    )
+                },
+                navigateUp = navigateUp
+            )
+        }
+
+        UiState.InProgress -> { CircularProgress() }
+
+        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

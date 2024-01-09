@@ -10,9 +10,12 @@ import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Sale
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,6 +23,9 @@ import javax.inject.Inject
 class DeliveryViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleRepository
 ) : ViewModel() {
+    private var _deliveryState = MutableStateFlow<UiState>(UiState.Fail)
+    val deliveryState = _deliveryState.asStateFlow()
+
     private var saleId = 0L
     private var productId = 0L
     private var stockId = 0L
@@ -105,11 +111,8 @@ class DeliveryViewModel @Inject constructor(
         }
     }
 
-    fun updateDelivery(
-        saleId: Long,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
+    fun updateDelivery(saleId: Long, onError: (error: Int) -> Unit) {
+        _deliveryState.value = UiState.InProgress
         val sale = Sale(
             id = saleId,
             productId = productId,
@@ -140,8 +143,11 @@ class DeliveryViewModel @Inject constructor(
         viewModelScope.launch {
             saleRepository.update(
                 model = sale,
-                onError = onError,
-                onSuccess = onSuccess
+                onError = {
+                    onError(it)
+                    _deliveryState.value = UiState.Fail
+                },
+                onSuccess = { _deliveryState.value = UiState.Success }
             )
         }
     }
