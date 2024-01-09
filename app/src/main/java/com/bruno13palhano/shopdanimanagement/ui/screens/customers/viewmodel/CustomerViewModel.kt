@@ -9,9 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +23,9 @@ import javax.inject.Inject
 class CustomerViewModel @Inject constructor(
     @CustomerRep private val customerRepository: CustomerRepository
 ) : ViewModel() {
+    private var _customerState = MutableStateFlow<UiState>(UiState.Fail)
+    val customerState = _customerState.asStateFlow()
+
     var name by mutableStateOf("")
         private set
     var photo by mutableStateOf(byteArrayOf())
@@ -72,7 +78,8 @@ class CustomerViewModel @Inject constructor(
         }
     }
 
-    fun insertCustomer(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+    fun insertCustomer(onError: (error: Int) -> Unit) {
+        _customerState.value = UiState.InProgress
         val customer = Customer(
             id = 0L,
             name = name,
@@ -85,17 +92,17 @@ class CustomerViewModel @Inject constructor(
         viewModelScope.launch {
             customerRepository.insert(
                 model = customer,
-                onError = onError,
-                onSuccess = { onSuccess() }
+                onError = {
+                    onError(it)
+                    _customerState.value = UiState.Fail
+                },
+                onSuccess = { _customerState.value = UiState.Success }
             )
         }
     }
 
-    fun updateCustomer(
-        id: Long,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
+    fun updateCustomer(id: Long, onError: (error: Int) -> Unit) {
+        _customerState.value = UiState.InProgress
         val customer = Customer(
             id = id,
             name = name,
@@ -108,8 +115,11 @@ class CustomerViewModel @Inject constructor(
         viewModelScope.launch {
             customerRepository.update(
                 model = customer,
-                onError = onError,
-                onSuccess = onSuccess
+                onError = {
+                    onError(it)
+                    _customerState.value = UiState.Fail
+                },
+                onSuccess = { _customerState.value = UiState.Success }
             )
         }
     }

@@ -13,8 +13,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.CustomerViewModel
 import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
@@ -35,6 +37,7 @@ fun CustomerScreen(
     }
 
     val context = LocalContext.current
+    val customerState by viewModel.customerState.collectAsStateWithLifecycle()
     val isCustomerNotEmpty by viewModel.isCustomerNotEmpty.collectAsStateWithLifecycle()
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) { uri ->
@@ -51,72 +54,76 @@ fun CustomerScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getErrors()
 
-    CustomerContent(
-        screenTitle = screenTitle,
-        snackbarHostState = snackbarHostState,
-        name = viewModel.name,
-        photo = viewModel.photo,
-        email = viewModel.email,
-        address = viewModel.address,
-        phoneNumber = viewModel.phoneNumber,
-        onNameChange = viewModel::updateName,
-        onEmailChange = viewModel::updateEmail,
-        onAddressChange = viewModel::updateAddress,
-        onPhoneNumberChange = viewModel::updatePhoneNumber,
-        onPhotoClick = {
-            galleryLauncher.launch(arrayOf("image/*"))
-        },
-        onOutsideClick = {
-            keyboardController?.hide()
-            focusManger.clearFocus(force = true)
-        },
-        onDoneButtonClick = {
-            if (isCustomerNotEmpty) {
-                if (isEditable) {
-                    viewModel.updateCustomer(
-                        id = customerId,
-                        onError = { error ->
-                            scope.launch {
-                                if (error == DataError.UpdateDatabase.error) {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[error],
-                                        withDismissAction = true
-                                    )
-                                }
+    when (customerState) {
+        UiState.Fail -> {
+            CustomerContent(
+                screenTitle = screenTitle,
+                snackbarHostState = snackbarHostState,
+                name = viewModel.name,
+                photo = viewModel.photo,
+                email = viewModel.email,
+                address = viewModel.address,
+                phoneNumber = viewModel.phoneNumber,
+                onNameChange = viewModel::updateName,
+                onEmailChange = viewModel::updateEmail,
+                onAddressChange = viewModel::updateAddress,
+                onPhoneNumberChange = viewModel::updatePhoneNumber,
+                onPhotoClick = {
+                    galleryLauncher.launch(arrayOf("image/*"))
+                },
+                onOutsideClick = {
+                    keyboardController?.hide()
+                    focusManger.clearFocus(force = true)
+                },
+                onDoneButtonClick = {
+                    if (isCustomerNotEmpty) {
+                        if (isEditable) {
+                            viewModel.updateCustomer(
+                                id = customerId,
+                                onError = { error ->
+                                    scope.launch {
+                                        if (error == DataError.UpdateDatabase.error) {
+                                            snackbarHostState.showSnackbar(
+                                                message = errors[error],
+                                                withDismissAction = true
+                                            )
+                                        }
 
-                                navigateUp()
-                            }
-                        }
-                    ) {
-                        scope.launch { navigateUp() }
-                    }
-                } else {
-                    viewModel.insertCustomer(
-                        onError = { error ->
-                            scope.launch {
-                                if (error == DataError.InsertDatabase.error) {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[error],
-                                        withDismissAction = true
-                                    )
+                                        navigateUp()
+                                    }
                                 }
+                            )
+                        } else {
+                            viewModel.insertCustomer(
+                                onError = { error ->
+                                    scope.launch {
+                                        if (error == DataError.InsertDatabase.error) {
+                                            snackbarHostState.showSnackbar(
+                                                message = errors[error],
+                                                withDismissAction = true
+                                            )
+                                        }
 
-                                navigateUp()
-                            }
+                                        navigateUp()
+                                    }
+                                }
+                            )
                         }
-                    ) {
-                        scope.launch { navigateUp() }
+                    } else {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = errors[DataError.FillMissingFields.error],
+                                withDismissAction = true
+                            )
+                        }
                     }
-                }
-            } else {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = errors[DataError.FillMissingFields.error],
-                        withDismissAction = true
-                    )
-                }
-            }
-        },
-        navigateUp = navigateUp
-    )
+                },
+                navigateUp = navigateUp
+            )
+        }
+
+        UiState.InProgress -> { CircularProgress() }
+
+        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+    }
 }
