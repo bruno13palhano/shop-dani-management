@@ -291,45 +291,44 @@ fun ItemScreen(
         UiState.InProgress -> { CircularProgress() }
 
         UiState.Success -> {
-            LaunchedEffect(key1 = Unit) {
-                navigateUp()
-                if (isEditable) {
-                    if (notifyItem) {
-                        setAlarmNotification(
-                            id = stockItemId,
-                            title = debitTitle,
-                            date = viewModel.dateOfPayment,
-                            description = debitDescription,
-                            context = context
-                        )
-                    }
+            LaunchedEffect(key1 = Unit) { navigateUp() }
 
+            if (isEditable) {
+                if (notifyItem) {
                     setAlarmNotification(
                         id = stockItemId,
-                        title = viewModel.name,
-                        date = viewModel.validity,
-                        description = viewModel.company,
-                        context = context
-                    )
-                } else {
-                    if (notifyItem) {
-                        setAlarmNotification(
-                            id = stockItemId,
-                            title = debitTitle,
-                            date = viewModel.dateOfPayment,
-                            description = debitDescription,
-                            context = context
-                        )
-                    }
-
-                    setAlarmNotification(
-                        id = productId,
-                        title = expiredTitle,
-                        date = viewModel.validity,
-                        description = expiredDescription,
+                        title = debitTitle,
+                        date = viewModel.dateOfPayment,
+                        description = debitDescription,
                         context = context
                     )
                 }
+
+                setAlarmNotification(
+                    id = stockItemId,
+                    title = expiredTitle,
+                    date = viewModel.validity,
+                    description = expiredDescription,
+                    context = context
+                )
+            } else {
+                if (notifyItem) {
+                    setAlarmNotification(
+                        id = stockItemId,
+                        title = debitTitle,
+                        date = viewModel.dateOfPayment,
+                        description = debitDescription,
+                        context = context
+                    )
+                }
+
+                setAlarmNotification(
+                    id = productId,
+                    title = expiredTitle,
+                    date = viewModel.validity,
+                    description = expiredDescription,
+                    context = context
+                )
             }
         }
     }
