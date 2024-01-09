@@ -10,10 +10,13 @@ import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.di.CatalogRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.model.Catalog
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +25,9 @@ class CatalogItemViewModel @Inject constructor(
     @CatalogRep private val catalogRepository: CatalogRepository,
     @ProductRep private val productRepository: ProductRepository
 ) : ViewModel() {
+    private var _catalogState = MutableStateFlow<UiState>(UiState.Fail)
+    val catalogState = _catalogState.asStateFlow()
+
     private var productId = 0L
     private var catalogId = 0L
     var name by mutableStateOf("")
@@ -78,33 +84,45 @@ class CatalogItemViewModel @Inject constructor(
         }
     }
 
-    fun insert(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+    fun insert(onError: (error: Int) -> Unit) {
+        _catalogState.value = UiState.InProgress
         viewModelScope.launch {
             catalogRepository.insert(
                 model = initCatalogItem(),
-                onError = onError,
-                onSuccess = { onSuccess() }
+                onError = {
+                    onError(it)
+                    _catalogState.value = UiState.Fail
+                },
+                onSuccess = { _catalogState.value = UiState.Success }
             )
         }
     }
 
-    fun update(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+    fun update(onError: (error: Int) -> Unit) {
+        _catalogState.value = UiState.InProgress
         viewModelScope.launch {
             catalogRepository.update(
                 model = initCatalogItem(),
-                onError = onError,
-                onSuccess = onSuccess
+                onError = {
+                    onError(it)
+                    _catalogState.value = UiState.Fail
+                },
+                onSuccess = { _catalogState.value = UiState.Success }
             )
         }
     }
 
-    fun delete(onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+    fun delete(onError: (error: Int) -> Unit) {
+        _catalogState.value = UiState.InProgress
         viewModelScope.launch {
             catalogRepository.deleteById(
                 id = catalogId,
                 timestamp = getCurrentTimestamp(),
-                onError = onError,
-                onSuccess = onSuccess
+                onError = {
+                    onError(it)
+                    _catalogState.value = UiState.Fail
+                },
+                onSuccess = { _catalogState.value = UiState.Success }
             )
         }
     }

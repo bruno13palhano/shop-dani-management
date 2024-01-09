@@ -55,12 +55,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.viewmodel.CatalogItemViewModel
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import kotlinx.coroutines.launch
@@ -82,6 +85,7 @@ fun CatalogItemScreen(
         }
     }
 
+    val catalogState by viewModel.catalogState.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getErrors()
@@ -90,81 +94,82 @@ fun CatalogItemScreen(
         stringResource(id = R.string.delete_label),
     )
 
-    CatalogItemContent(
-        editable = editable,
-        name = viewModel.name,
-        photo = viewModel.photo,
-        title = viewModel.title,
-        description = viewModel.description,
-        discount = viewModel.discount,
-        price = viewModel.price,
-        menuOptions = menuOptions,
-        onTitleChange = viewModel::updateTitle,
-        onDescriptionChange = viewModel::updateDescription,
-        onDiscountChange = viewModel::updateDiscount,
-        onPriceChange = viewModel::updatePrice,
-        onMenuOptionsItemClick = { index ->
-            when (index) {
-                0 -> {
-                    viewModel.delete(
-                        onError = { error ->
-                            scope.launch {
-                                if (error == DataError.DeleteDatabase.error) {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[error],
-                                        withDismissAction = true
-                                    )
+    when (catalogState) {
+        UiState.Fail -> {
+            CatalogItemContent(
+                editable = editable,
+                name = viewModel.name,
+                photo = viewModel.photo,
+                title = viewModel.title,
+                description = viewModel.description,
+                discount = viewModel.discount,
+                price = viewModel.price,
+                menuOptions = menuOptions,
+                onTitleChange = viewModel::updateTitle,
+                onDescriptionChange = viewModel::updateDescription,
+                onDiscountChange = viewModel::updateDiscount,
+                onPriceChange = viewModel::updatePrice,
+                onMenuOptionsItemClick = { index ->
+                    when (index) {
+                        0 -> {
+                            viewModel.delete(
+                                onError = { error ->
+                                    scope.launch {
+                                        if (error == DataError.DeleteDatabase.error) {
+                                            snackbarHostState.showSnackbar(
+                                                message = errors[error],
+                                                withDismissAction = true
+                                            )
+                                        }
+
+                                        navigateUp()
+                                    }
                                 }
-
-                                navigateUp()
-                            }
-                        }
-                    ) {
-                        scope.launch { navigateUp() }
-                    }
-                }
-            }
-            navigateUp()
-        },
-        onDoneButtonClick = {
-            if (catalogId == 0L) {
-                viewModel.insert(
-                    onError = { error ->
-                        scope.launch {
-                            if (error == DataError.InsertDatabase.error) {
-                                snackbarHostState.showSnackbar(
-                                    message = errors[error],
-                                    withDismissAction = true
-                                )
-                            }
-
-                            navigateUp()
+                            )
                         }
                     }
-                ) {
-                    scope.launch { navigateUp() }
-                }
-            } else {
-                viewModel.update(
-                    onError = { error ->
-                        scope.launch {
-                            if (error == DataError.UpdateDatabase.error) {
-                                snackbarHostState.showSnackbar(
-                                    message = errors[error],
-                                    withDismissAction = true
-                                )
-                            }
+                },
+                onDoneButtonClick = {
+                    if (catalogId == 0L) {
+                        viewModel.insert(
+                            onError = { error ->
+                                scope.launch {
+                                    if (error == DataError.InsertDatabase.error) {
+                                        snackbarHostState.showSnackbar(
+                                            message = errors[error],
+                                            withDismissAction = true
+                                        )
+                                    }
 
-                            navigateUp()
-                        }
+                                    navigateUp()
+                                }
+                            }
+                        )
+                    } else {
+                        viewModel.update(
+                            onError = { error ->
+                                scope.launch {
+                                    if (error == DataError.UpdateDatabase.error) {
+                                        snackbarHostState.showSnackbar(
+                                            message = errors[error],
+                                            withDismissAction = true
+                                        )
+                                    }
+
+                                    navigateUp()
+                                }
+                            }
+                        )
                     }
-                ) {
-                    scope.launch { navigateUp() }
-                }
-            }
-        },
-        navigateUp = navigateUp
-    )
+                },
+                navigateUp = navigateUp
+            )
+        }
+
+        UiState.InProgress -> { CircularProgress() }
+
+        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
