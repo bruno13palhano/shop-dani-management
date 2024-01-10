@@ -37,7 +37,8 @@ class ProductViewModel @Inject constructor(
 
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),
-        CompanyCheck(Company.NATURA, false)
+        CompanyCheck(Company.NATURA, false),
+        CompanyCheck(Company.BOTICARIO, false)
     )
     var name by mutableStateOf("")
         private set
@@ -70,7 +71,9 @@ class ProductViewModel @Inject constructor(
         viewModelScope.launch {
             categoryRepository.getAll()
                 .map {
-                    it.map { category -> CategoryCheck(category.id, category.category, false) }
+                    it.map { category ->
+                        CategoryCheck(category.id, category.category, false)
+                    }
                 }.collect {
                     allCategories = it
                     onCategoriesDone()
@@ -165,7 +168,9 @@ class ProductViewModel @Inject constructor(
                 categories = it.categories
                 company = it.company
                 setCategoriesChecked(it.categories)
-                category = it.categories.joinToString(", ") { category -> category.category }
+                category = it.categories.joinToString(", ") { category ->
+                    category.category
+                }
                 setCompanyChecked(it.company)
             }
         }
@@ -231,7 +236,13 @@ class ProductViewModel @Inject constructor(
         date = date,
         categories = allCategories
             .filter { it.isChecked }
-            .map { Category(id = it.id, category = it.category, timestamp = getCurrentTimestamp()) },
+            .map {
+                Category(
+                    id = it.id,
+                    category = it.category,
+                    timestamp = getCurrentTimestamp()
+                )
+            },
         company = company,
         timestamp = getCurrentTimestamp()
     )
