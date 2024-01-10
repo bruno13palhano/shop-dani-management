@@ -4,6 +4,11 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
@@ -52,7 +57,21 @@ class MainActivity : ComponentActivity() {
                         val coroutineScope = rememberCoroutineScope()
 
                         Scaffold(
-                            bottomBar = { if (showBottomBar) BottomMenu(navController = navController) }
+                            bottomBar = {
+                                AnimatedVisibility(
+                                    visible = showBottomBar,
+                                    enter = slideInVertically(
+                                        animationSpec = spring(stiffness = Spring.StiffnessHigh),
+                                        initialOffsetY = { it/8 }
+                                    ),
+                                    exit = slideOutVertically(
+                                        animationSpec = spring(stiffness = Spring.StiffnessHigh),
+                                        targetOffsetY = { it/8 }
+                                    )
+                                ) {
+                                    BottomMenu(navController = navController)
+                                }
+                            }
                         ) {
                             MainNavGraph(
                                 modifier = Modifier.padding(it),
