@@ -3,6 +3,11 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.products
 import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -76,8 +81,24 @@ fun ProductScreen(
     val configuration = LocalConfiguration.current
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    var showContent by remember { mutableStateOf(true) }
     var datePickerState = rememberDatePickerState()
     var showDatePickerDialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val errorMessage = stringResource(id = R.string.empty_fields_error)
+    val errors = getErrors()
+
+    when (productState) {
+        UiState.Fail -> { showContent = true }
+
+        UiState.InProgress -> {
+            showContent = false
+            CircularProgress()
+        }
+
+        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+    }
 
     if (showDatePickerDialog) {
         DatePickerDialog(
@@ -112,115 +133,108 @@ fun ProductScreen(
         }
     }
 
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val errorMessage = stringResource(id = R.string.empty_fields_error)
-    val errors = getErrors()
-
-    when (productState) {
-        UiState.Fail -> {
-            ProductContent(
-                isEditable = isEditable,
-                screenTitle = screenTitle,
-                snackbarHostState = snackbarHostState,
-                categories = viewModel.allCategories,
-                companies = viewModel.allCompanies,
-                name = viewModel.name,
-                code = viewModel.code,
-                description = viewModel.description,
-                photo = viewModel.photo,
-                date = dateFormat.format(viewModel.date),
-                category = viewModel.category,
-                company = viewModel.company,
-                onNameChange = viewModel::updateName,
-                onCodeChange = viewModel::updateCode,
-                onDescriptionChange = viewModel::updateDescription,
-                onDismissCategory = {
-                    viewModel.updateCategories(viewModel.allCategories)
-                    focusManager.clearFocus(force = true)
-                },
-                onCompanySelected = { viewModel.updateCompany(it) },
-                onDismissCompany = { focusManager.clearFocus(force = true) },
-                onImageClick = { galleryLauncher.launch(arrayOf("image/*")) },
-                onDateClick = { showDatePickerDialog = true },
-                onMoreOptionsItemClick = { index ->
-                    when (index) {
-                        ProductMenuItem.addToCatalog -> {
-                            onAddToCatalogClick(productId)
-                        }
-
-                        ProductMenuItem.delete -> {
-                            viewModel.deleteProduct(
-                                id = productId,
-                                onError = { error ->
-                                    scope.launch {
-                                        if (error == DataError.DeleteDatabase.error) {
-                                            snackbarHostState.showSnackbar(
-                                                message = errors[error],
-                                                withDismissAction = true
-                                            )
-                                        }
-
-                                        navigateUp()
-                                    }
-                                }
-                            )
-                        }
+    AnimatedVisibility(
+        visible = showContent,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        ProductContent(
+            isEditable = isEditable,
+            screenTitle = screenTitle,
+            snackbarHostState = snackbarHostState,
+            categories = viewModel.allCategories,
+            companies = viewModel.allCompanies,
+            name = viewModel.name,
+            code = viewModel.code,
+            description = viewModel.description,
+            photo = viewModel.photo,
+            date = dateFormat.format(viewModel.date),
+            category = viewModel.category,
+            company = viewModel.company,
+            onNameChange = viewModel::updateName,
+            onCodeChange = viewModel::updateCode,
+            onDescriptionChange = viewModel::updateDescription,
+            onDismissCategory = {
+                viewModel.updateCategories(viewModel.allCategories)
+                focusManager.clearFocus(force = true)
+            },
+            onCompanySelected = { viewModel.updateCompany(it) },
+            onDismissCompany = { focusManager.clearFocus(force = true) },
+            onImageClick = { galleryLauncher.launch(arrayOf("image/*")) },
+            onDateClick = { showDatePickerDialog = true },
+            onMoreOptionsItemClick = { index ->
+                when (index) {
+                    ProductMenuItem.addToCatalog -> {
+                        onAddToCatalogClick(productId)
                     }
-                },
-                onOutsideClick = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus(force = true)
-                },
-                onActionButtonClick = {
-                    if (isProductValid) {
-                        if (isEditable) {
-                            viewModel.updateProduct(
-                                id = productId,
-                                onError = { error ->
-                                    scope.launch {
-                                        if (error == DataError.UpdateDatabase.error) {
-                                            snackbarHostState.showSnackbar(
-                                                message = errors[error],
-                                                withDismissAction = true
-                                            )
-                                        }
 
-                                        navigateUp()
+                    ProductMenuItem.delete -> {
+                        viewModel.deleteProduct(
+                            id = productId,
+                            onError = { error ->
+                                scope.launch {
+                                    if (error == DataError.DeleteDatabase.error) {
+                                        snackbarHostState.showSnackbar(
+                                            message = errors[error],
+                                            withDismissAction = true
+                                        )
                                     }
-                                }
-                            )
-                        } else {
-                            viewModel.insertProduct(
-                                onError = { error ->
-                                    scope.launch {
-                                        if (error == DataError.InsertDatabase.error) {
-                                            snackbarHostState.showSnackbar(
-                                                message = errors[error],
-                                                withDismissAction = true
-                                            )
-                                        }
 
-                                        navigateUp()
-                                    }
+                                    navigateUp()
                                 }
-                            )
-                        }
+                            }
+                        )
+                    }
+                }
+            },
+            onOutsideClick = {
+                keyboardController?.hide()
+                focusManager.clearFocus(force = true)
+            },
+            onActionButtonClick = {
+                if (isProductValid) {
+                    if (isEditable) {
+                        viewModel.updateProduct(
+                            id = productId,
+                            onError = { error ->
+                                scope.launch {
+                                    if (error == DataError.UpdateDatabase.error) {
+                                        snackbarHostState.showSnackbar(
+                                            message = errors[error],
+                                            withDismissAction = true
+                                        )
+                                    }
+
+                                    navigateUp()
+                                }
+                            }
+                        )
                     } else {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = errorMessage,
-                                withDismissAction = true
-                            )
-                        }
+                        viewModel.insertProduct(
+                            onError = { error ->
+                                scope.launch {
+                                    if (error == DataError.InsertDatabase.error) {
+                                        snackbarHostState.showSnackbar(
+                                            message = errors[error],
+                                            withDismissAction = true
+                                        )
+                                    }
+
+                                    navigateUp()
+                                }
+                            }
+                        )
                     }
-                },
-                navigateUp = navigateUp
-            )
-        }
-
-        UiState.InProgress -> { CircularProgress() }
-
-        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+                } else {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = errorMessage,
+                            withDismissAction = true
+                        )
+                    }
+                }
+            },
+            navigateUp = navigateUp
+        )
     }
 }
