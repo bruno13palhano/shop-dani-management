@@ -2,6 +2,11 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.deliveries
 
 import android.content.res.Configuration
 import android.icu.text.DecimalFormat
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -79,6 +84,7 @@ fun DeliveryScreen(
     val configuration = LocalConfiguration.current
     val focusManager = LocalFocusManager.current
     val deliveryState by viewModel.deliveryState.collectAsStateWithLifecycle()
+    var showContent by remember { mutableStateOf(true) }
     var shippingDatePickerState = rememberDatePickerState()
     var showShippingDatePickerDialog by remember { mutableStateOf(false) }
     var deliveryDatePickerState = rememberDatePickerState()
@@ -159,46 +165,55 @@ fun DeliveryScreen(
     val errors = getErrors()
 
     when (deliveryState) {
-        UiState.Fail -> {
-            DeliveryContent(
-                name = viewModel.name,
-                address = viewModel.address,
-                phoneNumber = viewModel.phoneNumber,
-                productName = viewModel.productName,
-                price = viewModel.price,
-                deliveryPrice = viewModel.deliveryPrice,
-                shippingDate = dateFormat.format(viewModel.shippingDate),
-                deliveryDate = dateFormat.format(viewModel.deliveryDate),
-                delivered = viewModel.delivered,
-                onDeliveryPriceChange = viewModel::updateDeliveryPrice,
-                onDeliveredChange = viewModel::updateDelivered,
-                onShippingDateClick = { showShippingDatePickerDialog = true },
-                onDeliveryDateClick = { showDeliveryDatePickerDialog = true },
-                onOutsideClick = { focusManager.clearFocus(force = true) },
-                onDoneButtonClick = {
-                    viewModel.updateDelivery(
-                        saleId = deliveryId,
-                        onError = { error ->
-                            scope.launch {
-                                if (error == DataError.UpdateDatabase.error) {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[error],
-                                        withDismissAction = true
-                                    )
-                                }
+        UiState.Fail -> { showContent = true }
 
-                                navigateUp()
-                            }
-                        }
-                    )
-                },
-                navigateUp = navigateUp
-            )
+        UiState.InProgress -> {
+            showContent = false
+            CircularProgress()
         }
 
-        UiState.InProgress -> { CircularProgress() }
-
         UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+    }
+
+    AnimatedVisibility(
+        visible = showContent,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        DeliveryContent(
+            name = viewModel.name,
+            address = viewModel.address,
+            phoneNumber = viewModel.phoneNumber,
+            productName = viewModel.productName,
+            price = viewModel.price,
+            deliveryPrice = viewModel.deliveryPrice,
+            shippingDate = dateFormat.format(viewModel.shippingDate),
+            deliveryDate = dateFormat.format(viewModel.deliveryDate),
+            delivered = viewModel.delivered,
+            onDeliveryPriceChange = viewModel::updateDeliveryPrice,
+            onDeliveredChange = viewModel::updateDelivered,
+            onShippingDateClick = { showShippingDatePickerDialog = true },
+            onDeliveryDateClick = { showDeliveryDatePickerDialog = true },
+            onOutsideClick = { focusManager.clearFocus(force = true) },
+            onDoneButtonClick = {
+                viewModel.updateDelivery(
+                    saleId = deliveryId,
+                    onError = { error ->
+                        scope.launch {
+                            if (error == DataError.UpdateDatabase.error) {
+                                snackbarHostState.showSnackbar(
+                                    message = errors[error],
+                                    withDismissAction = true
+                                )
+                            }
+
+                            navigateUp()
+                        }
+                    }
+                )
+            },
+            navigateUp = navigateUp
+        )
     }
 }
 
