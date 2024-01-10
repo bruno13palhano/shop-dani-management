@@ -2,6 +2,11 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.login
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -81,6 +86,7 @@ fun CreateAccountScreen(
 ) {
     val loginState by viewModel.loginState.collectAsStateWithLifecycle()
     val isValid by viewModel.isFieldsNotEmpty.collectAsStateWithLifecycle()
+    var showContent by remember { mutableStateOf(true) }
     var showPassword by remember { mutableStateOf(false) }
     var showRepeatPassword by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -100,58 +106,63 @@ fun CreateAccountScreen(
     val errors = getUserResponse()
 
     when (loginState) {
-        LoginState.SignedOut -> {
-            CreateAccountContent(
-                snackbarHostState = snackbarHostState,
-                username = viewModel.username,
-                email = viewModel.email,
-                password = viewModel.password,
-                repeatPassword = viewModel.repeatPassword,
-                photo = viewModel.photo,
-                showPassword = showPassword,
-                showRepeatPassword = showRepeatPassword,
-                onUsernameChange = viewModel::updateUsername,
-                onEmailChange = viewModel::updateEmail,
-                onPasswordChange = viewModel::updatePassword,
-                onRepeatPasswordChange = viewModel::updateRepeatPassword,
-                onShowPasswordChange = { showPassword = it },
-                onShowRepeatPasswordChange = { showRepeatPassword = it },
-                onImageClick = { galleryLauncher.launch(arrayOf("image/*")) },
-                onOutsideClick = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus(force = true)
-                },
-                onDoneClick = {
-                    if (isValid) {
-                        viewModel.createAccount(
-                            onError = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[it],
-                                        withDismissAction = true
-                                    )
-                                }
-                            }
-                        )
-                    } else {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = errors[UserResponse.FillMissingFields.code]
-                            )
-                        }
-                    }
-                },
-                navigateUp = navigateUp
-            )
-        }
+        LoginState.SignedOut -> { showContent = true }
+
         LoginState.InProgress -> {
+            showContent = false
             CircularProgress()
         }
-        LoginState.SignedIn -> {
-            LaunchedEffect(key1 = Unit) {
-                onSuccess()
-            }
-        }
+
+        LoginState.SignedIn -> { LaunchedEffect(key1 = Unit) { onSuccess() } }
+    }
+
+    AnimatedVisibility(
+        visible = showContent,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        CreateAccountContent(
+            snackbarHostState = snackbarHostState,
+            username = viewModel.username,
+            email = viewModel.email,
+            password = viewModel.password,
+            repeatPassword = viewModel.repeatPassword,
+            photo = viewModel.photo,
+            showPassword = showPassword,
+            showRepeatPassword = showRepeatPassword,
+            onUsernameChange = viewModel::updateUsername,
+            onEmailChange = viewModel::updateEmail,
+            onPasswordChange = viewModel::updatePassword,
+            onRepeatPasswordChange = viewModel::updateRepeatPassword,
+            onShowPasswordChange = { showPassword = it },
+            onShowRepeatPasswordChange = { showRepeatPassword = it },
+            onImageClick = { galleryLauncher.launch(arrayOf("image/*")) },
+            onOutsideClick = {
+                keyboardController?.hide()
+                focusManager.clearFocus(force = true)
+            },
+            onDoneClick = {
+                if (isValid) {
+                    viewModel.createAccount(
+                        onError = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = errors[it],
+                                    withDismissAction = true
+                                )
+                            }
+                        }
+                    )
+                } else {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = errors[UserResponse.FillMissingFields.code]
+                        )
+                    }
+                }
+            },
+            navigateUp = navigateUp
+        )
     }
 }
 
