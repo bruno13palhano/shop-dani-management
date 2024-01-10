@@ -21,6 +21,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -39,6 +41,7 @@ import com.bruno13palhano.shopdanimanagement.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesContent(
+    snackbarHostState: SnackbarHostState,
     newCategory: String,
     showCategoryDialog: Boolean,
     categories: List<Category>,
@@ -50,6 +53,7 @@ fun CategoriesContent(
     onIconMenuClick: () -> Unit
 ) {
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.product_categories_label)) },

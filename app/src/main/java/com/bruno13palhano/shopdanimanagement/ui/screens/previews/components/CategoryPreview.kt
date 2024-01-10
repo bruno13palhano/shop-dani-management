@@ -3,6 +3,7 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.previews.components
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,6 +25,7 @@ private fun CategoriesListDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             CategoriesContent(
+                snackbarHostState = SnackbarHostState(),
                 newCategory = "",
                 showCategoryDialog = true,
                 categories = categories,
@@ -50,6 +52,7 @@ private fun CategoriesListPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             CategoriesContent(
+                snackbarHostState = SnackbarHostState(),
                 newCategory = "",
                 showCategoryDialog = false,
                 categories = categories,
