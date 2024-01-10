@@ -33,6 +33,7 @@ class SalesByCompanyViewModel @Inject constructor(
             saleRepository.getAll().collect {
                 val avonEntries = mutableListOf<Pair<String, Float>>()
                 val naturaEntries = mutableListOf<Pair<String, Float>>()
+                val boticarioEntries = mutableListOf<Pair<String, Float>>()
 
                 days = Array(rangeOfDays) { 0 }
                 it.filter { sale -> sale.company == Company.AVON.company }
@@ -44,9 +45,15 @@ class SalesByCompanyViewModel @Inject constructor(
                     .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
                 setChartEntries(naturaEntries, days)
 
+                days = Array(rangeOfDays) { 0 }
+                it.filter { sale -> sale.company == Company.BOTICARIO.company }
+                    .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
+                setChartEntries(boticarioEntries, days)
+
                 _chartEntry.value = SalesCompanyEntries(
                     avonEntries = avonEntries,
-                    naturaEntries = naturaEntries
+                    naturaEntries = naturaEntries,
+                    boticarioEntries = boticarioEntries
                 )
             }
         }
@@ -54,6 +61,7 @@ class SalesByCompanyViewModel @Inject constructor(
 
     data class SalesCompanyEntries(
         val avonEntries: List<Pair<String, Float>> = listOf(),
-        val naturaEntries: List<Pair<String, Float>> = listOf()
+        val naturaEntries: List<Pair<String, Float>> = listOf(),
+        val boticarioEntries: List<Pair<String, Float>> = listOf()
     )
 }

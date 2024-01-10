@@ -42,17 +42,21 @@ fun SalesByCompanyScreen(
             },
             salesByCompanyEntries.naturaEntries.mapIndexed { index, (date, y) ->
                 DateChartEntry(date, index.toFloat(), y)
+            },
+            salesByCompanyEntries.boticarioEntries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
             }
         )
     }
 
     SimpleChart(
         screenTitle = stringResource(id = R.string.company_sales_label),
-        startAxisTitle = stringResource(id = R.string.amount_of_money_label),
+        startAxisTitle = stringResource(id = R.string.amount_of_sales_label),
         bottomAxisTitle = chartTitle,
         entityColors = listOf(
             MaterialTheme.colorScheme.primary,
-            MaterialTheme.colorScheme.tertiary
+            MaterialTheme.colorScheme.tertiary,
+            MaterialTheme.colorScheme.secondary
         ),
         entry = chart,
         legends = listOf(
@@ -63,6 +67,10 @@ fun SalesByCompanyScreen(
             Pair(
                 stringResource(id = R.string.natura_company_label),
                 Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
+            ),
+            Pair(
+                stringResource(id = R.string.boticario_company_label),
+                Color.toArgb(MaterialTheme.colorScheme.secondary.value.toLong())
             )
         ),
         menuOptions = menuOptions,
