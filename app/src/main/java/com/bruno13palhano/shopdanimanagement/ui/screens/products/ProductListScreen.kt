@@ -1,17 +1,28 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.products
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductListContent
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.ProductListViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProductListScreen(
@@ -37,31 +48,64 @@ fun ProductListScreen(
     }
 
     val menuOptions = mutableListOf(stringResource(id = R.string.all_products_label))
+    val categoryState by viewModel.categoryState.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val orderList by viewModel.orders.collectAsStateWithLifecycle()
     var showCategoryDialog by remember { mutableStateOf(false) }
+    var showContent by remember { mutableStateOf(true) }
     menuOptions.addAll(categories)
 
-    ProductListContent(
-        isEditable = isEditable,
-        categoryId = viewModel.name,
-        showCategoryDialog = showCategoryDialog,
-        itemList = orderList,
-        menuOptions = menuOptions.toTypedArray(),
-        onCategoryChange = viewModel::updateName,
-        onOkClick = { viewModel.updateCategory(categoryId) },
-        onDismissRequest = { showCategoryDialog = false },
-        onItemClick = onItemClick,
-        onSearchClick = onSearchClick,
-        onEditItemClick = { showCategoryDialog = true },
-        onMenuItemClick = { index ->
-            if (index == 0) {
-                viewModel.getAllProducts()
-            } else {
-                viewModel.getProductsByCategory(menuOptions[index])
-            }
-        },
-        onAddButtonClick = onAddButtonClick,
-        navigateUp = navigateUp
-    )
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val errors = getErrors()
+
+    AnimatedVisibility(
+        visible = showContent,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        ProductListContent(
+            snackbarHostState = snackbarHostState,
+            isEditable = isEditable,
+            categoryId = viewModel.name,
+            showCategoryDialog = showCategoryDialog,
+            itemList = orderList,
+            menuOptions = menuOptions.toTypedArray(),
+            onCategoryChange = viewModel::updateName,
+            onOkClick = {
+                viewModel.updateCategory(id = categoryId) {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = errors[it],
+                            withDismissAction = true
+                        )
+                    }
+                }
+            },
+            onDismissRequest = { showCategoryDialog = false },
+            onItemClick = onItemClick,
+            onSearchClick = onSearchClick,
+            onEditItemClick = { showCategoryDialog = true },
+            onMenuItemClick = { index ->
+                if (index == 0) {
+                    viewModel.getAllProducts()
+                } else {
+                    viewModel.getProductsByCategory(menuOptions[index])
+                }
+            },
+            onAddButtonClick = onAddButtonClick,
+            navigateUp = navigateUp
+        )
+    }
+
+    when (categoryState) {
+        UiState.Fail -> { showContent = true }
+
+        UiState.InProgress -> {
+            showContent = false
+            CircularProgress()
+        }
+
+        UiState.Success -> { showContent = true }
+    }
 }

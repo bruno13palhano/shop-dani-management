@@ -11,6 +11,7 @@ import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +27,9 @@ class ProductListViewModel @Inject constructor(
     @CategoryRep private val categoryRepository: CategoryRepository,
     @ProductRep private val productRepository: ProductRepository
 ) : ViewModel() {
+    private var _categoryState = MutableStateFlow<UiState>(UiState.Fail)
+    val categoryState = _categoryState.asStateFlow()
+
     val categories = categoryRepository.getAll()
         .map {
             it.map { category -> category.category }
@@ -51,13 +55,17 @@ class ProductListViewModel @Inject constructor(
         this.name = name
     }
 
-    fun updateCategory(id: Long) {
+    fun updateCategory(id: Long, onError: (error: Int) -> Unit) {
+        _categoryState.value = UiState.InProgress
         val category = Category(id = id, category = name.trim(), timestamp = getCurrentTimestamp())
         viewModelScope.launch {
             categoryRepository.update(
                 model = category,
-                onError = {},
-                onSuccess = {}
+                onError = {
+                    onError(it)
+                    _categoryState.value = UiState.Fail
+                },
+                onSuccess = { _categoryState.value = UiState.Success }
             )
         }
     }
