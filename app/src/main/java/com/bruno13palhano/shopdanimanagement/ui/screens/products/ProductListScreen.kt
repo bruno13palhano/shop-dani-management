@@ -59,6 +59,17 @@ fun ProductListScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getErrors()
 
+    when (categoryState) {
+        UiState.Fail -> { showContent = true }
+
+        UiState.InProgress -> {
+            showContent = false
+            CircularProgress()
+        }
+
+        UiState.Success -> { showContent = true }
+    }
+
     AnimatedVisibility(
         visible = showContent,
         enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
@@ -96,16 +107,5 @@ fun ProductListScreen(
             onAddButtonClick = onAddButtonClick,
             navigateUp = navigateUp
         )
-    }
-
-    when (categoryState) {
-        UiState.Fail -> { showContent = true }
-
-        UiState.InProgress -> {
-            showContent = false
-            CircularProgress()
-        }
-
-        UiState.Success -> { showContent = true }
     }
 }
