@@ -1,6 +1,11 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -64,6 +69,7 @@ fun ItemScreen(
     val orientation = configuration.orientation
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    var showContent by remember { mutableStateOf(true) }
     var datePickerState = rememberDatePickerState()
     var showDatePickerDialog by remember { mutableStateOf(false) }
     var dateOfPaymentPickerState = rememberDatePickerState()
@@ -192,103 +198,112 @@ fun ItemScreen(
         viewModel.purchasePrice
     )
 
-    when (stockItemState) {
-        UiState.Fail -> {
-            ItemContent(
-                screenTitle = screenTitle,
-                snackbarHostState = snackbarHostState,
-                menuItems = menuItems,
-                name = viewModel.name,
-                photo = viewModel.photo,
-                quantity = viewModel.quantity,
-                date = dateFormat.format(viewModel.date),
-                dateOfPayment = dateFormat.format(viewModel.dateOfPayment),
-                purchasePrice = viewModel.purchasePrice,
-                salePrice = viewModel.salePrice,
-                validity = dateFormat.format(viewModel.validity),
-                category = viewModel.category,
-                company = viewModel.company,
-                isPaid = viewModel.isPaid,
-                onQuantityChange = viewModel::updateQuantity,
-                onPurchasePriceChange = viewModel::updatePurchasePrice,
-                onSalePriceChange = viewModel::updateSalePrice,
-                onIsPaidChange = viewModel::updateIsPaid,
-                onDateClick = { showDatePickerDialog = true },
-                onDateOfPaymentClick = { showDateOfPaymentPickerDialog = true },
-                onValidityClick = { showValidityPickerDialog = true },
-                onMoreOptionsItemClick = { index ->
-                    when (index) {
-                        0 -> {
-                            viewModel.deleteStockItem(
-                                stockOrderId = stockItemId,
-                                onError = { error ->
-                                    scope.launch {
-                                        if (error == DataError.DeleteDatabase.error)
-                                            snackbarHostState.showSnackbar(
-                                                message = errors[error],
-                                                withDismissAction = true
-                                            )
+    AnimatedVisibility(
+        visible = showContent,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        ItemContent(
+            screenTitle = screenTitle,
+            snackbarHostState = snackbarHostState,
+            menuItems = menuItems,
+            name = viewModel.name,
+            photo = viewModel.photo,
+            quantity = viewModel.quantity,
+            date = dateFormat.format(viewModel.date),
+            dateOfPayment = dateFormat.format(viewModel.dateOfPayment),
+            purchasePrice = viewModel.purchasePrice,
+            salePrice = viewModel.salePrice,
+            validity = dateFormat.format(viewModel.validity),
+            category = viewModel.category,
+            company = viewModel.company,
+            isPaid = viewModel.isPaid,
+            onQuantityChange = viewModel::updateQuantity,
+            onPurchasePriceChange = viewModel::updatePurchasePrice,
+            onSalePriceChange = viewModel::updateSalePrice,
+            onIsPaidChange = viewModel::updateIsPaid,
+            onDateClick = { showDatePickerDialog = true },
+            onDateOfPaymentClick = { showDateOfPaymentPickerDialog = true },
+            onValidityClick = { showValidityPickerDialog = true },
+            onMoreOptionsItemClick = { index ->
+                when (index) {
+                    0 -> {
+                        viewModel.deleteStockItem(
+                            stockOrderId = stockItemId,
+                            onError = { error ->
+                                scope.launch {
+                                    if (error == DataError.DeleteDatabase.error)
+                                        snackbarHostState.showSnackbar(
+                                            message = errors[error],
+                                            withDismissAction = true
+                                        )
 
-                                        navigateUp()
-                                    }
+                                    navigateUp()
                                 }
-                            )
-                        }
+                            }
+                        )
                     }
-                },
-                onOutsideClick = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus(force = true)
-                },
-                onDoneButtonClick = {
-                    if (isItemNotEmpty) {
-                        if (isEditable) {
-                            viewModel.updateStockItem(
-                                stockItemId = stockItemId,
-                                onError = { error ->
-                                    scope.launch {
-                                        if (error == DataError.UpdateDatabase.error) {
-                                            snackbarHostState.showSnackbar(
-                                                message = errors[error],
-                                                withDismissAction = true
-                                            )
-                                        }
-
-                                        navigateUp()
+                }
+            },
+            onOutsideClick = {
+                keyboardController?.hide()
+                focusManager.clearFocus(force = true)
+            },
+            onDoneButtonClick = {
+                if (isItemNotEmpty) {
+                    if (isEditable) {
+                        viewModel.updateStockItem(
+                            stockItemId = stockItemId,
+                            onError = { error ->
+                                scope.launch {
+                                    if (error == DataError.UpdateDatabase.error) {
+                                        snackbarHostState.showSnackbar(
+                                            message = errors[error],
+                                            withDismissAction = true
+                                        )
                                     }
-                                }
-                            )
-                        } else {
-                            viewModel.insertItems(
-                                productId = productId,
-                                onError = { error ->
-                                    scope.launch {
-                                        if (error == DataError.InsertDatabase.error) {
-                                            snackbarHostState.showSnackbar(
-                                                message = errors[error],
-                                                withDismissAction = true
-                                            )
-                                        }
 
-                                        navigateUp()
-                                    }
+                                    navigateUp()
                                 }
-                            )
-                        }
+                            }
+                        )
                     } else {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = errors[DataError.FillMissingFields.error],
-                                withDismissAction = true
-                            )
-                        }
-                    }
-                },
-                navigateUp = navigateUp
-            )
-        }
+                        viewModel.insertItems(
+                            productId = productId,
+                            onError = { error ->
+                                scope.launch {
+                                    if (error == DataError.InsertDatabase.error) {
+                                        snackbarHostState.showSnackbar(
+                                            message = errors[error],
+                                            withDismissAction = true
+                                        )
+                                    }
 
-        UiState.InProgress -> { CircularProgress() }
+                                    navigateUp()
+                                }
+                            }
+                        )
+                    }
+                } else {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = errors[DataError.FillMissingFields.error],
+                            withDismissAction = true
+                        )
+                    }
+                }
+            },
+            navigateUp = navigateUp
+        )
+    }
+
+    when (stockItemState) {
+        UiState.Fail -> { showContent = true }
+
+        UiState.InProgress -> {
+            showContent = false
+            CircularProgress()
+        }
 
         UiState.Success -> {
             LaunchedEffect(key1 = Unit) { navigateUp() }
