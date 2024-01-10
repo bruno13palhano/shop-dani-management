@@ -1,5 +1,10 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.login
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -67,6 +72,7 @@ fun LoginScreen(
     val loginStatus by viewModel.loginStatus.collectAsStateWithLifecycle()
     val isLoginValid by viewModel.isLoginValid.collectAsStateWithLifecycle()
     var showPassword by remember { mutableStateOf(false) }
+    var showContent by remember { mutableStateOf(true) }
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -80,36 +86,10 @@ fun LoginScreen(
             LaunchedEffect(key1 = Unit) {
                 viewModel.logout()
             }
-            LoginContent(
-                snackbarHostState = snackbarHostState,
-                username = viewModel.username,
-                password = viewModel.password,
-                showPassword = showPassword,
-                onUsernameChange = viewModel::updateUsername,
-                onPasswordChange = viewModel::updatePassword,
-                onShowPasswordChange = { showPassword = it },
-                onOutsideClick = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus(force = true)
-                },
-                onCreateAccountClick = onCreateAccountClick,
-                onLogin = {
-                    if (isLoginValid) {
-                        viewModel.login(
-                            onError = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[it],
-                                        withDismissAction = true
-                                    )
-                                }
-                            }
-                        )
-                    }
-                }
-            )
+            showContent = true
         }
         LoginState.InProgress -> {
+            showContent = false
             CircularProgress()
         }
         LoginState.SignedIn -> {
@@ -117,6 +97,41 @@ fun LoginScreen(
                 onSuccess()
             }
         }
+    }
+
+    AnimatedVisibility(
+        visible = showContent,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        LoginContent(
+            snackbarHostState = snackbarHostState,
+            username = viewModel.username,
+            password = viewModel.password,
+            showPassword = showPassword,
+            onUsernameChange = viewModel::updateUsername,
+            onPasswordChange = viewModel::updatePassword,
+            onShowPasswordChange = { showPassword = it },
+            onOutsideClick = {
+                keyboardController?.hide()
+                focusManager.clearFocus(force = true)
+            },
+            onCreateAccountClick = onCreateAccountClick,
+            onLogin = {
+                if (isLoginValid) {
+                    viewModel.login(
+                        onError = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = errors[it],
+                                    withDismissAction = true
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+        )
     }
 }
 
