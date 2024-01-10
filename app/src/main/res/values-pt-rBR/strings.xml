@@ -182,6 +182,7 @@
     <string name="company_sales_label">Vendas por Empresa</string>
     <string name="avon_company_label">Avon</string>
     <string name="natura_company_label">Natura</string>
+    <string name="boticario_company_label">Boticário</string>
     <string name="amount_of_sales_label">Quantidade de vendas</string>
     <string name="amount_of_items_label">Quantidade de itens</string>
     <string name="amount_of_items_sales_label">Quantidade de itens/vendas</string>
