@@ -77,6 +77,53 @@ fun ItemScreen(
     var validityPickerState = rememberDatePickerState()
     var showValidityPickerDialog by remember { mutableStateOf(false) }
 
+    val menuItems = arrayOf(
+        stringResource(id = R.string.delete_label)
+    )
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val errors = getErrors()
+
+    val expiredTitle = stringResource(id = R.string.stock_expired_item_label)
+    val expiredDescription = stringResource(id = R.string.stock_expired_item_tag, viewModel.name)
+    val debitTitle = stringResource(id = R.string.stock_payment_label)
+    val debitDescription = stringResource(
+        id = R.string.payment_tag,
+        viewModel.name,
+        viewModel.purchasePrice
+    )
+
+    when (stockItemState) {
+        UiState.Fail -> { showContent = true }
+
+        UiState.InProgress -> {
+            showContent = false
+            CircularProgress()
+        }
+
+        UiState.Success -> {
+            LaunchedEffect(key1 = Unit) { navigateUp() }
+
+            if (notifyItem) {
+                setAlarmNotification(
+                    id = stockItemId,
+                    title = debitTitle,
+                    date = viewModel.dateOfPayment,
+                    description = debitDescription,
+                    context = context
+                )
+            }
+
+            setAlarmNotification(
+                id = productId,
+                title = expiredTitle,
+                date = viewModel.validity,
+                description = expiredDescription,
+                context = context
+            )
+        }
+    }
+
     if (showDatePickerDialog) {
         DatePickerDialog(
             onDismissRequest = {
@@ -182,22 +229,6 @@ fun ItemScreen(
         }
     }
 
-    val menuItems = arrayOf(
-        stringResource(id = R.string.delete_label)
-    )
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val errors = getErrors()
-
-    val expiredTitle = stringResource(id = R.string.stock_expired_item_label)
-    val expiredDescription = stringResource(id = R.string.stock_expired_item_tag, viewModel.name)
-    val debitTitle = stringResource(id = R.string.stock_payment_label)
-    val debitDescription = stringResource(
-        id = R.string.payment_tag,
-        viewModel.name,
-        viewModel.purchasePrice
-    )
-
     AnimatedVisibility(
         visible = showContent,
         enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
@@ -295,56 +326,5 @@ fun ItemScreen(
             },
             navigateUp = navigateUp
         )
-    }
-
-    when (stockItemState) {
-        UiState.Fail -> { showContent = true }
-
-        UiState.InProgress -> {
-            showContent = false
-            CircularProgress()
-        }
-
-        UiState.Success -> {
-            LaunchedEffect(key1 = Unit) { navigateUp() }
-
-            if (isEditable) {
-                if (notifyItem) {
-                    setAlarmNotification(
-                        id = stockItemId,
-                        title = debitTitle,
-                        date = viewModel.dateOfPayment,
-                        description = debitDescription,
-                        context = context
-                    )
-                }
-
-                setAlarmNotification(
-                    id = stockItemId,
-                    title = expiredTitle,
-                    date = viewModel.validity,
-                    description = expiredDescription,
-                    context = context
-                )
-            } else {
-                if (notifyItem) {
-                    setAlarmNotification(
-                        id = stockItemId,
-                        title = debitTitle,
-                        date = viewModel.dateOfPayment,
-                        description = debitDescription,
-                        context = context
-                    )
-                }
-
-                setAlarmNotification(
-                    id = productId,
-                    title = expiredTitle,
-                    date = viewModel.validity,
-                    description = expiredDescription,
-                    context = context
-                )
-            }
-        }
     }
 }
