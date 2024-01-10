@@ -110,6 +110,17 @@ fun UserScreen(
         stringResource(id = R.string.change_password_label)
     )
 
+    when (updateState) {
+        UiState.Fail -> { showContent = true }
+
+        UiState.InProgress -> {
+            showContent = false
+            CircularProgress()
+        }
+
+        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+    }
+
     AnimatedVisibility(
         visible = showContent,
         enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
@@ -151,17 +162,6 @@ fun UserScreen(
             },
             navigateUp = navigateUp
         )
-    }
-
-    when (updateState) {
-        UiState.Fail -> { showContent = true }
-
-        UiState.InProgress -> {
-            showContent = false
-            CircularProgress()
-        }
-
-        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
     }
 }
 
