@@ -19,6 +19,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -38,6 +40,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListContent(
+    snackbarHostState: SnackbarHostState,
     isEditable: Boolean,
     categoryId: String,
     showCategoryDialog: Boolean,
@@ -56,6 +59,7 @@ fun ProductListContent(
     var expanded by remember { mutableStateOf(false) }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.products_label)) },

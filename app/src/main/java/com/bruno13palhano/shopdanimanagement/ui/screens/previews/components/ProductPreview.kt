@@ -186,6 +186,7 @@ private fun ProductListDynamicPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductListContent(
+                snackbarHostState = SnackbarHostState(),
                 isEditable = false,
                 showCategoryDialog = true,
                 categoryId = "Perfume",
@@ -217,6 +218,7 @@ private fun ProductListPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             ProductListContent(
+                snackbarHostState = SnackbarHostState(),
                 isEditable = true,
                 showCategoryDialog = true,
                 categoryId = "Perfume",
