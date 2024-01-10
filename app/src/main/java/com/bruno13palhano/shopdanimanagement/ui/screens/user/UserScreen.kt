@@ -2,6 +2,11 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.user
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -95,7 +100,7 @@ fun UserScreen(
         }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-
+    var showContent by remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getUserResponse()
@@ -105,51 +110,56 @@ fun UserScreen(
         stringResource(id = R.string.change_password_label)
     )
 
-    when (updateState) {
-        UiState.Fail -> {
-            UserContent(
-                snackbarHostState = snackbarHostState,
-                menuItems = menuItems,
-                photo = viewModel.photo,
-                username = viewModel.username,
-                email = viewModel.email,
-                role = viewModel.role,
-                onUsernameChange = viewModel::updateUsername,
-                onPhotoClick = { galleryLauncher.launch(arrayOf("image/*")) },
-                onMoreOptionsItemClick = { index ->
-                    when (index) {
-                        0 -> {
-                            onLogoutClick()
-                        }
+    AnimatedVisibility(
+        visible = showContent,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        UserContent(
+            snackbarHostState = snackbarHostState,
+            menuItems = menuItems,
+            photo = viewModel.photo,
+            username = viewModel.username,
+            email = viewModel.email,
+            role = viewModel.role,
+            onUsernameChange = viewModel::updateUsername,
+            onPhotoClick = { galleryLauncher.launch(arrayOf("image/*")) },
+            onMoreOptionsItemClick = { index ->
+                when (index) {
+                    0 -> { onLogoutClick() }
 
-                        1 -> {
-                            onChangePasswordClick()
-                        }
+                    1 -> { onChangePasswordClick() }
 
-                        else -> {}
+                    else -> {}
+                }
+            },
+            onOutsideClick = {
+                keyboardController?.hide()
+                focusManager.clearFocus(force = true)
+            },
+            onDoneClick = {
+                viewModel.updateUser(
+                    onError = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = errors[it],
+                                withDismissAction = true
+                            )
+                        }
                     }
-                },
-                onOutsideClick = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus(force = true)
-                },
-                onDoneClick = {
-                    viewModel.updateUser(
-                        onError = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = errors[it],
-                                    withDismissAction = true
-                                )
-                            }
-                        }
-                    )
-                },
-                navigateUp = navigateUp
-            )
-        }
+                )
+            },
+            navigateUp = navigateUp
+        )
+    }
 
-        UiState.InProgress -> { CircularProgress() }
+    when (updateState) {
+        UiState.Fail -> { showContent = true }
+
+        UiState.InProgress -> {
+            showContent = false
+            CircularProgress()
+        }
 
         UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
     }
