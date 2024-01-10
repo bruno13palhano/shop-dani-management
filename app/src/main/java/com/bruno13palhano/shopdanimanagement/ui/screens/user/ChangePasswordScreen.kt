@@ -1,5 +1,10 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.user
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -69,6 +74,7 @@ fun ChangePasswordScreen(
 
     val updateState by viewModel.updateState.collectAsStateWithLifecycle()
     val isFieldsNotEmpty by viewModel.isFieldsNotEmpty.collectAsStateWithLifecycle()
+    var showContent by remember { mutableStateOf(true) }
     var showNewPassword by remember { mutableStateOf(false) }
     var showRepeatNewPassword by remember { mutableStateOf(false) }
 
@@ -80,49 +86,58 @@ fun ChangePasswordScreen(
     val errors = getUserResponse()
 
     when (updateState) {
-        UiState.Fail -> {
-            ChangePasswordContent(
-                snackbarHostState = snackbarHostState,
-                newPassword = viewModel.newPassword,
-                repeatNewPassword = viewModel.repeatNewPassword,
-                showNewPassword = showNewPassword,
-                showRepeatNewPassword = showRepeatNewPassword,
-                onNewPasswordChange = viewModel::updateNewPassword,
-                onRepeatNewPasswordChange = viewModel::updateRepeatNewPassword,
-                onShowNewPasswordChange = { showNewPassword = it },
-                onShowRepeatNewPasswordChange = { showRepeatNewPassword = it },
-                onOutsideClick = {
-                    keyboardController?.hide()
-                    focusManger.clearFocus(force = true)
-                },
-                onDoneClick = {
-                    if (isFieldsNotEmpty) {
-                        viewModel.changePassword(
-                            onError = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = errors[it],
-                                        withDismissAction = true
-                                    )
-                                }
-                            }
-                        )
-                    } else {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = errors[UserResponse.FillMissingFields.code],
-                                withDismissAction = true
-                            )
-                        }
-                    }
-                },
-                navigateUp = navigateUp
-            )
+        UiState.Fail -> { showContent = true }
+
+        UiState.InProgress -> {
+            showContent = false
+            CircularProgress()
         }
 
-        UiState.InProgress -> { CircularProgress() }
-
         UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+    }
+
+    AnimatedVisibility(
+        visible = showContent,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        ChangePasswordContent(
+            snackbarHostState = snackbarHostState,
+            newPassword = viewModel.newPassword,
+            repeatNewPassword = viewModel.repeatNewPassword,
+            showNewPassword = showNewPassword,
+            showRepeatNewPassword = showRepeatNewPassword,
+            onNewPasswordChange = viewModel::updateNewPassword,
+            onRepeatNewPasswordChange = viewModel::updateRepeatNewPassword,
+            onShowNewPasswordChange = { showNewPassword = it },
+            onShowRepeatNewPasswordChange = { showRepeatNewPassword = it },
+            onOutsideClick = {
+                keyboardController?.hide()
+                focusManger.clearFocus(force = true)
+            },
+            onDoneClick = {
+                if (isFieldsNotEmpty) {
+                    viewModel.changePassword(
+                        onError = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = errors[it],
+                                    withDismissAction = true
+                                )
+                            }
+                        }
+                    )
+                } else {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = errors[UserResponse.FillMissingFields.code],
+                            withDismissAction = true
+                        )
+                    }
+                }
+            },
+            navigateUp = navigateUp
+        )
     }
 }
 
