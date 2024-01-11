@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -22,12 +22,14 @@ class SalesViewModel @Inject constructor(
     val saleList = _saleList
         .map {
             it.map { sale ->
-                CommonItem(
+                ExtendedItem(
                     id = sale.id,
                     photo = sale.photo,
                     title = sale.customerName,
-                    subtitle = sale.name,
-                    description = sale.dateOfSale.toString()
+                    firstSubtitle = sale.name,
+                    secondSubtitle = sale.salePrice.toString(),
+                    description = sale.dateOfSale.toString(),
+                    footer = sale.company
                 )
             }
         }
