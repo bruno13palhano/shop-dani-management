@@ -38,7 +38,10 @@ class ProductViewModel @Inject constructor(
     private val companiesCheck = listOf(
         CompanyCheck(Company.AVON, true),
         CompanyCheck(Company.NATURA, false),
-        CompanyCheck(Company.BOTICARIO, false)
+        CompanyCheck(Company.BOTICARIO, false),
+        CompanyCheck(Company.EUDORA, false),
+        CompanyCheck(Company.BERENICE, false),
+        CompanyCheck(Company.OUI, false)
     )
     var name by mutableStateOf("")
         private set
