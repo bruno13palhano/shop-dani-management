@@ -36,7 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
 
@@ -110,7 +110,7 @@ fun SalesScreen(
 fun SalesContent(
     isOrders: Boolean,
     screenTitle: String,
-    saleList: List<CommonItem>,
+    saleList: List<ExtendedItem>,
     menuItems: Array<String>,
     onItemClick: (id: Long) -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
@@ -172,13 +172,18 @@ fun SalesContent(
             modifier = Modifier
                 .semantics { contentDescription = "List of items" }
                 .padding(it),
-            contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
+            contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp),
+            reverseLayout = true
         ) {
             items(items = saleList, key = { item -> item.id }) { item ->
                 HorizontalItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
                     title = item.title,
-                    subtitle = item.subtitle,
+                    subtitle = stringResource(
+                        id = R.string.product_price_text_tag,
+                        item.firstSubtitle,
+                        item.secondSubtitle
+                    ),
                     description = stringResource(
                         id = R.string.date_of_sale_tag,
                         dateFormat.format(item.description.toLong())
