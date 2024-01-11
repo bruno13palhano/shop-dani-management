@@ -25,8 +25,8 @@ class SalesViewModel @Inject constructor(
                 CommonItem(
                     id = sale.id,
                     photo = sale.photo,
-                    title = sale.name,
-                    subtitle = sale.company,
+                    title = sale.customerName,
+                    subtitle = sale.name,
                     description = sale.dateOfSale.toString()
                 )
             }
