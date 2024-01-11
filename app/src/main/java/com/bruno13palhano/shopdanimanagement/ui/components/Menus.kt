@@ -35,7 +35,6 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -125,12 +124,8 @@ fun DrawerMenu(
                         items = items
                     ) { screen ->
                         NavigationDrawerItem(
-                            icon = {
-                                Icon(imageVector = screen.icon, contentDescription = null)
-                            },
-                            label = {
-                                Text(text = stringResource(id = screen.resourceId))
-                            },
+                            icon = { Icon(imageVector = screen.icon, contentDescription = null) },
+                            label = { Text(text = stringResource(id = screen.resourceId)) },
                             selected = currentDestination?.hierarchy?.any { destination ->
                                 destination.route == screen.route
                             } == true,
@@ -147,7 +142,7 @@ fun DrawerMenu(
                                     drawerState.close()
                                 }
                             },
-                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                            modifier = Modifier.padding(4.dp)
                         )
                     }
                 }
