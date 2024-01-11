@@ -9,7 +9,7 @@ import com.bruno13palhano.shopdanimanagement.makeRandomStockItem
 import com.bruno13palhano.shopdanimanagement.repository.TestCategoryRepository
 import com.bruno13palhano.shopdanimanagement.repository.TestStockRepository
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf

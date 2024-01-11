@@ -9,8 +9,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockSearchScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen

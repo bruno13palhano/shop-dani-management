@@ -15,7 +15,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialInfoS
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.ItemScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.ItemScreen
 
 fun NavGraphBuilder.financialNavGraph(
     navController: NavController,

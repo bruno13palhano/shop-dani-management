@@ -8,11 +8,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.ItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockSearchScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.ItemScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockSearchScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.StockScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockScreen
 
 fun NavGraphBuilder.stockNavGraph(
     navController: NavController,

@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders
+package com.bruno13palhano.shopdanimanagement.ui.screens.stock
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
@@ -37,7 +37,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.currentDate
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.setAlarmNotification
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockItemViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockItemViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

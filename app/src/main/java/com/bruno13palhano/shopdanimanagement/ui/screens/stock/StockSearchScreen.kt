@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.screens.stockorders
+package com.bruno13palhano.shopdanimanagement.ui.screens.stock
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.ui.components.SearchContent
-import com.bruno13palhano.shopdanimanagement.ui.screens.stockorders.viewmodel.StockSearchViewModel
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockSearchViewModel
 
 @Composable
 fun StockSearchScreen(
