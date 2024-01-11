@@ -34,6 +34,9 @@ class SalesByCompanyViewModel @Inject constructor(
                 val avonEntries = mutableListOf<Pair<String, Float>>()
                 val naturaEntries = mutableListOf<Pair<String, Float>>()
                 val boticarioEntries = mutableListOf<Pair<String, Float>>()
+                val eudoraEntries = mutableListOf<Pair<String, Float>>()
+                val bereniceEntries = mutableListOf<Pair<String, Float>>()
+                val ouiEntries = mutableListOf<Pair<String, Float>>()
 
                 days = Array(rangeOfDays) { 0 }
                 it.filter { sale -> sale.company == Company.AVON.company }
@@ -50,6 +53,21 @@ class SalesByCompanyViewModel @Inject constructor(
                     .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
                 setChartEntries(boticarioEntries, days)
 
+                days = Array(rangeOfDays) { 0 }
+                it.filter { sale -> sale.company == Company.EUDORA.company }
+                    .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
+                setChartEntries(eudoraEntries, days)
+
+                days = Array(rangeOfDays) { 0 }
+                it.filter { sale -> sale.company == Company.BERENICE.company }
+                    .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
+                setChartEntries(bereniceEntries, days)
+
+                days = Array(rangeOfDays) { 0 }
+                it.filter { sale -> sale.company == Company.OUI.company }
+                    .map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
+                setChartEntries(ouiEntries, days)
+
                 _chartEntry.value = SalesCompanyEntries(
                     avonEntries = avonEntries,
                     naturaEntries = naturaEntries,
@@ -62,6 +80,9 @@ class SalesByCompanyViewModel @Inject constructor(
     data class SalesCompanyEntries(
         val avonEntries: List<Pair<String, Float>> = listOf(),
         val naturaEntries: List<Pair<String, Float>> = listOf(),
-        val boticarioEntries: List<Pair<String, Float>> = listOf()
+        val boticarioEntries: List<Pair<String, Float>> = listOf(),
+        val eudoraEntries: List<Pair<String, Float>> = listOf(),
+        val bereniceEntries: List<Pair<String, Float>> = listOf(),
+        val ouiEntries: List<Pair<String, Float>> = listOf()
     )
 }

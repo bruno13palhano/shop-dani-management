@@ -45,6 +45,15 @@ fun SalesByCompanyScreen(
             },
             salesByCompanyEntries.boticarioEntries.mapIndexed { index, (date, y) ->
                 DateChartEntry(date, index.toFloat(), y)
+            },
+            salesByCompanyEntries.eudoraEntries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            },
+            salesByCompanyEntries.bereniceEntries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            },
+            salesByCompanyEntries.ouiEntries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
             }
         )
     }
@@ -56,7 +65,10 @@ fun SalesByCompanyScreen(
         entityColors = listOf(
             MaterialTheme.colorScheme.primary,
             MaterialTheme.colorScheme.tertiary,
-            MaterialTheme.colorScheme.secondary
+            MaterialTheme.colorScheme.secondary,
+            MaterialTheme.colorScheme.error,
+            MaterialTheme.colorScheme.errorContainer,
+            MaterialTheme.colorScheme.inversePrimary
         ),
         entry = chart,
         legends = listOf(
@@ -71,6 +83,18 @@ fun SalesByCompanyScreen(
             Pair(
                 stringResource(id = R.string.boticario_company_label),
                 Color.toArgb(MaterialTheme.colorScheme.secondary.value.toLong())
+            ),
+            Pair(
+                stringResource(id = R.string.eudora_company_label),
+                Color.toArgb(MaterialTheme.colorScheme.error.value.toLong())
+            ),
+            Pair(
+                stringResource(id = R.string.berenice_company_label),
+                Color.toArgb(MaterialTheme.colorScheme.errorContainer.value.toLong())
+            ),
+            Pair(
+                stringResource(id = R.string.oui_company_label),
+                Color.toArgb(MaterialTheme.colorScheme.inversePrimary.value.toLong())
             )
         ),
         menuOptions = menuOptions,
