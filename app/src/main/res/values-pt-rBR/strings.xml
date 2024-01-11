@@ -204,8 +204,8 @@
     <string name="liquid_profit_tag">Lucro líquido, %.2fR$.</string>
     <string name="value_tag">R$ %.2f</string>
     <string name="value_text_tag">R$ %s</string>
-    <string name="product_price_tag">%s, R$ %.2f</string>
-    <string name="product_price_text_tag">%s, R$ %s</string>
+    <string name="product_price_tag">%s, R$%.2f</string>
+    <string name="product_price_text_tag">%s, R$%s</string>
     <string name="total_sales_value_tag">Valor total de vendas, R$ %.2f</string>
     <string name="total_sales_text_value_tag">Valor total de vendas, R$ %s</string>
     <string name="customer_debit_tag">Débito de R$ %s.</string>
