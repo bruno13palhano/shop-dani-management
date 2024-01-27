@@ -107,6 +107,7 @@ fun StockListContent(
                 .semantics { contentDescription = "List of items" }
                 .padding(it),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+            reverseLayout = true
         ) {
             items(items = itemList, key = { item -> item.id }) { item ->
                 HorizontalItemList(
