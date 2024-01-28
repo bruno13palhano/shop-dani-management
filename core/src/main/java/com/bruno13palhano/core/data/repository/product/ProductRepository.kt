@@ -22,4 +22,5 @@ interface ProductRepository : RepositoryOperations<Product>, Syncable {
      * @return a [Flow] containing a [List] of all the products referring to the category.
      */
     fun getByCategory(category: String): Flow<List<Product>>
+    fun getByCode(code: String): Flow<Product>
 }
