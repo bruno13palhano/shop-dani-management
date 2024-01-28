@@ -32,6 +32,10 @@ getById:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
 FROM product P INNER JOIN ProductCategoriesTable PC ON P.id = PC.productId WHERE P.id = :produtId;
 
+getByCode:
+SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
+FROM product P INNER JOIN ProductCategoriesTable PC ON P.id = PC.productId WHERE P.code = :code;
+
 getLast:
 SELECT P.id, P.name, P.code, P.description, P.photo, P.date, PC.categories, P.company, P.timestamp
 FROM product P INNER JOIN ProductCategoriesTable PC ON P.id = PC.productId
