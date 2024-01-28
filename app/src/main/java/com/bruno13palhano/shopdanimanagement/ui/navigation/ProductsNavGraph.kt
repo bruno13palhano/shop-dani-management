@@ -61,6 +61,7 @@ fun NavGraphBuilder.productsNavGraph(
                             route = "${ProductsDestinations.PRODUCTS_PRODUCT_ROUTE}/$categoryId/${false}"
                         )
                     },
+                    showBottomMenu = showBottomMenu,
                     navigateUp = { navController.navigateUp() }
                 )
             }

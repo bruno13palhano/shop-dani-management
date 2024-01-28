@@ -102,6 +102,7 @@ fun NavGraphBuilder.salesNavGraph(
                     )
                 },
                 onAddButtonClick = {},
+                showBottomMenu = showBottomMenu,
                 navigateUp = { navController.navigateUp() }
             )
         }

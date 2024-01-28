@@ -72,6 +72,7 @@ fun NavGraphBuilder.stockNavGraph(
                     )
                 },
                 onAddButtonClick = {},
+                showBottomMenu = showBottomMenu,
                 navigateUp = { navController.navigateUp() }
             )
         }
