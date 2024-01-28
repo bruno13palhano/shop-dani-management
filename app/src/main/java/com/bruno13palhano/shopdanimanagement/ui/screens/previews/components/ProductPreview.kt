@@ -198,6 +198,7 @@ private fun ProductListDynamicPreview() {
                 onItemClick = {},
                 onSearchClick = {},
                 onEditItemClick = {},
+                onBarcodeClick = {},
                 onMenuItemClick = {},
                 onAddButtonClick = {},
                 navigateUp = {}
@@ -230,6 +231,7 @@ private fun ProductListPreview() {
                 onItemClick = {},
                 onSearchClick = {},
                 onEditItemClick = {},
+                onBarcodeClick = {},
                 onMenuItemClick = {},
                 onAddButtonClick = {},
                 navigateUp = {}
