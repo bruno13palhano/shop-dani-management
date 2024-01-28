@@ -19,6 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductListContent
+import com.bruno13palhano.shopdanimanagement.ui.components.BarcodeReader
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.ProductListViewModel
@@ -31,6 +32,7 @@ fun ProductListScreen(
     onItemClick: (id: Long) -> Unit,
     onSearchClick: () -> Unit,
     onAddButtonClick: () -> Unit,
+    showBottomMenu: (show: Boolean) -> Unit,
     navigateUp: () -> Unit,
     viewModel: ProductListViewModel = hiltViewModel()
 ) {
@@ -53,6 +55,7 @@ fun ProductListScreen(
     val orderList by viewModel.orders.collectAsStateWithLifecycle()
     var showCategoryDialog by remember { mutableStateOf(false) }
     var showContent by remember { mutableStateOf(true) }
+    var showBarcodeReader by remember { mutableStateOf(false) }
     menuOptions.addAll(categories)
 
     val scope = rememberCoroutineScope()
@@ -71,10 +74,29 @@ fun ProductListScreen(
     }
 
     AnimatedVisibility(
+        visible = showBarcodeReader,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        showContent = false
+        showBottomMenu(false)
+        BarcodeReader(
+            onBarcodeChange = { code ->
+                if(code.isNotEmpty()) {
+                    showBarcodeReader = false
+                    //Implement other functionalities
+                }
+            },
+            onClose = { showBarcodeReader = false }
+        )
+    }
+
+    AnimatedVisibility(
         visible = showContent,
         enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
         exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
     ) {
+        showBottomMenu(true)
         ProductListContent(
             snackbarHostState = snackbarHostState,
             isEditable = isEditable,
@@ -97,6 +119,7 @@ fun ProductListScreen(
             onItemClick = onItemClick,
             onSearchClick = onSearchClick,
             onEditItemClick = { showCategoryDialog = true },
+            onBarcodeClick = { showBarcodeReader = true },
             onMenuItemClick = { index ->
                 if (index == 0) {
                     viewModel.getAllProducts()
