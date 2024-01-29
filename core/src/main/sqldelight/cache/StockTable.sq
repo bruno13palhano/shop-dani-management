@@ -56,6 +56,12 @@ SELECT S.id, P.id, P.name, P.photo, S.date, S.dateOfPayment, S.validity, S.quant
 FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
 ON(P.id = PC.productId AND P.id = S.productId) WHERE S.id = :id;
 
+getByCode:
+SELECT S.id, P.id, P.name, P.photo, S.date, S.dateOfPayment, S.validity, S.quantity, PC.categories,
+    P.company, S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
+FROM product P INNER JOIN StockTable S INNER JOIN ProductCategoriesTable PC
+ON(P.id = PC.productId AND P.id = S.productId) WHERE P.code = :code;
+
 getLast:
 SELECT S.id, P.id, P.name, P.photo, S.date, S.dateOfPayment, S.validity, S.quantity, PC.categories,
     P.company, S.purchasePrice, S.salePrice, S.isPaid, S.timestamp
