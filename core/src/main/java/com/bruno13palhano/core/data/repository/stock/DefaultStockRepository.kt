@@ -104,6 +104,10 @@ internal class DefaultStockRepository @Inject constructor(
         return stockData.getByCategory(category = category)
     }
 
+    override fun getByCode(code: String): Flow<List<StockItem>> {
+        return stockData.getByCode(code = code)
+    }
+
     override suspend fun updateStockQuantity(id: Long, quantity: Int, timestamp: String) {
         stockData.updateStockQuantity(id = id, quantity = quantity)
     }

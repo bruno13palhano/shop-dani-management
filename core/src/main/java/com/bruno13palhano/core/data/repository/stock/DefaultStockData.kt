@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import javax.inject.Inject
 
-class DefaultStockData @Inject constructor(
+internal class DefaultStockData @Inject constructor(
     private val stockOrderQueries: StockTableQueries,
     private val versionQueries: VersionTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
@@ -124,6 +124,11 @@ class DefaultStockData @Inject constructor(
 
     override fun getItems(): Flow<List<StockItem>> {
         return stockOrderQueries.getItems(mapper = ::mapStockOrder).asFlow().mapToList(ioDispatcher)
+    }
+
+    override fun getByCode(code: String): Flow<List<StockItem>> {
+        return stockOrderQueries.getByCode(code = code, mapper = ::mapStockOrder)
+            .asFlow().mapToList(ioDispatcher)
     }
 
     override fun search(value: String): Flow<List<StockItem>> {

@@ -19,6 +19,7 @@ interface StockData : DataOperations<StockItem> {
         onSuccess: () -> Unit
     )
     fun getItems(): Flow<List<StockItem>>
+    fun getByCode(code: String): Flow<List<StockItem>>
     fun search(value: String): Flow<List<StockItem>>
     fun getByCategory(category: String): Flow<List<StockItem>>
     suspend fun updateStockQuantity(id: Long, quantity: Int)
