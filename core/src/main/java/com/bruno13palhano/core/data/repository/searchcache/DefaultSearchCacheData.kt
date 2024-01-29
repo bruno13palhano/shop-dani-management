@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class DefaultSearchCacheData @Inject constructor(
+internal class DefaultSearchCacheData @Inject constructor(
     private val searchQueries: SearchCacheTableQueries,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SearchCacheData {
