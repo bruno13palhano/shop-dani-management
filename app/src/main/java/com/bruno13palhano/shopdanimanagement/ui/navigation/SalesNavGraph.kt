@@ -82,6 +82,7 @@ fun NavGraphBuilder.salesNavGraph(
                     navController.navigate(route = SalesDestinations.SALES_SEARCH_STOCK_ROUTE)
                 },
                 onAddButtonClick = {},
+                showBottomMenu = showBottomMenu,
                 navigateUp = { navController.navigateUp() }
             )
         }

@@ -40,6 +40,7 @@ fun NavGraphBuilder.stockNavGraph(
                 onAddButtonClick = {
                     navController.navigate(route = StockDestinations.STOCK_ITEM_LIST_ROUTE)
                 },
+                showBottomMenu = showBottomMenu,
                 navigateUp = { navController.navigateUp() }
             )
         }
