@@ -1,12 +1,21 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.stock
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.BarcodeReader
 import com.bruno13palhano.shopdanimanagement.ui.components.StockListContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockViewModel
 
@@ -17,6 +26,7 @@ fun StockScreen(
     onItemClick: (id: Long) -> Unit,
     onSearchClick: () -> Unit,
     onAddButtonClick: () -> Unit,
+    showBottomMenu: (show: Boolean) -> Unit,
     navigateUp: () -> Unit,
     viewModel: StockViewModel = hiltViewModel()
 ) {
@@ -30,27 +40,64 @@ fun StockScreen(
 
     val stockList by viewModel.stockList.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
+    var showContent by remember { mutableStateOf(true) }
+    var showBarcodeReader by remember { mutableStateOf(false) }
     menuOptions.addAll(categories)
 
-    StockListContent(
-        isAddButtonEnabled = isAddButtonEnabled,
-        screenTitle = screenTitle,
-        itemList = stockList,
-        menuOptions = menuOptions.toTypedArray(),
-        onItemClick = onItemClick,
-        onSearchClick = onSearchClick,
-        onMenuItemClick = { index ->
-            when (index) {
-                0 -> {
-                    viewModel.getItems()
+    AnimatedVisibility(
+        visible = showContent,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        showBottomMenu(true)
+        StockListContent(
+            isAddButtonEnabled = isAddButtonEnabled,
+            screenTitle = screenTitle,
+            itemList = stockList,
+            menuOptions = menuOptions.toTypedArray(),
+            onItemClick = onItemClick,
+            onSearchClick = onSearchClick,
+            onBarcodeClick = {
+                showContent = false
+                showBarcodeReader = true
+            },
+            onMenuItemClick = { index ->
+                when (index) {
+                    0 -> {
+                        viewModel.getItems()
+                    }
+
+                    1 -> {
+                        viewModel.getOutOfStock()
+                    }
+
+                    else -> {
+                        viewModel.getItemsByCategories(menuOptions[index])
+                    }
                 }
-                1 -> { viewModel.getOutOfStock() }
-                else -> {
-                    viewModel.getItemsByCategories(menuOptions[index])
+            },
+            onAddButtonClick = onAddButtonClick,
+            navigateUp = navigateUp
+        )
+    }
+
+    AnimatedVisibility(
+        visible = showBarcodeReader,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        showBottomMenu(false)
+        BarcodeReader(
+            onBarcodeChange = { code ->
+                if(code.isNotEmpty()) {
+                    showBarcodeReader = false
+                    showContent = true
                 }
+            },
+            onClose = {
+                showBarcodeReader = false
+                showContent = true
             }
-        },
-        onAddButtonClick = onAddButtonClick,
-        navigateUp = navigateUp
-    )
+        )
+    }
 }

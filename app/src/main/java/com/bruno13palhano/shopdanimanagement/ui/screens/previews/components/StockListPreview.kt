@@ -30,6 +30,7 @@ fun StockListDynamicPreview() {
                 menuOptions = arrayOf(),
                 onItemClick = {},
                 onSearchClick = {},
+                onBarcodeClick = {},
                 onMenuItemClick = {},
                 onAddButtonClick = {},
                 navigateUp = {}
@@ -56,6 +57,7 @@ fun StockListItemPreview() {
                 menuOptions = arrayOf(),
                 onItemClick = {},
                 onSearchClick = {},
+                onBarcodeClick = {},
                 onMenuItemClick = {},
                 onAddButtonClick = {},
                 navigateUp = {}
