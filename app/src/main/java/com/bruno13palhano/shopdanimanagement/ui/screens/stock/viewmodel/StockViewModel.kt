@@ -85,4 +85,20 @@ class StockViewModel @Inject constructor(
             }
         }
     }
+
+    fun getItemsByCode(code: String) {
+        viewModelScope.launch {
+            stockRepository.getByCode(code = code).collect {
+                _stockList.value = it.map { stockItem ->
+                    Stock(
+                        id = stockItem.id,
+                        name = stockItem.name,
+                        photo = stockItem.photo,
+                        purchasePrice = stockItem.purchasePrice,
+                        quantity = stockItem.quantity
+                    )
+                }
+            }
+        }
+    }
 }
