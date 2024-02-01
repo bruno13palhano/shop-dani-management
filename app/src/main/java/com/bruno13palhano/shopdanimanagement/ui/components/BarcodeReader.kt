@@ -8,11 +8,14 @@ import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -74,7 +77,6 @@ fun BarcodeReader(
                     (barcodeResults.size == 0) ||
                     (barcodeResults.first() == null)
                 ) {
-                    previewView.overlay.clear()
                     return@MlKitAnalyzer
                 }
 
@@ -84,8 +86,6 @@ fun BarcodeReader(
                         true
                     }
                 }
-
-                previewView.overlay.clear()
             }
         )
         IconButton(
@@ -99,6 +99,23 @@ fun BarcodeReader(
                 contentDescription = stringResource(id = R.string.cancel_label)
             )
         }
+
+        VerticalDivider(
+            modifier = Modifier
+                .padding(start = 40.dp)
+                .height(144.dp)
+                .align(Alignment.CenterStart),
+            thickness = 2.dp,
+            color = MaterialTheme.colorScheme.primary
+        )
+        VerticalDivider(
+            modifier = Modifier
+                .padding(end = 40.dp)
+                .height(144.dp)
+                .align(Alignment.CenterEnd),
+            thickness = 2.dp,
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
