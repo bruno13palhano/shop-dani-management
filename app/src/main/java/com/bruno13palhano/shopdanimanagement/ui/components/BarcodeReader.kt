@@ -60,7 +60,7 @@ fun BarcodeReader(
         )
 
         val options = BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
+            .setBarcodeFormats(Barcode.FORMAT_EAN_13)
             .build()
         val barcodeScanner = BarcodeScanning.getClient(options)
 
@@ -82,6 +82,7 @@ fun BarcodeReader(
 
                 if (Barcode.TYPE_PRODUCT == barcodeResults[0].valueType) {
                     previewView.setOnTouchListener { _, _ ->
+                        println("code value: ${barcodeResults[0].rawValue.toString()}")
                         onBarcodeClick(barcodeResults[0].rawValue.toString())
                         true
                     }
