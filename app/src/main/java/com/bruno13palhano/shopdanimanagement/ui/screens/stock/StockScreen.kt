@@ -88,7 +88,7 @@ fun StockScreen(
     ) {
         showBottomMenu(false)
         BarcodeReader(
-            onBarcodeChange = { code ->
+            onBarcodeClick = { code ->
                 if(code.isNotEmpty()) {
                     viewModel.getItemsByCode(code = code)
                     showBarcodeReader = false

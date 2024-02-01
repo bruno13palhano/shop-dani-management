@@ -81,10 +81,9 @@ fun ProductListScreen(
         showContent = false
         showBottomMenu(false)
         BarcodeReader(
-            onBarcodeChange = { code ->
+            onBarcodeClick = { code ->
                 if(code.isNotEmpty()) {
                     showBarcodeReader = false
-                    //Implement other functionalities
                 }
             },
             onClose = { showBarcodeReader = false }

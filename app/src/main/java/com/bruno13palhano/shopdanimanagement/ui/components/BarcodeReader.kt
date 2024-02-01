@@ -35,7 +35,7 @@ import java.util.concurrent.Executors
 @androidx.annotation.OptIn(ExperimentalGetImage::class)
 @Composable
 fun BarcodeReader(
-    onBarcodeChange: (code: String) -> Unit,
+    onBarcodeClick: (code: String) -> Unit,
     onClose: () -> Unit
 ) {
     val context = LocalContext.current
@@ -79,7 +79,10 @@ fun BarcodeReader(
                 }
 
                 if (Barcode.TYPE_PRODUCT == barcodeResults[0].valueType) {
-                    onBarcodeChange(barcodeResults[0].rawValue.toString())
+                    previewView.setOnTouchListener { _, _ ->
+                        onBarcodeClick(barcodeResults[0].rawValue.toString())
+                        true
+                    }
                 }
 
                 previewView.overlay.clear()
