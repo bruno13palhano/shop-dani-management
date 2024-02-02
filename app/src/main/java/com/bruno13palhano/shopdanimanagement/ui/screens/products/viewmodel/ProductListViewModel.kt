@@ -109,4 +109,12 @@ class ProductListViewModel @Inject constructor(
             }
         }
     }
+
+    fun getProductsByCode(code: String) {
+        viewModelScope.launch {
+            productRepository.getByCode(code = code).collect {
+
+            }
+        }
+    }
 }
