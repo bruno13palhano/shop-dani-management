@@ -82,7 +82,6 @@ fun BarcodeReader(
 
                 if (Barcode.TYPE_PRODUCT == barcodeResults[0].valueType) {
                     previewView.setOnTouchListener { _, _ ->
-                        println("code value: ${barcodeResults[0].rawValue.toString()}")
                         onBarcodeClick(barcodeResults[0].rawValue.toString())
                         true
                     }
