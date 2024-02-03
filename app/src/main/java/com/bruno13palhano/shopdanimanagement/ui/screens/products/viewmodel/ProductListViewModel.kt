@@ -113,7 +113,15 @@ class ProductListViewModel @Inject constructor(
     fun getProductsByCode(code: String) {
         viewModelScope.launch {
             productRepository.getByCode(code = code).collect {
-
+                _orders.value = it.map { product ->
+                    CommonItem(
+                        id = product.id,
+                        photo = product.photo,
+                        title = product.name,
+                        subtitle = product.company,
+                        description = product.date.toString()
+                    )
+                }
             }
         }
     }
