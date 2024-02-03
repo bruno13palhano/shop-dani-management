@@ -63,14 +63,18 @@ fun ProductListScreen(
     val errors = getErrors()
 
     when (categoryState) {
-        UiState.Fail -> { showContent = true }
+        UiState.Fail -> {
+            showContent = !showBarcodeReader
+        }
 
         UiState.InProgress -> {
             showContent = false
             CircularProgress()
         }
 
-        UiState.Success -> { showContent = true }
+        UiState.Success -> {
+            showContent = !showBarcodeReader
+        }
     }
 
     AnimatedVisibility(
@@ -78,15 +82,19 @@ fun ProductListScreen(
         enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
         exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
     ) {
-        showContent = false
         showBottomMenu(false)
         BarcodeReader(
             onBarcodeClick = { code ->
                 if(code.isNotEmpty()) {
+                    viewModel.getProductsByCode(code = code)
                     showBarcodeReader = false
+                    showContent = true
                 }
             },
-            onClose = { showBarcodeReader = false }
+            onClose = {
+                showBarcodeReader = false
+                showContent = true
+            }
         )
     }
 
@@ -118,7 +126,7 @@ fun ProductListScreen(
             onItemClick = onItemClick,
             onSearchClick = onSearchClick,
             onEditItemClick = { showCategoryDialog = true },
-            onBarcodeClick = { showBarcodeReader = true },
+            onBarcodeClick = { showBarcodeReader = true; showContent = false },
             onMenuItemClick = { index ->
                 if (index == 0) {
                     viewModel.getAllProducts()
