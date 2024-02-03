@@ -95,7 +95,7 @@ internal class DefaultProductRepository @Inject constructor(
         return productData.getByCategory(category = category)
     }
 
-    override fun getByCode(code: String): Flow<Product> {
+    override fun getByCode(code: String): Flow<List<Product>> {
         return productData.getByCode(code = code)
     }
 

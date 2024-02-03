@@ -21,5 +21,5 @@ interface ProductData : DataOperations<Product> {
     fun search(value: String): Flow<List<Product>>
     fun searchPerCategory(value: String ,categoryId: Long): Flow<List<Product>>
     fun getByCategory(category: String): Flow<List<Product>>
-    fun getByCode(code: String): Flow<Product>
+    fun getByCode(code: String): Flow<List<Product>>
 }

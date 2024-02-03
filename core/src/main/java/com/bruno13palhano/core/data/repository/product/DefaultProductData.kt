@@ -204,10 +204,9 @@ internal class DefaultProductData @Inject constructor(
             .catch { it.printStackTrace() }
     }
 
-    override fun getByCode(code: String): Flow<Product> {
+    override fun getByCode(code: String): Flow<List<Product>> {
         return productQueries.getByCode(code = code, mapper = ::mapProduct)
-            .asFlow().mapToOne(ioDispatcher)
-            .catch { it.printStackTrace() }
+            .asFlow().mapToList(ioDispatcher)
     }
 
     override fun getLast(): Flow<Product> {
