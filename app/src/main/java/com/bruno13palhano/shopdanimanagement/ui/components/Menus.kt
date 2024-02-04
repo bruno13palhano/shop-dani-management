@@ -3,29 +3,28 @@ package com.bruno13palhano.shopdanimanagement.ui.components
 import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlaylistAdd
-import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -92,38 +91,30 @@ fun DrawerMenu(
         gesturesEnabled = gesturesEnabled,
         drawerContent = {
             ModalDrawerSheet(
+                modifier = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    Modifier.fillMaxWidth(.78F)
+                } else {
+                    Modifier
+                },
                 drawerShape = RectangleShape
             ) {
                 LazyColumn {
                     stickyHeader {
-                        Card(
-                            modifier = Modifier.padding(bottom = 16.dp),
-                            shape = RectangleShape
-                        ) {
-                            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                                Image(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .fillMaxWidth()
-                                        .sizeIn(minHeight = 208.dp),
-                                    imageVector = Icons.Filled.Image,
-                                    contentDescription = stringResource(id = R.string.app_logo_label)
-                                )
-                            }
-                            Text(
-                                modifier = Modifier
-                                    .padding(vertical = 16.dp)
-                                    .fillMaxWidth(),
-                                text = stringResource(id = R.string.app_name),
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                        }
+                        Text(
+                            modifier = Modifier
+                                .padding(24.dp)
+                                .fillMaxWidth(),
+                            text = stringResource(id = R.string.app_name),
+                            textAlign = TextAlign.Start,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        HorizontalDivider()
                     }
                     items(
                         items = items
                     ) { screen ->
                         NavigationDrawerItem(
+                            shape = RoundedCornerShape(0, 50, 50, 0),
                             icon = { Icon(imageVector = screen.icon, contentDescription = null) },
                             label = { Text(text = stringResource(id = screen.resourceId)) },
                             selected = currentDestination?.hierarchy?.any { destination ->
@@ -142,7 +133,9 @@ fun DrawerMenu(
                                     drawerState.close()
                                 }
                             },
-                            modifier = Modifier.padding(4.dp)
+                            modifier = Modifier
+                                .padding(top = 4.dp, bottom = 4.dp, end = 8.dp)
+                                .height(52.dp)
                         )
                     }
                 }
