@@ -8,10 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.List
@@ -171,167 +170,182 @@ fun HomeContent(
             } catch (ignored: Exception) { "0" }
         }
 
-        Column(modifier = Modifier
-            .padding(it)
-            .verticalScroll(rememberScrollState())
-        ) {
-            val dots = stringResource(id = R.string.dots_label)
-            Row(
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 8.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
+        val dots = stringResource(id = R.string.dots_label)
+
+        LazyColumn(modifier = Modifier.padding(it)) {
+            item {
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1F, true)
+                        .padding(top = 16.dp, bottom = 8.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
-                        text = stringResource(id = R.string.profit_label),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        text = if(showProfit) {
-                            stringResource(id = R.string.value_tag, homeInfo.profit)
-                        } else {
-                            stringResource(id = R.string.value_text_tag, dots)
-                        },
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Text(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        text = if (showProfit) {
-                            stringResource(id = R.string.total_sales_value_tag, homeInfo.sales)
-                        } else {
-                            stringResource(id = R.string.total_sales_text_value_tag, dots)
-                        },
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-                IconButton(
-                    modifier = Modifier.padding(end = 8.dp),
-                    onClick = { onShowProfitChange(!showProfit) }
-                ) {
-                    if (showProfit) {
-                        Icon(
-                            imageVector = Icons.Filled.Visibility,
-                            contentDescription = stringResource(id = R.string.show_label)
+                            .weight(1F, true)
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
+                            text = stringResource(id = R.string.profit_label),
+                            style = MaterialTheme.typography.titleMedium
                         )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Filled.VisibilityOff,
-                            contentDescription = stringResource(id = R.string.hide_label)
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            text = if (showProfit) {
+                                stringResource(id = R.string.value_tag, homeInfo.profit)
+                            } else {
+                                stringResource(id = R.string.value_text_tag, dots)
+                            },
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            text = if (showProfit) {
+                                stringResource(id = R.string.total_sales_value_tag, homeInfo.sales)
+                            } else {
+                                stringResource(id = R.string.total_sales_text_value_tag, dots)
+                            },
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                    IconButton(
+                        modifier = Modifier.padding(end = 8.dp),
+                        onClick = { onShowProfitChange(!showProfit) }
+                    ) {
+                        if (showProfit) {
+                            Icon(
+                                imageVector = Icons.Filled.Visibility,
+                                contentDescription = stringResource(id = R.string.show_label)
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Filled.VisibilityOff,
+                                contentDescription = stringResource(id = R.string.hide_label)
+                            )
+                        }
+                    }
+                }
+
+                LazyRow(
+                    modifier = Modifier.semantics { contentDescription = "Options" },
+                    contentPadding = PaddingValues(vertical = 16.dp, horizontal = 4.dp)
+                ) {
+                    items(items = options, key = { option -> option.route }) { option ->
+                        val description = stringResource(id = option.resourceId)
+                        CircularItemList(
+                            modifier = Modifier
+                                .semantics {
+                                    contentDescription = description
+                                }
+                                .padding(horizontal = 4.dp),
+                            title = stringResource(id = option.resourceId),
+                            icon = option.icon,
+                            onClick = { onOptionsItemClick(option.route) }
                         )
                     }
                 }
-            }
 
-            LazyRow(
-                modifier = Modifier.semantics { contentDescription = "Options" },
-                contentPadding = PaddingValues(vertical = 16.dp, horizontal = 4.dp)
-            ) {
-                items(items = options, key = { option -> option.route } ) { option ->
-                    val description = stringResource(id = option.resourceId)
-                    CircularItemList(
-                        modifier = Modifier
-                            .semantics {
-                                contentDescription = description
-                            }
-                            .padding(horizontal = 4.dp),
-                        title = stringResource(id = option.resourceId),
-                        icon = option.icon,
-                        onClick = { onOptionsItemClick(option.route) }
-                    )
-                }
-            }
-
-            ElevatedCard(
-                modifier = Modifier
-                    .semantics { contentDescription = "List of sales" }
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-            ) {
-                infoSaleList.forEach { info ->
-                    InfoItemList(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        contentPadding = PaddingValues(vertical = 12.dp),
-                        title = info.second,
-                        subtitle = if (showProfit) {
-                            stringResource(
-                                id = R.string.product_price_tag,
-                                info.first.item,
-                                info.first.value
-                            )
-                        } else {
-                            stringResource(
-                                id = R.string.product_price_text_tag,
-                                info.first.item,
-                                dots
-                            )
-                        },
-                        description = pluralStringResource(
-                            id = R.plurals.description_label,
-                            count = info.first.quantity,
-                            info.first.customer,
-                            info.first.quantity,
-                            dateFormat.format(info.first.date)
-                        ),
-                        onEditClick = { onSalesItemClick(info.first.id, info.first.isOrderedByCustomer) }
-                    )
-                    HorizontalDivider()
-                }
-            }
-
-            ElevatedCard(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                ProvideChartStyle(
-                    chartStyle = m3ChartStyle(
-                        entityColors = listOf(MaterialTheme.colorScheme.tertiary)
-                    )
+                ElevatedCard(
+                    modifier = Modifier
+                        .semantics { contentDescription = "List of sales" }
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 ) {
-                    val marker = rememberMarker()
-                    Chart(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth()
-                            .height(264.dp),
-                        chart = lineChart(),
-                        runInitialAnimation = true,
-                        chartModelProducer = lastSalesEntry,
-                        marker = marker,
-                        fadingEdges = rememberFadingEdges(),
-                        startAxis = startAxis(
-                            titleComponent = textComponent(
-                                color = MaterialTheme.colorScheme.onBackground,
-                                background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
-                                padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                                margins = dimensionsOf(end = 8.dp),
-                                typeface = Typeface.MONOSPACE
+                    infoSaleList.forEach { info ->
+                        InfoItemList(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            contentPadding = PaddingValues(vertical = 12.dp),
+                            title = info.second,
+                            subtitle = if (showProfit) {
+                                stringResource(
+                                    id = R.string.product_price_tag,
+                                    info.first.item,
+                                    info.first.value
+                                )
+                            } else {
+                                stringResource(
+                                    id = R.string.product_price_text_tag,
+                                    info.first.item,
+                                    dots
+                                )
+                            },
+                            description = pluralStringResource(
+                                id = R.plurals.description_label,
+                                count = info.first.quantity,
+                                info.first.customer,
+                                info.first.quantity,
+                                dateFormat.format(info.first.date)
                             ),
-                            title = stringResource(id = R.string.amount_of_sales_label)
-                        ),
-                        bottomAxis = if (lastSalesEntry.getModel().entries.isEmpty()) {
-                            bottomAxis()
-                        } else {
-                            bottomAxis(
-                                guideline = null,
-                                valueFormatter = axisValuesFormatter,
+                            onEditClick = {
+                                onSalesItemClick(
+                                    info.first.id,
+                                    info.first.isOrderedByCustomer
+                                )
+                            }
+                        )
+                        HorizontalDivider()
+                    }
+                }
+
+                ElevatedCard(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    ProvideChartStyle(
+                        chartStyle = m3ChartStyle(
+                            entityColors = listOf(MaterialTheme.colorScheme.tertiary)
+                        )
+                    ) {
+                        val marker = rememberMarker()
+                        Chart(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth()
+                                .height(264.dp),
+                            chart = lineChart(),
+                            runInitialAnimation = true,
+                            chartModelProducer = lastSalesEntry,
+                            marker = marker,
+                            fadingEdges = rememberFadingEdges(),
+                            startAxis = startAxis(
                                 titleComponent = textComponent(
                                     color = MaterialTheme.colorScheme.onBackground,
-                                    background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                    background = shapeComponent(
+                                        Shapes.pillShape,
+                                        MaterialTheme.colorScheme.primaryContainer
+                                    ),
                                     padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                                    margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
+                                    margins = dimensionsOf(end = 8.dp),
                                     typeface = Typeface.MONOSPACE
                                 ),
-                                title = stringResource(id = R.string.last_sales_label)
-                            )
-                        }
-                    )
+                                title = stringResource(id = R.string.amount_of_sales_label)
+                            ),
+                            bottomAxis = if (lastSalesEntry.getModel().entries.isEmpty()) {
+                                bottomAxis()
+                            } else {
+                                bottomAxis(
+                                    guideline = null,
+                                    valueFormatter = axisValuesFormatter,
+                                    titleComponent = textComponent(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        background = shapeComponent(
+                                            Shapes.pillShape,
+                                            MaterialTheme.colorScheme.primaryContainer
+                                        ),
+                                        padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                        margins = dimensionsOf(
+                                            top = 8.dp,
+                                            start = 8.dp,
+                                            end = 8.dp
+                                        ),
+                                        typeface = Typeface.MONOSPACE
+                                    ),
+                                    title = stringResource(id = R.string.last_sales_label)
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
