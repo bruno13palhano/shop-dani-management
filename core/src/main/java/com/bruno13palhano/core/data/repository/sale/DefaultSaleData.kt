@@ -272,6 +272,10 @@ internal class DefaultSaleData @Inject constructor(
         )
     }
 
+    override suspend fun getAllSales(): List<Sale> {
+        return saleQueries.getAll(mapper = ::mapSale).executeAsList()
+    }
+
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
         return saleQueries.getByCustomerId(customerId = customerId, mapper = ::mapSale)
             .asFlow().mapToList(ioDispatcher)
