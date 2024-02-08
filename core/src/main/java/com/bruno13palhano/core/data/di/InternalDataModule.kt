@@ -1,5 +1,7 @@
 package com.bruno13palhano.core.data.di
 
+import com.bruno13palhano.core.data.repository.DefaultExcelSheet
+import com.bruno13palhano.core.data.repository.ExcelSheet
 import com.bruno13palhano.core.data.repository.catalog.CatalogData
 import com.bruno13palhano.core.data.repository.catalog.DefaultCatalogData
 import com.bruno13palhano.core.data.repository.category.CategoryData
@@ -52,6 +54,9 @@ internal annotation class InternalCatalogLight
 @Qualifier
 internal annotation class InternalVersionLight
 
+@Qualifier
+internal annotation class InternalDefaultExcelSheet
+
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class InternalDataModule {
@@ -100,4 +105,9 @@ internal abstract class InternalDataModule {
     @Singleton
     @Binds
     abstract fun bindInternalVersionData(data: DefaultVersionData): VersionData
+
+    @InternalDefaultExcelSheet
+    @Singleton
+    @Binds
+    abstract fun bindInternalDefaultExcelSheet(data: DefaultExcelSheet): ExcelSheet
 }
