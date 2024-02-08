@@ -18,6 +18,7 @@ interface SaleRepository : RepositoryOperations<Sale>, Syncable {
     fun getCanceledByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>>
     fun getCanceledByPrice(isOrderedAsc: Boolean): Flow<List<Sale>>
     suspend fun cancelSale(saleId: Long)
+    suspend fun exportExcelSheet()
     fun getDebitSales(): Flow<List<Sale>>
     fun getSalesByCustomerName(isPaidByCustomer: Boolean, isOrderedAsc: Boolean): Flow<List<Sale>>
     fun getSalesBySalePrice(isPaidByCustomer: Boolean, isOrderedAsc: Boolean): Flow<List<Sale>>
