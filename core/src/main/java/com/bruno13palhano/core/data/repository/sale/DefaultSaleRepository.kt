@@ -1,9 +1,11 @@
 package com.bruno13palhano.core.data.repository.sale
 
 import com.bruno13palhano.core.data.di.Dispatcher
+import com.bruno13palhano.core.data.di.InternalDefaultExcelSheet
 import com.bruno13palhano.core.data.di.InternalSaleLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.data.repository.ExcelSheet
 import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
@@ -32,6 +34,7 @@ internal class DefaultSaleRepository @Inject constructor(
     @InternalSaleLight private val saleData: SaleData,
     @InternalVersionLight private val versionData: VersionData,
     @DefaultVersionNet private val versionNetwork: VersionNetwork,
+    @InternalDefaultExcelSheet private val excelSheet: ExcelSheet,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : SaleRepository {
     override suspend fun insert(
@@ -97,6 +100,45 @@ internal class DefaultSaleRepository @Inject constructor(
 
     override suspend fun cancelSale(saleId: Long) {
         saleData.cancelSale(saleId = saleId)
+    }
+
+    override suspend fun exportExcelSheet(sheetName: String) {
+        CoroutineScope(ioDispatcher).launch {
+            val sales = saleData.getAllSales()
+            val salesToSheet = mutableListOf<List<String>>()
+            sales.forEach {
+                salesToSheet.add(mapSalesToSheet(it))
+            }
+            excelSheet.createExcel(
+                sheetName = sheetName,
+                headers = salesSheetHeaders(),
+                data = salesToSheet
+            )
+        }
+    }
+
+    private fun mapSalesToSheet(sale: Sale): List<String> {
+        return listOf(
+            sale.customerName,
+            sale.name,
+            sale.company,
+            sale.address,
+            sale.purchasePrice.toString(),
+            sale.salePrice.toString(),
+            sale.deliveryPrice.toString()
+        )
+    }
+
+    private fun salesSheetHeaders(): List<String> {
+        return listOf(
+            "Customer",
+            "Product",
+            "Company",
+            "Address",
+            "Purchase Price",
+            "Sale Price",
+            "Delivery Price"
+        )
     }
 
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
