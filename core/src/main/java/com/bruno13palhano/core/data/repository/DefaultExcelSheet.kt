@@ -51,7 +51,12 @@ internal class DefaultExcelSheet @Inject constructor(
         headers: List<String>,
         data: List<List<String>>
     ): Workbook {
-        val sheet: Sheet = workbook.createSheet(sheetName)
+        val sheet: Sheet = if (workbook.getSheet(sheetName) == null) {
+            workbook.createSheet(sheetName)
+        } else {
+            workbook.getSheet(sheetName)
+        }
+
         val cellStyle = getHeaderStyle(workbook = workbook)
         createSheetHeader(headers = headers, cellStyle = cellStyle, sheet = sheet)
 
