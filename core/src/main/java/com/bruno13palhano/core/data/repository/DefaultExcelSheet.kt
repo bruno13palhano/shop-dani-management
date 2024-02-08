@@ -22,7 +22,7 @@ internal class DefaultExcelSheet @Inject constructor(
     @DefaultWorkbook private val workbook: Workbook,
     @ApplicationContext private val context: Context
 ) : ExcelSheet {
-    override fun createExcel(
+    override suspend fun createExcel(
         sheetName: String,
         headers: List<String>,
         data: List<List<String>>
