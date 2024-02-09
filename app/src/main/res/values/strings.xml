@@ -81,6 +81,7 @@
     <string name="enter_customer_name_label">Enter customer name</string>
     <string name="ok_label">OK</string>
     <string name="cancel_label">Cancel</string>
+    <string name="category_label">Category</string>
     <string name="new_category_label">New category</string>
     <string name="more_options_label">More options</string>
     <string name="edit_label">Edit</string>

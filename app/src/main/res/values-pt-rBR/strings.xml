@@ -82,6 +82,7 @@
     <string name="enter_customer_name_label">Insira o nome do cliente</string>
     <string name="ok_label">OK</string>
     <string name="cancel_label">Cancelar</string>
+    <string name="category_label">Categoria</string>
     <string name="new_category_label">Nova categoria</string>
     <string name="more_options_label">Mais opções</string>
     <string name="edit_label">Editar</string>
