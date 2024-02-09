@@ -147,9 +147,12 @@ fun ProductListContent(
             }
         }
         if (showCategoryDialog) {
-            CategoryDialog(
-                newCategory = categoryId,
-                onCategoryChange = onCategoryChange,
+            SingleInputDialog(
+                dialogTitle = stringResource(id = R.string.category_label),
+                label = stringResource(id = R.string.name_label),
+                placeholder = stringResource(id = R.string.enter_name_label),
+                input = categoryId,
+                onInputChange = onCategoryChange,
                 onOkClick = onOkClick,
                 onDismissRequest = onDismissRequest
             )
