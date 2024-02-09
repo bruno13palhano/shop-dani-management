@@ -195,6 +195,7 @@
     <string name="ordered_by_last_label">Ordenado por último</string>
     <string name="ordered_by_address_label">Ordenado pelo endereço</string>
     <string name="barcode_scanner_label">Escaner de código de barras</string>
+    <string name="create_spreadsheet_label">Criar uma planilha</string>
     <string name="owing_tag">Devendo, %sR$.</string>
     <string name="amount_of_all_purchases_tag">Valor de todas as comporas, %sR$.</string>
     <string name="last_purchase_tag">Última compra, %sR$.</string>
