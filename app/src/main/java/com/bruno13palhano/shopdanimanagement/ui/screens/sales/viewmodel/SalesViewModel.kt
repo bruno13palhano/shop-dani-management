@@ -86,4 +86,10 @@ class SalesViewModel @Inject constructor(
             }
         }
     }
+
+    fun exportSalesExcelSheet(sheetName: String) {
+        viewModelScope.launch {
+            saleRepository.exportExcelSheet(sheetName = sheetName)
+        }
+    }
 }
