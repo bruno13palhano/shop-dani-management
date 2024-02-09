@@ -61,7 +61,8 @@ fun SalesScreen(
     val menuItems = arrayOf(
         stringResource(id = R.string.ordered_by_name_label),
         stringResource(id = R.string.ordered_by_price_label),
-        stringResource(id = R.string.ordered_by_last_label)
+        stringResource(id = R.string.ordered_by_last_label),
+        stringResource(id = R.string.create_spreadsheet_label)
     )
 
     var orderedByName by remember { mutableStateOf(false) }
@@ -75,7 +76,7 @@ fun SalesScreen(
         onItemClick = onItemClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
-                0 -> {
+                MoreOptions.ORDERED_BY_NAME -> {
                     if (isOrders) {
                         viewModel.getOrdersByCustomerName(isOrderedAsc = orderedByName)
                     } else {
@@ -83,7 +84,7 @@ fun SalesScreen(
                     }
                     orderedByName = !orderedByName
                 }
-                1 -> {
+                MoreOptions.ORDERED_BY_PRICE -> {
                     if (isOrders) {
                         viewModel.getOrdersBySalePrice(isOrderedAsc = orderedByPrice)
                     } else {
@@ -91,12 +92,15 @@ fun SalesScreen(
                     }
                     orderedByPrice = !orderedByPrice
                 }
-                else -> {
+                MoreOptions.ORDERED_BY_LAST -> {
                     if (isOrders) {
                         viewModel.getOrders()
                     } else {
                         viewModel.getSales()
                     }
+                }
+                MoreOptions.CREATE_SPREADSHEET -> {
+
                 }
             }
         },
@@ -194,4 +198,11 @@ fun SalesContent(
             }
         }
     }
+}
+
+private object MoreOptions {
+    const val ORDERED_BY_NAME = 0
+    const val ORDERED_BY_PRICE = 1
+    const val ORDERED_BY_LAST = 2
+    const val CREATE_SPREADSHEET = 3
 }
