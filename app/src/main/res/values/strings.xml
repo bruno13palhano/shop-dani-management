@@ -196,6 +196,7 @@
     <string name="ordered_by_address_label">Ordered by Address</string>
     <string name="barcode_scanner_label">Barcode scanner</string>
     <string name="create_spreadsheet_label">Create a spreadsheet</string>
+    <string name="spreadsheet_name_label">Spreadsheet name</string>
     <string name="owing_tag">Owing, %sR$.</string>
     <string name="amount_of_all_purchases_tag">Amount of all purchases, %sR$.</string>
     <string name="last_purchase_tag">Last purchase, %sR$.</string>

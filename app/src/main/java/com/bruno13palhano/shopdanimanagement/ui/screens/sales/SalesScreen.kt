@@ -219,7 +219,7 @@ fun SalesContent(
             exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
         ) {
             SingleInputDialog(
-                dialogTitle = "Spreadsheet name",
+                dialogTitle = stringResource(id = R.string.spreadsheet_name_label),
                 label = stringResource(id = R.string.name_label),
                 placeholder = stringResource(id = R.string.enter_name_label),
                 input = sheetName,
