@@ -1,5 +1,10 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.sales
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
+import com.bruno13palhano.shopdanimanagement.ui.components.SingleInputDialog
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
@@ -67,13 +73,18 @@ fun SalesScreen(
 
     var orderedByName by remember { mutableStateOf(false) }
     var orderedByPrice by remember { mutableStateOf(false) }
+    var showSpreadsheetDialog by remember { mutableStateOf(false) }
 
     SalesContent(
         isOrders = isOrders,
         screenTitle = screenTitle,
+        sheetName = viewModel.sheetName,
+        showSpreadsheetDialog = showSpreadsheetDialog,
         saleList = saleList,
         menuItems = menuItems,
         onItemClick = onItemClick,
+        onSheetNameChange = viewModel::updateSheetName,
+        onDialogOkClick = { viewModel.exportSalesSheet() },
         onMoreOptionsItemClick = { index ->
             when (index) {
                 MoreOptions.ORDERED_BY_NAME -> {
@@ -99,11 +110,10 @@ fun SalesScreen(
                         viewModel.getSales()
                     }
                 }
-                MoreOptions.CREATE_SPREADSHEET -> {
-
-                }
+                MoreOptions.CREATE_SPREADSHEET -> { showSpreadsheetDialog = true }
             }
         },
+        onDismissDialog = { showSpreadsheetDialog = false },
         onAddButtonClick = onAddButtonClick,
         navigateUp = navigateUp
     )
@@ -114,10 +124,15 @@ fun SalesScreen(
 fun SalesContent(
     isOrders: Boolean,
     screenTitle: String,
+    sheetName: String,
+    showSpreadsheetDialog: Boolean,
     saleList: List<ExtendedItem>,
     menuItems: Array<String>,
     onItemClick: (id: Long) -> Unit,
+    onSheetNameChange: (sheetName: String) -> Unit,
+    onDialogOkClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
+    onDismissDialog: () -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
@@ -196,6 +211,22 @@ fun SalesContent(
                     onClick = { onItemClick(item.id) }
                 )
             }
+        }
+
+        AnimatedVisibility(
+            visible = showSpreadsheetDialog,
+            enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+            exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+        ) {
+            SingleInputDialog(
+                dialogTitle = "Spreadsheet name",
+                label = stringResource(id = R.string.name_label),
+                placeholder = stringResource(id = R.string.enter_name_label),
+                input = sheetName,
+                onInputChange = onSheetNameChange,
+                onOkClick = onDialogOkClick,
+                onDismissRequest = onDismissDialog
+            )
         }
     }
 }
