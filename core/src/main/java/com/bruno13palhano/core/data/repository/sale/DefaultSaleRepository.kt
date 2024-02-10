@@ -11,6 +11,8 @@ import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
+import com.bruno13palhano.core.data.repository.mapSalesToSheet
+import com.bruno13palhano.core.data.repository.salesSheetHeaders
 import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.Sale
@@ -106,39 +108,15 @@ internal class DefaultSaleRepository @Inject constructor(
         CoroutineScope(ioDispatcher).launch {
             val sales = saleData.getAllSales()
             val salesToSheet = mutableListOf<List<String>>()
-            sales.forEach {
-                salesToSheet.add(mapSalesToSheet(it))
-            }
+
+            sales.forEach { salesToSheet.add(mapSalesToSheet(it)) }
+
             excelSheet.createExcel(
                 sheetName = sheetName,
-                headers = salesSheetHeaders(),
+                headers = salesSheetHeaders,
                 data = salesToSheet
             )
         }
-    }
-
-    private fun mapSalesToSheet(sale: Sale): List<String> {
-        return listOf(
-            sale.customerName,
-            sale.name,
-            sale.company,
-            sale.address,
-            sale.purchasePrice.toString(),
-            sale.salePrice.toString(),
-            sale.deliveryPrice.toString()
-        )
-    }
-
-    private fun salesSheetHeaders(): List<String> {
-        return listOf(
-            "Customer",
-            "Product",
-            "Company",
-            "Address",
-            "Purchase Price",
-            "Sale Price",
-            "Delivery Price"
-        )
     }
 
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
