@@ -1,5 +1,8 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
@@ -18,6 +21,9 @@ import javax.inject.Inject
 class SalesViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleRepository
 ) : ViewModel() {
+    var sheetName by mutableStateOf("")
+        private set
+
     private val _saleList = MutableStateFlow(emptyList<Sale>())
     val saleList = _saleList
         .map {
@@ -38,6 +44,10 @@ class SalesViewModel @Inject constructor(
             started = WhileSubscribed(5_000),
             initialValue = emptyList()
         )
+
+    fun updateSheetName(sheetName: String) {
+        this.sheetName = sheetName
+    }
 
     fun getSales() {
         viewModelScope.launch {
@@ -87,9 +97,10 @@ class SalesViewModel @Inject constructor(
         }
     }
 
-    fun exportSalesExcelSheet(sheetName: String) {
+    fun exportSalesSheet() {
         viewModelScope.launch {
-            saleRepository.exportExcelSheet(sheetName = sheetName)
+            if (sheetName.isNotEmpty())
+                saleRepository.exportExcelSheet(sheetName = sheetName)
         }
     }
 }
