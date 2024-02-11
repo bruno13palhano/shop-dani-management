@@ -133,11 +133,8 @@ fun UserScreen(
             onPhotoClick = { galleryLauncher.launch(arrayOf("image/*")) },
             onMoreOptionsItemClick = { index ->
                 when (index) {
-                    0 -> { onLogoutClick() }
-
-                    1 -> { onChangePasswordClick() }
-
-                    else -> {}
+                    MoreOptions.LOGOUT -> { onLogoutClick() }
+                    MoreOptions.CHANGE_PASSWORD -> { onChangePasswordClick() }
                 }
             },
             onOutsideClick = {
@@ -340,4 +337,9 @@ fun UserContent(
             )
         }
     }
+}
+
+private object MoreOptions {
+    const val LOGOUT = 0
+    const val CHANGE_PASSWORD = 1
 }
