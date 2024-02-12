@@ -172,7 +172,8 @@ fun FinancialInfoContent(
                     text = stringResource(id = R.string.profit_tag, profit)
                 )
             }
-            val axisValuesFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
+            val axisValuesFormatter =
+                AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
                 try {
                     (chartValues.chartEntryModel.entries.first()
                         .getOrNull(value.toInt()) as? DateChartEntry)
@@ -229,7 +230,10 @@ fun FinancialInfoContent(
                     startAxis = startAxis(
                         titleComponent = textComponent(
                             color = MaterialTheme.colorScheme.onBackground,
-                            background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                            background = shapeComponent(
+                                Shapes.pillShape,
+                                MaterialTheme.colorScheme.primaryContainer
+                            ),
                             padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
                             margins = dimensionsOf(end = 8.dp),
                             typeface = Typeface.MONOSPACE
@@ -244,7 +248,10 @@ fun FinancialInfoContent(
                             valueFormatter = axisValuesFormatter,
                             titleComponent = textComponent(
                                 color = MaterialTheme.colorScheme.onBackground,
-                                background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                background = shapeComponent(
+                                    Shapes.pillShape,
+                                    MaterialTheme.colorScheme.primaryContainer
+                                ),
                                 padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
                                 margins = dimensionsOf(top = 8.dp, start = 8.dp),
                                 typeface = Typeface.MONOSPACE
