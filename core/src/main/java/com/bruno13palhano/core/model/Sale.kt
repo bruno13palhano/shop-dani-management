@@ -87,4 +87,35 @@ data class Sale(
         result = 31 * result + timestamp.hashCode()
         return result
     }
+
+    companion object {
+        fun emptySale(): Sale {
+            return Sale(
+                id = 0L,
+                productId = 0L,
+                stockId = 0L,
+                customerId = 0L,
+                name = "",
+                customerName = "",
+                photo = byteArrayOf(),
+                address = "",
+                phoneNumber = "",
+                quantity = 0,
+                purchasePrice = 0F,
+                salePrice = 0F,
+                deliveryPrice = 0F,
+                categories = listOf(),
+                company = "",
+                dateOfSale = 0L,
+                dateOfPayment = 0L,
+                shippingDate = 0L,
+                deliveryDate = 0L,
+                isOrderedByCustomer = false,
+                isPaidByCustomer = false,
+                delivered = false,
+                canceled = false,
+                timestamp = ""
+            )
+        }
+    }
 }
