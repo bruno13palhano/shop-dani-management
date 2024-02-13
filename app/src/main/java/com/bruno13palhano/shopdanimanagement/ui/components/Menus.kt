@@ -2,6 +2,7 @@ package com.bruno13palhano.shopdanimanagement.ui.components
 
 import android.content.res.Configuration
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Money
@@ -26,6 +28,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -295,6 +298,36 @@ fun CompanyBottomSheet(
                                 }
                             )
                         }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SaleBottomSheet(
+    openBottomSheet: Boolean,
+    onBottomSheetChange: (close: Boolean) -> Unit,
+    onDismissBottomSheet: () -> Unit,
+    onEditSaleClick: (id: Long) -> Unit
+) {
+    val bottomSheetState = rememberModalBottomSheetState()
+
+    AnimatedVisibility(visible = openBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                onBottomSheetChange(false)
+                onDismissBottomSheet()
+            },
+            sheetState = bottomSheetState,
+        ) {
+            Column(modifier = Modifier.padding(bottom = 32.dp)) {
+                IconButton(onClick =  { onEditSaleClick(1L) }) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = stringResource(id = R.string.edit_label)
                     )
                 }
             }
