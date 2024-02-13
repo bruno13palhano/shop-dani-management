@@ -12,6 +12,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -21,6 +22,9 @@ import javax.inject.Inject
 class SalesViewModel @Inject constructor(
     @SaleRep private val saleRepository: SaleRepository
 ) : ViewModel() {
+    private var _currentSale = MutableStateFlow(Sale.emptySale())
+    val currentSale = _currentSale.asStateFlow()
+
     var sheetName by mutableStateOf("")
         private set
 
@@ -44,6 +48,14 @@ class SalesViewModel @Inject constructor(
             started = WhileSubscribed(5_000),
             initialValue = emptyList()
         )
+
+    fun getCurrentSale(saleId: Long) {
+        viewModelScope.launch {
+            saleRepository.getById(id = saleId).collect {
+                _currentSale.value = it
+            }
+        }
+    }
 
     fun updateSheetName(sheetName: String) {
         this.sheetName = sheetName
