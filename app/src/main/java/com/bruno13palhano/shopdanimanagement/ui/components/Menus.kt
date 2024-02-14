@@ -4,11 +4,15 @@ import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Person
@@ -48,7 +53,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
@@ -64,7 +71,9 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.core.model.Company
+import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainDestinations
 import kotlinx.coroutines.launch
@@ -308,6 +317,7 @@ fun CompanyBottomSheet(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SaleBottomSheet(
+    sale: Sale,
     openBottomSheet: Boolean,
     onBottomSheetChange: (close: Boolean) -> Unit,
     onDismissBottomSheet: () -> Unit,
@@ -323,13 +333,90 @@ fun SaleBottomSheet(
             },
             sheetState = bottomSheetState,
         ) {
-            Column(modifier = Modifier.padding(bottom = 32.dp)) {
-                IconButton(onClick =  { onEditSaleClick(1L) }) {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = stringResource(id = R.string.edit_label)
+            Column(
+                modifier = Modifier
+                    .padding(bottom = 48.dp)
+                    .fillMaxWidth()
+            ) {
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = stringResource(id = R.string.sale_information_label),
+                        style = MaterialTheme.typography.titleLarge
                     )
+                    IconButton(
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                        onClick = { onEditSaleClick(sale.id) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = stringResource(id = R.string.edit_label)
+                        )
+                    }
                 }
+                Row(modifier = Modifier
+                    .padding(start = 8.dp)
+                    .fillMaxWidth()) {
+                    if (sale.photo.isEmpty()) {
+                        Image(
+                            modifier = Modifier
+                                .size(128.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            imageVector = Icons.Filled.Image,
+                            contentDescription = stringResource(id = R.string.product_image_label)
+                        )
+                    } else {
+                        Image(
+                            modifier = Modifier
+                                .size(128.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            painter = rememberAsyncImagePainter(model = sale.photo),
+                            contentDescription = stringResource(id = R.string.product_image_label)
+                        )
+                    }
+                    Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                        Text(
+                            text = sale.name,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            text = stringResource(id = R.string.price_tag, sale.salePrice),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            text = stringResource(
+                                id = R.string.delivery_price_tag,
+                                sale.deliveryPrice.toString()
+                            ),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                }
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                Text(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = stringResource(id = R.string.customer_information_label),
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp),
+                    text = sale.customerName,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp),
+                    text = sale.address,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp),
+                    text = stringResource(id = R.string.phone_number_tag, sale.phoneNumber),
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
         }
     }
