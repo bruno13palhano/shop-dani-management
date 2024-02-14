@@ -198,6 +198,8 @@
     <string name="barcode_scanner_label">Escaner de código de barras</string>
     <string name="create_spreadsheet_label">Criar uma planilha</string>
     <string name="spreadsheet_name_label">Nome da planilha</string>
+    <string name="customer_information_label">Informações do cliente</string>
+    <string name="sale_information_label">Informações da venda</string>
     <string name="owing_tag">Devendo, %sR$.</string>
     <string name="amount_of_all_purchases_tag">Valor de todas as comporas, %sR$.</string>
     <string name="last_purchase_tag">Última compra, %sR$.</string>
