@@ -38,9 +38,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
+import com.bruno13palhano.shopdanimanagement.ui.components.SaleBottomSheet
 import com.bruno13palhano.shopdanimanagement.ui.components.SingleInputDialog
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
@@ -64,6 +66,7 @@ fun SalesScreen(
     }
 
     val saleList by viewModel.saleList.collectAsStateWithLifecycle()
+    val currentSale by viewModel.currentSale.collectAsStateWithLifecycle()
     val menuItems = arrayOf(
         stringResource(id = R.string.ordered_by_name_label),
         stringResource(id = R.string.ordered_by_price_label),
@@ -74,16 +77,27 @@ fun SalesScreen(
     var orderedByName by remember { mutableStateOf(false) }
     var orderedByPrice by remember { mutableStateOf(false) }
     var showSpreadsheetDialog by remember { mutableStateOf(false) }
+    var openBottomSheet by remember { mutableStateOf(false) }
 
     SalesContent(
         isOrders = isOrders,
         screenTitle = screenTitle,
         sheetName = viewModel.sheetName,
         showSpreadsheetDialog = showSpreadsheetDialog,
+        openBottomSheet = openBottomSheet,
         saleList = saleList,
+        currentSale = currentSale,
         menuItems = menuItems,
-        onItemClick = onItemClick,
+        onItemClick = {
+            openBottomSheet = true
+            viewModel.getCurrentSale(saleId = it)
+        },
+        onEditClick = {
+            openBottomSheet = false
+            onItemClick(it)
+        },
         onSheetNameChange = viewModel::updateSheetName,
+        onBottomSheetChange = { openBottomSheet = it },
         onDialogOkClick = { viewModel.exportSalesSheet() },
         onMoreOptionsItemClick = { index ->
             when (index) {
@@ -114,6 +128,7 @@ fun SalesScreen(
             }
         },
         onDismissDialog = { showSpreadsheetDialog = false },
+        onDismissBottomSheet = { openBottomSheet = false },
         onAddButtonClick = onAddButtonClick,
         navigateUp = navigateUp
     )
@@ -126,13 +141,18 @@ fun SalesContent(
     screenTitle: String,
     sheetName: String,
     showSpreadsheetDialog: Boolean,
+    openBottomSheet: Boolean,
     saleList: List<ExtendedItem>,
+    currentSale: Sale,
     menuItems: Array<String>,
     onItemClick: (id: Long) -> Unit,
+    onEditClick: (id: Long) -> Unit,
     onSheetNameChange: (sheetName: String) -> Unit,
+    onBottomSheetChange: (close: Boolean) -> Unit,
     onDialogOkClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
     onDismissDialog: () -> Unit,
+    onDismissBottomSheet: () -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
@@ -212,6 +232,14 @@ fun SalesContent(
                 )
             }
         }
+
+        SaleBottomSheet(
+            sale = currentSale,
+            openBottomSheet = openBottomSheet,
+            onBottomSheetChange = onBottomSheetChange,
+            onDismissBottomSheet = onDismissBottomSheet,
+            onEditSaleClick = onEditClick
+        )
 
         AnimatedVisibility(
             visible = showSpreadsheetDialog,
