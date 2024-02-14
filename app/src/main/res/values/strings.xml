@@ -214,7 +214,7 @@
     <string name="customer_debit_tag">Debit of R$ %s.</string>
     <string name="date_of_payment_tag">Date of payment %s.</string>
     <string name="deliver_to_tag">Deliver to %s.</string>
-    <string name="delivery_price_tag">Delivery price R$ %s.</string>
+    <string name="delivery_price_tag">Delivery price %sR$.</string>
     <string name="delivery_date_tag">Delivery date %s.</string>
     <string name="phone_number_tag">Phone number %s.</string>
     <string name="product_tag">Product, %s.</string>
