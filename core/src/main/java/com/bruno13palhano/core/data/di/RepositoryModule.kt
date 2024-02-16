@@ -1,6 +1,7 @@
 package com.bruno13palhano.core.data.di
 
 import com.bruno13palhano.core.data.domain.FinancialUseCase
+import com.bruno13palhano.core.data.domain.SaleInfoUseCase
 import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
 import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.data.repository.customer.CustomerRepository
@@ -51,6 +52,9 @@ annotation class CatalogRep
 @Qualifier
 annotation class Financial
 
+@Qualifier
+annotation class SalesInformation
+
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class RepositoryModule {
@@ -99,4 +103,9 @@ internal abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindFinancialUseCase(financial: FinancialUseCase): FinancialUseCase
+
+    @SalesInformation
+    @Singleton
+    @Binds
+    abstract fun bindSaleInfoUseCase(salesInformation: SaleInfoUseCase): SaleInfoUseCase
 }
