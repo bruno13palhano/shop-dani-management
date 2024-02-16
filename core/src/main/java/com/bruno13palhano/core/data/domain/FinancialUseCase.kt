@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class FinancialUseCase @Inject constructor(
     @SaleRep private val saleRepository: SaleRepository
-){
+) {
     operator fun invoke(): Flow<FinancialInfo> {
         return saleRepository.getAll().map { mapToFinancialInfo(it) }
     }
@@ -23,7 +23,7 @@ class FinancialUseCase @Inject constructor(
         var ordersSales = 0F
 
         sales.map { sale ->
-            allSales += sale.salePrice
+            allSales += (sale.salePrice * sale.quantity) //fixed wrong amount
             allSalesPurchasePrice += sale.purchasePrice
 
             if (sale.isOrderedByCustomer) {
