@@ -59,6 +59,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -378,7 +379,12 @@ fun SaleBottomSheet(
                     }
                     Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                         Text(
-                            text = sale.name,
+                            text = pluralStringResource(
+                                id = R.plurals.simple_description_label,
+                                count = sale.quantity,
+                                sale.quantity,
+                                sale.name
+                            ),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
