@@ -23,7 +23,7 @@ class FinancialUseCase @Inject constructor(
         var ordersSales = 0F
 
         sales.map { sale ->
-            allSales += (sale.salePrice * sale.quantity) //fixed wrong amount
+            allSales += (sale.salePrice * sale.quantity)
             allSalesPurchasePrice += sale.purchasePrice
 
             if (sale.isOrderedByCustomer) {
