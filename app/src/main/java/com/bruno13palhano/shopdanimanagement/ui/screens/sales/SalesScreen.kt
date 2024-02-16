@@ -38,13 +38,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bruno13palhano.core.model.Sale
+import com.bruno13palhano.core.model.SaleInfo
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.SaleBottomSheet
 import com.bruno13palhano.shopdanimanagement.ui.components.SingleInputDialog
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
 
@@ -88,9 +87,9 @@ fun SalesScreen(
         saleList = saleList,
         currentSale = currentSale,
         menuItems = menuItems,
-        onItemClick = {
+        onItemClick = { saleId, customerId ->
             openBottomSheet = true
-            viewModel.getCurrentSale(saleId = it)
+            viewModel.getCurrentSale(saleId = saleId, customerId = customerId)
         },
         onEditClick = {
             openBottomSheet = false
@@ -142,10 +141,10 @@ fun SalesContent(
     sheetName: String,
     showSpreadsheetDialog: Boolean,
     openBottomSheet: Boolean,
-    saleList: List<ExtendedItem>,
-    currentSale: Sale,
+    saleList: List<SaleInfo>,
+    currentSale: SaleInfo,
     menuItems: Array<String>,
-    onItemClick: (id: Long) -> Unit,
+    onItemClick: (saleId: Long, customerId: Long) -> Unit,
     onEditClick: (id: Long) -> Unit,
     onSheetNameChange: (sheetName: String) -> Unit,
     onBottomSheetChange: (close: Boolean) -> Unit,
@@ -214,27 +213,27 @@ fun SalesContent(
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp),
             reverseLayout = true
         ) {
-            items(items = saleList, key = { item -> item.id }) { item ->
+            items(items = saleList, key = { item -> item.saleId }) { item ->
                 HorizontalItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    title = item.title,
+                    title = item.customerName,
                     subtitle = stringResource(
                         id = R.string.product_price_text_tag,
-                        item.firstSubtitle,
-                        item.secondSubtitle
+                        item.productName,
+                        item.salePrice.toString()
                     ),
                     description = stringResource(
                         id = R.string.date_of_sale_tag,
-                        dateFormat.format(item.description.toLong())
+                        dateFormat.format(item.dateOfSale)
                     ),
-                    photo = item.photo,
-                    onClick = { onItemClick(item.id) }
+                    photo = item.productPhoto,
+                    onClick = { onItemClick(item.saleId, item.customerId) }
                 )
             }
         }
 
         SaleBottomSheet(
-            sale = currentSale,
+            saleInfo = currentSale,
             openBottomSheet = openBottomSheet,
             onBottomSheetChange = onBottomSheetChange,
             onDismissBottomSheet = onDismissBottomSheet,

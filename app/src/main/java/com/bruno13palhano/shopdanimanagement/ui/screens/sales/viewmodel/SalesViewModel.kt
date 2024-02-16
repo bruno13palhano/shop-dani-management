@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.SaleRep
+import com.bruno13palhano.core.data.di.SalesInformation
+import com.bruno13palhano.core.data.domain.SaleInfoUseCase
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
+import com.bruno13palhano.core.model.SaleInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -20,10 +22,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SalesViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleRepository
+    @SaleRep private val saleRepository: SaleRepository,
+    @SalesInformation private val salesInfoUseCase: SaleInfoUseCase
 ) : ViewModel() {
-    private var _currentSale = MutableStateFlow(Sale.emptySale())
-    val currentSale = _currentSale.asStateFlow()
+    private var _currentSaleInfo = MutableStateFlow(SaleInfo.emptySaleInfo())
+    val currentSale = _currentSaleInfo.asStateFlow()
 
     var sheetName by mutableStateOf("")
         private set
@@ -32,14 +35,20 @@ class SalesViewModel @Inject constructor(
     val saleList = _saleList
         .map {
             it.map { sale ->
-                ExtendedItem(
-                    id = sale.id,
-                    photo = sale.photo,
-                    title = sale.customerName,
-                    firstSubtitle = sale.name,
-                    secondSubtitle = sale.salePrice.toString(),
-                    description = sale.dateOfSale.toString(),
-                    footer = sale.company
+                SaleInfo(
+                    saleId = sale.id,
+                    customerId = sale.customerId,
+                    productName = sale.name,
+                    customerName = sale.customerName,
+                    productPhoto = sale.photo,
+                    customerPhoto = byteArrayOf(),
+                    address = sale.address,
+                    phoneNumber = sale.phoneNumber,
+                    email = "",
+                    salePrice = sale.salePrice,
+                    deliveryPrice = sale.deliveryPrice,
+                    quantity = sale.quantity,
+                    dateOfSale = sale.dateOfSale
                 )
             }
         }
@@ -49,10 +58,10 @@ class SalesViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun getCurrentSale(saleId: Long) {
+    fun getCurrentSale(saleId: Long, customerId: Long) {
         viewModelScope.launch {
-            saleRepository.getById(id = saleId).collect {
-                _currentSale.value = it
+            salesInfoUseCase(saleId = saleId, customerId = customerId).collect {
+                _currentSaleInfo.value = it
             }
         }
     }

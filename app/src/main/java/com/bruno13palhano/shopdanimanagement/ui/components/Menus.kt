@@ -74,7 +74,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.core.model.Company
-import com.bruno13palhano.core.model.Sale
+import com.bruno13palhano.core.model.SaleInfo
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainDestinations
 import kotlinx.coroutines.launch
@@ -318,7 +318,7 @@ fun CompanyBottomSheet(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SaleBottomSheet(
-    sale: Sale,
+    saleInfo: SaleInfo,
     openBottomSheet: Boolean,
     onBottomSheetChange: (close: Boolean) -> Unit,
     onDismissBottomSheet: () -> Unit,
@@ -347,7 +347,7 @@ fun SaleBottomSheet(
                     )
                     IconButton(
                         modifier = Modifier.align(Alignment.CenterEnd),
-                        onClick = { onEditSaleClick(sale.id) }
+                        onClick = { onEditSaleClick(saleInfo.saleId) }
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
@@ -358,7 +358,7 @@ fun SaleBottomSheet(
                 Row(modifier = Modifier
                     .padding(start = 8.dp)
                     .fillMaxWidth()) {
-                    if (sale.photo.isEmpty()) {
+                    if (saleInfo.productPhoto.isEmpty()) {
                         Image(
                             modifier = Modifier
                                 .size(128.dp)
@@ -373,7 +373,7 @@ fun SaleBottomSheet(
                                 .size(128.dp)
                                 .padding(8.dp)
                                 .clip(RoundedCornerShape(8.dp)),
-                            painter = rememberAsyncImagePainter(model = sale.photo),
+                            painter = rememberAsyncImagePainter(model = saleInfo.productPhoto),
                             contentDescription = stringResource(id = R.string.product_image_label)
                         )
                     }
@@ -381,20 +381,20 @@ fun SaleBottomSheet(
                         Text(
                             text = pluralStringResource(
                                 id = R.plurals.simple_description_label,
-                                count = sale.quantity,
-                                sale.quantity,
-                                sale.name
+                                count = saleInfo.quantity,
+                                saleInfo.quantity,
+                                saleInfo.productName
                             ),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
-                            text = stringResource(id = R.string.price_tag, sale.salePrice),
+                            text = stringResource(id = R.string.price_tag, saleInfo.salePrice),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
                             text = stringResource(
                                 id = R.string.delivery_price_tag,
-                                sale.deliveryPrice.toString()
+                                saleInfo.deliveryPrice.toString()
                             ),
                             style = MaterialTheme.typography.titleMedium
                         )
@@ -410,17 +410,17 @@ fun SaleBottomSheet(
                 )
                 Text(
                     modifier = Modifier.padding(start = 16.dp),
-                    text = sale.customerName,
+                    text = saleInfo.customerName,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     modifier = Modifier.padding(start = 16.dp),
-                    text = sale.address,
+                    text = saleInfo.address,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     modifier = Modifier.padding(start = 16.dp),
-                    text = stringResource(id = R.string.phone_number_tag, sale.phoneNumber),
+                    text = stringResource(id = R.string.phone_number_tag, saleInfo.phoneNumber),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
