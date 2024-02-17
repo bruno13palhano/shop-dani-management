@@ -232,13 +232,14 @@ fun SalesContent(
             }
         }
 
-        SaleBottomSheet(
-            saleInfo = currentSale,
-            openBottomSheet = openBottomSheet,
-            onBottomSheetChange = onBottomSheetChange,
-            onDismissBottomSheet = onDismissBottomSheet,
-            onEditSaleClick = onEditClick
-        )
+        AnimatedVisibility(visible = openBottomSheet) {
+            SaleBottomSheet(
+                saleInfo = currentSale,
+                onBottomSheetChange = onBottomSheetChange,
+                onDismissBottomSheet = onDismissBottomSheet,
+                onEditSaleClick = onEditClick
+            )
+        }
 
         AnimatedVisibility(
             visible = showSpreadsheetDialog,

@@ -2,7 +2,6 @@ package com.bruno13palhano.shopdanimanagement.ui.components
 
 import android.content.res.Configuration
 import androidx.annotation.StringRes
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -322,158 +321,155 @@ fun CompanyBottomSheet(
 @Composable
 fun SaleBottomSheet(
     saleInfo: SaleInfo,
-    openBottomSheet: Boolean,
     onBottomSheetChange: (close: Boolean) -> Unit,
     onDismissBottomSheet: () -> Unit,
     onEditSaleClick: (id: Long) -> Unit
 ) {
     val bottomSheetState = rememberModalBottomSheetState()
 
-    AnimatedVisibility(visible = openBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = {
-                onBottomSheetChange(false)
-                onDismissBottomSheet()
-            },
-            sheetState = bottomSheetState,
+    ModalBottomSheet(
+        onDismissRequest = {
+            onBottomSheetChange(false)
+            onDismissBottomSheet()
+        },
+        sheetState = bottomSheetState
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(bottom = 48.dp)
+                .fillMaxWidth()
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(bottom = 48.dp)
-                    .fillMaxWidth()
-            ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = stringResource(id = R.string.sale_information_label),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    IconButton(
-                        modifier = Modifier.align(Alignment.CenterEnd),
-                        onClick = { onEditSaleClick(saleInfo.saleId) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Edit,
-                            contentDescription = stringResource(id = R.string.edit_label)
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .fillMaxWidth()
-                ) {
-                    if (saleInfo.productPhoto.isEmpty()) {
-                        Image(
-                            modifier = Modifier
-                                .size(128.dp)
-                                .padding(16.dp)
-                                .clip(RoundedCornerShape(5)),
-                            imageVector = Icons.Filled.Image,
-                            contentScale = ContentScale.Crop,
-                            contentDescription = stringResource(id = R.string.product_image_label)
-                        )
-                    } else {
-                        Image(
-                            modifier = Modifier
-                                .size(128.dp)
-                                .padding(16.dp)
-                                .clip(RoundedCornerShape(5)),
-                            painter = rememberAsyncImagePainter(model = saleInfo.productPhoto),
-                            contentScale = ContentScale.Crop,
-                            contentDescription = stringResource(id = R.string.product_image_label)
-                        )
-                    }
-                    Column(modifier = Modifier.align(Alignment.CenterVertically)) {
-                        Text(
-                            text = pluralStringResource(
-                                id = R.plurals.simple_description_label,
-                                count = saleInfo.quantity,
-                                saleInfo.quantity,
-                                saleInfo.productName
-                            ),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Text(
-                            text = stringResource(id = R.string.price_tag, saleInfo.salePrice),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontStyle = FontStyle.Italic
-                        )
-                        Text(
-                            text = stringResource(
-                                id = R.string.delivery_price_tag,
-                                saleInfo.deliveryPrice.toString()
-                            ),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontStyle = FontStyle.Italic
-                        )
-                        Text(
-                            text = stringResource(
-                                id = R.string.date_of_sale_tag,
-                                dateFormat.format(saleInfo.dateOfSale)
-                            ),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontStyle = FontStyle.Italic
-                        )
-                    }
-                }
-
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
+            Box(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = stringResource(id = R.string.customer_information_label),
+                    modifier = Modifier.align(Alignment.Center),
+                    text = stringResource(id = R.string.sale_information_label),
                     style = MaterialTheme.typography.titleLarge
                 )
-
-                Row(
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .fillMaxWidth()
+                IconButton(
+                    modifier = Modifier.align(Alignment.CenterEnd),
+                    onClick = { onEditSaleClick(saleInfo.saleId) }
                 ) {
-                    if (saleInfo.customerName.isEmpty()) {
-                        Image(
-                            modifier = Modifier
-                                .size(128.dp)
-                                .padding(16.dp)
-                                .clip(RoundedCornerShape(5)),
-                            imageVector = Icons.Filled.Image,
-                            contentScale = ContentScale.Crop,
-                            contentDescription = stringResource(id = R.string.customer_photo_label)
-                        )
-                    } else {
-                        Image(
-                            modifier = Modifier
-                                .size(128.dp)
-                                .padding(16.dp)
-                                .clip(RoundedCornerShape(5)),
-                            painter = rememberAsyncImagePainter(model = saleInfo.customerPhoto),
-                            contentScale = ContentScale.Crop,
-                            contentDescription = stringResource(id = R.string.customer_photo_label)
-                        )
-                    }
-                    Column(modifier = Modifier.align(Alignment.CenterVertically)) {
-                        Text(
-                            text = saleInfo.customerName,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontStyle = FontStyle.Italic
-                        )
-                        Text(
-                            text = saleInfo.address,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontStyle = FontStyle.Italic
-                        )
-                        Text(
-                            text = saleInfo.phoneNumber,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontStyle = FontStyle.Italic
-                        )
-                        Text(
-                            text = saleInfo.email,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontStyle = FontStyle.Italic
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = stringResource(id = R.string.edit_label)
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .fillMaxWidth()
+            ) {
+                if (saleInfo.productPhoto.isEmpty()) {
+                    Image(
+                        modifier = Modifier
+                            .size(128.dp)
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(5)),
+                        imageVector = Icons.Filled.Image,
+                        contentScale = ContentScale.Crop,
+                        contentDescription = stringResource(id = R.string.product_image_label)
+                    )
+                } else {
+                    Image(
+                        modifier = Modifier
+                            .size(128.dp)
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(5)),
+                        painter = rememberAsyncImagePainter(model = saleInfo.productPhoto),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = stringResource(id = R.string.product_image_label)
+                    )
+                }
+                Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                    Text(
+                        text = pluralStringResource(
+                            id = R.plurals.simple_description_label,
+                            count = saleInfo.quantity,
+                            saleInfo.quantity,
+                            saleInfo.productName
+                        ),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = stringResource(id = R.string.price_tag, saleInfo.salePrice),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontStyle = FontStyle.Italic
+                    )
+                    Text(
+                        text = stringResource(
+                            id = R.string.delivery_price_tag,
+                            saleInfo.deliveryPrice.toString()
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontStyle = FontStyle.Italic
+                    )
+                    Text(
+                        text = stringResource(
+                            id = R.string.date_of_sale_tag,
+                            dateFormat.format(saleInfo.dateOfSale)
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            }
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+            Text(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.customer_information_label),
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Row(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .fillMaxWidth()
+            ) {
+                if (saleInfo.customerName.isEmpty()) {
+                    Image(
+                        modifier = Modifier
+                            .size(128.dp)
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(5)),
+                        imageVector = Icons.Filled.Image,
+                        contentScale = ContentScale.Crop,
+                        contentDescription = stringResource(id = R.string.customer_photo_label)
+                    )
+                } else {
+                    Image(
+                        modifier = Modifier
+                            .size(128.dp)
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(5)),
+                        painter = rememberAsyncImagePainter(model = saleInfo.customerPhoto),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = stringResource(id = R.string.customer_photo_label)
+                    )
+                }
+                Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                    Text(
+                        text = saleInfo.customerName,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontStyle = FontStyle.Italic
+                    )
+                    Text(
+                        text = saleInfo.address,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontStyle = FontStyle.Italic
+                    )
+                    Text(
+                        text = saleInfo.phoneNumber,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontStyle = FontStyle.Italic
+                    )
+                    Text(
+                        text = saleInfo.email,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontStyle = FontStyle.Italic
+                    )
                 }
             }
         }
