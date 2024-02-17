@@ -58,11 +58,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -77,6 +79,7 @@ import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.SaleInfo
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainDestinations
+import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -355,25 +358,29 @@ fun SaleBottomSheet(
                         )
                     }
                 }
-                Row(modifier = Modifier
-                    .padding(start = 8.dp)
-                    .fillMaxWidth()) {
+                Row(
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .fillMaxWidth()
+                ) {
                     if (saleInfo.productPhoto.isEmpty()) {
                         Image(
                             modifier = Modifier
                                 .size(128.dp)
-                                .padding(8.dp)
-                                .clip(RoundedCornerShape(8.dp)),
+                                .padding(16.dp)
+                                .clip(RoundedCornerShape(5)),
                             imageVector = Icons.Filled.Image,
+                            contentScale = ContentScale.Crop,
                             contentDescription = stringResource(id = R.string.product_image_label)
                         )
                     } else {
                         Image(
                             modifier = Modifier
                                 .size(128.dp)
-                                .padding(8.dp)
-                                .clip(RoundedCornerShape(8.dp)),
+                                .padding(16.dp)
+                                .clip(RoundedCornerShape(5)),
                             painter = rememberAsyncImagePainter(model = saleInfo.productPhoto),
+                            contentScale = ContentScale.Crop,
                             contentDescription = stringResource(id = R.string.product_image_label)
                         )
                     }
@@ -389,14 +396,24 @@ fun SaleBottomSheet(
                         )
                         Text(
                             text = stringResource(id = R.string.price_tag, saleInfo.salePrice),
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontStyle = FontStyle.Italic
                         )
                         Text(
                             text = stringResource(
                                 id = R.string.delivery_price_tag,
                                 saleInfo.deliveryPrice.toString()
                             ),
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontStyle = FontStyle.Italic
+                        )
+                        Text(
+                            text = stringResource(
+                                id = R.string.date_of_sale_tag,
+                                dateFormat.format(saleInfo.dateOfSale)
+                            ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontStyle = FontStyle.Italic
                         )
                     }
                 }
@@ -408,21 +425,56 @@ fun SaleBottomSheet(
                     text = stringResource(id = R.string.customer_information_label),
                     style = MaterialTheme.typography.titleLarge
                 )
-                Text(
-                    modifier = Modifier.padding(start = 16.dp),
-                    text = saleInfo.customerName,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    modifier = Modifier.padding(start = 16.dp),
-                    text = saleInfo.address,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    modifier = Modifier.padding(start = 16.dp),
-                    text = stringResource(id = R.string.phone_number_tag, saleInfo.phoneNumber),
-                    style = MaterialTheme.typography.titleMedium
-                )
+
+                Row(
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .fillMaxWidth()
+                ) {
+                    if (saleInfo.customerName.isEmpty()) {
+                        Image(
+                            modifier = Modifier
+                                .size(128.dp)
+                                .padding(16.dp)
+                                .clip(RoundedCornerShape(5)),
+                            imageVector = Icons.Filled.Image,
+                            contentScale = ContentScale.Crop,
+                            contentDescription = stringResource(id = R.string.customer_photo_label)
+                        )
+                    } else {
+                        Image(
+                            modifier = Modifier
+                                .size(128.dp)
+                                .padding(16.dp)
+                                .clip(RoundedCornerShape(5)),
+                            painter = rememberAsyncImagePainter(model = saleInfo.customerPhoto),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = stringResource(id = R.string.customer_photo_label)
+                        )
+                    }
+                    Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                        Text(
+                            text = saleInfo.customerName,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontStyle = FontStyle.Italic
+                        )
+                        Text(
+                            text = saleInfo.address,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontStyle = FontStyle.Italic
+                        )
+                        Text(
+                            text = saleInfo.phoneNumber,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontStyle = FontStyle.Italic
+                        )
+                        Text(
+                            text = saleInfo.email,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontStyle = FontStyle.Italic
+                        )
+                    }
+                }
             }
         }
     }
