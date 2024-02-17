@@ -23,13 +23,13 @@ class FinancialUseCase @Inject constructor(
         var ordersSales = 0F
 
         sales.map { sale ->
-            allSales += (sale.salePrice * sale.quantity)
+            allSales += saleAmount(price = sale.salePrice, quantity = sale.quantity)
             allSalesPurchasePrice += sale.purchasePrice
 
             if (sale.isOrderedByCustomer) {
-                ordersSales += (sale.salePrice * sale.quantity)
+                ordersSales += saleAmount(price = sale.salePrice, quantity = sale.quantity)
             } else {
-                stockSales += (sale.salePrice * sale.quantity)
+                stockSales += saleAmount(price = sale.salePrice, quantity = sale.quantity)
             }
         }
 
@@ -46,6 +46,8 @@ class FinancialUseCase @Inject constructor(
             ),
         )
     }
+
+    private fun saleAmount(price: Float, quantity: Int) = (price * quantity)
 
     private fun calculateProfit(
         sales: Float,
