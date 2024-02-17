@@ -27,9 +27,9 @@ class FinancialUseCase @Inject constructor(
             allSalesPurchasePrice += sale.purchasePrice
 
             if (sale.isOrderedByCustomer) {
-                ordersSales += sale.salePrice
+                ordersSales += (sale.salePrice * sale.quantity)
             } else {
-                stockSales += sale.salePrice
+                stockSales += (sale.salePrice * sale.quantity)
             }
         }
 
