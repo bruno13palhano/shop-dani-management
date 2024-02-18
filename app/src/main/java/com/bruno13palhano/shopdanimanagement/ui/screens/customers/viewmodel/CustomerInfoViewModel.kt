@@ -110,9 +110,7 @@ class CustomerInfoViewModel @Inject constructor(
             if (!photo.contentEquals(other.photo)) return false
             if (owingValue != other.owingValue) return false
             if (purchasesValue != other.purchasesValue) return false
-            if (lastPurchaseValue != other.lastPurchaseValue) return false
-
-            return true
+            return lastPurchaseValue == other.lastPurchaseValue
         }
 
         override fun hashCode(): Int {
