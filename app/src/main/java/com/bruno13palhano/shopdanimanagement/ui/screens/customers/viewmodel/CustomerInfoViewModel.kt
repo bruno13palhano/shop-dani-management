@@ -3,8 +3,6 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.di.CustomerInformation
-import com.bruno13palhano.core.data.repository.sale.SaleRepository
-import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.domain.CustomerInfoUseCase
 import com.bruno13palhano.core.model.CustomerInfo
 import com.bruno13palhano.shopdanimanagement.ui.screens.setChartEntries
@@ -19,7 +17,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CustomerInfoViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleRepository,
     @CustomerInformation private val customerInfoUseCase: CustomerInfoUseCase
 ) : ViewModel() {
     private var _customerInfo = MutableStateFlow(CustomerInfo.emptyCustomerInfo())
@@ -40,7 +37,7 @@ class CustomerInfoViewModel @Inject constructor(
 
     fun getCustomerInfo(customerId: Long) {
         viewModelScope.launch {
-            customerInfoUseCase(customerId = customerId).collect {
+            customerInfoUseCase.getCustomerInfo(customerId = customerId).collect {
                 _customerInfo.value = it
             }
         }
@@ -51,7 +48,7 @@ class CustomerInfoViewModel @Inject constructor(
         val chartEntries = mutableListOf<Pair<String, Float>>()
 
         viewModelScope.launch {
-            saleRepository.getByCustomerId(customerId)
+            customerInfoUseCase.getCustomerSales(customerId = customerId)
                 .map {
                     it.map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
                     setChartEntries(chartEntries, days)
