@@ -13,7 +13,7 @@ class CustomerInfoUseCase  @Inject constructor(
     @CustomerRep private val customerRepository: CustomerRepository,
     @SaleRep private val saleRepository: SaleRepository
 ) {
-    operator fun invoke(customerId: Long): Flow<CustomerInfo> {
+    fun getCustomerInfo(customerId: Long): Flow<CustomerInfo> {
         return combine(
             saleRepository.getByCustomerId(customerId = customerId),
             customerRepository.getById(id = customerId)
@@ -42,6 +42,8 @@ class CustomerInfoUseCase  @Inject constructor(
             )
         }
     }
+
+    fun getCustomerSales(customerId: Long) = saleRepository.getByCustomerId(customerId = customerId)
 
     private fun saleAmount(price: Float, quantity: Int) = (price * quantity)
 }
