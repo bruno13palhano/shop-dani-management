@@ -1,5 +1,6 @@
 package com.bruno13palhano.core.data.di
 
+import com.bruno13palhano.core.data.domain.CustomerInfoUseCase
 import com.bruno13palhano.core.data.domain.FinancialUseCase
 import com.bruno13palhano.core.data.domain.SaleInfoUseCase
 import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
@@ -55,6 +56,9 @@ annotation class Financial
 @Qualifier
 annotation class SalesInformation
 
+@Qualifier
+annotation class CustomerInformation
+
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class RepositoryModule {
@@ -87,7 +91,9 @@ internal abstract class RepositoryModule {
     @SearchCacheRep
     @Singleton
     @Binds
-    abstract fun bindSearchCacheRepository(repository: DefaultSearchCacheRepository): SearchCacheRepository
+    abstract fun bindSearchCacheRepository(
+        repository: DefaultSearchCacheRepository
+    ): SearchCacheRepository
 
     @StockRep
     @Singleton
@@ -108,4 +114,11 @@ internal abstract class RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindSaleInfoUseCase(salesInformation: SaleInfoUseCase): SaleInfoUseCase
+
+    @CustomerInformation
+    @Singleton
+    @Binds
+    abstract fun bindCustomerInfoUseCase(
+        customerInformation: CustomerInfoUseCase
+    ): CustomerInfoUseCase
 }
