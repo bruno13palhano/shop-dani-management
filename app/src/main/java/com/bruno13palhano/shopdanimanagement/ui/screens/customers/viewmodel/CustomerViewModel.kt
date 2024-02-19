@@ -11,6 +11,7 @@ import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
+import com.bruno13palhano.shopdanimanagement.ui.screens.stringToInt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -34,11 +35,17 @@ class CustomerViewModel @Inject constructor(
         private set
     var address by mutableStateOf("")
         private set
+    var city by mutableStateOf("")
+        private set
     var phoneNumber by mutableStateOf("")
+        private set
+    var gender by mutableStateOf("")
+        private set
+    var age by mutableStateOf("")
         private set
 
     val isCustomerNotEmpty = snapshotFlow {
-        name.isNotEmpty() && address.isNotEmpty()
+        name.isNotEmpty() && address.isNotEmpty() && city.isNotEmpty()
     }
         .stateIn(
             scope = viewModelScope,
@@ -62,8 +69,20 @@ class CustomerViewModel @Inject constructor(
         this.address = address
     }
 
+    fun updateCity(city: String) {
+        this.city = city
+    }
+
     fun updatePhoneNumber(phoneNumber: String) {
         this.phoneNumber = phoneNumber
+    }
+
+    fun updateGender(gender: String) {
+        this.gender = gender
+    }
+
+    fun updateAge(age: String) {
+        this.age = age
     }
 
     fun getCustomer(id: Long) {
@@ -86,7 +105,10 @@ class CustomerViewModel @Inject constructor(
             photo = photo,
             email = email,
             address = address,
+            city = city,
             phoneNumber = phoneNumber,
+            gender = gender,
+            age = stringToInt(age),
             timestamp = getCurrentTimestamp()
         )
         viewModelScope.launch {
@@ -109,7 +131,10 @@ class CustomerViewModel @Inject constructor(
             photo = photo,
             email = email,
             address = address,
+            city = city,
             phoneNumber = phoneNumber,
+            gender = gender,
+            age = stringToInt(age),
             timestamp = getCurrentTimestamp()
         )
         viewModelScope.launch {

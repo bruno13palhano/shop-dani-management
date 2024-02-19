@@ -13,10 +13,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.LocationCity
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,11 +56,17 @@ fun CustomerContent(
     photo: ByteArray,
     email: String,
     address: String,
+    city: String,
     phoneNumber: String,
+    gender: String,
+    age: String,
     onNameChange: (name: String) -> Unit,
     onEmailChange: (email: String) -> Unit,
     onAddressChange: (address: String) -> Unit,
+    onCityChange: (city: String) -> Unit,
     onPhoneNumberChange: (phoneNumber: String) -> Unit,
+    onGenderChange: (gender: String) -> Unit,
+    onAgeChange: (age: String) -> Unit,
     onPhotoClick: () -> Unit,
     onOutsideClick: () -> Unit,
     onDoneButtonClick: () -> Unit,
@@ -105,7 +115,7 @@ fun CustomerContent(
                 if (photo.isEmpty()) {
                     Image(
                         modifier = Modifier
-                            .size(200.dp)
+                            .size(160.dp)
                             .padding(8.dp)
                             .clip(RoundedCornerShape(5)),
                         imageVector = Icons.Filled.Image,
@@ -115,7 +125,7 @@ fun CustomerContent(
                 } else {
                     Image(
                         modifier = Modifier
-                            .size(200.dp)
+                            .size(160.dp)
                             .padding(8.dp)
                             .clip(RoundedCornerShape(5)),
                         painter = rememberAsyncImagePainter(model = photo),
@@ -164,7 +174,7 @@ fun CustomerContent(
                 onValueChange = onEmailChange,
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Filled.Title,
+                        imageVector = Icons.Filled.Email,
                         contentDescription = stringResource(id = R.string.email_label)
                     )
                 },
@@ -222,6 +232,37 @@ fun CustomerContent(
                     .padding(horizontal = 8.dp, vertical = 2.dp)
                     .fillMaxWidth()
                     .clearFocusOnKeyboardDismiss(),
+                value = city,
+                onValueChange = onCityChange,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Place,
+                        contentDescription = stringResource(id = R.string.city_label)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.city_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.enter_city_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .fillMaxWidth()
+                    .clearFocusOnKeyboardDismiss(),
                 value = phoneNumber,
                 onValueChange = { phoneNumberValue ->
                     if (phoneNumberValue.isEmpty() || phoneNumberValue.matches(patternInt)) {
@@ -251,6 +292,75 @@ fun CustomerContent(
                 placeholder = {
                     Text(
                         text = stringResource(id = R.string.enter_phone_number_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .fillMaxWidth()
+                    .clearFocusOnKeyboardDismiss(),
+                value = gender,
+                onValueChange = onGenderChange,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Person,
+                        contentDescription = stringResource(id = R.string.gender_label)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.gender_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.enter_gender_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .fillMaxWidth()
+                    .clearFocusOnKeyboardDismiss(),
+                value = age,
+                onValueChange = { ageValue ->
+                    if (ageValue.isEmpty() || ageValue.matches(patternInt)) {
+                        onAgeChange(ageValue)
+                    }
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Cake,
+                        contentDescription = stringResource(id = R.string.age_label)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Number
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                singleLine = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.age_label),
+                        fontStyle = FontStyle.Italic
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.enter_age_label),
                         fontStyle = FontStyle.Italic
                     )
                 }

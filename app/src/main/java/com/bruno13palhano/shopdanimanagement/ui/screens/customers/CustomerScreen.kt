@@ -84,11 +84,17 @@ fun CustomerScreen(
             photo = viewModel.photo,
             email = viewModel.email,
             address = viewModel.address,
+            city = viewModel.city,
             phoneNumber = viewModel.phoneNumber,
+            gender = viewModel.gender,
+            age = viewModel.age,
             onNameChange = viewModel::updateName,
             onEmailChange = viewModel::updateEmail,
             onAddressChange = viewModel::updateAddress,
+            onCityChange = viewModel::updateCity,
             onPhoneNumberChange = viewModel::updatePhoneNumber,
+            onGenderChange = viewModel::updateGender,
+            onAgeChange = viewModel::updateAge,
             onPhotoClick = {
                 galleryLauncher.launch(arrayOf("image/*"))
             },
