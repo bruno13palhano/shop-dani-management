@@ -56,6 +56,9 @@
     <string name="sale_price_label">Sale price</string>
     <string name="is_paid_label">Is product paid</string>
     <string name="role_label">Role</string>
+    <string name="city_label">City</string>
+    <string name="gender_label">Gender</string>
+    <string name="age_label">Age</string>
     <string name="change_password_label">Change password</string>
     <string name="product_name_label">Product name</string>
     <string name="customer_name_label">Customer name</string>
@@ -79,6 +82,9 @@
     <string name="enter_sale_price_label">Enter sale price</string>
     <string name="enter_product_name_label">Enter product name</string>
     <string name="enter_customer_name_label">Enter customer name</string>
+    <string name="enter_city_label">Enter city</string>
+    <string name="enter_gender_label">Enter gender</string>
+    <string name="enter_age_label">Enter age</string>
     <string name="ok_label">OK</string>
     <string name="cancel_label">Cancel</string>
     <string name="category_label">Category</string>

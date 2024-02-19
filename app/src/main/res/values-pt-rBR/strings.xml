@@ -57,6 +57,9 @@
     <string name="sale_price_label">Preço de venda</string>
     <string name="is_paid_label">O produto está pago</string>
     <string name="role_label">Função</string>
+    <string name="city_label">Cidade</string>
+    <string name="gender_label">Gênero</string>
+    <string name="age_label">Idade</string>
     <string name="change_password_label">Mudar senha</string>
     <string name="product_name_label">Nome do produto</string>
     <string name="customer_name_label">Nome do cliente</string>
@@ -80,6 +83,9 @@
     <string name="enter_sale_price_label">Insira o preço de venda</string>
     <string name="enter_product_name_label">Insira o nome do produto</string>
     <string name="enter_customer_name_label">Insira o nome do cliente</string>
+    <string name="enter_city_label">Insira a cidade</string>
+    <string name="enter_gender_label">Insira o gênero</string>
+    <string name="enter_age_label">Insira a idade</string>
     <string name="ok_label">OK</string>
     <string name="cancel_label">Cancelar</string>
     <string name="category_label">Categoria</string>
