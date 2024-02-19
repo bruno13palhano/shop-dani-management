@@ -1,5 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.customers
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,17 +29,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bruno13palhano.core.model.CustomerInfo
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.CustomerInfoBottomSheet
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.CustomersViewModel
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @Composable
 fun CustomersScreen(
@@ -48,8 +54,19 @@ fun CustomersScreen(
     onIconMenuClick: () -> Unit,
     viewModel: CustomersViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getAllCustomers()
+    LaunchedEffect(key1 = Unit) { viewModel.getAllCustomers() }
+
+    val entries by viewModel.entry.collectAsStateWithLifecycle()
+    val customerInfo by viewModel.customerInfo.collectAsStateWithLifecycle()
+
+    val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
+
+    LaunchedEffect(key1 = entries) {
+        chart.setEntries(
+            entries.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            }
+        )
     }
 
     val customerList by viewModel.customerList.collectAsStateWithLifecycle()
@@ -61,11 +78,19 @@ fun CustomersScreen(
 
     var orderedByName by remember { mutableStateOf(false) }
     var orderedByAddress by remember { mutableStateOf(false) }
+    var openCustomerBottomSheet by remember { mutableStateOf(false) }
 
     CustomersContent(
         customerList = customerList,
+        customerInfo = customerInfo,
+        openCustomerBottomSheet = openCustomerBottomSheet,
+        chartEntries = chart,
         menuItems = menuItems,
-        onItemClick = onItemClick,
+        onItemClick = {
+            openCustomerBottomSheet = true
+            viewModel.getCustomerInfo(it)
+            viewModel.getCustomerPurchases(it)
+        },
         onSearchClick = onSearchClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
@@ -80,6 +105,8 @@ fun CustomersScreen(
                 else -> { viewModel.getAllCustomers() }
             }
         },
+        onEditCustomerClick = onItemClick,
+        onDismissCustomerBottomSheet = { openCustomerBottomSheet = false },
         onAddButtonClick = onAddButtonClick,
         onIconMenuClick = onIconMenuClick
     )
@@ -89,10 +116,15 @@ fun CustomersScreen(
 @Composable
 fun CustomersContent(
     customerList: List<CommonItem>,
+    customerInfo: CustomerInfo,
+    openCustomerBottomSheet: Boolean,
+    chartEntries: ChartEntryModelProducer,
     menuItems: Array<String>,
     onItemClick: (id: Long) -> Unit,
     onSearchClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
+    onEditCustomerClick: (id: Long) -> Unit,
+    onDismissCustomerBottomSheet: () -> Unit,
     onAddButtonClick: () -> Unit,
     onIconMenuClick: () -> Unit
 ) {
@@ -166,6 +198,24 @@ fun CustomersContent(
                     onClick = { onItemClick(item.id) }
                 )
             }
+        }
+    }
+
+    AnimatedVisibility(visible = openCustomerBottomSheet) {
+        CustomerInfoBottomSheet(onDismissBottomSheet = onDismissCustomerBottomSheet) {
+            val focusManager = LocalFocusManager.current
+
+            CustomerInfoContent(
+                name = customerInfo.name,
+                address = customerInfo.address,
+                photo = customerInfo.photo,
+                owingValue = customerInfo.owingValue,
+                purchasesValue = customerInfo.purchasesValue,
+                lastPurchaseValue = customerInfo.lastPurchaseValue,
+                entry = chartEntries,
+                onEditIconClick = { onEditCustomerClick(customerInfo.id) },
+                onOutsideClick = { focusManager.clearFocus(force = true) }
+            )
         }
     }
 }

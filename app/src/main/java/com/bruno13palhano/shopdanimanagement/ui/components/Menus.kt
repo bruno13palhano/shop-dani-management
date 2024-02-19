@@ -6,6 +6,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -474,6 +475,24 @@ fun SaleBottomSheet(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomerInfoBottomSheet(
+    onDismissBottomSheet: () -> Unit,
+    content: @Composable (ColumnScope.() -> Unit)
+) {
+    val bottomSheetState = rememberModalBottomSheetState()
+
+    ModalBottomSheet(
+        modifier = Modifier
+            .padding(bottom = 48.dp)
+            .fillMaxWidth(),
+        onDismissRequest = onDismissBottomSheet,
+        sheetState = bottomSheetState,
+        content = content
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
