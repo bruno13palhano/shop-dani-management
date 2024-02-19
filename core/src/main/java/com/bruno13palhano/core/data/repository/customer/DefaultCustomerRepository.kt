@@ -45,7 +45,10 @@ internal class DefaultCustomerRepository @Inject constructor(
                 photo = model.photo,
                 email = model.email,
                 address = model.address,
+                city = model.city,
                 phoneNumber = model.phoneNumber,
+                gender = model.gender,
+                age = model.age,
                 timestamp = model.timestamp
             )
 

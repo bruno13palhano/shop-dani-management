@@ -36,7 +36,10 @@ internal class DefaultCustomerData @Inject constructor(
                         photo = model.photo,
                         email = model.email,
                         address = model.address,
+                        city = model.city,
                         phoneNumber = model.phoneNumber,
+                        gender = model.gender,
+                        age = model.age.toLong(),
                         timestamp = model.timestamp
                     )
                     id = customerQueries.getLastId().executeAsOne()
@@ -57,7 +60,10 @@ internal class DefaultCustomerData @Inject constructor(
                         photo = model.photo,
                         email = model.email,
                         address = model.address,
+                        city = model.city,
                         phoneNumber = model.phoneNumber,
+                        gender = model.gender,
+                        age = model.age.toLong(),
                         timestamp = model.timestamp
                     )
 
@@ -93,7 +99,10 @@ internal class DefaultCustomerData @Inject constructor(
                     photo = model.photo,
                     email = model.email,
                     address = model.address,
+                    city = model.city,
                     phoneNumber = model.phoneNumber,
+                    gender = model.gender,
+                    age = model.age.toLong(),
                     timestamp = model.timestamp
                 )
 
@@ -188,7 +197,10 @@ internal class DefaultCustomerData @Inject constructor(
         photo: ByteArray,
         email: String,
         address: String,
+        city: String,
         phoneNumber: String,
+        gender: String,
+        age: Long,
         timestamp: String
     ) = Customer(
         id = id,
@@ -196,7 +208,10 @@ internal class DefaultCustomerData @Inject constructor(
         photo = photo,
         email = email,
         address = address,
+        city = city,
         phoneNumber = phoneNumber,
+        gender = gender,
+        age = age.toInt(),
         timestamp = timestamp
     )
 }
