@@ -2,6 +2,7 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.customers
 
 import android.graphics.Typeface
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.LocationCity
@@ -69,7 +69,6 @@ import com.patrykandpatrick.vico.core.scroll.InitialScroll
 fun CustomerInfoScreen(
     customerId: Long,
     onEditIconClick: () -> Unit,
-    navigateUp: () -> Unit,
     viewModel: CustomerInfoViewModel = hiltViewModel()
 ) {
     val entries by viewModel.entry.collectAsStateWithLifecycle()
@@ -104,8 +103,7 @@ fun CustomerInfoScreen(
         lastPurchaseValue = customerInfo.lastPurchaseValue,
         entry = chart,
         onEditIconClick = onEditIconClick,
-        onOutsideClick = { focusManager.clearFocus(force = true) },
-        navigateUp = navigateUp
+        onOutsideClick = { focusManager.clearFocus(force = true) }
     )
 }
 
@@ -120,38 +118,47 @@ fun CustomerInfoContent(
     lastPurchaseValue: String,
     entry: ChartEntryModelProducer,
     onEditIconClick: () -> Unit,
-    onOutsideClick: () -> Unit,
-    navigateUp: () -> Unit
+    onOutsideClick: () -> Unit
 ) {
-    Scaffold(
-        modifier = Modifier.clickableNoEffect { onOutsideClick() },
-        topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(id = R.string.customer_label)) },
-                navigationIcon = {
-                    IconButton(onClick = navigateUp) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.up_button_label)
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = onEditIconClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Edit,
-                            contentDescription = stringResource(id = R.string.edit_label)
-                        )
-                    }
-                }
-            )
-        }
-    ) {
+//    Scaffold(
+//        modifier = Modifier.clickableNoEffect { onOutsideClick() },
+//        topBar = {
+//            TopAppBar(
+//                title = { Text(text = stringResource(id = R.string.customer_label)) },
+//                actions = {
+//                    IconButton(onClick = onEditIconClick) {
+//                        Icon(
+//                            imageVector = Icons.Filled.Edit,
+//                            contentDescription = stringResource(id = R.string.edit_label)
+//                        )
+//                    }
+//                }
+//            )
+//        }
+//    ) {
         Column(
             modifier = Modifier
-                .padding(it)
+                .padding(bottom = 48.dp)
+                .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
+                .clickableNoEffect { onOutsideClick() }
         ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = stringResource(id = R.string.customer_information_label),
+                    style = MaterialTheme.typography.titleLarge
+                )
+                IconButton(
+                    modifier = Modifier.align(Alignment.CenterEnd),
+                    onClick = onEditIconClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = stringResource(id = R.string.edit_label)
+                    )
+                }
+            }
             Row(
                verticalAlignment = Alignment.Bottom
             ) {
@@ -296,5 +303,5 @@ fun CustomerInfoContent(
                 )
             }
         }
-    }
+//    }
 }
