@@ -4,21 +4,25 @@ CREATE TABLE CustomerTable (
     photo BLOB NOT NULL,
     email TEXT NOT NULL,
     address TEXT NOT NULL,
+    city TEXT NOT NULL,
     phoneNumber TEXT NOT NULL,
+    gender TEXT NOT NULL,
+    age INTEGER NOT NULL,
     timestamp TEXT NOT NULL
 );
 
 insert:
-INSERT INTO CustomerTable(name, photo, email, address, phoneNumber, timestamp)
-VALUES(?,?,?,?,?, ?);
+INSERT INTO CustomerTable(name, photo, email, address, city, phoneNumber, gender, age, timestamp)
+VALUES(?,?,?,?,?,?,?,?,?);
 
 insertWithId:
-INSERT OR REPLACE INTO CustomerTable(id, name, photo, email, address, phoneNumber, timestamp)
-VALUES(?,?,?,?,?,?,?);
+INSERT OR REPLACE INTO CustomerTable(id, name, photo, email, address, city, phoneNumber, gender,
+    age, timestamp)
+VALUES(?,?,?,?,?,?,?,?,?,?);
 
 update:
-UPDATE CustomerTable SET name = ?, photo = ?, email = ?, address = ?, phoneNumber = ?,
-    timestamp = ? WHERE id = ?;
+UPDATE CustomerTable SET name = ?, photo = ?, email = ?, address = ?, city = ?, phoneNumber = ?,
+    gender = ?, age = ?, timestamp = ? WHERE id = ?;
 
 delete:
 DELETE FROM CustomerTable WHERE id = ?;
