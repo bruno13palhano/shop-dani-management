@@ -6,7 +6,10 @@ data class Customer(
     val photo: ByteArray,
     val email: String,
     val address: String,
+    val city: String,
     val phoneNumber: String,
+    val gender: String,
+    val age: Int,
     override val timestamp: String
 ) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
@@ -20,10 +23,11 @@ data class Customer(
         if (!photo.contentEquals(other.photo)) return false
         if (email != other.email) return false
         if (address != other.address) return false
+        if (city != other.city) return false
         if (phoneNumber != other.phoneNumber) return false
-        if (timestamp != other.timestamp) return false
-
-        return true
+        if (gender != other.gender) return false
+        if (age != other.age) return false
+        return timestamp == other.timestamp
     }
 
     override fun hashCode(): Int {
@@ -32,7 +36,10 @@ data class Customer(
         result = 31 * result + photo.contentHashCode()
         result = 31 * result + email.hashCode()
         result = 31 * result + address.hashCode()
+        result = 31 * result + city.hashCode()
         result = 31 * result + phoneNumber.hashCode()
+        result = 31 * result + gender.hashCode()
+        result = 31 * result + age
         result = 31 * result + timestamp.hashCode()
         return result
     }
