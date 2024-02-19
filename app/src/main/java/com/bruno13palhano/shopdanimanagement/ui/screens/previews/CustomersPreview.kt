@@ -7,6 +7,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.bruno13palhano.core.model.CustomerInfo
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerInfoContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomersContent
@@ -25,10 +26,15 @@ fun CustomerDynamicPreview() {
         ) {
             CustomersContent(
                 customerList = customerList,
+                customerInfo = CustomerInfo.emptyCustomerInfo(),
+                openCustomerBottomSheet = false,
+                chartEntries = ChartEntryModelProducer(),
                 menuItems = arrayOf(),
                 onItemClick = {},
                 onSearchClick = {},
                 onMoreOptionsItemClick = {},
+                onEditCustomerClick = {},
+                onDismissCustomerBottomSheet = {},
                 onAddButtonClick = {},
                 onIconMenuClick = {}
             )
@@ -49,10 +55,15 @@ fun CustomerPreview() {
         ) {
             CustomersContent(
                 customerList = customerList,
+                customerInfo = CustomerInfo.emptyCustomerInfo(),
+                openCustomerBottomSheet = false,
+                chartEntries = ChartEntryModelProducer(),
                 menuItems = arrayOf(),
                 onItemClick = {},
                 onSearchClick = {},
                 onMoreOptionsItemClick = {},
+                onEditCustomerClick = {},
+                onDismissCustomerBottomSheet = {},
                 onAddButtonClick = {},
                 onIconMenuClick = {}
             )
@@ -90,8 +101,7 @@ fun CustomerInfoDynamicPreview() {
                 lastPurchaseValue = "77.99",
                 entry = ChartEntryModelProducer(),
                 onEditIconClick = {},
-                onOutsideClick = {},
-                navigateUp = {}
+                onOutsideClick = {}
             )
         }
     }
@@ -117,8 +127,7 @@ fun CustomerInfoPreview() {
                 lastPurchaseValue = "77.99",
                 entry = ChartEntryModelProducer(),
                 onEditIconClick = {},
-                onOutsideClick = {},
-                navigateUp = {}
+                onOutsideClick = {}
             )
         }
     }
