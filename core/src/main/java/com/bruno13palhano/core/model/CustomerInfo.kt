@@ -1,6 +1,7 @@
 package com.bruno13palhano.core.model
 
 data class CustomerInfo(
+    val id: Long,
     val name: String,
     val address: String,
     val photo: ByteArray,
@@ -14,6 +15,7 @@ data class CustomerInfo(
 
         other as CustomerInfo
 
+        if (id != other.id) return false
         if (name != other.name) return false
         if (address != other.address) return false
         if (!photo.contentEquals(other.photo)) return false
@@ -23,7 +25,8 @@ data class CustomerInfo(
     }
 
     override fun hashCode(): Int {
-        var result = name.hashCode()
+        var result = id.hashCode()
+        result = 31 * result + name.hashCode()
         result = 31 * result + address.hashCode()
         result = 31 * result + photo.contentHashCode()
         result = 31 * result + owingValue.hashCode()
@@ -34,6 +37,7 @@ data class CustomerInfo(
 
     companion object {
         fun emptyCustomerInfo() = CustomerInfo(
+            id = 0L,
             name = "",
             address = "",
             photo = byteArrayOf(),

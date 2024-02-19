@@ -33,6 +33,7 @@ class CustomerInfoUseCase  @Inject constructor(
             }
 
             CustomerInfo(
+                id = customerId,
                 name = customer.name,
                 address = customer.address,
                 photo = customer.photo,
