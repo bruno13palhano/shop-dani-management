@@ -92,7 +92,10 @@ class CustomerViewModel @Inject constructor(
                 photo = it.photo
                 email = it.email
                 address = it.address
+                city = it.city
                 phoneNumber = it.phoneNumber
+                gender = it.gender
+                age = it.age.toString()
             }
         }
     }
