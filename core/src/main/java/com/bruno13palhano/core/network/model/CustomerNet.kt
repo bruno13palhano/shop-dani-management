@@ -10,7 +10,10 @@ data class CustomerNet(
     @Json(name = "photo") val photo: String,
     @Json(name = "email") val email: String,
     @Json(name = "address") val address: String,
+    @Json(name = "city") val city: String,
     @Json(name = "phoneNumber") val phoneNumber: String,
+    @Json(name = "gender") val gender: String,
+    @Json(name = "age") val age: Int,
     @Json(name = "timestamp") val timestamp: String
 ) {
     override fun equals(other: Any?): Boolean {
@@ -48,7 +51,10 @@ internal fun CustomerNet.asExternal() = Customer(
     photo = Base64.getDecoder().decode(photo),
     email = email,
     address = address,
+    city = city,
     phoneNumber = phoneNumber,
+    gender = gender,
+    age = age,
     timestamp = timestamp
 )
 
@@ -58,6 +64,9 @@ internal fun Customer.asNetwork() = CustomerNet(
     photo = Base64.getEncoder().encodeToString(photo),
     email = email,
     address = address,
+    city = city,
     phoneNumber = phoneNumber,
+    gender = gender,
+    age = age,
     timestamp = timestamp
 )
