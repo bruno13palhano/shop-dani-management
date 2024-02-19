@@ -8,7 +8,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerInfoScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomersScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.SearchCustomersScreen
@@ -27,9 +26,9 @@ fun NavGraphBuilder.customersNavGraph(
             showBottomMenu(true)
             gesturesEnabled(true)
             CustomersScreen(
-                onItemClick = { customerId ->
+                onItemClick = { id ->
                     navController.navigate(
-                        route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_INFO_ROUTE}/$customerId"
+                        route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_ROUTE}/${id}/${true}"
                     )
                 },
                 onSearchClick = {
@@ -83,26 +82,6 @@ fun NavGraphBuilder.customersNavGraph(
                 )
             }
         }
-        composable(
-            route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_INFO_ROUTE}/{$ITEM_ID}",
-            arguments = listOf(
-                navArgument(ITEM_ID) { type = NavType.LongType }
-            )
-        ) { backStackEntry ->
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            backStackEntry.arguments?.getLong(ITEM_ID)?.let { id ->
-                CustomerInfoScreen(
-                    customerId = id,
-                    onEditIconClick = {
-                        navController.navigate(
-                            route = "${CustomersDestinations.CUSTOMERS_CUSTOMER_ROUTE}/$id/${true}"
-                        )
-                    },
-                    navigateUp = { navController.navigateUp() }
-                )
-            }
-        }
     }
 }
 
@@ -110,5 +89,4 @@ object CustomersDestinations {
     const val MAIN_CUSTOMERS_ROUTE = "customers_main_route"
     const val CUSTOMERS_SEARCH_ROUTE = "customers_search_route"
     const val CUSTOMERS_CUSTOMER_ROUTE = "customers_customer_route"
-    const val CUSTOMERS_CUSTOMER_INFO_ROUTE = "customers_customer_info_route"
 }
