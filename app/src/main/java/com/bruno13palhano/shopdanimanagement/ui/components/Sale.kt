@@ -1,6 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
 import android.icu.text.DecimalFormat
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,7 +37,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -128,7 +131,9 @@ fun SaleContent(
                                     MoreOptionsMenu(
                                         items = menuItems,
                                         expanded = expanded,
-                                        onDismissRequest = { expandedValue -> expanded = expandedValue },
+                                        onDismissRequest = { expandedValue ->
+                                            expanded = expandedValue
+                                        },
                                         onClick = onMoreOptionsItemClick
                                     )
                                 }
@@ -157,13 +162,38 @@ fun SaleContent(
             .fillMaxHeight()
             .verticalScroll(rememberScrollState())
         ) {
-            CustomerBottomSheet(
-                customers = customers,
-                openBottomSheet = openCustomerSheet,
-                onBottomSheetChange = { show -> openCustomerSheet = show },
-                onDismissCustomer = onDismissCustomer,
-                onSelectedItem = onCustomerSelected
-            )
+            AnimatedVisibility(visible = openCustomerSheet) {
+                BottomSheet(
+                    onDismissBottomSheet = {
+                        openCustomerSheet = false
+                        onDismissCustomer()
+                    }
+                ) {
+                    val initialCustomer = customers
+                        .filter { customer -> customer.isChecked }
+                        .findLast { customer -> customer.isChecked }?.name
+                    val (selected, onOptionSelected) = rememberSaveable {
+                        mutableStateOf(initialCustomer)
+                    }
+
+                    Column(modifier = Modifier.padding(bottom = 32.dp)) {
+                        customers.forEach { customerItem ->
+                            ListItem(
+                                headlineContent = { Text(text = customerItem.name) },
+                                leadingContent = {
+                                    RadioButton(
+                                        selected = customerItem.name == selected,
+                                        onClick = {
+                                            onOptionSelected(customerItem.name)
+                                            onCustomerSelected(customerItem.name)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            }
 
             Row(
                 verticalAlignment = Alignment.Bottom

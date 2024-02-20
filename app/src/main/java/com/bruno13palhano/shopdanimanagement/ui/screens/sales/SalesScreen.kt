@@ -5,22 +5,31 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,17 +41,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.core.model.SaleInfo
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.BottomSheet
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
-import com.bruno13palhano.shopdanimanagement.ui.components.SaleBottomSheet
 import com.bruno13palhano.shopdanimanagement.ui.components.SingleInputDialog
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
@@ -96,7 +110,6 @@ fun SalesScreen(
             onItemClick(it)
         },
         onSheetNameChange = viewModel::updateSheetName,
-        onBottomSheetChange = { openBottomSheet = it },
         onDialogOkClick = { viewModel.exportSalesSheet() },
         onMoreOptionsItemClick = { index ->
             when (index) {
@@ -147,7 +160,6 @@ fun SalesContent(
     onItemClick: (saleId: Long, customerId: Long) -> Unit,
     onEditClick: (id: Long) -> Unit,
     onSheetNameChange: (sheetName: String) -> Unit,
-    onBottomSheetChange: (close: Boolean) -> Unit,
     onDialogOkClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
     onDismissDialog: () -> Unit,
@@ -233,12 +245,151 @@ fun SalesContent(
         }
 
         AnimatedVisibility(visible = openBottomSheet) {
-            SaleBottomSheet(
-                saleInfo = currentSale,
-                onBottomSheetChange = onBottomSheetChange,
-                onDismissBottomSheet = onDismissBottomSheet,
-                onEditSaleClick = onEditClick
-            )
+            BottomSheet(onDismissBottomSheet = onDismissBottomSheet) {
+                Column(
+                    modifier = Modifier
+                        .padding(bottom = 48.dp)
+                        .fillMaxWidth()
+                ) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            modifier = Modifier.align(Alignment.Center),
+                            text = stringResource(id = R.string.sale_information_label),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        IconButton(
+                            modifier = Modifier.align(Alignment.CenterEnd),
+                            onClick = { onEditClick(currentSale.saleId) }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = stringResource(id = R.string.edit_label)
+                            )
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        if (currentSale.productPhoto.isEmpty()) {
+                            Image(
+                                modifier = Modifier
+                                    .size(128.dp)
+                                    .padding(16.dp)
+                                    .clip(RoundedCornerShape(5)),
+                                imageVector = Icons.Filled.Image,
+                                contentScale = ContentScale.Crop,
+                                contentDescription = stringResource(id = R.string.product_image_label)
+                            )
+                        } else {
+                            Image(
+                                modifier = Modifier
+                                    .size(128.dp)
+                                    .padding(16.dp)
+                                    .clip(RoundedCornerShape(5)),
+                                painter = rememberAsyncImagePainter(
+                                    model = currentSale.productPhoto
+                                ),
+                                contentScale = ContentScale.Crop,
+                                contentDescription = stringResource(id = R.string.product_image_label)
+                            )
+                        }
+                        Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                            Text(
+                                text = pluralStringResource(
+                                    id = R.plurals.simple_description_label,
+                                    count = currentSale.quantity,
+                                    currentSale.quantity,
+                                    currentSale.productName
+                                ),
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                text = stringResource(id = R.string.price_tag, currentSale.salePrice),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontStyle = FontStyle.Italic
+                            )
+                            Text(
+                                text = stringResource(
+                                    id = R.string.delivery_price_tag,
+                                    currentSale.deliveryPrice.toString()
+                                ),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontStyle = FontStyle.Italic
+                            )
+                            Text(
+                                text = stringResource(
+                                    id = R.string.date_of_sale_tag,
+                                    dateFormat.format(currentSale.dateOfSale)
+                                ),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+                    }
+
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                    Text(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        text = stringResource(id = R.string.customer_information_label),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        if (currentSale.customerName.isEmpty()) {
+                            Image(
+                                modifier = Modifier
+                                    .size(128.dp)
+                                    .padding(16.dp)
+                                    .clip(RoundedCornerShape(5)),
+                                imageVector = Icons.Filled.Image,
+                                contentScale = ContentScale.Crop,
+                                contentDescription = stringResource(id = R.string.customer_photo_label)
+                            )
+                        } else {
+                            Image(
+                                modifier = Modifier
+                                    .size(128.dp)
+                                    .padding(16.dp)
+                                    .clip(RoundedCornerShape(5)),
+                                painter = rememberAsyncImagePainter(
+                                    model = currentSale.customerPhoto
+                                ),
+                                contentScale = ContentScale.Crop,
+                                contentDescription = stringResource(id = R.string.customer_photo_label)
+                            )
+                        }
+                        Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                            Text(
+                                text = currentSale.customerName,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontStyle = FontStyle.Italic
+                            )
+                            Text(
+                                text = currentSale.address,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontStyle = FontStyle.Italic
+                            )
+                            Text(
+                                text = currentSale.phoneNumber,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontStyle = FontStyle.Italic
+                            )
+                            Text(
+                                text = currentSale.email,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+                    }
+                }
+            }
         }
 
         AnimatedVisibility(

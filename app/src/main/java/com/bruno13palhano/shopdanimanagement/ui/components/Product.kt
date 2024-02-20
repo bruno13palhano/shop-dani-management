@@ -1,10 +1,12 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,12 +32,15 @@ import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.Title
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -158,19 +165,66 @@ fun ProductContent(
             .fillMaxHeight()
             .verticalScroll(rememberScrollState())
         ) {
-            CategoryBottomSheet(
-                categories = categories,
-                openBottomSheet = openCategorySheet,
-                onBottomSheetChange = { show -> openCategorySheet = show },
-                onDismissCategory = onDismissCategory
-            )
-            CompanyBottomSheet(
-                companies = companies,
-                openBottomSheet = openCompanySheet,
-                onBottomSheetChange = { show -> openCompanySheet = show },
-                onDismissCompany = onDismissCompany,
-                onSelectedItem = onCompanySelected
-            )
+            AnimatedVisibility(visible = openCategorySheet) {
+                BottomSheet(
+                    onDismissBottomSheet = {
+                        openCategorySheet = false
+                        onDismissCategory()
+                    }
+                ) {
+                    LazyColumn(contentPadding = PaddingValues(bottom = 32.dp)) {
+                        items(categories) { categoryItem ->
+                            ListItem(
+                                headlineContent = { Text(text = categoryItem.category) },
+                                leadingContent = {
+                                    var checked by rememberSaveable { mutableStateOf(categoryItem.isChecked) }
+
+                                    Checkbox(
+                                        checked = checked,
+                                        onCheckedChange = { isChecked ->
+                                            categoryItem.isChecked = isChecked
+                                            checked = isChecked
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            AnimatedVisibility(visible = openCompanySheet) {
+                val initialCompany = companies
+                    .filter { company -> company.isChecked }
+                    .findLast { company -> company.isChecked }?.name?.company
+
+                BottomSheet(
+                    onDismissBottomSheet = {
+                        openCompanySheet = false
+                        onDismissCompany()
+                    }
+                ) {
+                    val (selected, onOptionSelected) = rememberSaveable { mutableStateOf(initialCompany)}
+
+                    Column(modifier = Modifier.padding(bottom = 32.dp)) {
+                        companies.forEach { companyItem ->
+                            ListItem(
+                                headlineContent = { Text(text = companyItem.name.company) },
+                                leadingContent = {
+                                    RadioButton(
+                                        selected = companyItem.name.company == selected,
+                                        onClick = {
+                                            onOptionSelected(companyItem.name.company)
+                                            onCompanySelected(companyItem.name.company)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
             Row(
                 verticalAlignment = Alignment.Bottom
             ) {
