@@ -94,11 +94,11 @@ fun CustomersScreen(
         onSearchClick = onSearchClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
-                0 -> {
+                MoreOptions.ORDERED_BY_NAME -> {
                     viewModel.getOrderedByName(isOrderedAsc = orderedByName)
                     orderedByName = !orderedByName
                 }
-                1 -> {
+                MoreOptions.ORDERED_BY_ADDRESS -> {
                     viewModel.getOrderedByAddress(isOrderedAsc = orderedByAddress)
                     orderedByAddress = !orderedByAddress
                 }
@@ -218,4 +218,9 @@ fun CustomersContent(
             )
         }
     }
+}
+
+private object MoreOptions {
+    const val ORDERED_BY_NAME = 0
+    const val ORDERED_BY_ADDRESS = 1
 }
