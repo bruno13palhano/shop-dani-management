@@ -479,7 +479,7 @@ fun SaleBottomSheet(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomerInfoBottomSheet(
+fun BottomSheet(
     onDismissBottomSheet: () -> Unit,
     content: @Composable (ColumnScope.() -> Unit)
 ) {

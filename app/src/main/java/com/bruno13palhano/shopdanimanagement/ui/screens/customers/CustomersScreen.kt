@@ -39,7 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.CustomerInfo
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItemList
-import com.bruno13palhano.shopdanimanagement.ui.components.CustomerInfoBottomSheet
+import com.bruno13palhano.shopdanimanagement.ui.components.BottomSheet
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
@@ -202,7 +202,7 @@ fun CustomersContent(
     }
 
     AnimatedVisibility(visible = openCustomerBottomSheet) {
-        CustomerInfoBottomSheet(onDismissBottomSheet = onDismissCustomerBottomSheet) {
+        BottomSheet(onDismissBottomSheet = onDismissCustomerBottomSheet) {
             val focusManager = LocalFocusManager.current
 
             CustomerInfoContent(
