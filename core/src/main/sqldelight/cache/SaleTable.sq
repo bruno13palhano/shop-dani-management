@@ -9,6 +9,14 @@ CREATE TABLE SaleTable (
     purchasePrice REAL NOT NULL,
     salePrice REAL NOT NULL,
     deliveryPrice REAL NOT NULL,
+    amazonCode TEXT NOT NULL,
+    amazonRequestNumber INTEGER NOT NULL,
+    amazonPrice REAL NOT NULL,
+    amazonTax INTEGER NOT NULL,
+    amazonProfit REAL NOT NULL,
+    amazonSKU TEXT NOT NULL,
+    resaleProfit REAL NOT NULL,
+    totalProfit REAL NOT NULL,
     dateOfSale INTEGER NOT NULL,
     dateOfPayment INTEGER NOT NULL,
     shippingDate INTEGER NOT NULL,
@@ -17,26 +25,31 @@ CREATE TABLE SaleTable (
     isPaidByCustomer INTEGER AS Boolean NOT NULL,
     delivered INTEGER AS Boolean NOT NULL,
     canceled INTEGER AS Boolean NOT NULL,
+    isAmazon INTEGER AS Boolean NOT NULL,
     timestamp TEXT NOT NULL
 );
 
 insert:
 INSERT INTO SaleTable(productId, customerId, stockId, quantity, purchasePrice, salePrice,
-    deliveryPrice, dateOfSale, dateOfPayment, shippingDate, deliveryDate, isOrderedByCustomer,
-    isPaidByCustomer, delivered,canceled, timestamp)
-VALUES (?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    deliveryPrice, amazonCode, amazonRequestNumber, amazonPrice, amazonTax, amazonProfit, amazonSKU,
+    resaleProfit, totalProfit, dateOfSale, dateOfPayment, shippingDate, deliveryDate,
+    isOrderedByCustomer, isPaidByCustomer, delivered,canceled, isAmazon, timestamp)
+VALUES (?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
 
 insertWithId:
 INSERT OR REPLACE INTO SaleTable(id, productId, customerId, stockId, quantity, purchasePrice,
-    salePrice, deliveryPrice, dateOfSale, dateOfPayment, shippingDate, deliveryDate,
-    isOrderedByCustomer, isPaidByCustomer, delivered, canceled, timestamp)
-VALUES (?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?, ?, ?);
+    salePrice, deliveryPrice, amazonCode, amazonRequestNumber, amazonPrice, amazonTax, amazonProfit,
+    amazonSKU, resaleProfit, totalProfit, dateOfSale, dateOfPayment, shippingDate, deliveryDate,
+    isOrderedByCustomer, isPaidByCustomer, delivered,canceled, isAmazon, timestamp)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
 
 update:
 UPDATE SaleTable SET productId = ?, customerId = ?, stockId = ?, quantity = ?,
-    purchasePrice = ?, salePrice = ?, deliveryPrice = ?, dateOfSale = ?, dateOfPayment = ?,
-    shippingDate = ?, deliveryDate = ?, isOrderedByCustomer = ?, isPaidByCustomer = ?,
-    delivered = ?, canceled = ?, timestamp = ?
+    purchasePrice = ?, salePrice = ?, deliveryPrice = ?, amazonCode = ?, amazonRequestNumber = ?,
+    amazonPrice= ?, amazonTax = ?, amazonProfit = ?, amazonSKU = ?, resaleProfit = ?,
+    totalProfit = ?, dateOfSale = ?, dateOfPayment = ?, shippingDate = ?, deliveryDate = ?,
+    isOrderedByCustomer = ?, isPaidByCustomer = ?, isAmazon = ?, delivered = ?, canceled = ?,
+    timestamp = ?
 WHERE id = ?;
 
 delete:
@@ -44,9 +57,11 @@ DELETE FROM SaleTable WHERE id = ?;
 
 getAll:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -54,9 +69,11 @@ WHERE S.canceled = 0;
 
 getById:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -64,9 +81,11 @@ WHERE S.id = ?;
 
 getLast:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -74,9 +93,11 @@ ORDER BY S.id DESC LIMIT 1;
 
 getByCustomerId:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -84,9 +105,11 @@ WHERE S.customerId = :customerId;
 
 getDeliveries:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -94,9 +117,11 @@ WHERE S.canceled = 0 AND S.delivered = :delivered;
 
 getLastSales:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -104,9 +129,11 @@ ORDER BY S.id DESC LIMIT :offset, :limit;
 
 getAllStockSales:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -114,9 +141,11 @@ WHERE S.isOrderedByCustomer = 0 ORDER BY S.id DESC LIMIT :offset, :limit;
 
 getAllOrdersSales:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -124,9 +153,11 @@ WHERE S.isOrderedByCustomer = 1 ORDER BY S.id DESC LIMIT :offset, :limit;
 
 getAllOrdersByCustomerNameAsc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -134,9 +165,11 @@ WHERE S.isOrderedByCustomer = 1 ORDER BY C.name ASC;
 
 getAllOrdersByCustomerNameDesc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -144,9 +177,11 @@ WHERE S.isOrderedByCustomer = 1 ORDER BY C.name DESC;
 
 getAllOrdersBySalePriceAsc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -154,9 +189,11 @@ WHERE S.isOrderedByCustomer = 1 ORDER BY S.salePrice ASC;
 
 getAllOrdersBySalePriceDesc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -164,9 +201,11 @@ WHERE S.isOrderedByCustomer = 1 ORDER BY S.salePrice DESC;
 
 getSalesByCustomerNameDesc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -174,9 +213,11 @@ WHERE S.isPaidByCustomer = :isPaidByCustomer AND canceled = 0 ORDER BY C.name DE
 
 getAllSalesByCustomerNameDesc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -184,9 +225,11 @@ WHERE S.canceled = 0 ORDER BY C.name DESC;
 
 getSalesByCustomerNameAsc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -194,9 +237,11 @@ WHERE isPaidByCustomer = :isPaidByCustomer AND canceled = 0 ORDER BY C.name ASC;
 
 getAllSalesByCustomerNameAsc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -204,9 +249,11 @@ WHERE S.canceled = 0 ORDER BY C.name ASC;
 
 getSalesBySalePriceDesc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN  CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -214,9 +261,11 @@ WHERE isPaidByCustomer = :isPaidByCustomer AND canceled = 0 ORDER BY S.salePrice
 
 getAllSalesBySalePriceDesc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -224,9 +273,11 @@ WHERE S.canceled = 0 ORDER BY S.salePrice DESC;
 
 getSalesBySalePriceAsc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN  CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -234,29 +285,23 @@ WHERE isPaidByCustomer = :isPaidByCustomer AND canceled = 0 ORDER BY S.salePrice
 
 getAllSalesBySalePriceAsc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
 WHERE S.canceled = 0 ORDER BY S.salePrice ASC;
 
-getCanceledSales:
-SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
-FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
-INNER JOIN CustomerTable C
-ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
-WHERE S.canceled = 1 ORDER BY S.id DESC LIMIT :offset, :limit;
-
 getAllCanceledSales:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -264,9 +309,11 @@ WHERE S.canceled = 1 ORDER BY S.id DESC;
 
 getCanceledByNameDesc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -274,9 +321,11 @@ WHERE S.canceled = 1 ORDER BY P.name DESC;
 
 getCanceledByNameAsc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -284,9 +333,11 @@ WHERE S.canceled = 1 ORDER BY P.name ASC;
 
 getCanceledByCustomerNameDesc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -294,9 +345,11 @@ WHERE S.canceled = 1 ORDER BY C.name DESC;
 
 getCanceledByCustomerNameAsc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -304,9 +357,11 @@ WHERE S.canceled = 1 ORDER BY C.name ASC;
 
 getCanceledByPriceDesc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -314,9 +369,11 @@ WHERE S.canceled = 1 ORDER BY S.salePrice DESC;
 
 getCanceledByPriceAsc:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
@@ -327,9 +384,11 @@ UPDATE SaleTable SET canceled = 1 WHERE id = ?;
 
 getDebitSales:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
-    C.phoneNumber,S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
-    P.company, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate, S.isOrderedByCustomer,
-    S.isPaidByCustomer, S.delivered, S.canceled, S.timestamp
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonPrice, S.amazonTax, S.amazonProfit,
+    S.amazonSKU, S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate,
+    S.deliveryDate, S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon,
+    S.timestamp
 FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
