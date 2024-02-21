@@ -50,6 +50,14 @@ internal class DefaultSaleData @Inject constructor(
                             purchasePrice = model.purchasePrice.toDouble(),
                             salePrice = model.salePrice.toDouble(),
                             deliveryPrice = model.deliveryPrice.toDouble(),
+                            amazonCode = model.amazonCode,
+                            amazonRequestNumber = model.amazonRequestNumber,
+                            amazonPrice = model.amazonPrice.toDouble(),
+                            amazonTax = model.amazonTax.toLong(),
+                            amazonProfit = model.amazonProfit.toDouble(),
+                            amazonSKU = model.amazonSKU,
+                            resaleProfit = model.resaleProfit.toDouble(),
+                            totalProfit = model.totalProfit.toDouble(),
                             dateOfSale = model.dateOfSale,
                             dateOfPayment = model.dateOfPayment,
                             shippingDate = model.shippingDate,
@@ -58,6 +66,7 @@ internal class DefaultSaleData @Inject constructor(
                             isPaidByCustomer = model.isPaidByCustomer,
                             delivered = model.delivered,
                             canceled = model.canceled,
+                            isAmazon = model.isAmazon,
                             timestamp = model.timestamp
                         )
                     } else {
@@ -88,6 +97,14 @@ internal class DefaultSaleData @Inject constructor(
                             purchasePrice = model.purchasePrice.toDouble(),
                             salePrice = model.salePrice.toDouble(),
                             deliveryPrice = model.deliveryPrice.toDouble(),
+                            amazonCode = model.amazonCode,
+                            amazonRequestNumber = model.amazonRequestNumber,
+                            amazonPrice = model.amazonPrice.toDouble(),
+                            amazonTax = model.amazonTax.toLong(),
+                            amazonProfit = model.amazonProfit.toDouble(),
+                            amazonSKU = model.amazonSKU,
+                            resaleProfit = model.resaleProfit.toDouble(),
+                            totalProfit = model.totalProfit.toDouble(),
                             dateOfSale = model.dateOfSale,
                             dateOfPayment = model.dateOfPayment,
                             shippingDate = model.shippingDate,
@@ -96,6 +113,7 @@ internal class DefaultSaleData @Inject constructor(
                             isPaidByCustomer = model.isPaidByCustomer,
                             delivered = model.delivered,
                             canceled = model.canceled,
+                            isAmazon = model.isAmazon,
                             timestamp = model.timestamp
                         )
                     }
@@ -126,6 +144,14 @@ internal class DefaultSaleData @Inject constructor(
                             quantity = model.quantity.toLong(),
                             purchasePrice = model.purchasePrice.toDouble(),
                             salePrice = model.salePrice.toDouble(),
+                            amazonCode = model.amazonCode,
+                            amazonRequestNumber = model.amazonRequestNumber,
+                            amazonPrice = model.amazonPrice.toDouble(),
+                            amazonTax = model.amazonTax.toLong(),
+                            amazonProfit = model.amazonProfit.toDouble(),
+                            amazonSKU = model.amazonSKU,
+                            resaleProfit = model.resaleProfit.toDouble(),
+                            totalProfit = model.totalProfit.toDouble(),
                             deliveryPrice = model.deliveryPrice.toDouble(),
                             dateOfSale = model.dateOfSale,
                             dateOfPayment = model.dateOfPayment,
@@ -135,6 +161,7 @@ internal class DefaultSaleData @Inject constructor(
                             isPaidByCustomer = model.isPaidByCustomer,
                             delivered = model.delivered,
                             canceled = model.canceled,
+                            isAmazon = model.isAmazon,
                             timestamp = model.timestamp
                         )
                     } else {
@@ -166,6 +193,14 @@ internal class DefaultSaleData @Inject constructor(
                             purchasePrice = model.purchasePrice.toDouble(),
                             salePrice = model.salePrice.toDouble(),
                             deliveryPrice = model.deliveryPrice.toDouble(),
+                            amazonCode = model.amazonCode,
+                            amazonRequestNumber = model.amazonRequestNumber,
+                            amazonPrice = model.amazonPrice.toDouble(),
+                            amazonTax = model.amazonTax.toLong(),
+                            amazonProfit = model.amazonProfit.toDouble(),
+                            amazonSKU = model.amazonSKU,
+                            resaleProfit = model.resaleProfit.toDouble(),
+                            totalProfit = model.totalProfit.toDouble(),
                             dateOfSale = model.dateOfSale,
                             dateOfPayment = model.dateOfPayment,
                             shippingDate = model.shippingDate,
@@ -174,6 +209,7 @@ internal class DefaultSaleData @Inject constructor(
                             isPaidByCustomer = model.isPaidByCustomer,
                             delivered = model.delivered,
                             canceled = model.canceled,
+                            isAmazon = model.isAmazon,
                             timestamp = model.timestamp
                         )
                     }
@@ -236,6 +272,14 @@ internal class DefaultSaleData @Inject constructor(
                     purchasePrice = model.purchasePrice.toDouble(),
                     salePrice = model.salePrice.toDouble(),
                     deliveryPrice = model.deliveryPrice.toDouble(),
+                    amazonCode = model.amazonCode,
+                    amazonRequestNumber = model.amazonRequestNumber,
+                    amazonPrice = model.amazonPrice.toDouble(),
+                    amazonTax = model.amazonTax.toLong(),
+                    amazonProfit = model.amazonProfit.toDouble(),
+                    amazonSKU = model.amazonSKU,
+                    resaleProfit = model.resaleProfit.toDouble(),
+                    totalProfit = model.totalProfit.toDouble(),
                     dateOfSale = model.dateOfSale,
                     dateOfPayment = model.dateOfPayment,
                     shippingDate = model.shippingDate,
@@ -244,6 +288,7 @@ internal class DefaultSaleData @Inject constructor(
                     isPaidByCustomer = model.isPaidByCustomer,
                     delivered = model.delivered,
                     canceled = model.canceled,
+                    isAmazon = model.isAmazon,
                     timestamp = model.timestamp,
                     id = model.id
                 )
@@ -482,6 +527,14 @@ internal class DefaultSaleData @Inject constructor(
         deliveryPrice: Double,
         categories: List<Category>,
         company: String,
+        amazonCode: String,
+        requestNumber: Long,
+        amazonPrice: Double,
+        amazonTax: Long,
+        amazonProfit: Double,
+        amazonSKU: String,
+        resaleProfit: Double,
+        totalProfit: Double,
         dateOfSale: Long,
         dateOfPayment: Long,
         shippingDate: Long,
@@ -490,6 +543,7 @@ internal class DefaultSaleData @Inject constructor(
         isPaidByCustomer: Boolean,
         delivered: Boolean,
         canceled: Boolean,
+        isAmazon: Boolean,
         timestamp: String
     ): Sale {
         return Sale(
@@ -508,6 +562,14 @@ internal class DefaultSaleData @Inject constructor(
             deliveryPrice = deliveryPrice.toFloat(),
             categories = categories,
             company = company,
+            amazonCode = amazonCode,
+            amazonRequestNumber = requestNumber,
+            amazonPrice = amazonPrice.toFloat(),
+            amazonTax = amazonTax.toInt(),
+            amazonProfit = amazonProfit.toFloat(),
+            amazonSKU = amazonSKU,
+            resaleProfit = resaleProfit.toFloat(),
+            totalProfit = totalProfit.toFloat(),
             dateOfSale = dateOfSale,
             dateOfPayment = dateOfPayment,
             shippingDate = shippingDate,
@@ -516,6 +578,7 @@ internal class DefaultSaleData @Inject constructor(
             isPaidByCustomer = isPaidByCustomer,
             delivered = delivered,
             canceled = canceled,
+            isAmazon = isAmazon,
             timestamp = timestamp
         )
     }

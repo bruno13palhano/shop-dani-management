@@ -261,6 +261,14 @@ internal class DefaultSaleRepository @Inject constructor(
         deliveryPrice = sale.deliveryPrice,
         categories = sale.categories,
         company = sale.company,
+        amazonCode = sale.amazonCode,
+        amazonRequestNumber = sale.amazonRequestNumber,
+        amazonPrice = sale.amazonPrice,
+        amazonTax = sale.amazonTax,
+        amazonProfit = sale.amazonProfit,
+        amazonSKU = sale.amazonSKU,
+        resaleProfit = sale.resaleProfit,
+        totalProfit = sale.totalProfit,
         dateOfSale = sale.dateOfSale,
         dateOfPayment = sale.dateOfPayment,
         shippingDate = sale.shippingDate,
@@ -269,6 +277,7 @@ internal class DefaultSaleRepository @Inject constructor(
         isPaidByCustomer = sale.isPaidByCustomer,
         delivered = sale.delivered,
         canceled = sale.canceled,
+        isAmazon = sale.isAmazon,
         timestamp = sale.timestamp
     )
 }
