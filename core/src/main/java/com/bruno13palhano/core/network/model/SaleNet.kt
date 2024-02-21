@@ -12,6 +12,14 @@ data class SaleNet (
     @Json(name = "purchasePrice") val purchasePrice: Float,
     @Json(name = "salePrice") val salePrice: Float,
     @Json(name = "deliveryPrice") val deliveryPrice: Float,
+    @Json(name = "amazonCode") val amazonCode: String,
+    @Json(name = "amazonRequestNumber") val amazonRequestNumber: Long,
+    @Json(name = "amazonPrice") val amazonPrice: Float,
+    @Json(name = "amazonTax") val amazonTax: Int,
+    @Json(name = "amazonProfit") val amazonProfit: Float,
+    @Json(name = "amazonSKU") val amazonSKU: String,
+    @Json(name = "resaleProfit") val resaleProfit: Float,
+    @Json(name = "totalProfit") val totalProfit: Float,
     @Json(name = "dateOfSale") val dateOfSale: Long,
     @Json(name = "dateOfPayment") val dateOfPayment: Long,
     @Json(name = "shippingDate") val shippingDate: Long,
@@ -20,6 +28,7 @@ data class SaleNet (
     @Json(name = "isPaidByCustomer") val isPaidByCustomer: Boolean,
     @Json(name = "delivered") val delivered: Boolean,
     @Json(name = "canceled") val canceled: Boolean,
+    @Json(name = "isAmazon") val isAmazon: Boolean,
     @Json(name = "timestamp") val timestamp: String
 )
 
@@ -39,6 +48,14 @@ internal fun SaleNet.asExternal() = Sale(
     deliveryPrice = deliveryPrice,
     categories = listOf(),
     company = "",
+    amazonCode = amazonCode,
+    amazonRequestNumber = amazonRequestNumber,
+    amazonPrice = amazonPrice,
+    amazonTax = amazonTax,
+    amazonProfit = amazonProfit,
+    amazonSKU = amazonSKU,
+    resaleProfit = resaleProfit,
+    totalProfit = totalProfit,
     dateOfSale = dateOfSale,
     dateOfPayment = dateOfPayment,
     shippingDate = shippingDate,
@@ -47,6 +64,7 @@ internal fun SaleNet.asExternal() = Sale(
     isPaidByCustomer = isPaidByCustomer,
     delivered = delivered,
     canceled = canceled,
+    isAmazon = isAmazon,
     timestamp = timestamp
 )
 
@@ -59,6 +77,14 @@ internal fun Sale.asNetwork() = SaleNet(
     purchasePrice = purchasePrice,
     salePrice = salePrice,
     deliveryPrice = deliveryPrice,
+    amazonCode = amazonCode,
+    amazonRequestNumber = amazonRequestNumber,
+    amazonPrice = amazonPrice,
+    amazonTax = amazonTax,
+    amazonProfit = amazonProfit,
+    amazonSKU = amazonSKU,
+    resaleProfit = resaleProfit,
+    totalProfit = totalProfit,
     dateOfSale = dateOfSale,
     dateOfPayment = dateOfPayment,
     shippingDate = shippingDate,
@@ -67,5 +93,6 @@ internal fun Sale.asNetwork() = SaleNet(
     isPaidByCustomer = isPaidByCustomer,
     delivered = delivered,
     canceled = canceled,
+    isAmazon = isAmazon,
     timestamp = timestamp
 )

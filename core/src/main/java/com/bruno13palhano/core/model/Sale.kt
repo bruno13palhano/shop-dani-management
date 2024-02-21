@@ -16,6 +16,14 @@ data class Sale(
     val deliveryPrice: Float,
     val categories: List<Category>,
     val company: String,
+    val amazonCode: String,
+    val amazonRequestNumber: Long,
+    val amazonPrice: Float,
+    val amazonTax: Int,
+    val amazonProfit: Float,
+    val amazonSKU: String,
+    val resaleProfit: Float,
+    val totalProfit: Float,
     val dateOfSale: Long,
     val dateOfPayment: Long,
     val shippingDate: Long,
@@ -24,6 +32,7 @@ data class Sale(
     val isPaidByCustomer: Boolean,
     val delivered: Boolean,
     val canceled: Boolean,
+    val isAmazon: Boolean,
     override val timestamp: String
 ) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
@@ -47,6 +56,14 @@ data class Sale(
         if (deliveryPrice != other.deliveryPrice) return false
         if (categories != other.categories) return false
         if (company != other.company) return false
+        if (amazonCode != other.amazonCode) return false
+        if (amazonRequestNumber != other.amazonRequestNumber) return false
+        if (amazonPrice != other.amazonPrice) return false
+        if (amazonTax != other.amazonTax) return false
+        if (amazonProfit != other.amazonProfit) return false
+        if (amazonSKU != other.amazonSKU) return false
+        if (resaleProfit != other.resaleProfit) return false
+        if (totalProfit != other.totalProfit) return false
         if (dateOfSale != other.dateOfSale) return false
         if (dateOfPayment != other.dateOfPayment) return false
         if (shippingDate != other.shippingDate) return false
@@ -55,9 +72,8 @@ data class Sale(
         if (isPaidByCustomer != other.isPaidByCustomer) return false
         if (delivered != other.delivered) return false
         if (canceled != other.canceled) return false
-        if (timestamp != other.timestamp) return false
-
-        return true
+        if (isAmazon != other.isAmazon) return false
+        return timestamp == other.timestamp
     }
 
     override fun hashCode(): Int {
@@ -76,6 +92,14 @@ data class Sale(
         result = 31 * result + deliveryPrice.hashCode()
         result = 31 * result + categories.hashCode()
         result = 31 * result + company.hashCode()
+        result = 31 * result + amazonCode.hashCode()
+        result = 31 * result + amazonRequestNumber.hashCode()
+        result = 31 * result + amazonPrice.hashCode()
+        result = 31 * result + amazonTax
+        result = 31 * result + amazonProfit.hashCode()
+        result = 31 * result + amazonSKU.hashCode()
+        result = 31 * result + resaleProfit.hashCode()
+        result = 31 * result + totalProfit.hashCode()
         result = 31 * result + dateOfSale.hashCode()
         result = 31 * result + dateOfPayment.hashCode()
         result = 31 * result + shippingDate.hashCode()
@@ -84,6 +108,7 @@ data class Sale(
         result = 31 * result + isPaidByCustomer.hashCode()
         result = 31 * result + delivered.hashCode()
         result = 31 * result + canceled.hashCode()
+        result = 31 * result + isAmazon.hashCode()
         result = 31 * result + timestamp.hashCode()
         return result
     }
@@ -106,6 +131,14 @@ data class Sale(
                 deliveryPrice = 0F,
                 categories = listOf(),
                 company = "",
+                amazonCode = "",
+                amazonRequestNumber = 0L,
+                amazonPrice = 0F,
+                amazonTax = 0,
+                amazonProfit = 0F,
+                amazonSKU = "",
+                resaleProfit = 0F,
+                totalProfit = 0F,
                 dateOfSale = 0L,
                 dateOfPayment = 0L,
                 shippingDate = 0L,
@@ -114,6 +147,7 @@ data class Sale(
                 isPaidByCustomer = false,
                 delivered = false,
                 canceled = false,
+                isAmazon = false,
                 timestamp = ""
             )
         }
