@@ -16,4 +16,3 @@ dependencyResolutionManagement {
 rootProject.name = "ShopDaniManagement"
 include ':app'
 include ':core'
-include ':feature'
