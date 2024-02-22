@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.Paid
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PriceCheck
@@ -82,12 +83,28 @@ fun SaleContent(
     salePrice: String,
     category: String,
     company: String,
+    amazonCode: String,
+    amazonRequestNumber: String,
+    amazonPrice: String,
+    amazonTax: String,
+    amazonProfit: String,
+    amazonSKU: String,
+    resaleProfit: String,
+    totalProfit: String,
     isPaidByCustomer: Boolean,
+    isAmazon: Boolean,
     onQuantityChange: (quantity: String) -> Unit,
+    onAmazonCodeChange: (amazonCode: String) -> Unit,
+    onAmazonRequestNumberChange: (amazonRequestNumber: String) -> Unit,
+    onAmazonPriceChange: (amazonPrice: String) -> Unit,
+    onAmazonTaxChange: (amazonTax: String) -> Unit,
+    onAmazonSKUChange: (amazonSKU: String) -> Unit,
+    onResaleProfitChange: (resaleProfit: String) -> Unit,
     onPurchasePriceChange: (purchasePrice: String) -> Unit,
     onSalePriceChange: (salePrice: String) -> Unit,
     onDeliveryPriceChange: (deliveryPrice: String) -> Unit,
     onIsPaidByCustomerChange: (isPaidByCustomer: Boolean) -> Unit,
+    onIsAmazonChange: (isAmazon: Boolean) -> Unit,
     onDateOfSaleClick: () -> Unit,
     onDateOfPaymentClick: () -> Unit,
     customers: List<CustomerCheck>,
@@ -293,7 +310,7 @@ fun SaleContent(
                         if (focusState.hasFocus) {
                             openCustomerSheet = true
                         }
-                },
+                    },
                 value = customerName,
                 onValueChange = {},
                 leadingIcon = {
@@ -385,6 +402,314 @@ fun SaleContent(
                     )
                 }
             )
+
+            Row(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                Checkbox(
+                    checked = isAmazon,
+                    onCheckedChange = onIsAmazonChange
+                )
+                Text(text = stringResource(id = R.string.is_amazon_label))
+            }
+            AnimatedVisibility(visible = isAmazon) {
+                Column {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .fillMaxWidth()
+                            .clearFocusOnKeyboardDismiss(),
+                        value = amazonCode,
+                        onValueChange = { value ->
+                            if (value.isEmpty() || value.matches(patternInt)) {
+                                onAmazonCodeChange(value)
+                            }
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Numbers,
+                                contentDescription = stringResource(id = R.string.amazon_code_label)
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Number
+                        ),
+                        keyboardActions = KeyboardActions(onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }),
+                        singleLine = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.amazon_code_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.enter_amazon_code_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .fillMaxWidth()
+                            .clearFocusOnKeyboardDismiss(),
+                        value = amazonRequestNumber,
+                        onValueChange = { value ->
+                            if (value.isEmpty() || value.matches(patternInt)) {
+                                onAmazonRequestNumberChange(value)
+                            }
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Numbers,
+                                contentDescription = stringResource(
+                                    id = R.string.amazon_request_number_label
+                                )
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Number
+                        ),
+                        keyboardActions = KeyboardActions(onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }),
+                        singleLine = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.amazon_request_number_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(
+                                    id = R.string.enter_amazon_request_number_label
+                                ),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .fillMaxWidth()
+                            .clearFocusOnKeyboardDismiss(),
+                        value = amazonPrice,
+                        onValueChange = { value ->
+                            if (value.isEmpty() || value.matches(pattern)) {
+                                onAmazonPriceChange(value)
+                            }
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Paid,
+                                contentDescription = stringResource(
+                                    id = R.string.amazon_price_label
+                                )
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Decimal
+                        ),
+                        keyboardActions = KeyboardActions(onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }),
+                        singleLine = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.amazon_price_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.enter_amazon_price_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .fillMaxWidth()
+                            .clearFocusOnKeyboardDismiss(),
+                        value = amazonTax,
+                        onValueChange = { value ->
+                            if (value.isEmpty() || value.matches(patternInt)) {
+                                onAmazonTaxChange(value)
+                            }
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Paid,
+                                contentDescription = stringResource(id = R.string.amazon_tax_label)
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Number
+                        ),
+                        keyboardActions = KeyboardActions(onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }),
+                        singleLine = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.amazon_tax_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.enter_amazon_tax_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .fillMaxWidth()
+                            .clearFocusOnKeyboardDismiss(),
+                        value = amazonProfit,
+                        onValueChange = {},
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Paid,
+                                contentDescription = stringResource(
+                                    id = R.string.purchase_price_label
+                                )
+                            )
+                        },
+                        singleLine = true,
+                        readOnly = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.amazon_profit_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.enter_amazon_profit_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .fillMaxWidth()
+                            .clearFocusOnKeyboardDismiss(),
+                        value = amazonSKU,
+                        onValueChange = onAmazonSKUChange,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Title,
+                                contentDescription = stringResource(id = R.string.amazon_sku_label)
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }),
+                        singleLine = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.amazon_sku_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.enter_amazon_sku_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .fillMaxWidth()
+                            .clearFocusOnKeyboardDismiss(),
+                        value = resaleProfit,
+                        onValueChange = { value ->
+                            if (value.isEmpty() || value.matches(pattern)) {
+                                onResaleProfitChange(value)
+                            }
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Paid,
+                                contentDescription = stringResource(
+                                    id = R.string.resale_profit_label
+                                )
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Decimal
+                        ),
+                        keyboardActions = KeyboardActions(onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }),
+                        singleLine = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.resale_profit_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.enter_resale_profit_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .fillMaxWidth()
+                            .clearFocusOnKeyboardDismiss(),
+                        value = totalProfit,
+                        onValueChange = {},
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Paid,
+                                contentDescription = stringResource(
+                                    id = R.string.purchase_price_label
+                                )
+                            )
+                        },
+                        singleLine = true,
+                        readOnly = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.total_profit_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.enter_total_profit_label),
+                                fontStyle = FontStyle.Italic
+                            )
+                        },
+                    )
+                }
+            }
+
             OutlinedTextField(
                 modifier = Modifier
                     .padding(horizontal = 8.dp, vertical = 2.dp)
