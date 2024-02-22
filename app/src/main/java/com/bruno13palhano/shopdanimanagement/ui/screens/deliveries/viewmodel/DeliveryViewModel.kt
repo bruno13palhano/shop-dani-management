@@ -37,11 +37,20 @@ class DeliveryViewModel @Inject constructor(
     private var salePrice = 0F
     private var categories = listOf<Category>()
     private var company = ""
+    private var amazonCode = ""
+    private var amazonRequestNumber = 0L
+    private var amazonPrice = 0F
+    private var amazonTax = 0
+    private var amazonProfit = 0F
+    private var amazonSKU = ""
+    private var resaleProfit = 0F
+    private var totalProfit = 0F
     private var dateOfSale = 0L
     private var dateOfPayment = 0L
     private var isOrderedByCustomer = false
     private var isPaidByCustomer = false
     private var canceled = false
+    private var isAmazon = false
     private var timestamp = getCurrentTimestamp()
     var name by mutableStateOf("")
         private set
@@ -104,9 +113,18 @@ class DeliveryViewModel @Inject constructor(
                 deliveryPrice = it.deliveryPrice.toString()
                 categories = it.categories
                 company = it.company
+                amazonCode = it.amazonCode
+                amazonRequestNumber = it.amazonRequestNumber
+                amazonPrice = it.amazonPrice
+                amazonTax = it.amazonTax
+                amazonProfit = it.amazonProfit
+                amazonSKU = it.amazonSKU
+                resaleProfit = it.resaleProfit
+                totalProfit = it.totalProfit
                 shippingDate = it.shippingDate
                 deliveryDate = it.deliveryDate
                 delivered = it.delivered
+                isAmazon = it.isAmazon
             }
         }
     }
@@ -129,6 +147,14 @@ class DeliveryViewModel @Inject constructor(
             deliveryPrice = stringToFloat(deliveryPrice),
             categories = categories,
             company = company,
+            amazonCode = amazonCode,
+            amazonRequestNumber = amazonRequestNumber,
+            amazonPrice = amazonPrice,
+            amazonTax = amazonTax,
+            amazonProfit = amazonProfit,
+            amazonSKU = amazonSKU,
+            resaleProfit = resaleProfit,
+            totalProfit = totalProfit,
             dateOfSale = dateOfSale,
             dateOfPayment = dateOfPayment,
             shippingDate = shippingDate,
@@ -137,6 +163,7 @@ class DeliveryViewModel @Inject constructor(
             isPaidByCustomer = isPaidByCustomer,
             delivered = delivered,
             canceled = canceled,
+            isAmazon = false,
             timestamp = getCurrentTimestamp()
         )
 
