@@ -24,6 +24,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToFloat
 import com.bruno13palhano.shopdanimanagement.ui.screens.stringToInt
+import com.bruno13palhano.shopdanimanagement.ui.screens.stringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -77,11 +78,29 @@ class SaleViewModel @Inject constructor(
         private set
     var company by mutableStateOf("")
         private set
+    var amazonCode by mutableStateOf("")
+        private set
+    var amazonRequestNumber by mutableStateOf("")
+        private set
+    var amazonPrice by mutableStateOf("")
+        private set
+    var amazonTax by mutableStateOf("")
+        private set
+    var amazonProfit by mutableStateOf("")
+        private set
+    var amazonSKU by mutableStateOf("")
+        private set
+    var resaleProfit by mutableStateOf("")
+        private set
+    var totalProfit by mutableStateOf("")
+        private set
     var allCustomers by mutableStateOf(listOf<CustomerCheck>())
         private set
     var isPaidByCustomer by mutableStateOf(false)
         private set
     private var isPaid by mutableStateOf(false)
+    var isAmazon by mutableStateOf(false)
+        private set
 
     val notifySale = snapshotFlow { !isPaidByCustomer }
         .stateIn(
@@ -141,6 +160,42 @@ class SaleViewModel @Inject constructor(
 
     fun updateIsPaidByCustomer(isPaidByCustomer: Boolean) {
         this.isPaidByCustomer = isPaidByCustomer
+    }
+
+    fun updateAmazonCode(amazonCode: String) {
+        this.amazonCode = amazonCode
+    }
+
+    fun updateAmazonRequestNumber(amazonRequestNumber: String) {
+        this.amazonRequestNumber = amazonRequestNumber
+    }
+
+    fun updateAmazonPrice(amazonPrice: String) {
+        this.amazonPrice = amazonPrice
+    }
+
+    fun updateAmazonTax(amazonTax: String) {
+        this.amazonTax = amazonTax
+    }
+
+    fun updateAmazonProfit(amazonProfit: String) {
+        this.amazonProfit = amazonProfit
+    }
+
+    fun updateAmazonSKU(amazonSKU: String) {
+        this.amazonSKU = amazonSKU
+    }
+
+    fun updateResaleProfit(resaleProfit: String) {
+        this.resaleProfit = resaleProfit
+    }
+
+    fun updateTotalProfit(totalProfit: String) {
+        this.totalProfit = totalProfit
+    }
+
+    fun updateIsAmazon(isAmazon: Boolean) {
+        this.isAmazon = isAmazon
     }
 
     fun updateCustomerName(customerName: String) {
@@ -325,6 +380,14 @@ class SaleViewModel @Inject constructor(
         deliveryPrice = stringToFloat(deliveryPrice),
         categories = emptyList(),
         company = company,
+        amazonCode = amazonCode,
+        amazonRequestNumber = stringToLong(amazonRequestNumber),
+        amazonPrice = stringToFloat(amazonPrice),
+        amazonTax = stringToInt(amazonTax),
+        amazonProfit = stringToFloat(amazonProfit),
+        amazonSKU = amazonSKU,
+        resaleProfit = stringToFloat(resaleProfit),
+        totalProfit = stringToFloat(totalProfit),
         dateOfSale = dateOfSale,
         dateOfPayment = dateOfPayment,
         shippingDate = shippingDate,
@@ -333,6 +396,7 @@ class SaleViewModel @Inject constructor(
         isPaidByCustomer = isPaidByCustomer,
         delivered = delivered,
         canceled = canceled,
+        isAmazon = isAmazon,
         timestamp = getCurrentTimestamp()
     )
 }
