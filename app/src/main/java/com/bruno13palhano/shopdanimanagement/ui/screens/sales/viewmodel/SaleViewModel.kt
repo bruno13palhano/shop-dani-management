@@ -86,13 +86,9 @@ class SaleViewModel @Inject constructor(
         private set
     var amazonTax by mutableStateOf("")
         private set
-    var amazonProfit by mutableStateOf("")
-        private set
     var amazonSKU by mutableStateOf("")
         private set
     var resaleProfit by mutableStateOf("")
-        private set
-    var totalProfit by mutableStateOf("")
         private set
     var allCustomers by mutableStateOf(listOf<CustomerCheck>())
         private set
@@ -101,6 +97,22 @@ class SaleViewModel @Inject constructor(
     private var isPaid by mutableStateOf(false)
     var isAmazon by mutableStateOf(false)
         private set
+
+    private var _amazonProfit = snapshotFlow { calcAmazonProfit() }
+    val amazonProfit = _amazonProfit
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5_000),
+            initialValue = "0"
+        )
+
+    private var _totalProfit = snapshotFlow { calcTotalProfit() }
+    var totalProfit = _totalProfit
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5_000),
+            initialValue = "0"
+        )
 
     val notifySale = snapshotFlow { !isPaidByCustomer }
         .stateIn(
@@ -152,6 +164,7 @@ class SaleViewModel @Inject constructor(
 
     fun updateSalePrice(salePrice: String) {
         this.salePrice = salePrice
+        this.amazonPrice = salePrice
     }
 
     fun updateDeliveryPrice(deliveryPrice: String) {
@@ -172,14 +185,11 @@ class SaleViewModel @Inject constructor(
 
     fun updateAmazonPrice(amazonPrice: String) {
         this.amazonPrice = amazonPrice
+        this.salePrice = amazonPrice
     }
 
     fun updateAmazonTax(amazonTax: String) {
         this.amazonTax = amazonTax
-    }
-
-    fun updateAmazonProfit(amazonProfit: String) {
-        this.amazonProfit = amazonProfit
     }
 
     fun updateAmazonSKU(amazonSKU: String) {
@@ -188,10 +198,6 @@ class SaleViewModel @Inject constructor(
 
     fun updateResaleProfit(resaleProfit: String) {
         this.resaleProfit = resaleProfit
-    }
-
-    fun updateTotalProfit(totalProfit: String) {
-        this.totalProfit = totalProfit
     }
 
     fun updateIsAmazon(isAmazon: Boolean) {
@@ -384,10 +390,10 @@ class SaleViewModel @Inject constructor(
         amazonRequestNumber = stringToLong(amazonRequestNumber),
         amazonPrice = stringToFloat(amazonPrice),
         amazonTax = stringToInt(amazonTax),
-        amazonProfit = stringToFloat(amazonProfit),
+        amazonProfit = stringToFloat(amazonProfit.value),
         amazonSKU = amazonSKU,
         resaleProfit = stringToFloat(resaleProfit),
-        totalProfit = stringToFloat(totalProfit),
+        totalProfit = stringToFloat(totalProfit.value),
         dateOfSale = dateOfSale,
         dateOfPayment = dateOfPayment,
         shippingDate = shippingDate,
@@ -399,4 +405,17 @@ class SaleViewModel @Inject constructor(
         isAmazon = isAmazon,
         timestamp = getCurrentTimestamp()
     )
+
+    private fun calcAmazonProfit(): String {
+        return (if (amazonPrice.isNotEmpty()) {
+            val totalAmazonPrice = (stringToFloat(amazonPrice) * stringToFloat(quantity))
+            totalAmazonPrice - ((stringToFloat(amazonTax) * totalAmazonPrice) / 100)
+        } else 0F).toString()
+    }
+
+    private fun calcTotalProfit(): String {
+        return (stringToFloat(amazonProfit.value) -
+                (stringToFloat(purchasePrice) * stringToFloat(quantity))
+                + stringToFloat(resaleProfit)).toString()
+    }
 }
