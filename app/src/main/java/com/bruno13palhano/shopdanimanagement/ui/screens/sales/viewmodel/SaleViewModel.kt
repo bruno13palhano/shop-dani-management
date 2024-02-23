@@ -122,8 +122,8 @@ class SaleViewModel @Inject constructor(
         )
 
     val isSaleNotEmpty = snapshotFlow {
-        quantity.isNotEmpty() && stringToInt(quantity) != 0 && purchasePrice.isNotEmpty()
-                && salePrice.isNotEmpty()
+        if (isAmazon) isSaleParamsNotEmpty() && isAmazonParamsNotEmpty()
+        else isSaleParamsNotEmpty()
     }
         .stateIn(
             scope = viewModelScope,
@@ -164,7 +164,7 @@ class SaleViewModel @Inject constructor(
 
     fun updateSalePrice(salePrice: String) {
         this.salePrice = salePrice
-        this.amazonPrice = salePrice
+        if (isAmazon) this.amazonPrice = salePrice
     }
 
     fun updateDeliveryPrice(deliveryPrice: String) {
@@ -185,7 +185,7 @@ class SaleViewModel @Inject constructor(
 
     fun updateAmazonPrice(amazonPrice: String) {
         this.amazonPrice = amazonPrice
-        this.salePrice = amazonPrice
+        if (isAmazon) this.salePrice = amazonPrice
     }
 
     fun updateAmazonTax(amazonTax: String) {
@@ -202,6 +202,7 @@ class SaleViewModel @Inject constructor(
 
     fun updateIsAmazon(isAmazon: Boolean) {
         this.isAmazon = isAmazon
+        if (isAmazon) amazonPrice = salePrice
     }
 
     fun updateCustomerName(customerName: String) {
@@ -301,12 +302,19 @@ class SaleViewModel @Inject constructor(
                 purchasePrice = it.purchasePrice.toString()
                 salePrice = it.salePrice.toString()
                 deliveryPrice = it.deliveryPrice.toString()
+                amazonCode = it.amazonCode
+                amazonRequestNumber = it.amazonRequestNumber.toString()
+                amazonPrice = it.amazonPrice.toString()
+                amazonTax = it.amazonTax.toString()
+                amazonSKU = it.amazonSKU
+                resaleProfit = it.resaleProfit.toString()
                 shippingDate = it.shippingDate
                 deliveryDate = it.deliveryDate
                 category = setCategories(it.categories)
                 company = it.company
                 isPaidByCustomer = it.isPaidByCustomer
                 isOrderedByCustomer = it.isOrderedByCustomer
+                isAmazon = it.isAmazon
                 delivered = it.delivered
                 updateDateOfSale(it.dateOfSale)
                 updateDateOfPayment(it.dateOfPayment)
@@ -405,6 +413,17 @@ class SaleViewModel @Inject constructor(
         isAmazon = isAmazon,
         timestamp = getCurrentTimestamp()
     )
+
+    private fun isSaleParamsNotEmpty(): Boolean {
+        return quantity.isNotEmpty() && stringToInt(quantity) != 0 && purchasePrice.isNotEmpty()
+                && salePrice.isNotEmpty()
+    }
+
+    private fun isAmazonParamsNotEmpty(): Boolean {
+        return amazonCode.isNotEmpty() && amazonRequestNumber.isNotEmpty() &&
+               amazonPrice.isNotEmpty() && (amazonTax.isNotEmpty() && stringToInt(amazonTax) != 0)
+               && amazonSKU.isNotEmpty() && resaleProfit.isNotEmpty()
+    }
 
     private fun calcAmazonProfit(): String {
         return (if (amazonPrice.isNotEmpty()) {
