@@ -3,6 +3,7 @@ package com.bruno13palhano.shopdanimanagement.ui.components
 import android.icu.text.DecimalFormat
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -56,6 +58,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -417,10 +420,14 @@ fun SaleContent(
                 Text(text = stringResource(id = R.string.is_amazon_label))
             }
             AnimatedVisibility(visible = isAmazon) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                        .border(2.dp, MaterialTheme.colorScheme.primary, RectangleShape)
+                ) {
                     OutlinedTextField(
                         modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .padding(start = 8.dp, end = 8.dp, bottom = 2.dp)
                             .fillMaxWidth()
                             .clearFocusOnKeyboardDismiss(),
                         value = amazonCode,
@@ -679,7 +686,7 @@ fun SaleContent(
                     )
                     OutlinedTextField(
                         modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 8.dp)
                             .fillMaxWidth()
                             .clearFocusOnKeyboardDismiss(),
                         value = totalProfit,
