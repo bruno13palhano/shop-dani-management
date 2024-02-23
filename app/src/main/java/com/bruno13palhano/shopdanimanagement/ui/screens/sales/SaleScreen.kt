@@ -72,6 +72,8 @@ fun SaleScreen(
     val saleState by viewModel.saleState.collectAsStateWithLifecycle()
     val isSaleNotEmpty by viewModel.isSaleNotEmpty.collectAsStateWithLifecycle()
     val notifySale by viewModel.notifySale.collectAsStateWithLifecycle()
+    val amazonProfit by viewModel.amazonProfit.collectAsStateWithLifecycle()
+    val totalProfit by viewModel.totalProfit.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val focusManager = LocalFocusManager.current
@@ -218,10 +220,10 @@ fun SaleScreen(
             amazonRequestNumber = viewModel.amazonRequestNumber,
             amazonPrice = viewModel.amazonPrice,
             amazonTax = viewModel.amazonTax,
-            amazonProfit = viewModel.amazonProfit,
+            amazonProfit = amazonProfit,
             amazonSKU = viewModel.amazonSKU,
             resaleProfit = viewModel.resaleProfit,
-            totalProfit = viewModel.totalProfit,
+            totalProfit = totalProfit,
             isPaidByCustomer = viewModel.isPaidByCustomer,
             isAmazon = viewModel.isAmazon,
             onQuantityChange = viewModel::updateQuantity,
