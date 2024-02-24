@@ -304,7 +304,7 @@ class SaleViewModel @Inject constructor(
                 deliveryPrice = it.deliveryPrice.toString()
                 amazonCode = it.amazonCode
                 amazonRequestNumber = it.amazonRequestNumber.toString()
-                amazonPrice = it.amazonPrice.toString()
+                amazonPrice = if (it.isAmazon) it.salePrice.toString() else ""
                 amazonTax = it.amazonTax.toString()
                 amazonSKU = it.amazonSKU
                 resaleProfit = it.resaleProfit.toString()
@@ -396,7 +396,6 @@ class SaleViewModel @Inject constructor(
         company = company,
         amazonCode = amazonCode,
         amazonRequestNumber = stringToLong(amazonRequestNumber),
-        amazonPrice = stringToFloat(amazonPrice),
         amazonTax = stringToInt(amazonTax),
         amazonProfit = stringToFloat(amazonProfit.value),
         amazonSKU = amazonSKU,

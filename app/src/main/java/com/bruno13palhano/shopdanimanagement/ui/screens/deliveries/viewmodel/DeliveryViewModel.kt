@@ -115,7 +115,7 @@ class DeliveryViewModel @Inject constructor(
                 company = it.company
                 amazonCode = it.amazonCode
                 amazonRequestNumber = it.amazonRequestNumber
-                amazonPrice = it.amazonPrice
+                amazonPrice = if (it.isAmazon) it.salePrice else 0F
                 amazonTax = it.amazonTax
                 amazonProfit = it.amazonProfit
                 amazonSKU = it.amazonSKU
@@ -149,7 +149,6 @@ class DeliveryViewModel @Inject constructor(
             company = company,
             amazonCode = amazonCode,
             amazonRequestNumber = amazonRequestNumber,
-            amazonPrice = amazonPrice,
             amazonTax = amazonTax,
             amazonProfit = amazonProfit,
             amazonSKU = amazonSKU,
