@@ -18,7 +18,6 @@ data class Sale(
     val company: String,
     val amazonCode: String,
     val amazonRequestNumber: Long,
-    val amazonPrice: Float,
     val amazonTax: Int,
     val amazonProfit: Float,
     val amazonSKU: String,
@@ -58,7 +57,6 @@ data class Sale(
         if (company != other.company) return false
         if (amazonCode != other.amazonCode) return false
         if (amazonRequestNumber != other.amazonRequestNumber) return false
-        if (amazonPrice != other.amazonPrice) return false
         if (amazonTax != other.amazonTax) return false
         if (amazonProfit != other.amazonProfit) return false
         if (amazonSKU != other.amazonSKU) return false
@@ -94,7 +92,6 @@ data class Sale(
         result = 31 * result + company.hashCode()
         result = 31 * result + amazonCode.hashCode()
         result = 31 * result + amazonRequestNumber.hashCode()
-        result = 31 * result + amazonPrice.hashCode()
         result = 31 * result + amazonTax
         result = 31 * result + amazonProfit.hashCode()
         result = 31 * result + amazonSKU.hashCode()
@@ -133,7 +130,6 @@ data class Sale(
                 company = "",
                 amazonCode = "",
                 amazonRequestNumber = 0L,
-                amazonPrice = 0F,
                 amazonTax = 0,
                 amazonProfit = 0F,
                 amazonSKU = "",

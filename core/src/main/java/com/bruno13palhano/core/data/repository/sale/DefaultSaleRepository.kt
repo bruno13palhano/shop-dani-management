@@ -263,7 +263,6 @@ internal class DefaultSaleRepository @Inject constructor(
         company = sale.company,
         amazonCode = sale.amazonCode,
         amazonRequestNumber = sale.amazonRequestNumber,
-        amazonPrice = sale.amazonPrice,
         amazonTax = sale.amazonTax,
         amazonProfit = sale.amazonProfit,
         amazonSKU = sale.amazonSKU,
