@@ -357,6 +357,10 @@ internal class DefaultSaleData @Inject constructor(
         ).asFlow().mapToList(ioDispatcher)
     }
 
+    override fun getAmazonSale(): Flow<List<Sale>> {
+        return saleQueries.getAmazonSales(mapper = ::mapSale).asFlow().mapToList(ioDispatcher)
+    }
+
     override fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>> {
         return saleQueries.getAllStockSales(
             offset = offset.toLong(),

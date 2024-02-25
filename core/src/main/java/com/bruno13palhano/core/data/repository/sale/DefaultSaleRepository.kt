@@ -139,6 +139,10 @@ internal class DefaultSaleRepository @Inject constructor(
         return saleData.getLastSales(offset = offset, limit = limit)
     }
 
+    override fun getAmazonSale(): Flow<List<Sale>> {
+        return saleData.getAmazonSale()
+    }
+
     override fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>> {
         return saleData.getAllStockSales(offset = offset, limit = limit)
     }

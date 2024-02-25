@@ -119,6 +119,16 @@ INNER JOIN CustomerTable C
 ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
 ORDER BY S.id DESC LIMIT :offset, :limit;
 
+getAmazonSales:
+SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonTax, S.amazonProfit, S.amazonSKU,
+    S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate,
+    S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon, S.timestamp
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
+WHERE S.isAmazon = 1;
+
 getAllStockSales:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
     C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
