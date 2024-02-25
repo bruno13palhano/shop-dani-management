@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PointOfSale
+import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ElevatedCard
@@ -158,6 +159,7 @@ fun HomeContent(
             HomeInnerScreen.Sales,
             HomeInnerScreen.Stock,
             HomeInnerScreen.Orders,
+            HomeInnerScreen.Amazon,
             HomeInnerScreen.Deliveries,
             HomeInnerScreen.Catalog
         )
@@ -356,6 +358,7 @@ sealed class HomeInnerScreen(val route: String, val icon: ImageVector, @StringRe
     object Stock: HomeInnerScreen(HomeDestinations.HOME_STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
     object Sales: HomeInnerScreen(HomeDestinations.HOME_SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
     object Orders: HomeInnerScreen(HomeDestinations.HOME_ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
+    object Amazon: HomeInnerScreen(HomeDestinations.HOME_AMAZON_ROUTE, Icons.Filled.ShoppingBag, R.string.amazon_label)
     object Deliveries: HomeInnerScreen(HomeDestinations.HOME_DELIVERIES_ROUTE, Icons.Filled.LocalShipping, R.string.deliveries_label)
     object Catalog: HomeInnerScreen(HomeDestinations.HOME_CATALOG_ROUTE, Icons.Filled.ListAlt, R.string.catalog_label)
 }
