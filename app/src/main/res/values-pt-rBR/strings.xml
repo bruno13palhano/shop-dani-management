@@ -95,6 +95,7 @@
     <string name="delete_label">Deletar</string>
     <string name="all_products_label">Todos os produtos</string>
     <string name="add_to_catalog_label">Adicionar ao catálogo</string>
+    <string name="amazon_label">Amazon</string>
     <string name="amazon_code_label">Código na Amazon</string>
     <string name="amazon_request_number_label">Número de pedido na Amazon</string>
     <string name="amazon_price_label">Preço na Amazon</string>

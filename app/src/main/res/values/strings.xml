@@ -95,6 +95,7 @@
     <string name="all_products_label">All the products</string>
     <string name="add_to_catalog_label">Add to catalog</string>
     <string name="save_categories_label">Save categories</string>
+    <string name="amazon_label">Amazon</string>
     <string name="amazon_code_label">Amazon code</string>
     <string name="amazon_request_number_label">Amazon request number</string>
     <string name="amazon_price_label">Amazon price</string>
