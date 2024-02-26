@@ -24,7 +24,7 @@ interface SaleData : DataOperations<Sale> {
     fun getOrdersBySalePrice(isOrderedAsc: Boolean): Flow<List<Sale>>
     fun getDeliveries(delivered: Boolean): Flow<List<Sale>>
     fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>>
-    fun getAmazonSale(): Flow<List<Sale>>
+    fun getAmazonSales(): Flow<List<Sale>>
     fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>>
     fun getAllOrdersSales(offset: Int, limit: Int): Flow<List<Sale>>
     fun getAllCanceledSales(): Flow<List<Sale>>
@@ -33,6 +33,7 @@ interface SaleData : DataOperations<Sale> {
     fun getCanceledByPrice(isOrderedAsc: Boolean): Flow<List<Sale>>
     suspend fun cancelSale(saleId: Long)
     suspend fun getAllSales(): List<Sale>
+    suspend fun getAllAmazonSales(): List<Sale>
     fun getDebitSales(): Flow<List<Sale>>
     fun getSalesByCustomerName(isPaidByCustomer: Boolean, isOrderedAsc: Boolean): Flow<List<Sale>>
     fun getSalesBySalePrice(isPaidByCustomer: Boolean, isOrderedAsc: Boolean): Flow<List<Sale>>
