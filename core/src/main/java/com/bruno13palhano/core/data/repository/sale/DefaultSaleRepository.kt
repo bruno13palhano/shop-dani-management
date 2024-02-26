@@ -7,10 +7,12 @@ import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.ExcelSheet
 import com.bruno13palhano.core.data.repository.Versions
+import com.bruno13palhano.core.data.repository.amazonSalesSheetHeaders
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
+import com.bruno13palhano.core.data.repository.mapAmazonSalesToSheet
 import com.bruno13palhano.core.data.repository.mapSalesToSheet
 import com.bruno13palhano.core.data.repository.salesSheetHeaders
 import com.bruno13palhano.core.data.repository.version.VersionData
@@ -119,6 +121,21 @@ internal class DefaultSaleRepository @Inject constructor(
         }
     }
 
+    override suspend fun exportAmazonExcelSheet(sheetName: String) {
+        CoroutineScope(ioDispatcher).launch {
+            val amazonSales = saleData.getAllAmazonSales()
+            val amazonSalesToSheet = mutableListOf<List<String>>()
+
+            amazonSales.forEach { amazonSalesToSheet.add(mapAmazonSalesToSheet(it)) }
+
+            excelSheet.createExcel(
+                sheetName = sheetName,
+                headers = amazonSalesSheetHeaders,
+                data = amazonSalesToSheet
+            )
+        }
+    }
+
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
         return saleData.getByCustomerId(customerId = customerId)
     }
@@ -140,7 +157,7 @@ internal class DefaultSaleRepository @Inject constructor(
     }
 
     override fun getAmazonSale(): Flow<List<Sale>> {
-        return saleData.getAmazonSale()
+        return saleData.getAmazonSales()
     }
 
     override fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>> {
