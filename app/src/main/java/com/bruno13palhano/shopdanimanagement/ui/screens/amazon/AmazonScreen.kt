@@ -1,11 +1,23 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.amazon
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -14,6 +26,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,6 +38,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.SaleInfo
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalItemList
+import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
+import com.bruno13palhano.shopdanimanagement.ui.components.SingleInputDialog
 import com.bruno13palhano.shopdanimanagement.ui.screens.amazon.viewmodel.AmazonViewModel
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 
@@ -32,12 +50,31 @@ fun AmazonScreen(
     viewModel: AmazonViewModel = hiltViewModel()
 ) {
     val amazonSales by viewModel.amazonSale.collectAsStateWithLifecycle()
+    val menuItems = arrayOf(
+        stringResource(id = R.string.create_spreadsheet_label)
+    )
+
+    var showSpreadsheetDialog by remember { mutableStateOf(false) }
 
     AmazonContent(
         amazonSales = amazonSales,
+        menuItems = menuItems,
+        sheetName = viewModel.sheetName,
+        showSpreadsheetDialog = showSpreadsheetDialog,
+        onSheetNameChange = viewModel::updateSheetName,
         onItemClick = { saleId ->
             onItemClick(saleId)
         },
+        onSearchClick = {},
+        onBarcodeClick = {},
+        onMoreOptionsItemClick = { index ->
+            when (index) {
+                MoreOptions.CREATE_SPREADSHEET -> { showSpreadsheetDialog = true }
+                else -> {}
+            }
+        },
+        onDialogOkClick = { viewModel.createSpreadsheet() },
+        onDismissDialog = { showSpreadsheetDialog = false },
         navigateUp = navigateUp
     )
 }
@@ -46,9 +83,20 @@ fun AmazonScreen(
 @Composable
 fun AmazonContent(
     amazonSales: List<SaleInfo>,
+    menuItems: Array<String>,
+    sheetName: String,
+    showSpreadsheetDialog: Boolean,
+    onSheetNameChange: (sheetName: String) -> Unit,
     onItemClick: (saleId: Long) -> Unit,
+    onSearchClick: () -> Unit,
+    onBarcodeClick: () -> Unit,
+    onMoreOptionsItemClick: (index: Int) -> Unit,
+    onDialogOkClick: () -> Unit,
+    onDismissDialog: () -> Unit,
     navigateUp: () -> Unit
 ) {
+    var expandedMenu by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -59,6 +107,40 @@ fun AmazonContent(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.up_button_label)
                         )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onSearchClick) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = stringResource(id = R.string.search_label)
+                        )
+                    }
+                    IconButton(onClick = onBarcodeClick) {
+                        Icon(
+                            imageVector = Icons.Filled.QrCodeScanner,
+                            contentDescription = stringResource(id = R.string.barcode_scanner_label)
+                        )
+                    }
+                    IconButton(onClick = { expandedMenu = true }) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = stringResource(id = R.string.drawer_menu_label)
+                            )
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                MoreOptionsMenu(
+                                    items = menuItems,
+                                    expanded = expandedMenu,
+                                    onDismissRequest = { expandedMenu = false },
+                                    onClick = { onMoreOptionsItemClick(it) }
+                                )
+                            }
+                        }
                     }
                 }
             )
@@ -89,5 +171,25 @@ fun AmazonContent(
                 )
             }
         }
+
+        AnimatedVisibility(
+            visible = showSpreadsheetDialog,
+            enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+            exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+        ) {
+            SingleInputDialog(
+                dialogTitle = stringResource(id = R.string.spreadsheet_name_label),
+                label = stringResource(id = R.string.name_label),
+                placeholder = stringResource(id = R.string.enter_name_label),
+                input = sheetName,
+                onInputChange = onSheetNameChange,
+                onOkClick = onDialogOkClick,
+                onDismissRequest = onDismissDialog
+            )
+        }
     }
+}
+
+private object MoreOptions {
+    const val CREATE_SPREADSHEET = 0
 }
