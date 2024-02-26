@@ -28,14 +28,16 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 @Composable
 fun AmazonScreen(
     navigateUp: () -> Unit,
-    onItemClick: (saleId: Long, customerId: Long) -> Unit,
+    onItemClick: (saleId: Long) -> Unit,
     viewModel: AmazonViewModel = hiltViewModel()
 ) {
     val amazonSales by viewModel.amazonSale.collectAsStateWithLifecycle()
 
     AmazonContent(
         amazonSales = amazonSales,
-        onItemClick = onItemClick,
+        onItemClick = { saleId ->
+            onItemClick(saleId)
+        },
         navigateUp = navigateUp
     )
 }
@@ -44,7 +46,7 @@ fun AmazonScreen(
 @Composable
 fun AmazonContent(
     amazonSales: List<SaleInfo>,
-    onItemClick: (saleId: Long, customerId: Long) -> Unit,
+    onItemClick: (saleId: Long) -> Unit,
     navigateUp: () -> Unit
 ) {
     Scaffold(
@@ -82,7 +84,7 @@ fun AmazonContent(
                     ),
                     photo = item.productPhoto,
                     onClick = {
-                        onItemClick(item.saleId, item.customerId)
+                        onItemClick(item.saleId)
                     }
                 )
             }
