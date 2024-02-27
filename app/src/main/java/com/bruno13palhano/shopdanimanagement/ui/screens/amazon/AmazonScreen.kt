@@ -47,6 +47,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 fun AmazonScreen(
     navigateUp: () -> Unit,
     onItemClick: (saleId: Long) -> Unit,
+    onSearchClick: () -> Unit,
     viewModel: AmazonViewModel = hiltViewModel()
 ) {
     val amazonSales by viewModel.amazonSale.collectAsStateWithLifecycle()
@@ -65,8 +66,7 @@ fun AmazonScreen(
         onItemClick = { saleId ->
             onItemClick(saleId)
         },
-        onSearchClick = {},
-        onBarcodeClick = {},
+        onSearchClick = onSearchClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
                 MoreOptions.CREATE_SPREADSHEET -> { showSpreadsheetDialog = true }
@@ -89,7 +89,6 @@ fun AmazonContent(
     onSheetNameChange: (sheetName: String) -> Unit,
     onItemClick: (saleId: Long) -> Unit,
     onSearchClick: () -> Unit,
-    onBarcodeClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
     onDialogOkClick: () -> Unit,
     onDismissDialog: () -> Unit,
@@ -114,12 +113,6 @@ fun AmazonContent(
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = stringResource(id = R.string.search_label)
-                        )
-                    }
-                    IconButton(onClick = onBarcodeClick) {
-                        Icon(
-                            imageVector = Icons.Filled.QrCodeScanner,
-                            contentDescription = stringResource(id = R.string.barcode_scanner_label)
                         )
                     }
                     IconButton(onClick = { expandedMenu = true }) {

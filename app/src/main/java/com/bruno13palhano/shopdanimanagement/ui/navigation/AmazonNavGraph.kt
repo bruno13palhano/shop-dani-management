@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.amazon.AmazonScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.amazon.SearchAmazonScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
 
 fun NavGraphBuilder.amazonNavGraph(
@@ -28,6 +29,9 @@ fun NavGraphBuilder.amazonNavGraph(
                     navController.navigate(
                         route = "${AmazonDestinations.AMAZON_SALE_ROUTE}/$saleId"
                     )
+                },
+                onSearchClick = {
+                    navController.navigate(route = AmazonDestinations.AMAZON_SEARCH_ROUTE)
                 },
                 navigateUp = { navController.navigateUp() }
             )
@@ -51,10 +55,21 @@ fun NavGraphBuilder.amazonNavGraph(
                 )
             }
         }
+        composable(route = AmazonDestinations.AMAZON_SEARCH_ROUTE) {
+            showBottomMenu(true)
+            gesturesEnabled(true)
+            SearchAmazonScreen(
+                onItemClick = {
+                    navController.navigate(route = "${AmazonDestinations.AMAZON_SALE_ROUTE}/$id")
+                },
+                navigateUp = { navController.navigateUp() }
+            )
+        }
     }
 }
 
 object AmazonDestinations {
     const val MAIN_AMAZON_ROUTE = "main_amazon_route"
+    const val AMAZON_SEARCH_ROUTE = "amazon_search_route"
     const val AMAZON_SALE_ROUTE = "amazon_sale_route"
 }
