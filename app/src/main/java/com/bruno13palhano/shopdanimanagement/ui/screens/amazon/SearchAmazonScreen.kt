@@ -136,15 +136,3 @@ fun SearchAmazonContent(
         }
     }
 }
-
-@Preview
-@Composable
-fun SearchP() {
-    SearchAmazonContent(
-        amazonSales = emptyList(),
-        searchCacheList = emptyList(),
-        onSearchClick = {},
-        onItemClick = {},
-        navigateUp = {}
-    )
-}
