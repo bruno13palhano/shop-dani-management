@@ -129,6 +129,23 @@ FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
 INNER JOIN CustomerTable C ON(P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id)
 WHERE S.isAmazon = 1;
 
+searchAmazonSales:
+SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
+    C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
+    P.company, S.amazonCode, S.amazonRequestNumber, S.amazonTax, S.amazonProfit, S.amazonSKU,
+    S.resaleProfit, S.totalProfit, S.dateOfSale, S.dateOfPayment, S.shippingDate, S.deliveryDate,
+    S.isOrderedByCustomer, S.isPaidByCustomer, S.delivered, S.canceled, S.isAmazon, S.timestamp
+FROM product P INNER JOIN SaleTable S INNER JOIN ProductCategoriesTable PC
+INNER JOIN CustomerTable C
+ON(PC.categories LIKE '%' || :category || '%' OR P.name LIKE '%' || :productName || '%'
+    OR C.name LIKE '%' || :customerName || '%' OR P.description LIKE '%' || :description || '%'
+    OR C.address LIKE '%' || :address || '%' OR C.city LIKE '%' || :city || '%'
+    OR C.gender LIKE '%' || :gender || '%' OR C.age LIKE '%' || :age || '%'
+    OR S.amazonCode LIKE '%' || :amazonCode || '%'
+    OR S.amazonRequestNumber LIKE '%' || :amazonRequestNumber || '%'
+    OR S.amazonSKU LIKE '%' || :amazonSKU || '%' OR P.company LIKE '%' || :company || '%')
+WHERE P.id = PC.productId AND P.id = S.productId AND S.customerId = C.id AND S.isAmazon = 1;
+
 getAllStockSales:
 SELECT S.id, S.productId, S.customerId, S.stockId, P.name, C.name, P.photo, C.address,
     C.phoneNumber, S.quantity, S.purchasePrice, S.salePrice, S.deliveryPrice, PC.categories,
