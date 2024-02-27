@@ -208,6 +208,10 @@ internal class DefaultSaleRepository @Inject constructor(
         return saleData.getCanceledByPrice(isOrderedAsc = isOrderedAsc)
     }
 
+    override fun searchAmazonSales(search: String): Flow<List<Sale>> {
+        return saleData.searchAmazonSales(search = search)
+    }
+
     override fun getSalesByCustomerName(
         isPaidByCustomer: Boolean,
         isOrderedAsc: Boolean

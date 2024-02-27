@@ -444,6 +444,24 @@ internal class DefaultSaleData @Inject constructor(
         }
     }
 
+    override fun searchAmazonSales(search: String): Flow<List<Sale>> {
+        return saleQueries.searchAmazonSales(
+            category = search,
+            productName = search,
+            customerName = search,
+            description = search,
+            address = search,
+            city = search,
+            gender = search,
+            age = search,
+            amazonCode = search,
+            amazonRequestNumber = search,
+            amazonSKU = search,
+            company = search,
+            mapper = ::mapSale
+        ).asFlow().mapToList(ioDispatcher)
+    }
+
     override fun getSalesByCustomerName(
         isPaidByCustomer: Boolean,
         isOrderedAsc: Boolean

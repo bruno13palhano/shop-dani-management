@@ -31,6 +31,7 @@ interface SaleData : DataOperations<Sale> {
     fun getCanceledByName(isOrderedAsc: Boolean): Flow<List<Sale>>
     fun getCanceledByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>>
     fun getCanceledByPrice(isOrderedAsc: Boolean): Flow<List<Sale>>
+    fun searchAmazonSales(search: String): Flow<List<Sale>>
     suspend fun cancelSale(saleId: Long)
     suspend fun getAllSales(): List<Sale>
     suspend fun getAllAmazonSales(): List<Sale>
