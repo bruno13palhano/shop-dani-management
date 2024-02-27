@@ -59,7 +59,7 @@ fun NavGraphBuilder.amazonNavGraph(
             showBottomMenu(true)
             gesturesEnabled(true)
             SearchAmazonScreen(
-                onItemClick = {
+                onItemClick = { id ->
                     navController.navigate(route = "${AmazonDestinations.AMAZON_SALE_ROUTE}/$id")
                 },
                 navigateUp = { navController.navigateUp() }
