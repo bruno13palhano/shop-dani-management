@@ -43,10 +43,27 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.amazon.viewmodel.AmazonV
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 
 @Composable
-fun AmazonScreen(
-    navigateUp: () -> Unit,
+fun AmazonRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
     onItemClick: (saleId: Long) -> Unit,
     onSearchClick: () -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    AmazonScreen(
+        onItemClick = onItemClick,
+        onSearchClick = onSearchClick,
+        navigateUp = navigateUp,
+    )
+}
+
+@Composable
+fun AmazonScreen(
+    onItemClick: (saleId: Long) -> Unit,
+    onSearchClick: () -> Unit,
+    navigateUp: () -> Unit,
     viewModel: AmazonViewModel = hiltViewModel()
 ) {
     val amazonSales by viewModel.amazonSale.collectAsStateWithLifecycle()

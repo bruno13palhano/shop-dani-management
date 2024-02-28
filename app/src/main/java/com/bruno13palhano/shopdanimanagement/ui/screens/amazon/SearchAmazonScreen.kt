@@ -34,6 +34,21 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.amazon.viewmodel.SearchA
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 
 @Composable
+fun SearchAmazonRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    SearchAmazonScreen(
+        onItemClick = onItemClick,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun SearchAmazonScreen(
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,

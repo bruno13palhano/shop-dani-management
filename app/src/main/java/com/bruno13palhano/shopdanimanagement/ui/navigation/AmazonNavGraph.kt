@@ -1,16 +1,14 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.amazon.AmazonScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.amazon.SearchAmazonScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.amazon.AmazonRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.amazon.SearchAmazonRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.sales.EditSaleRoute
 
 fun NavGraphBuilder.amazonNavGraph(
     navController: NavController,
@@ -22,9 +20,9 @@ fun NavGraphBuilder.amazonNavGraph(
         route = HomeDestinations.HOME_AMAZON_ROUTE
     ) {
         composable(route = AmazonDestinations.MAIN_AMAZON_ROUTE) {
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            AmazonScreen(
+            AmazonRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { saleId ->
                     navController.navigate(
                         route = "${AmazonDestinations.AMAZON_SALE_ROUTE}/$saleId"
@@ -40,25 +38,19 @@ fun NavGraphBuilder.amazonNavGraph(
             route = "${AmazonDestinations.AMAZON_SALE_ROUTE}/{$ITEM_ID}",
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            val id = backStackEntry.arguments?.getLong(ITEM_ID)
-
-            id?.let { saleId ->
-                SaleScreen(
-                    isEdit = true,
-                    screenTitle = stringResource(id = R.string.edit_sale_label),
-                    isOrderedByCustomer = true,
-                    stockOrderId = 0L,
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { saleId ->
+                EditSaleRoute(
+                    showBottomMenu = showBottomMenu,
+                    gesturesEnabled = gesturesEnabled,
                     saleId = saleId,
                     navigateUp = { navController.navigateUp() }
                 )
             }
         }
         composable(route = AmazonDestinations.AMAZON_SEARCH_ROUTE) {
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            SearchAmazonScreen(
+            SearchAmazonRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { id ->
                     navController.navigate(route = "${AmazonDestinations.AMAZON_SALE_ROUTE}/$id")
                 },
