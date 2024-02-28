@@ -198,7 +198,7 @@ class ProductsNavGraphTest {
 
     @Test
     fun onAddToCatalogClick_fromProductScreen_shouldNavigateToCatalogItemScreen() {
-        val expected = "${ProductsDestinations.PRODUCTS_CATALOG_ITEM_ROUTE}/{$ITEM_ID}/{$EDITABLE}"
+        val expected = "${ProductsDestinations.PRODUCTS_CATALOG_NEW_ITEM_ROUTE}/{$ITEM_ID}/{$EDITABLE}"
 
         composeRule.onNodeWithContentDescription("List of items")
             .onChildren()

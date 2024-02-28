@@ -43,6 +43,45 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
+@Composable
+fun NewProductRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    categoryId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    ProductScreen(
+        isEditable = false,
+        screenTitle = stringResource(id = R.string.new_product_label),
+        productId = 0L,
+        categoryId = categoryId,
+        onAddToCatalogClick = {},
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
+fun EditProductRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    productId: Long,
+    onAddToCatalogClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    ProductScreen(
+        isEditable = true,
+        screenTitle = stringResource(id = R.string.edit_product_label),
+        productId = productId,
+        categoryId = 0L,
+        onAddToCatalogClick = onAddToCatalogClick,
+        navigateUp = navigateUp
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductScreen(

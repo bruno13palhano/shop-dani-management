@@ -9,6 +9,9 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.CatalogItemScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.NewCatalogItemRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.EditProductRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.NewProductRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductCategoriesScreen
@@ -48,7 +51,7 @@ fun NavGraphBuilder.productsNavGraph(
                     categoryId = categoryId,
                     onItemClick = { productId ->
                         navController.navigate(
-                            route = "${ProductsDestinations.PRODUCTS_PRODUCT_ROUTE}/$productId/${true}"
+                            route = "${ProductsDestinations.PRODUCTS_EDIT_PRODUCT_ROUTE}/$productId"
                         )
                     },
                     onSearchClick = {
@@ -58,7 +61,7 @@ fun NavGraphBuilder.productsNavGraph(
                     },
                     onAddButtonClick = {
                         navController.navigate(
-                            route = "${ProductsDestinations.PRODUCTS_PRODUCT_ROUTE}/$categoryId/${false}"
+                            route = "${ProductsDestinations.PRODUCTS_NEW_PRODUCT_ROUTE}/$categoryId"
                         )
                     },
                     showBottomMenu = showBottomMenu,
@@ -78,7 +81,7 @@ fun NavGraphBuilder.productsNavGraph(
                     categoryId = categoryId,
                     onItemClick = { productId ->
                         navController.navigate(
-                            route = "${ProductsDestinations.PRODUCTS_PRODUCT_ROUTE}/$productId/${true}"
+                            route = "${ProductsDestinations.PRODUCTS_EDIT_PRODUCT_ROUTE}/$productId"
                         )
                     },
                     navigateUp = { navController.navigateUp() }
@@ -86,20 +89,14 @@ fun NavGraphBuilder.productsNavGraph(
             }
         }
         composable(
-            route = "${ProductsDestinations.PRODUCTS_CATALOG_ITEM_ROUTE}/{$ITEM_ID}/{$EDITABLE}",
-            arguments = listOf(
-                navArgument(ITEM_ID) { type = NavType.LongType },
-                navArgument(EDITABLE) { type = NavType.BoolType }
-            )
+            route = "${ProductsDestinations.PRODUCTS_CATALOG_NEW_ITEM_ROUTE}/{$ITEM_ID}/{$EDITABLE}",
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            val id = backStackEntry.arguments?.getLong(ITEM_ID)
-            val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
-            if (id != null && editable != null) {
-                CatalogItemScreen(
-                    productId = id,
-                    catalogId = 0L,
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { productId ->
+                NewCatalogItemRoute(
+                    showBottomMenu = showBottomMenu,
+                    gesturesEnabled = gesturesEnabled,
+                    productId = productId,
                     navigateUp = { navController.navigateUp() }
                 )
             }
@@ -128,7 +125,38 @@ fun NavGraphBuilder.productsNavGraph(
                     productId = if (editable) id else 0L,
                     onAddToCatalogClick = {
                         navController.navigate(
-                            route = "${ProductsDestinations.PRODUCTS_CATALOG_ITEM_ROUTE}/${id}/${false}"
+                            route = "${ProductsDestinations.PRODUCTS_CATALOG_NEW_ITEM_ROUTE}/${id}"
+                        )
+                    },
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
+        }
+        composable(
+            route = "${ProductsDestinations.PRODUCTS_NEW_PRODUCT_ROUTE}/{$ITEM_ID}",
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
+        ) { backStackEntry ->
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { categoryId ->
+                NewProductRoute(
+                    showBottomMenu = showBottomMenu,
+                    gesturesEnabled = gesturesEnabled,
+                    categoryId = categoryId,
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
+        }
+        composable(
+            route = "${ProductsDestinations.PRODUCTS_EDIT_PRODUCT_ROUTE}/{$ITEM_ID}",
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
+        ) { backStackEntry ->
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { productId ->
+                EditProductRoute(
+                    showBottomMenu = showBottomMenu,
+                    gesturesEnabled = gesturesEnabled,
+                    productId = productId,
+                    onAddToCatalogClick = {
+                        navController.navigate(
+                            route = "${ProductsDestinations.PRODUCTS_CATALOG_NEW_ITEM_ROUTE}/$productId"
                         )
                     },
                     navigateUp = { navController.navigateUp() }
@@ -143,5 +171,7 @@ object ProductsDestinations {
     const val PRODUCTS_LIST_ROUTE = "products_list_route"
     const val PRODUCTS_SEARCH_ROUTE = "products_search_route"
     const val PRODUCTS_PRODUCT_ROUTE = "products_product_route"
-    const val PRODUCTS_CATALOG_ITEM_ROUTE = "products_catalog_item_route"
+    const val PRODUCTS_NEW_PRODUCT_ROUTE = "products_new_product_route"
+    const val PRODUCTS_EDIT_PRODUCT_ROUTE = "products_edit_product_route"
+    const val PRODUCTS_CATALOG_NEW_ITEM_ROUTE = "products_catalog_new_item_route"
 }

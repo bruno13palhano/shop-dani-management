@@ -37,6 +37,23 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.SearchProductsViewModel
 
 @Composable
+fun SalesSearchProductRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    SearchProductScreen(
+        isEditable = false,
+        categoryId = 0L,
+        onItemClick = onItemClick,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun SearchProductScreen(
     isEditable: Boolean,
     categoryId: Long,

@@ -26,6 +26,26 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.Produ
 import kotlinx.coroutines.launch
 
 @Composable
+fun SalesProductListRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    onSearchClick: () -> Unit,
+    navigateUp: () -> Unit
+) {
+    gesturesEnabled(true)
+    ProductListScreen(
+        isEditable = false,
+        categoryId = 0L,
+        onItemClick = onItemClick,
+        onSearchClick = onSearchClick,
+        onAddButtonClick = {},
+        showBottomMenu = showBottomMenu,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun ProductListScreen(
     isEditable: Boolean,
     categoryId: Long,

@@ -75,6 +75,38 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 @Composable
+fun NewCatalogItemRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    productId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    CatalogItemScreen(
+        productId = productId,
+        catalogId = 0L,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
+fun EditCatalogItemRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    catalogId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    CatalogItemScreen(
+        productId = 0L,
+        catalogId = catalogId,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun CatalogItemScreen(
     productId: Long,
     catalogId: Long,
