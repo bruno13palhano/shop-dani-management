@@ -39,6 +39,21 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel.DeliveriesViewModel
 
 @Composable
+fun DeliveriesRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    DeliveriesScreen(
+        onItemClick = onItemClick,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun DeliveriesScreen(
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,

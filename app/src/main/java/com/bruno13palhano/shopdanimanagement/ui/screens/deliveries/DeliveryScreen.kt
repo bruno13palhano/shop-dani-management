@@ -70,6 +70,21 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.viewmodel.Del
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+@Composable
+fun DeliveryRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    deliveryId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    DeliveryScreen(
+        deliveryId = deliveryId,
+        navigateUp = navigateUp
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeliveryScreen(

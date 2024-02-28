@@ -6,8 +6,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveriesScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveryScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveriesRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.deliveries.DeliveryRoute
 
 fun NavGraphBuilder.deliveriesNAvGraph(
     navController: NavController,
@@ -19,9 +19,9 @@ fun NavGraphBuilder.deliveriesNAvGraph(
         route = HomeDestinations.HOME_DELIVERIES_ROUTE
     ) {
         composable(route = DeliveriesDestinations.DELIVERIES_MAIN_ROUTE) {
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            DeliveriesScreen(
+            DeliveriesRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { deliveryId ->
                     navController.navigate(
                         route = "${DeliveriesDestinations.DELIVERIES_DELIVERY_ROUTE}/$deliveryId"
@@ -34,10 +34,10 @@ fun NavGraphBuilder.deliveriesNAvGraph(
             route = "${DeliveriesDestinations.DELIVERIES_DELIVERY_ROUTE}/{$ITEM_ID}",
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
-            showBottomMenu(true)
-            gesturesEnabled(true)
             backStackEntry.arguments?.getLong(ITEM_ID)?.let { deliveryId ->
-                DeliveryScreen(
+                DeliveryRoute(
+                    showBottomMenu = showBottomMenu,
+                    gesturesEnabled = gesturesEnabled,
                     deliveryId = deliveryId,
                     navigateUp = { navController.navigateUp() }
                 )
