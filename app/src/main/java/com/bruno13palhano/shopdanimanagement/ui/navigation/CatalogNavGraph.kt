@@ -6,8 +6,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.CatalogItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.CatalogScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.CatalogRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.EditCatalogItemRoute
 
 fun NavGraphBuilder.catalogNavGraph(
     navController: NavController,
@@ -19,32 +19,26 @@ fun NavGraphBuilder.catalogNavGraph(
         route = HomeDestinations.HOME_CATALOG_ROUTE
     ) {
         composable(route = CatalogDestination.CATALOG_MAIN_ROUTE) {
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            CatalogScreen(
+            CatalogRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { id ->
                     navController.navigate(
-                        route = "${CatalogDestination.CATALOG_ITEM_ROUTE}/${id}/${true}"
+                        route = "${CatalogDestination.CATALOG_ITEM_ROUTE}/$id"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(
-            route = "${CatalogDestination.CATALOG_ITEM_ROUTE}/{$ITEM_ID}/{$EDITABLE}",
-            arguments = listOf(
-                navArgument(ITEM_ID) { type = NavType.LongType },
-                navArgument(EDITABLE) { type = NavType.BoolType }
-            )
+            route = "${CatalogDestination.CATALOG_ITEM_ROUTE}/{$ITEM_ID}",
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            val id = backStackEntry.arguments?.getLong(ITEM_ID)
-            val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
-            if (id != null && editable != null) {
-                CatalogItemScreen(
-                    productId = if (editable) 0L else id,
-                    catalogId = if (editable) id else 0L,
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { catalogId ->
+                EditCatalogItemRoute(
+                    showBottomMenu = showBottomMenu,
+                    gesturesEnabled = gesturesEnabled,
+                    catalogId = catalogId,
                     navigateUp = { navController.navigateUp() }
                 )
             }

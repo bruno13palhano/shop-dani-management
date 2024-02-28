@@ -43,6 +43,21 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.ExtendedItem
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
 @Composable
+fun CatalogRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    CatalogScreen(
+        onItemClick = onItemClick,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun CatalogScreen(
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,
