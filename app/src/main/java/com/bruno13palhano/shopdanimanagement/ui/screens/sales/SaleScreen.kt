@@ -41,6 +41,63 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SaleView
 import com.bruno13palhano.shopdanimanagement.ui.screens.setAlarmNotification
 import kotlinx.coroutines.launch
 
+@Composable
+fun NewStockSaleRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    stockOrderId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    SaleScreen(
+        isEdit = false,
+        screenTitle = stringResource(id = R.string.new_sale_label),
+        isOrderedByCustomer = false,
+        stockOrderId = stockOrderId,
+        saleId = 0L,
+        navigateUp = navigateUp
+   )
+}
+
+@Composable
+fun NewOrderSaleRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    productId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    SaleScreen(
+        isEdit = false,
+        screenTitle = stringResource(id = R.string.new_sale_label),
+        isOrderedByCustomer = true,
+        stockOrderId = productId,
+        saleId = 0L,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
+fun EditSaleRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    saleId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    SaleScreen(
+        isEdit = true,
+        screenTitle = stringResource(id = R.string.edit_sale_label),
+        isOrderedByCustomer = false,
+        stockOrderId = 0L,
+        saleId = saleId,
+        navigateUp = navigateUp
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SaleScreen(

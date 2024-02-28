@@ -62,6 +62,43 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
 
 @Composable
+fun SalesRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    onAddButtonClick: () -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    SalesScreen(
+        isOrders = false,
+        screenTitle = stringResource(id = R.string.sales_label),
+        onItemClick = onItemClick,
+        onAddButtonClick = onAddButtonClick,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
+fun OrdersRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    SalesScreen(
+        isOrders = true,
+        screenTitle = stringResource(id = R.string.orders_label),
+        onItemClick = onItemClick,
+        onAddButtonClick = {},
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun SalesScreen(
     isOrders: Boolean,
     screenTitle: String,

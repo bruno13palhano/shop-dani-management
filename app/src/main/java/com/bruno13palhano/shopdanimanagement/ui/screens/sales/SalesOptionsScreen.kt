@@ -26,6 +26,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.shopdanimanagement.R
 
+@Composable
+fun SalesOptionsRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onOrdersOptionClick: () -> Unit,
+    onStockOptionClick: () -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    SalesOptionsScreen(
+        onOrdersOptionClick = onOrdersOptionClick,
+        onStockOptionClick = onStockOptionClick,
+        navigateUp = navigateUp
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SalesOptionsScreen(
