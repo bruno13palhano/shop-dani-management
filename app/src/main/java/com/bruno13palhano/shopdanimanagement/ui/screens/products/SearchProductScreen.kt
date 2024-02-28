@@ -54,6 +54,24 @@ fun SalesSearchProductRoute(
 }
 
 @Composable
+fun SearchProductRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    categoryId: Long,
+    onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    SearchProductScreen(
+        isEditable = true,
+        categoryId = categoryId,
+        onItemClick = onItemClick,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun SearchProductScreen(
     isEditable: Boolean,
     categoryId: Long,

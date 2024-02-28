@@ -22,6 +22,20 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.Produ
 import kotlinx.coroutines.launch
 
 @Composable
+fun ProductCategoriesRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onIconMenuClick: () -> Unit,
+    onItemClick: (categoryId: String) -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    ProductCategoriesScreen(
+        onIconMenuClick = onIconMenuClick,
+        onItemClick = onItemClick
+    )
+}
+@Composable
 fun ProductCategoriesScreen(
     onIconMenuClick: () -> Unit,
     onItemClick: (categoryId: String) -> Unit,
