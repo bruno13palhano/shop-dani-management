@@ -9,6 +9,21 @@ import com.bruno13palhano.shopdanimanagement.ui.components.SearchContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockSearchViewModel
 
 @Composable
+fun StockSearchRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    StockSearchScreen(
+        onItemClick = onItemClick,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun StockSearchScreen(
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,

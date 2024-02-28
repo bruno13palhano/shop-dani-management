@@ -20,6 +20,47 @@ import com.bruno13palhano.shopdanimanagement.ui.components.StockListContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockViewModel
 
 @Composable
+fun SalesStockRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    onSearchClick: () -> Unit,
+    navigateUp: () -> Unit
+) {
+    gesturesEnabled(true)
+    StockScreen(
+        isAddButtonEnabled = false,
+        screenTitle = stringResource(id = R.string.stock_list_label),
+        onItemClick = onItemClick,
+        onSearchClick = onSearchClick,
+        onAddButtonClick = {},
+        showBottomMenu = showBottomMenu,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
+fun StockRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    onSearchClick: () -> Unit,
+    onAddButtonClick: () -> Unit,
+    navigateUp: () -> Unit
+) {
+    gesturesEnabled(true)
+    StockScreen(
+        isAddButtonEnabled = true,
+        screenTitle = stringResource(id = R.string.stock_list_label),
+        onItemClick = onItemClick,
+        onSearchClick = onSearchClick,
+        onAddButtonClick = onAddButtonClick,
+        showBottomMenu = showBottomMenu,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun StockScreen(
     isAddButtonEnabled: Boolean,
     screenTitle: String,

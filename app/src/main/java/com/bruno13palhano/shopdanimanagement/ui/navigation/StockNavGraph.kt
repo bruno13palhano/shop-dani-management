@@ -1,18 +1,17 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.ItemScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockSearchScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.products.ProductListScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.products.SearchProductScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.SalesProductListRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.products.SalesSearchProductRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.EditStockItemRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.NewStockItemRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockSearchRoute
 
 fun NavGraphBuilder.stockNavGraph(
     navController: NavController,
@@ -24,14 +23,12 @@ fun NavGraphBuilder.stockNavGraph(
         route = HomeDestinations.HOME_STOCK_ROUTE
     ) {
         composable(route = StockDestinations.STOCK_MAIN_ROUTE) {
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            StockScreen(
-                isAddButtonEnabled = true,
-                screenTitle = stringResource(id = R.string.stock_list_label),
+            StockRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { stockId ->
                     navController.navigate(
-                        route = "${StockDestinations.STOCK_ITEM_ROUTE}/$stockId/${true}/${false}"
+                        route = "${StockDestinations.STOCK_EDIT_ITEM_ROUTE}/$stockId"
                     )
                 },
                 onSearchClick = {
@@ -40,31 +37,28 @@ fun NavGraphBuilder.stockNavGraph(
                 onAddButtonClick = {
                     navController.navigate(route = StockDestinations.STOCK_ITEM_LIST_ROUTE)
                 },
-                showBottomMenu = showBottomMenu,
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = StockDestinations.STOCK_SEARCH_ITEM_ROUTE) {
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            StockSearchScreen(
+            StockSearchRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { stockId ->
                     navController.navigate(
-                        route = "${StockDestinations.STOCK_ITEM_ROUTE}/$stockId/${true}/${false}"
+                        route = "${StockDestinations.STOCK_EDIT_ITEM_ROUTE}/$stockId"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = StockDestinations.STOCK_ITEM_LIST_ROUTE) {
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            ProductListScreen(
-                isEditable = false,
-                categoryId = 0L,
+            SalesProductListRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { productId ->
                     navController.navigate(
-                        route = "${StockDestinations.STOCK_ITEM_ROUTE}/$productId/${false}/${false}"
+                        route = "${StockDestinations.STOCK_NEW_ITEM_ROUTE}/$productId"
                     )
                 },
                 onSearchClick = {
@@ -72,49 +66,43 @@ fun NavGraphBuilder.stockNavGraph(
                         route = StockDestinations.STOCK_SEARCH_PRODUCT_ROUTE
                     )
                 },
-                onAddButtonClick = {},
-                showBottomMenu = showBottomMenu,
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = StockDestinations.STOCK_SEARCH_PRODUCT_ROUTE) {
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            SearchProductScreen(
-                isEditable = false,
-                categoryId = 0L,
+            SalesSearchProductRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { productId ->
                     navController.navigate(
-                        route = "${StockDestinations.STOCK_ITEM_ROUTE}/$productId/${false}/${false}"
+                        route = "${StockDestinations.STOCK_NEW_ITEM_ROUTE}/$productId"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(
-            route = "${StockDestinations.STOCK_ITEM_ROUTE}/{$ITEM_ID}/{$EDITABLE}/{$IS_ORDERED}",
-            arguments = listOf(
-                navArgument(ITEM_ID) { type = NavType.LongType },
-                navArgument(EDITABLE) { type = NavType.BoolType },
-                navArgument(IS_ORDERED) { type = NavType.BoolType }
-            )
+            route = "${StockDestinations.STOCK_NEW_ITEM_ROUTE}/{$ITEM_ID}",
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            val id = backStackEntry.arguments?.getLong(ITEM_ID)
-            val editable = backStackEntry.arguments?.getBoolean(EDITABLE)
-            val isOrdered = backStackEntry.arguments?.getBoolean(IS_ORDERED)
-
-            if (id != null && editable != null && isOrdered != null) {
-                ItemScreen(
-                    isEditable = editable,
-                    stockItemId = if (editable) id else 0L,
-                    screenTitle = if (editable) {
-                        stringResource(id = R.string.edit_stock_item_label)
-                    } else {
-                        stringResource(id = R.string.new_stock_item_label)
-                    },
-                    productId = if (editable) 0L else id,
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { productId ->
+                NewStockItemRoute(
+                    showBottomMenu = showBottomMenu,
+                    gesturesEnabled = gesturesEnabled,
+                    productId = productId,
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
+        }
+        composable(
+            route = "${StockDestinations.STOCK_EDIT_ITEM_ROUTE}/{$ITEM_ID}",
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
+        ) { backStackEntry ->
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { stockItemId ->
+                EditStockItemRoute(
+                    showBottomMenu = showBottomMenu,
+                    gesturesEnabled = gesturesEnabled,
+                    stockItemId = stockItemId,
                     navigateUp = { navController.navigateUp() }
                 )
             }
@@ -127,5 +115,6 @@ object StockDestinations {
     const val STOCK_SEARCH_ITEM_ROUTE = "stock_search_item_route"
     const val STOCK_ITEM_LIST_ROUTE = "stock_item_list_route"
     const val STOCK_SEARCH_PRODUCT_ROUTE = "stock_search_product_route"
-    const val STOCK_ITEM_ROUTE = "stock_item_route"
+    const val STOCK_NEW_ITEM_ROUTE = "stock_new_item_route"
+    const val STOCK_EDIT_ITEM_ROUTE = "stock_edit_item_route"
 }

@@ -40,6 +40,42 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.setAlarmNotification
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.viewmodel.StockItemViewModel
 import kotlinx.coroutines.launch
 
+@Composable
+fun NewStockItemRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    productId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    ItemScreen(
+        isEditable = false,
+        productId = productId,
+        stockItemId = 0L,
+        screenTitle = stringResource(id = R.string.new_stock_item_label),
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
+fun EditStockItemRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    stockItemId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    ItemScreen(
+        isEditable = true,
+        productId = 0L,
+        stockItemId = stockItemId,
+        screenTitle = stringResource(id = R.string.edit_stock_item_label),
+        navigateUp = navigateUp
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemScreen(
