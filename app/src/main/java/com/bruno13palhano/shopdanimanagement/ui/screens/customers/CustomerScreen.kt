@@ -18,8 +18,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomerContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
@@ -28,6 +30,39 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.CustomerViewModel
 import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import kotlinx.coroutines.launch
+
+@Composable
+fun NewCustomerRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    CustomerScreen(
+        screenTitle = stringResource(id = R.string.new_customer_label),
+        isEditable = false,
+        customerId = 0L,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
+fun EditCustomerRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    customerId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    CustomerScreen(
+        screenTitle = stringResource(id = R.string.edit_customer_label),
+        isEditable = true,
+        customerId = customerId,
+        navigateUp = navigateUp
+    )
+}
 
 @Composable
 fun CustomerScreen(

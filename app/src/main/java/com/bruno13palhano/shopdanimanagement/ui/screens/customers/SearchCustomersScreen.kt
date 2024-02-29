@@ -36,6 +36,21 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.SearchCustomersViewModel
 
 @Composable
+fun SearchCustomersRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    SearchCustomersScreen(
+        onItemClick = onItemClick,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun SearchCustomersScreen(
     onItemClick: (id: Long) -> Unit,
     navigateUp: () -> Unit,

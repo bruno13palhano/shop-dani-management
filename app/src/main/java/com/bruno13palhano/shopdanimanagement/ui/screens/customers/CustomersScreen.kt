@@ -47,6 +47,25 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.Cust
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @Composable
+fun CustomersRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (id: Long) -> Unit,
+    onSearchClick: () -> Unit,
+    onAddButtonClick: () -> Unit,
+    onIconMenuClick: () -> Unit
+) {
+    showBottomMenu(true)
+    gesturesEnabled(true)
+    CustomersScreen(
+        onItemClick = onItemClick,
+        onSearchClick = onSearchClick,
+        onAddButtonClick = onAddButtonClick,
+        onIconMenuClick = onIconMenuClick
+    )
+}
+
+@Composable
 fun CustomersScreen(
     onItemClick: (id: Long) -> Unit,
     onSearchClick: () -> Unit,
