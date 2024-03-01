@@ -60,6 +60,19 @@ import com.patrykandpatrick.vico.core.legend.VerticalLegend
 import com.patrykandpatrick.vico.core.scroll.InitialScroll
 
 @Composable
+fun FinancialInfoRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    FinancialInfoScreen(
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun FinancialInfoScreen(
     navigateUp: () -> Unit,
     viewModel: FinancialInfoViewModel = hiltViewModel()

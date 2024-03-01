@@ -30,6 +30,23 @@ import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
 import com.bruno13palhano.shopdanimanagement.ui.navigation.FinancialDestinations
 
 @Composable
+fun FinancialRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (route: String) -> Unit,
+    onIconMenuClick: () -> Unit,
+    goHome: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    FinancialScreen(
+        onItemClick = onItemClick,
+        onIconMenuClick = onIconMenuClick,
+        goHome = goHome
+    )
+}
+
+@Composable
 fun FinancialScreen(
     onItemClick: (route: String) -> Unit,
     onIconMenuClick: () -> Unit,

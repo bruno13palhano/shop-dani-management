@@ -1,6 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
@@ -8,14 +7,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CanceledSalesScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CustomersDebitScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialInfoScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.stock.ItemScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CanceledSalesRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CustomersDebitRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialInfoRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.sales.FinancialEditSaleRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.stock.FinancialEditStockItemRoute
 
 fun NavGraphBuilder.financialNavGraph(
     navController: NavController,
@@ -28,9 +26,9 @@ fun NavGraphBuilder.financialNavGraph(
         route = MainDestinations.FINANCIAL_ROUTE
     ) {
         composable(route = FinancialDestinations.FINANCIAL_MAIN_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            FinancialScreen(
+            FinancialRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { route ->
                     navController.navigate(route)
                 },
@@ -47,23 +45,23 @@ fun NavGraphBuilder.financialNavGraph(
             )
         }
         composable(route = FinancialDestinations.FINANCIAL_INFO_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            FinancialInfoScreen(
+            FinancialInfoRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = FinancialDestinations.FINANCIAL_CANCELED_SALES_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            CanceledSalesScreen(
+            CanceledSalesRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = FinancialDestinations.FINANCIAL_STOCK_DEBITS_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            StockDebitsScreen(
+            StockDebitsRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { stockItemId ->
                     navController.navigate(
                         route = "${FinancialDestinations.FINANCIAL_STOCK_ITEM_ROUTE}/$stockItemId"
@@ -73,9 +71,9 @@ fun NavGraphBuilder.financialNavGraph(
             )
         }
         composable(route = FinancialDestinations.FINANCIAL_CUSTOMERS_DEBITS_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            CustomersDebitScreen(
+            CustomersDebitRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { saleId ->
                     navController.navigate(
                         route = "${FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE}/$saleId"
@@ -88,14 +86,10 @@ fun NavGraphBuilder.financialNavGraph(
             route = "${FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE}/{$ITEM_ID}",
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
-            showBottomMenu(false)
-            gesturesEnabled(true)
             backStackEntry.arguments?.getLong(ITEM_ID)?.let { saleId ->
-                SaleScreen(
-                    isEdit = true,
-                    screenTitle = stringResource(id = R.string.edit_sale_label),
-                    isOrderedByCustomer = false,
-                    stockOrderId = 0L,
+                FinancialEditSaleRoute(
+                    showBottomMenu = showBottomMenu,
+                    gesturesEnabled = gesturesEnabled,
                     saleId = saleId,
                     navigateUp = { navController.navigateUp() }
                 )
@@ -105,14 +99,11 @@ fun NavGraphBuilder.financialNavGraph(
             route = "${FinancialDestinations.FINANCIAL_STOCK_ITEM_ROUTE}/{$ITEM_ID}",
             arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
-            showBottomMenu(false)
-            gesturesEnabled(true)
             backStackEntry.arguments?.getLong(ITEM_ID)?.let { stockItemId ->
-                ItemScreen(
-                    isEditable = true,
-                    productId = 0L,
+                FinancialEditStockItemRoute(
+                    showBottomMenu = showBottomMenu,
+                    gesturesEnabled = gesturesEnabled,
                     stockItemId = stockItemId,
-                    screenTitle = stringResource(id = R.string.edit_stock_item_label),
                     navigateUp = { navController.navigateUp() }
                 )
             }

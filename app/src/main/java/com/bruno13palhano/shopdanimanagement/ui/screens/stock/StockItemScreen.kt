@@ -76,6 +76,24 @@ fun EditStockItemRoute(
     )
 }
 
+@Composable
+fun FinancialEditStockItemRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    stockItemId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    ItemScreen(
+        isEditable = true,
+        productId = 0L,
+        stockItemId = stockItemId,
+        screenTitle = stringResource(id = R.string.edit_stock_item_label),
+        navigateUp = navigateUp
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemScreen(

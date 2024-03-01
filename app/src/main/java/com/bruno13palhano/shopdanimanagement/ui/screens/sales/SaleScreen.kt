@@ -98,6 +98,25 @@ fun EditSaleRoute(
     )
 }
 
+@Composable
+fun FinancialEditSaleRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    saleId: Long,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    SaleScreen(
+        isEdit = true,
+        screenTitle = stringResource(id = R.string.edit_sale_label),
+        isOrderedByCustomer = false,
+        stockOrderId = 0L,
+        saleId = saleId,
+        navigateUp = navigateUp
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SaleScreen(

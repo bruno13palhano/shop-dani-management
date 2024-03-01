@@ -38,9 +38,24 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel.StockDebitsViewModel
 
 @Composable
-fun StockDebitsScreen(
-    navigateUp: () -> Unit,
+fun StockDebitsRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
     onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    StockDebitsScreen(
+        onItemClick = onItemClick,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
+fun StockDebitsScreen(
+    onItemClick: (id: Long) -> Unit,
+    navigateUp: () -> Unit,
     viewModel: StockDebitsViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = Unit) {

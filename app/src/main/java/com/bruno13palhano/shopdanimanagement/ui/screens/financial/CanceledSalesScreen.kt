@@ -36,6 +36,17 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.viewmodel.CanceledSalesViewModel
 
 @Composable
+fun CanceledSalesRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    CanceledSalesScreen(navigateUp = navigateUp)
+}
+
+@Composable
 fun CanceledSalesScreen(
     navigateUp: () -> Unit,
     viewModel: CanceledSalesViewModel = hiltViewModel()
