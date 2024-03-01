@@ -72,6 +72,25 @@ import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @Composable
+fun HomeRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onOptionsItemClick: (route: String) -> Unit,
+    onSalesItemClick: (id: Long, isOrderedByCustomer: Boolean) -> Unit,
+    onMenuClick: () -> Unit,
+    onUnauthenticated: () -> Unit
+) {
+    gesturesEnabled(true)
+    HomeScreen(
+        onOptionsItemClick = onOptionsItemClick,
+        onSalesItemClick = onSalesItemClick,
+        onMenuClick = onMenuClick,
+        onUnauthenticated = onUnauthenticated,
+        showBottomMenu = showBottomMenu
+    )
+}
+
+@Composable
 fun HomeScreen(
     onOptionsItemClick: (route: String) -> Unit,
     onSalesItemClick: (id: Long, isOrderedByCustomer: Boolean) -> Unit,

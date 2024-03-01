@@ -1,15 +1,13 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.screens.home.HomeScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SaleScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.home.HomeRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.sales.EditSaleRoute
 
 fun NavGraphBuilder.homeNavGraph(
     navController: NavController,
@@ -22,8 +20,9 @@ fun NavGraphBuilder.homeNavGraph(
         route = MainDestinations.HOME_ROUTE,
     ) {
         composable(route = HomeDestinations.HOME_MAIN_ROUTE) {
-            gesturesEnabled(true)
-            HomeScreen(
+            HomeRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onOptionsItemClick = { route ->
                     navController.navigate(route = route)
                 },
@@ -41,29 +40,18 @@ fun NavGraphBuilder.homeNavGraph(
                         launchSingleTop = true
                         restoreState = true
                     }
-                },
-                showBottomMenu = showBottomMenu
+                }
             )
         }
 
         composable(
-            route = "${HomeDestinations.HOME_SALE_ROUTE}/{$ITEM_ID}/{$IS_ORDERED}",
-            arguments = listOf(
-                navArgument(ITEM_ID) { type = NavType.LongType },
-                navArgument(IS_ORDERED) { type = NavType.BoolType }
-            )
+            route = "${HomeDestinations.HOME_SALE_ROUTE}/{$ITEM_ID}",
+            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
-            showBottomMenu(true)
-            gesturesEnabled(true)
-            val saleId = backStackEntry.arguments?.getLong(ITEM_ID)
-            val isOrdered = backStackEntry.arguments?.getBoolean(IS_ORDERED)
-
-            if (saleId != null && isOrdered != null) {
-                SaleScreen(
-                    isEdit = true,
-                    screenTitle = stringResource(id = R.string.edit_sale_label),
-                    isOrderedByCustomer = isOrdered,
-                    stockOrderId = 0L,
+            backStackEntry.arguments?.getLong(ITEM_ID)?.let { saleId ->
+                EditSaleRoute(
+                    showBottomMenu = showBottomMenu,
+                    gesturesEnabled = gesturesEnabled,
                     saleId = saleId,
                     navigateUp = { navController.navigateUp() }
                 )
