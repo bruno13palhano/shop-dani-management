@@ -17,6 +17,17 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.LastS
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @Composable
+fun LastSalesRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    LastSalesScreen(navigateUp = navigateUp)
+}
+
+@Composable
 fun LastSalesScreen(
     navigateUp: () -> Unit,
     viewModel: LastSalesViewModel = hiltViewModel()

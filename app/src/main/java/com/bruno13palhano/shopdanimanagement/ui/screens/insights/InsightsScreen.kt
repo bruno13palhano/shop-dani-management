@@ -30,6 +30,23 @@ import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
 import com.bruno13palhano.shopdanimanagement.ui.navigation.InsightsDestinations
 
 @Composable
+fun InsightsRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onItemClick: (route: String) -> Unit,
+    onIconMenuClick: () -> Unit,
+    goHome: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    InsightsScreen(
+        onItemClick = onItemClick,
+        onIconMenuClick = onIconMenuClick,
+        goHome = goHome
+    )
+}
+
+@Composable
 fun InsightsScreen(
     onItemClick: (route: String) -> Unit,
     onIconMenuClick: () -> Unit,

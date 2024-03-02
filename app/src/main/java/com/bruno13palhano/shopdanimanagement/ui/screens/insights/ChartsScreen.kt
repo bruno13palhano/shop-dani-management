@@ -68,6 +68,17 @@ import com.patrykandpatrick.vico.core.legend.VerticalLegend
 import com.patrykandpatrick.vico.core.scroll.InitialScroll
 
 @Composable
+fun ChartsRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    ChartsScreen(navigateUp = navigateUp)
+}
+
+@Composable
 fun ChartsScreen(
     navigateUp: () -> Unit,
     viewModel: ChartsViewModel = hiltViewModel()

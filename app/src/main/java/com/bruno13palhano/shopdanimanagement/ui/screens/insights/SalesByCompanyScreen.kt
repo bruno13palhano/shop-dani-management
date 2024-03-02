@@ -18,6 +18,17 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.insights.viewmodel.Sales
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @Composable
+fun SalesByCompanyRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    SalesByCompanyScreen(navigateUp = navigateUp)
+}
+
+@Composable
 fun SalesByCompanyScreen(
     navigateUp: () -> Unit,
     viewModel: SalesByCompanyViewModel = hiltViewModel()

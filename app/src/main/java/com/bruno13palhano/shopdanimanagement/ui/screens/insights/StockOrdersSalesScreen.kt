@@ -19,6 +19,17 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.composed.plus
 
 @Composable
+fun StockOrdersSalesRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    StockOrdersSalesScreen(navigateUp = navigateUp)
+}
+
+@Composable
 fun StockOrdersSalesScreen(
     navigateUp: () -> Unit,
     viewModel: StockOrdersSalesViewModel = hiltViewModel()

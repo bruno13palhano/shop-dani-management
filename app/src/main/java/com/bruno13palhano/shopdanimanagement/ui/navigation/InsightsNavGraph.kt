@@ -5,11 +5,11 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.ui.screens.insights.ChartsScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.insights.SalesByCompanyScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.insights.InsightsScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.insights.LastSalesScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.insights.StockOrdersSalesScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.insights.ChartsRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.insights.InsightsRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.insights.LastSalesRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.insights.SalesByCompanyRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.insights.StockOrdersSalesRoute
 
 fun NavGraphBuilder.insightsNavGraph(
     navController: NavController,
@@ -22,9 +22,9 @@ fun NavGraphBuilder.insightsNavGraph(
         route = MainDestinations.INSIGHTS_ROUTE
     ) {
         composable(route = InsightsDestinations.INSIGHTS_MAIN_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            InsightsScreen(
+            InsightsRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onItemClick = { route ->
                     navController.navigate(route = route)
                 },
@@ -41,30 +41,30 @@ fun NavGraphBuilder.insightsNavGraph(
             )
         }
         composable(route = InsightsDestinations.INSIGHTS_CHARTS_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            ChartsScreen(
+            ChartsRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = InsightsDestinations.INSIGHTS_LAST_SALES_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            LastSalesScreen(
+            LastSalesRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = InsightsDestinations.INSIGHTS_STOCK_ORDERS_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            StockOrdersSalesScreen(
+            StockOrdersSalesRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(route = InsightsDestinations.INSIGHTS_COMPANY_SALES_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            SalesByCompanyScreen(
+            SalesByCompanyRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
             )
         }
