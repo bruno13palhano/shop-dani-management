@@ -6,6 +6,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.bruno13palhano.shopdanimanagement.ui.navigation.home.amazonNavGraph
+import com.bruno13palhano.shopdanimanagement.ui.navigation.home.catalogNavGraph
+import com.bruno13palhano.shopdanimanagement.ui.navigation.home.deliveriesNAvGraph
+import com.bruno13palhano.shopdanimanagement.ui.navigation.home.ordersNavGraph
+import com.bruno13palhano.shopdanimanagement.ui.navigation.home.salesNavGraph
+import com.bruno13palhano.shopdanimanagement.ui.navigation.home.stockNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.screens.home.HomeRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.EditSaleRoute
 

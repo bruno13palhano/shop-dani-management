@@ -1,4 +1,4 @@
-package com.bruno13palhano.shopdanimanagement.ui.navigation
+package com.bruno13palhano.shopdanimanagement.ui.navigation.home
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -6,6 +6,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.ITEM_ID
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SalesProductListRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SalesSearchProductRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.EditStockItemRoute
