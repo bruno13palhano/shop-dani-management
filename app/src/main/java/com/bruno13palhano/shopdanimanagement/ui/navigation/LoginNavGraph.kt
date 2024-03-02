@@ -4,8 +4,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.ui.screens.login.CreateAccountScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.login.CreateAccountRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginRoute
 
 fun NavGraphBuilder.loginNavGraph(
     navController: NavController,
@@ -17,9 +17,9 @@ fun NavGraphBuilder.loginNavGraph(
         route = MainDestinations.LOGIN_ROUTE
     ) {
         composable(route = LoginDestinations.LOGIN_MAIN_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(false)
-            LoginScreen(
+            LoginRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onSuccess = {
                     navController.navigate(route = MainDestinations.HOME_ROUTE) {
                         popUpTo(0)
@@ -32,9 +32,9 @@ fun NavGraphBuilder.loginNavGraph(
             )
         }
         composable(route = LoginDestinations.LOGIN_CREATE_ACCOUNT_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(false)
-            CreateAccountScreen(
+            CreateAccountRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onSuccess = {
                     navController.navigate(route = HomeDestinations.HOME_MAIN_ROUTE) {
                         popUpTo(0)

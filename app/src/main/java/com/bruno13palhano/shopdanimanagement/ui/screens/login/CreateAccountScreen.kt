@@ -74,6 +74,21 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.login.viewmodel.CreateAc
 import kotlinx.coroutines.launch
 
 @Composable
+fun CreateAccountRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onSuccess: () -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(false)
+    CreateAccountScreen(
+        onSuccess = onSuccess,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun CreateAccountScreen(
     onSuccess: () -> Unit,
     navigateUp: () -> Unit,

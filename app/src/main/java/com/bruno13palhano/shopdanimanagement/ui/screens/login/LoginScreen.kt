@@ -59,6 +59,21 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.login.viewmodel.LoginVie
 import kotlinx.coroutines.launch
 
 @Composable
+fun LoginRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onSuccess: () -> Unit,
+    onCreateAccountClick: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(false)
+    LoginScreen(
+        onSuccess = onSuccess,
+        onCreateAccountClick = onCreateAccountClick
+    )
+}
+
+@Composable
 fun LoginScreen(
     onSuccess: () -> Unit,
     onCreateAccountClick: () -> Unit,
