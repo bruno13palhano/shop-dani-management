@@ -73,6 +73,23 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel.UserViewM
 import kotlinx.coroutines.launch
 
 @Composable
+fun UserRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onLogoutClick: () -> Unit,
+    onChangePasswordClick: () -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    UserScreen(
+        onLogoutClick = onLogoutClick,
+        onChangePasswordClick = onChangePasswordClick,
+        navigateUp = navigateUp
+    )
+}
+
+@Composable
 fun UserScreen(
     onLogoutClick: () -> Unit,
     onChangePasswordClick: () -> Unit,

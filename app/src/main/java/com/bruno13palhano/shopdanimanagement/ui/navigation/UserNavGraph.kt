@@ -4,8 +4,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.ui.screens.user.ChangePasswordScreen
-import com.bruno13palhano.shopdanimanagement.ui.screens.user.UserScreen
+import com.bruno13palhano.shopdanimanagement.ui.screens.user.ChangePasswordRoute
+import com.bruno13palhano.shopdanimanagement.ui.screens.user.UserRoute
 
 fun NavGraphBuilder.userNavGraph(
     navController: NavController,
@@ -17,9 +17,9 @@ fun NavGraphBuilder.userNavGraph(
         route = MainDestinations.USER_ROUTE
     ) {
         composable(route = UserDestinations.USER_MAIN_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            UserScreen(
+            UserRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
                 onLogoutClick = {
                     navController.navigate(route = MainDestinations.LOGIN_ROUTE) {
                         popUpTo(0)
@@ -32,9 +32,11 @@ fun NavGraphBuilder.userNavGraph(
             )
         }
         composable(route = UserDestinations.USER_CHANGE_PASSWORD_ROUTE) {
-            showBottomMenu(false)
-            gesturesEnabled(true)
-            ChangePasswordScreen(navigateUp = { navController.navigateUp() })
+            ChangePasswordRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
+                navigateUp = { navController.navigateUp() }
+            )
         }
     }
 }

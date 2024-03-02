@@ -59,6 +59,17 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel.ChangePas
 import kotlinx.coroutines.launch
 
 @Composable
+fun ChangePasswordRoute(
+    showBottomMenu: (show: Boolean) -> Unit,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    navigateUp: () -> Unit
+) {
+    showBottomMenu(false)
+    gesturesEnabled(true)
+    ChangePasswordScreen(navigateUp = navigateUp)
+}
+
+@Composable
 fun ChangePasswordScreen(
     navigateUp: () -> Unit,
     viewModel: ChangePasswordViewModel = hiltViewModel()
