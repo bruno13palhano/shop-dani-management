@@ -312,7 +312,7 @@ fun ItemScreen(
             onValidityClick = { showValidityPickerDialog = true },
             onMoreOptionsItemClick = { index ->
                 when (index) {
-                    0 -> {
+                    MoreOptions.DELETE_ITEM -> {
                         viewModel.deleteStockItem(
                             stockOrderId = stockItemId,
                             onError = { error ->
@@ -381,4 +381,8 @@ fun ItemScreen(
             navigateUp = navigateUp
         )
     }
+}
+
+private object MoreOptions {
+    const val DELETE_ITEM = 0
 }
