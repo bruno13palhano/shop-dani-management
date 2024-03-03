@@ -170,14 +170,21 @@ fun ProductListScreen(
             onEditItemClick = { showCategoryDialog = true },
             onBarcodeClick = { showBarcodeReader = true; showContent = false },
             onMenuItemClick = { index ->
-                if (index == 0) {
-                    viewModel.getAllProducts()
-                } else {
-                    viewModel.getProductsByCategory(menuOptions[index])
+                when (index) {
+                    ProductCategoriesMenu.ALL_PRODUCTS -> { viewModel.getAllProducts() }
+
+                    ProductCategoriesMenu.PRODUCTS_BY_CATEGORY -> {
+                        viewModel.getProductsByCategory(menuOptions[index])
+                    }
                 }
             },
             onAddButtonClick = onAddButtonClick,
             navigateUp = navigateUp
         )
     }
+}
+
+private object ProductCategoriesMenu {
+    const val ALL_PRODUCTS = 0
+    const val PRODUCTS_BY_CATEGORY = 1
 }
