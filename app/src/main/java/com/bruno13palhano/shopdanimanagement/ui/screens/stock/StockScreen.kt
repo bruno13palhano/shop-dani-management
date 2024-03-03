@@ -104,15 +104,11 @@ fun StockScreen(
             },
             onMenuItemClick = { index ->
                 when (index) {
-                    0 -> {
-                        viewModel.getItems()
-                    }
+                    StockMenuItems.ALL_ITEMS -> { viewModel.getItems() }
 
-                    1 -> {
-                        viewModel.getOutOfStock()
-                    }
+                    StockMenuItems.OUT_OF_STOCK -> { viewModel.getOutOfStock() }
 
-                    else -> {
+                    StockMenuItems.ITEMS_BY_CATEGORY -> {
                         viewModel.getItemsByCategories(menuOptions[index])
                     }
                 }
@@ -142,4 +138,10 @@ fun StockScreen(
             }
         )
     }
+}
+
+private object StockMenuItems {
+    const val ALL_ITEMS = 0
+    const val OUT_OF_STOCK = 1
+    const val ITEMS_BY_CATEGORY = 2
 }
