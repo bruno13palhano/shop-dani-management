@@ -72,19 +72,19 @@ fun CanceledSalesScreen(
         menuItems = menuItems,
         onMoreOptionsItemClick = { index ->
             when (index) {
-                0 -> {
+                CanceledSalesMenu.SALES_BY_NAME -> {
                     viewModel.getCanceledSalesByName(isOrderedAsc = orderedByName)
                     orderedByName = toggleOrdered(orderedByName)
                 }
-                1 -> {
+                CanceledSalesMenu.SALES_BY_CUSTOMER_NAME -> {
                     viewModel.getCanceledSalesByCustomerName(isOrderedAsc = orderedByCustomerName)
                     orderedByCustomerName = toggleOrdered(orderedByCustomerName)
                 }
-                2 -> {
+                CanceledSalesMenu.SALE_BY_PRICE -> {
                     viewModel.getCanceledSalesByPrice(isOrderedAsc = orderedByPrice)
                     orderedByPrice = toggleOrdered(orderedByPrice)
                 }
-                else -> { viewModel.getAllCanceledSales() }
+                CanceledSalesMenu.ALL_CANCELED_SALES -> { viewModel.getAllCanceledSales() }
             }
         },
         navigateUp = navigateUp
@@ -158,4 +158,11 @@ fun CanceledSalesContent(
             }
         }
     }
+}
+
+private object CanceledSalesMenu {
+    const val SALES_BY_NAME = 0
+    const val SALES_BY_CUSTOMER_NAME = 1
+    const val SALE_BY_PRICE = 2
+    const val ALL_CANCELED_SALES = 3
 }
