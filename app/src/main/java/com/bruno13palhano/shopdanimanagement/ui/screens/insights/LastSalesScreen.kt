@@ -65,11 +65,15 @@ fun LastSalesScreen(
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
             chartTitle = when (index) {
-                1 -> {
+                LastSalesMenu.DAYS_7 -> {
+                    viewModel.setLastSalesEntryByRange(7)
+                    menuOptions[0]
+                }
+                LastSalesMenu.DAYS_21 -> {
                     viewModel.setLastSalesEntryByRange(21)
                     menuOptions[1]
                 }
-                2 -> {
+                LastSalesMenu.DAYS_31 -> {
                     viewModel.setLastSalesEntryByRange(31)
                     menuOptions[2]
                 }
@@ -81,4 +85,10 @@ fun LastSalesScreen(
         },
         navigateUp = navigateUp
     )
+}
+
+private object LastSalesMenu {
+    const val DAYS_7 = 0
+    const val DAYS_21 = 1
+    const val DAYS_31 = 2
 }

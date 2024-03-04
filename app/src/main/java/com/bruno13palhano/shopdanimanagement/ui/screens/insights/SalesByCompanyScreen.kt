@@ -111,11 +111,15 @@ fun SalesByCompanyScreen(
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
             chartTitle = when (index) {
-                1 -> {
+                SalesByCompanyMenu.DAYS_7 -> {
+                    viewModel.getChartByRange(7)
+                    menuOptions[0]
+                }
+                SalesByCompanyMenu.DAYS_21 -> {
                     viewModel.getChartByRange(21)
                     menuOptions[1]
                 }
-                2 -> {
+                SalesByCompanyMenu.DAYS_31 -> {
                     viewModel.getChartByRange(31)
                     menuOptions[2]
                 }
@@ -127,4 +131,10 @@ fun SalesByCompanyScreen(
         },
         navigateUp = navigateUp
     )
+}
+
+private object SalesByCompanyMenu {
+    const val DAYS_7 = 0
+    const val DAYS_21 = 1
+    const val DAYS_31 = 2
 }

@@ -127,12 +127,17 @@ fun ChartsScreen(
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
             chartTitle = when (index) {
-                1 -> {
+                ChartsMenu.DAYS_7 -> {
+                    viewModel.setItemsDaysRange(7)
+                    menuOptions[0]
+                }
+
+                ChartsMenu.DAYS_21 -> {
                     viewModel.setItemsDaysRange(21)
                     menuOptions[1]
                 }
 
-                2 -> {
+                ChartsMenu.DAYS_31 -> {
                     viewModel.setItemsDaysRange(31)
                     menuOptions[2]
                 }
@@ -342,4 +347,10 @@ private fun rememberLegend(legends: List<Pair<String, Int>>): VerticalLegend {
         iconPadding = 10.dp,
         spacing = 4.dp
     )
+}
+
+private object ChartsMenu {
+    const val DAYS_7 = 0
+    const val DAYS_21 = 1
+    const val DAYS_31 = 2
 }

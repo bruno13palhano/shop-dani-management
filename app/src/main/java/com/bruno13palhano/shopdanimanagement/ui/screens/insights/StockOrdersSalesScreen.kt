@@ -82,11 +82,15 @@ fun StockOrdersSalesScreen(
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
             chartTitle = when (index) {
-                1 -> {
+                StockOrdersSalesMenu.DAYS_7 -> {
+                    viewModel.setStockOrdersSalesRange(7)
+                    menuOptions[0]
+                }
+                StockOrdersSalesMenu.DAYS_21 -> {
                     viewModel.setStockOrdersSalesRange(21)
                     menuOptions[1]
                 }
-                2 -> {
+                StockOrdersSalesMenu.DAYS_31 -> {
                     viewModel.setStockOrdersSalesRange(31)
                     menuOptions[2]
                 }
@@ -98,4 +102,10 @@ fun StockOrdersSalesScreen(
         },
         navigateUp = navigateUp
     )
+}
+
+private object StockOrdersSalesMenu {
+    const val DAYS_7 = 0
+    const val DAYS_21 = 1
+    const val DAYS_31 = 2
 }
