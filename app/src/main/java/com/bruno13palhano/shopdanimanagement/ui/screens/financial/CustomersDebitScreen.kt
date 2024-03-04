@@ -79,15 +79,15 @@ fun CustomersDebitScreen(
         onItemClick = onItemClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
-                0 -> {
+                CustomersDebitMenu.DEBITS_BY_NAME -> {
                     viewModel.getDebitByCustomerName(orderedByName)
                     orderedByName = toggleOrdered(orderedByName)
                 }
-                1 -> {
+                CustomersDebitMenu.DEBITS_BY_PRICE -> {
                     viewModel.getDebitBySalePrice(orderedByPrice)
                     orderedByPrice = toggleOrdered(orderedByPrice)
                 }
-                else -> { viewModel.getDebits() }
+                CustomersDebitMenu.ALL_DEBITS -> { viewModel.getDebits() }
             }
         },
         navigateUp = navigateUp
@@ -165,4 +165,10 @@ fun CustomersDebitContent(
             }
         }
     }
+}
+
+private object CustomersDebitMenu {
+    const val DEBITS_BY_NAME = 0
+    const val DEBITS_BY_PRICE = 1
+    const val ALL_DEBITS = 3
 }
