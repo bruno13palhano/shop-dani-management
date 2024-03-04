@@ -77,11 +77,11 @@ fun StockDebitsScreen(
         onItemClick = onItemClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
-                0 -> {
+                StockDebitsMenu.STOCK_BY_NAME -> {
                     viewModel.getStockByName(isOrderedAsc = orderedByName)
                     orderedByName = toggleOrdered(orderedByName)
                 }
-                else -> {
+                StockDebitsMenu.STOCK_BY_PRICE -> {
                     viewModel.getStockByPrice(isOrderedAsc = orderedByPrice)
                     orderedByPrice = toggleOrdered(orderedByPrice)
                 }
@@ -161,4 +161,9 @@ fun StockDebitsContent(
             }
         }
     }
+}
+
+private object StockDebitsMenu {
+    const val STOCK_BY_NAME = 0
+    const val STOCK_BY_PRICE = 1
 }
