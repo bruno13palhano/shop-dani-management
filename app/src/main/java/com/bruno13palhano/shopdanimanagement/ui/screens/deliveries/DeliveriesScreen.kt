@@ -76,13 +76,13 @@ fun DeliveriesScreen(
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
             when (index) {
-                0 -> {
+                DeliveriesMenu.NON_DELIVERED -> {
                     viewModel.getDeliveries(false)
                 }
-                1 -> {
+                DeliveriesMenu.DELIVERED -> {
                     viewModel.getDeliveries(true)
                 }
-                else -> {
+                DeliveriesMenu.ALL_DELIVERIES -> {
                     viewModel.getAllDeliveries()
                 }
             }
@@ -168,4 +168,10 @@ fun DeliveriesContent(
             }
         }
     }
+}
+
+private object DeliveriesMenu {
+    const val NON_DELIVERED = 0
+    const val DELIVERED = 1
+    const val ALL_DELIVERIES = 2
 }
