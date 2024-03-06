@@ -1,5 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
+import android.icu.text.DecimalFormat
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import java.util.Locale
 
 @Composable
 fun CustomTextField(
@@ -49,7 +51,7 @@ fun CustomTextField(
 fun CustomIntegerField(
     modifier: Modifier = Modifier,
     value: String,
-    onValueChange: (text: String) -> Unit,
+    onValueChange: (value: String) -> Unit,
     icon: ImageVector,
     label: String,
     placeholder: String,
@@ -83,6 +85,46 @@ fun CustomIntegerField(
         })
     )
 }
+@Composable
+fun CustomFloatField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (value: String) -> Unit,
+    icon: ImageVector,
+    label: String,
+    placeholder: String,
+    singleLine: Boolean = true,
+    readOnly: Boolean = false
+) {
+    val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
+    val decimalSeparator = decimalFormat.decimalFormatSymbols.decimalSeparator
+    val pattern = remember { Regex("^\\d*\\$decimalSeparator?\\d*\$") }
+
+    OutlinedTextField(
+        modifier = modifier
+            .padding(horizontal = 8.dp, vertical = 2.dp)
+            .fillMaxWidth()
+            .clearFocusOnKeyboardDismiss(),
+        value = value,
+        onValueChange = { newValue ->
+            if (newValue.isEmpty() || newValue.matches(pattern)) {
+                onValueChange(newValue)
+            }
+        },
+        leadingIcon = { Icon(imageVector = icon, contentDescription = label) },
+        label = { Text(text = label, fontStyle = FontStyle.Italic) },
+        placeholder = { Text(text = placeholder, fontStyle = FontStyle.Italic) },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done,
+            keyboardType = KeyboardType.Decimal
+        ),
+        keyboardActions = KeyboardActions(onDone = {
+            defaultKeyboardAction(ImeAction.Done)
+        }),
+        singleLine = singleLine,
+        readOnly = readOnly,
+    )
+}
 
 @Composable
 fun CustomClickField(
@@ -99,7 +141,11 @@ fun CustomClickField(
         modifier = modifier
             .padding(horizontal = 8.dp, vertical = 2.dp)
             .fillMaxWidth()
-            .onFocusChanged { focusState -> if (focusState.hasFocus) { onClick() } },
+            .onFocusChanged { focusState ->
+                if (focusState.hasFocus) {
+                    onClick()
+                }
+            },
         value = value,
         onValueChange = {},
         leadingIcon = { Icon(imageVector = icon, contentDescription = label) },
