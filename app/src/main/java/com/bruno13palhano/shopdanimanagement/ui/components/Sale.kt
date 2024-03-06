@@ -1,6 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
-import android.icu.text.DecimalFormat
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -15,8 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -41,7 +38,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -57,16 +53,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -172,11 +163,6 @@ fun SaleContent(
             }
         }
     ) {
-        val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
-        val decimalSeparator = decimalFormat.decimalFormatSymbols.decimalSeparator
-        val pattern = remember { Regex("^\\d*\\$decimalSeparator?\\d*\$") }
-        val patternInt = remember { Regex("^\\d*") }
-
         Column(modifier = Modifier
             .padding(it)
             .fillMaxHeight()
@@ -243,167 +229,43 @@ fun SaleContent(
                     }
                 }
                 Column {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                            .fillMaxWidth()
-                            .clearFocusOnKeyboardDismiss(),
-                        value = productName,
-                        onValueChange = {},
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Title,
-                                contentDescription = stringResource(id = R.string.name_label)
-                            )
-                        },
-                        singleLine = true,
-                        readOnly = true,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.name_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        }
+                    CustomTextField(
+                        text = productName,
+                        onTextChange = {},
+                        icon = Icons.Filled.Title,
+                        label = stringResource(id = R.string.name_label),
+                        placeholder = stringResource(id = R.string.name_label),
+                        readOnly = true
                     )
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                            .fillMaxWidth()
-                            .clearFocusOnKeyboardDismiss(),
+                    CustomIntegerField(
                         value = quantity,
-                        onValueChange = { quantityValue ->
-                            if (quantityValue.isEmpty() || quantityValue.matches(patternInt)) {
-                                onQuantityChange(quantityValue)
-                            }
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.ShoppingBag,
-                                contentDescription = stringResource(id = R.string.quantity_label)
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Number
-                        ),
-                        keyboardActions = KeyboardActions(onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }),
-                        singleLine = true,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.quantity_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_quantity_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
+                        onValueChange = onQuantityChange,
+                        icon = Icons.Filled.ShoppingBag,
+                        label = stringResource(id = R.string.quantity_label),
+                        placeholder = stringResource(id = R.string.enter_quantity_label)
                     )
                 }
             }
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (focusState.hasFocus) {
-                            openCustomerSheet = true
-                        }
-                    },
+            CustomClickField(
                 value = customerName,
-                onValueChange = {},
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Person,
-                        contentDescription = stringResource(id = R.string.customer_name_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                readOnly = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.customer_name_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_customer_name_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                onClick = { openCustomerSheet = true },
+                icon = Icons.Filled.Person,
+                label = stringResource(id = R.string.customer_name_label),
+                placeholder = stringResource(id = R.string.enter_customer_name_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (focusState.hasFocus) {
-                            onDateOfSaleClick()
-                        }
-                    },
+            CustomClickField(
                 value = dateOfSale,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.EditCalendar,
-                        contentDescription = stringResource(id = R.string.date_of_sale_label)
-                    )
-                },
-                onValueChange = {},
-                singleLine = true,
-                readOnly = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.date_of_sale_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_date_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+                onClick = onDateOfSaleClick,
+                icon = Icons.Filled.EditCalendar,
+                label = stringResource(id = R.string.date_of_sale_label),
+                placeholder = stringResource(id = R.string.enter_date_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState ->
-                        if (focusState.hasFocus) {
-                            onDateOfPaymentClick()
-                        }
-                    },
+            CustomClickField(
                 value = dateOfPayment,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.EditCalendar,
-                        contentDescription = stringResource(id = R.string.date_of_payment_label)
-                    )
-                },
-                onValueChange = {},
-                singleLine = true,
-                readOnly = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.date_of_payment_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_date_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+                onClick = onDateOfPaymentClick,
+                icon = Icons.Filled.EditCalendar,
+                label = stringResource(id = R.string.date_of_payment_label),
+                placeholder = stringResource(id = R.string.enter_date_label)
             )
 
             Row(
@@ -425,453 +287,102 @@ fun SaleContent(
                         .padding(horizontal = 8.dp, vertical = 2.dp)
                         .border(2.dp, MaterialTheme.colorScheme.primary, RectangleShape)
                 ) {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(start = 8.dp, end = 8.dp, bottom = 2.dp)
-                            .fillMaxWidth()
-                            .clearFocusOnKeyboardDismiss(),
+                    CustomIntegerField(
                         value = amazonCode,
-                        onValueChange = { value ->
-                            if (value.isEmpty() || value.matches(patternInt)) {
-                                onAmazonCodeChange(value)
-                            }
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Numbers,
-                                contentDescription = stringResource(id = R.string.amazon_code_label)
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Number
-                        ),
-                        keyboardActions = KeyboardActions(onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }),
-                        singleLine = true,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.amazon_code_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_amazon_code_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
+                        onValueChange = onAmazonCodeChange,
+                        icon = Icons.Filled.Numbers,
+                        label = stringResource(id = R.string.amazon_code_label),
+                        placeholder = stringResource(id = R.string.enter_amazon_code_label)
                     )
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                            .fillMaxWidth()
-                            .clearFocusOnKeyboardDismiss(),
+                    CustomIntegerField(
                         value = amazonRequestNumber,
-                        onValueChange = { value ->
-                            if (value.isEmpty() || value.matches(patternInt)) {
-                                onAmazonRequestNumberChange(value)
-                            }
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Numbers,
-                                contentDescription = stringResource(
-                                    id = R.string.amazon_request_number_label
-                                )
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Number
-                        ),
-                        keyboardActions = KeyboardActions(onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }),
-                        singleLine = true,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.amazon_request_number_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(
-                                    id = R.string.enter_amazon_request_number_label
-                                ),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
+                        onValueChange = onAmazonRequestNumberChange,
+                        icon = Icons.Filled.Numbers,
+                        label = stringResource(id = R.string.amazon_request_number_label),
+                        placeholder = stringResource(
+                            id = R.string.enter_amazon_request_number_label
+                        )
                     )
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                            .fillMaxWidth()
-                            .clearFocusOnKeyboardDismiss(),
+                    CustomFloatField(
                         value = amazonPrice,
-                        onValueChange = { value ->
-                            if (value.isEmpty() || value.matches(pattern)) {
-                                onAmazonPriceChange(value)
-                            }
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Paid,
-                                contentDescription = stringResource(
-                                    id = R.string.amazon_price_label
-                                )
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Decimal
-                        ),
-                        keyboardActions = KeyboardActions(onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }),
-                        singleLine = true,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.amazon_price_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_amazon_price_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
+                        onValueChange = onAmazonPriceChange,
+                        icon = Icons.Filled.Paid,
+                        label = stringResource(id = R.string.amazon_price_label),
+                        placeholder = stringResource(id = R.string.enter_amazon_price_label)
                     )
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                            .fillMaxWidth()
-                            .clearFocusOnKeyboardDismiss(),
-                        value = amazonTax,
-                        onValueChange = { value ->
-                            if (value.isEmpty() || value.matches(patternInt)) {
-                                onAmazonTaxChange(value)
-                            }
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Paid,
-                                contentDescription = stringResource(id = R.string.amazon_tax_label)
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Number
-                        ),
-                        keyboardActions = KeyboardActions(onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }),
-                        singleLine = true,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.amazon_tax_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_amazon_tax_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                    )
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                            .fillMaxWidth()
-                            .clearFocusOnKeyboardDismiss(),
-                        value = amazonProfit,
-                        onValueChange = {},
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Paid,
-                                contentDescription = stringResource(
-                                    id = R.string.purchase_price_label
-                                )
-                            )
-                        },
-                        singleLine = true,
-                        readOnly = true,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.amazon_profit_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_amazon_profit_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                    )
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                            .fillMaxWidth()
-                            .clearFocusOnKeyboardDismiss(),
-                        value = amazonSKU,
-                        onValueChange = onAmazonSKUChange,
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Title,
-                                contentDescription = stringResource(id = R.string.amazon_sku_label)
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }),
-                        singleLine = true,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.amazon_sku_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_amazon_sku_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                    )
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                            .fillMaxWidth()
-                            .clearFocusOnKeyboardDismiss(),
+                    CustomFloatField(
                         value = resaleProfit,
-                        onValueChange = { value ->
-                            if (value.isEmpty() || value.matches(pattern)) {
-                                onResaleProfitChange(value)
-                            }
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Paid,
-                                contentDescription = stringResource(
-                                    id = R.string.resale_profit_label
-                                )
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Decimal
-                        ),
-                        keyboardActions = KeyboardActions(onDone = {
-                            defaultKeyboardAction(ImeAction.Done)
-                        }),
-                        singleLine = true,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.resale_profit_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_resale_profit_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
+                        onValueChange = onResaleProfitChange,
+                        icon = Icons.Filled.Paid,
+                        label = stringResource(id = R.string.resale_profit_label),
+                        placeholder = stringResource(id = R.string.enter_resale_profit_label)
                     )
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 8.dp)
-                            .fillMaxWidth()
-                            .clearFocusOnKeyboardDismiss(),
-                        value = totalProfit,
-                        onValueChange = {},
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Paid,
-                                contentDescription = stringResource(
-                                    id = R.string.purchase_price_label
-                                )
-                            )
-                        },
-                        singleLine = true,
-                        readOnly = true,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.total_profit_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.enter_total_profit_label),
-                                fontStyle = FontStyle.Italic
-                            )
-                        },
+                    CustomIntegerField(
+                        value = amazonTax,
+                        onValueChange = onAmazonTaxChange,
+                        icon = Icons.Filled.Paid,
+                        label = stringResource(id = R.string.amazon_tax_label),
+                        placeholder = stringResource(id = R.string.enter_amazon_tax_label)
+                    )
+                    CustomTextField(
+                        text = amazonProfit,
+                        onTextChange = {},
+                        icon = Icons.Filled.Paid,
+                        label = stringResource(id = R.string.amazon_profit_label),
+                        placeholder = stringResource(id = R.string.enter_amazon_profit_label),
+                        readOnly = true
+                    )
+                    CustomTextField(
+                        text = amazonSKU,
+                        onTextChange = onAmazonSKUChange,
+                        icon = Icons.Filled.Title,
+                        label = stringResource(id = R.string.amazon_sku_label),
+                        placeholder = stringResource(id = R.string.enter_amazon_sku_label)
+                    )
+                    CustomTextField(
+                        text = totalProfit,
+                        onTextChange = {},
+                        icon = Icons.Filled.Paid,
+                        label = stringResource(id = R.string.total_profit_label),
+                        placeholder = stringResource(id = R.string.enter_total_profit_label)
                     )
                 }
             }
 
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
+            CustomFloatField(
                 value = purchasePrice,
-                onValueChange = { purchasePriceValue ->
-                    if (purchasePriceValue.isEmpty() || purchasePriceValue.matches(pattern)) {
-                        onPurchasePriceChange(purchasePriceValue)
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Paid,
-                        contentDescription = stringResource(id = R.string.purchase_price_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Decimal
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.purchase_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_purchase_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                onValueChange = onPurchasePriceChange,
+                icon = Icons.Filled.Paid,
+                label = stringResource(id = R.string.purchase_price_label),
+                placeholder = stringResource(id = R.string.enter_purchase_price_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
+            CustomFloatField(
                 value = salePrice,
-                onValueChange = { salePriceValue ->
-                    if (salePriceValue.isEmpty() || salePriceValue.matches(pattern)) {
-                        onSalePriceChange(salePriceValue)
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.PriceCheck,
-                        contentDescription = stringResource(id = R.string.sale_price_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Decimal
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.sale_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_sale_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
+                onValueChange = onSalePriceChange,
+                icon = Icons.Filled.PriceCheck,
+                label = stringResource(id = R.string.sale_price_label),
+                placeholder = stringResource(id = R.string.enter_sale_price_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
+            CustomFloatField(
                 value = deliveryPrice,
-                onValueChange = { deliveryPriceValue ->
-                    if (deliveryPriceValue.isEmpty() || deliveryPrice.matches(pattern)) {
-                        onDeliveryPriceChange(deliveryPriceValue)
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.LocalShipping,
-                        contentDescription = stringResource(id = R.string.delivery_price_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Decimal
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.delivery_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_delivery_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+                onValueChange = onDeliveryPriceChange,
+                icon = Icons.Filled.LocalShipping,
+                label = stringResource(id = R.string.delivery_price_label),
+                placeholder = stringResource(id = R.string.enter_delivery_price_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth(),
+            CustomClickField(
                 value = category,
-                onValueChange = {},
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Category,
-                        contentDescription = stringResource(id = R.string.categories_label)
-                    )
-                },
-                singleLine = true,
-                readOnly = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.categories_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+                onClick = {},
+                icon = Icons.Filled.Category,
+                label = stringResource(id = R.string.categories_label),
+                placeholder = ""
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth(),
+            CustomClickField(
                 value = company,
-                onValueChange = {},
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.BusinessCenter,
-                        contentDescription = stringResource(id = R.string.company_label)
-                    )
-                },
-                singleLine = true,
-                readOnly = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.company_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+                onClick = {},
+                icon = Icons.Filled.BusinessCenter,
+                label = stringResource(id = R.string.company_label),
+                placeholder = ""
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically
