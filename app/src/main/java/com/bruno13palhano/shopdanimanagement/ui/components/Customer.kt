@@ -3,13 +3,10 @@ package com.bruno13palhano.shopdanimanagement.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -27,22 +24,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
@@ -72,8 +64,6 @@ fun CustomerContent(
     onDoneButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
-    val patternInt = remember { Regex("^\\d*") }
-
     Scaffold(
         modifier = Modifier.clickableNoEffect { onOutsideClick() },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -134,236 +124,54 @@ fun CustomerContent(
                     )
                 }
             }
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = name,
-                onValueChange = onNameChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Title,
-                        contentDescription = stringResource(id = R.string.name_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.name_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_name_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomTextField(
+                text = name,
+                onTextChange = onNameChange,
+                icon = Icons.Filled.Title,
+                label = stringResource(id = R.string.name_label),
+                placeholder = stringResource(id = R.string.enter_name_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = email,
-                onValueChange = onEmailChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Email,
-                        contentDescription = stringResource(id = R.string.email_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.email_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_email_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomTextField(
+                text = email,
+                onTextChange = onEmailChange,
+                icon = Icons.Filled.Email,
+                label = stringResource(id = R.string.email_label),
+                placeholder = stringResource(id = R.string.enter_email_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = address,
-                onValueChange = onAddressChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.LocationCity,
-                        contentDescription = stringResource(id = R.string.address_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.address_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_address_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomTextField(
+                text = address,
+                onTextChange = onAddressChange,
+                icon = Icons.Filled.LocationCity,
+                label = stringResource(id = R.string.address_label),
+                placeholder = stringResource(id = R.string.enter_address_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = city,
-                onValueChange = onCityChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Place,
-                        contentDescription = stringResource(id = R.string.city_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.city_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_city_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomTextField(
+                text = city,
+                onTextChange = onCityChange,
+                icon = Icons.Filled.Place,
+                label = stringResource(id = R.string.city_label),
+                placeholder = stringResource(id = R.string.enter_city_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
+            CustomIntegerField(
                 value = phoneNumber,
-                onValueChange = { phoneNumberValue ->
-                    if (phoneNumberValue.isEmpty() || phoneNumberValue.matches(patternInt)) {
-                        onPhoneNumberChange(phoneNumberValue)
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Phone,
-                        contentDescription = stringResource(id = R.string.phone_number_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Number
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.phone_number_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_phone_number_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+                onValueChange = onPhoneNumberChange,
+                icon = Icons.Filled.Phone,
+                label = stringResource(id = R.string.phone_number_label),
+                placeholder = stringResource(id = R.string.enter_phone_number_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = gender,
-                onValueChange = onGenderChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Person,
-                        contentDescription = stringResource(id = R.string.gender_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.gender_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_gender_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomTextField(
+                text = gender,
+                onTextChange = onGenderChange,
+                icon = Icons.Filled.Person,
+                label = stringResource(id = R.string.gender_label),
+                placeholder = stringResource(id = R.string.enter_gender_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
+            CustomIntegerField(
                 value = age,
-                onValueChange = { ageValue ->
-                    if (ageValue.isEmpty() || ageValue.matches(patternInt)) {
-                        onAgeChange(ageValue)
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Cake,
-                        contentDescription = stringResource(id = R.string.age_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Number
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.age_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_age_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+                onValueChange = onAgeChange,
+                icon = Icons.Filled.Cake,
+                label = stringResource(id = R.string.age_label),
+                placeholder = stringResource(id = R.string.enter_age_label)
             )
         }
     }
