@@ -7,23 +7,17 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Key
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -40,17 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
-import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
+import com.bruno13palhano.shopdanimanagement.ui.components.CustomPasswordField
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
@@ -81,8 +69,6 @@ fun ChangePasswordScreen(
     val updateState by viewModel.updateState.collectAsStateWithLifecycle()
     val isFieldsNotEmpty by viewModel.isFieldsNotEmpty.collectAsStateWithLifecycle()
     var showContent by remember { mutableStateOf(true) }
-    var showNewPassword by remember { mutableStateOf(false) }
-    var showRepeatNewPassword by remember { mutableStateOf(false) }
 
     val focusManger = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -111,12 +97,8 @@ fun ChangePasswordScreen(
             snackbarHostState = snackbarHostState,
             newPassword = viewModel.newPassword,
             repeatNewPassword = viewModel.repeatNewPassword,
-            showNewPassword = showNewPassword,
-            showRepeatNewPassword = showRepeatNewPassword,
             onNewPasswordChange = viewModel::updateNewPassword,
             onRepeatNewPasswordChange = viewModel::updateRepeatNewPassword,
-            onShowNewPasswordChange = { showNewPassword = it },
-            onShowRepeatNewPasswordChange = { showRepeatNewPassword = it },
             onOutsideClick = {
                 keyboardController?.hide()
                 focusManger.clearFocus(force = true)
@@ -153,12 +135,8 @@ fun ChangePasswordContent(
     snackbarHostState: SnackbarHostState,
     newPassword: String,
     repeatNewPassword: String,
-    showNewPassword: Boolean,
-    showRepeatNewPassword: Boolean,
     onNewPasswordChange: (newPassword: String) -> Unit,
     onRepeatNewPasswordChange: (repeatNewPassword: String) -> Unit,
-    onShowNewPasswordChange: (show: Boolean) -> Unit,
-    onShowRepeatNewPasswordChange: (show: Boolean) -> Unit,
     onOutsideClick: () -> Unit,
     onDoneClick: () -> Unit,
     navigateUp: () -> Unit
@@ -193,117 +171,19 @@ fun ChangePasswordContent(
             .fillMaxHeight()
             .verticalScroll(rememberScrollState())
         ) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = newPassword,
-                onValueChange = onNewPasswordChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Key,
-                        contentDescription = stringResource(id = R.string.new_password_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                trailingIcon = {
-                    if (showRepeatNewPassword) {
-                        IconButton(onClick = { onShowNewPasswordChange(false) }) {
-                            Icon(
-                                imageVector = Icons.Filled.Visibility,
-                                contentDescription = stringResource(id = R.string.new_password_label)
-                            )
-                        }
-                    } else {
-                        IconButton(onClick = { onShowNewPasswordChange(true) }) {
-                            Icon(
-                                imageVector = Icons.Filled.VisibilityOff,
-                                contentDescription = stringResource(id = R.string.new_password_label)
-                            )
-                        }
-                    }
-                },
-                visualTransformation = if (showNewPassword) {
-                    VisualTransformation.None
-                } else {
-                    PasswordVisualTransformation()
-                },
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.new_password_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_new_password_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomPasswordField(
+                password = newPassword,
+                onPasswordChange = onNewPasswordChange,
+                icon = Icons.Filled.Key,
+                label = stringResource(id = R.string.new_password_label),
+                placeholder = stringResource(id = R.string.enter_new_password_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = repeatNewPassword,
-                onValueChange = onRepeatNewPasswordChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Key,
-                        contentDescription = stringResource(id = R.string.repeat_new_password_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                trailingIcon = {
-                    if (showRepeatNewPassword) {
-                        IconButton(onClick = { onShowRepeatNewPasswordChange(false) }) {
-                            Icon(
-                                imageVector = Icons.Filled.Visibility,
-                                contentDescription = stringResource(id = R.string.repeat_new_password_label)
-                            )
-                        }
-                    } else {
-                        IconButton(onClick = { onShowRepeatNewPasswordChange(true) }) {
-                            Icon(
-                                imageVector = Icons.Filled.VisibilityOff,
-                                contentDescription = stringResource(id = R.string.repeat_new_password_label)
-                            )
-                        }
-                    }
-                },
-                visualTransformation = if (showRepeatNewPassword) {
-                    VisualTransformation.None
-                } else {
-                    PasswordVisualTransformation()
-                },
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.repeat_new_password_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_repeat_new_password_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomPasswordField(
+                password = repeatNewPassword,
+                onPasswordChange = onRepeatNewPasswordChange,
+                icon = Icons.Filled.Key,
+                label = stringResource(id = R.string.repeat_new_password_label),
+                placeholder = stringResource(id = R.string.enter_repeat_new_password_label)
             )
         }
     }
