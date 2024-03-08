@@ -25,10 +25,8 @@ fun LoginPreview() {
                 snackbarHostState = SnackbarHostState(),
                 username = "bruno13palhano",
                 password = "12345678",
-                showPassword = true,
                 onUsernameChange = {},
                 onPasswordChange = {},
-                onShowPasswordChange = {},
                 onOutsideClick = {},
                 onCreateAccountClick = {},
                 onLogin = {}
@@ -49,10 +47,8 @@ fun LoginDynamicPreview() {
                 snackbarHostState = SnackbarHostState(),
                 username = "bruno13palhano",
                 password = "12345678",
-                showPassword = false,
                 onUsernameChange = {},
                 onPasswordChange = {},
-                onShowPasswordChange = {},
                 onOutsideClick = {},
                 onCreateAccountClick = {},
                 onLogin = {}
