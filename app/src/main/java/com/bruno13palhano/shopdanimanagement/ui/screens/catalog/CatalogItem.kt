@@ -1,7 +1,6 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.catalog
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.icu.text.DecimalFormat
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -12,13 +11,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -36,7 +32,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -54,9 +49,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -64,15 +56,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
+import com.bruno13palhano.shopdanimanagement.ui.components.CustomFloatField
+import com.bruno13palhano.shopdanimanagement.ui.components.CustomIntegerField
+import com.bruno13palhano.shopdanimanagement.ui.components.CustomTextField
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
-import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.viewmodel.CatalogItemViewModel
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DataError
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 @Composable
 fun NewCatalogItemRoute(
@@ -239,10 +232,6 @@ fun CatalogItemContent(
     navigateUp: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
-    val decimalSeparator = decimalFormat.decimalFormatSymbols.decimalSeparator
-    val pattern = remember { Regex("^\\d*\\$decimalSeparator?\\d*\$") }
-    val patternInt = remember { Regex("^\\d*") }
 
     Scaffold(
         topBar = {
@@ -325,165 +314,40 @@ fun CatalogItemContent(
                     )
                 }
             }
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = name,
-                onValueChange = {},
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Title,
-                        contentDescription = stringResource(id = R.string.product_name_label)
-                    )
-                },
-                singleLine = true,
-                readOnly = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.product_name_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomTextField(
+                text = name,
+                onTextChange = {},
+                icon = Icons.Filled.Title,
+                label = stringResource(id = R.string.product_name_label),
+                placeholder = ""
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = title,
-                onValueChange = onTitleChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Label,
-                        contentDescription = stringResource(id = R.string.title_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.title_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_title_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomTextField(
+                text = title,
+                onTextChange = onTitleChange,
+                icon = Icons.Filled.Label,
+                label = stringResource(id = R.string.title_label),
+                placeholder = stringResource(id = R.string.enter_title_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
+            CustomIntegerField(
                 value = discount,
-                onValueChange = { discountValue ->
-                    if (discountValue.isEmpty() || discountValue.matches(patternInt)) {
-                        onDiscountChange(discountValue)
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Discount,
-                        contentDescription = stringResource(id = R.string.discount_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Number
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.discount_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_discount_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+                onValueChange = onDiscountChange,
+                icon = Icons.Filled.Discount,
+                label = stringResource(id = R.string.discount_label),
+                placeholder = stringResource(id = R.string.enter_discount_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
+            CustomFloatField(
                 value = price,
-                onValueChange = { priceValue ->
-                    if (priceValue.isEmpty() || priceValue.matches(pattern)) {
-                        onPriceChange(priceValue)
-                    }
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Paid,
-                        contentDescription = stringResource(id = R.string.purchase_price_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Decimal
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_price_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+                onValueChange = onPriceChange,
+                icon = Icons.Filled.Paid,
+                label = stringResource(id = R.string.price_label),
+                placeholder = stringResource(id = R.string.enter_price_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = description,
-                onValueChange = onDescriptionChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Description,
-                        contentDescription = stringResource(id = R.string.description_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.description_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_description_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomTextField(
+                text = description,
+                onTextChange = onDescriptionChange,
+                icon = Icons.Filled.Description,
+                label = stringResource(id = R.string.description_label),
+                placeholder = stringResource(id = R.string.enter_description_label)
             )
         }
     }
