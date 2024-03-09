@@ -13,13 +13,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AdminPanelSettings
@@ -34,7 +31,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -55,16 +51,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
+import com.bruno13palhano.shopdanimanagement.ui.components.CustomTextField
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
-import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getUserResponse
@@ -277,80 +271,27 @@ fun UserContent(
                     )
                 }
             }
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = username,
-                onValueChange = onUsernameChange,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Title,
-                        contentDescription = stringResource(id = R.string.username_label)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-                singleLine = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.username_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.enter_username_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomTextField(
+                text = username,
+                onTextChange = onUsernameChange,
+                icon = Icons.Filled.Title,
+                label = stringResource(id = R.string.username_label),
+                placeholder = stringResource(id = R.string.enter_username_label)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = email,
-                onValueChange = {},
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Email,
-                        contentDescription = stringResource(id = R.string.email_label)
-                    )
-                },
-                singleLine = true,
-                readOnly = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.email_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            CustomTextField(
+                text = email,
+                onTextChange = {},
+                icon = Icons.Filled.Email,
+                label = stringResource(id = R.string.email_label),
+                placeholder = ""
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                    .fillMaxWidth()
-                    .clearFocusOnKeyboardDismiss(),
-                value = role,
-                onValueChange = {},
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.AdminPanelSettings,
-                        contentDescription = stringResource(id = R.string.role_label)
-                    )
-                },
-                singleLine = true,
+            CustomTextField(
+                text = role,
+                onTextChange = {},
+                icon = Icons.Filled.AdminPanelSettings,
                 readOnly = true,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.role_label),
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+                label = stringResource(id = R.string.role_label),
+                placeholder = ""
             )
         }
     }
