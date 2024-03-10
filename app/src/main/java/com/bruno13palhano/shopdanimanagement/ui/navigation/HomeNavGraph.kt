@@ -32,9 +32,9 @@ fun NavGraphBuilder.homeNavGraph(
                 onOptionsItemClick = { route ->
                     navController.navigate(route = route)
                 },
-                onSalesItemClick = { id, isOrderedByCustomer ->
+                onSalesItemClick = { id ->
                     navController.navigate(
-                        route = "${HomeDestinations.HOME_SALE_ROUTE}/$id/$isOrderedByCustomer"
+                        route = "${HomeDestinations.HOME_SALE_ROUTE}/$id"
                     )
                 },
                 onMenuClick = onIconMenuClick,

@@ -26,7 +26,7 @@ fun HomeDynamicPreview() {
                 lastSalesEntry = ChartEntryModelProducer(),
                 showProfit = false,
                 onOptionsItemClick = {},
-                onSalesItemClick = { _, _ ->},
+                onSalesItemClick = { _ ->},
                 onShowProfitChange = {},
                 onMenuClick = {}
             )
@@ -50,7 +50,7 @@ fun HomePreview() {
                 lastSalesEntry = ChartEntryModelProducer(),
                 showProfit = true,
                 onOptionsItemClick = {},
-                onSalesItemClick = { _, _ -> },
+                onSalesItemClick = { _ -> },
                 onShowProfitChange = {},
                 onMenuClick = {}
             )

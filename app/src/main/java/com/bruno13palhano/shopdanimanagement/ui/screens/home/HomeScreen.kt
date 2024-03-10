@@ -76,7 +76,7 @@ fun HomeRoute(
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
     onOptionsItemClick: (route: String) -> Unit,
-    onSalesItemClick: (id: Long, isOrderedByCustomer: Boolean) -> Unit,
+    onSalesItemClick: (id: Long) -> Unit,
     onMenuClick: () -> Unit,
     onUnauthenticated: () -> Unit
 ) {
@@ -93,7 +93,7 @@ fun HomeRoute(
 @Composable
 fun HomeScreen(
     onOptionsItemClick: (route: String) -> Unit,
-    onSalesItemClick: (id: Long, isOrderedByCustomer: Boolean) -> Unit,
+    onSalesItemClick: (id: Long) -> Unit,
     onMenuClick: () -> Unit,
     onUnauthenticated: () -> Unit,
     showBottomMenu: (show: Boolean) -> Unit,
@@ -149,7 +149,7 @@ fun HomeContent(
     lastSalesEntry: ChartEntryModelProducer,
     showProfit: Boolean,
     onOptionsItemClick: (route: String) -> Unit,
-    onSalesItemClick: (id: Long, isOrderedByCustomer: Boolean) -> Unit,
+    onSalesItemClick: (id: Long) -> Unit,
     onShowProfitChange: (show: Boolean) -> Unit,
     onMenuClick: () -> Unit,
 ) {
@@ -300,10 +300,7 @@ fun HomeContent(
                                 dateFormat.format(info.first.date)
                             ),
                             onEditClick = {
-                                onSalesItemClick(
-                                    info.first.id,
-                                    info.first.isOrderedByCustomer
-                                )
+                                onSalesItemClick(info.first.id)
                             }
                         )
                         HorizontalDivider()
