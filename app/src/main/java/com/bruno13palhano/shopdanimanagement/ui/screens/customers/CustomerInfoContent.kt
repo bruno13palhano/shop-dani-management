@@ -21,7 +21,6 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,11 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.clearFocusOnKeyboardDismiss
+import com.bruno13palhano.shopdanimanagement.ui.components.CustomTextField
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
@@ -113,49 +111,21 @@ fun CustomerInfoContent(
                 }
             }
             Column {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                        .fillMaxWidth()
-                        .clearFocusOnKeyboardDismiss(),
-                    value = name,
-                    onValueChange = {},
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Title,
-                            contentDescription = stringResource(id = R.string.name_label)
-                        )
-                    },
-                    singleLine = true,
+                CustomTextField(
+                    text = name,
+                    onTextChange = {},
+                    icon = Icons.Filled.Title,
                     readOnly = true,
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.name_label),
-                            fontStyle = FontStyle.Italic
-                        )
-                    }
+                    label = stringResource(id = R.string.name_label),
+                    placeholder = ""
                 )
-                OutlinedTextField(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                        .fillMaxWidth()
-                        .clearFocusOnKeyboardDismiss(),
-                    value = address,
-                    onValueChange = {},
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.LocationCity,
-                            contentDescription = stringResource(id = R.string.address_label)
-                        )
-                    },
-                    singleLine = true,
+                CustomTextField(
+                    text = address,
+                    onTextChange = {},
+                    icon = Icons.Filled.LocationCity,
                     readOnly = true,
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.address_label),
-                            fontStyle = FontStyle.Italic
-                        )
-                    }
+                    label = stringResource(id = R.string.address_label),
+                    placeholder = ""
                 )
             }
         }
