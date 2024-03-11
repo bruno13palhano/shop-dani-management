@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -74,7 +74,7 @@ fun CategoriesContent(
                 SimpleItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
                     itemName = category.category,
-                    imageVector = Icons.Filled.ArrowForward
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward
                 ) {
                     onItemClick(category.id.toString())
                 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Factory
 import androidx.compose.material.icons.filled.List
@@ -107,9 +108,25 @@ fun InsightsContent(
     }
 }
 
-sealed class InsightsInnerScreen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    object Charts: InsightsInnerScreen(InsightsDestinations.INSIGHTS_CHARTS_ROUTE, Icons.Filled.BarChart, R.string.charts_label)
-    object LastSales: InsightsInnerScreen(InsightsDestinations.INSIGHTS_LAST_SALES_ROUTE, Icons.Filled.PointOfSale, R.string.last_sales_label)
-    object StockOrdersSales: InsightsInnerScreen(InsightsDestinations.INSIGHTS_STOCK_ORDERS_ROUTE, Icons.Filled.List, R.string.stock_vs_orders_label)
-    object CompanySales: InsightsInnerScreen(InsightsDestinations.INSIGHTS_COMPANY_SALES_ROUTE, Icons.Filled.Factory, R.string.company_sales_label)
+sealed class InsightsInnerScreen(
+    val route: String,
+    val icon: ImageVector,
+    @StringRes val resourceId: Int
+) {
+    object Charts: InsightsInnerScreen(
+        InsightsDestinations.INSIGHTS_CHARTS_ROUTE,
+        Icons.Filled.BarChart, R.string.charts_label
+    )
+    object LastSales: InsightsInnerScreen(
+        InsightsDestinations.INSIGHTS_LAST_SALES_ROUTE,
+        Icons.Filled.PointOfSale, R.string.last_sales_label
+    )
+    object StockOrdersSales: InsightsInnerScreen(
+        InsightsDestinations.INSIGHTS_STOCK_ORDERS_ROUTE,
+        Icons.AutoMirrored.Filled.List, R.string.stock_vs_orders_label
+    )
+    object CompanySales: InsightsInnerScreen(
+        InsightsDestinations.INSIGHTS_COMPANY_SALES_ROUTE,
+        Icons.Filled.Factory, R.string.company_sales_label
+    )
 }

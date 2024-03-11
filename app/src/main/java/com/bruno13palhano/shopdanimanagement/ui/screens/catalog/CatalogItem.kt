@@ -17,12 +17,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Discount
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.Label
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Paid
 import androidx.compose.material.icons.filled.Title
@@ -240,7 +240,7 @@ fun CatalogItemContent(
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.up_button_label)
                         )
                     }
@@ -324,7 +324,7 @@ fun CatalogItemContent(
             CustomTextField(
                 text = title,
                 onTextChange = onTitleChange,
-                icon = Icons.Filled.Label,
+                icon = Icons.AutoMirrored.Filled.Label,
                 label = stringResource(id = R.string.title_label),
                 placeholder = stringResource(id = R.string.enter_title_label)
             )

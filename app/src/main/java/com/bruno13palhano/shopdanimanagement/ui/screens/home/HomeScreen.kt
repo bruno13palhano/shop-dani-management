@@ -12,9 +12,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.Checklist
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PointOfSale
@@ -370,11 +370,39 @@ fun HomeContent(
     }
 }
 
-sealed class HomeInnerScreen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    object Stock: HomeInnerScreen(HomeDestinations.HOME_STOCK_ROUTE, Icons.Filled.List, R.string.stock_label)
-    object Sales: HomeInnerScreen(HomeDestinations.HOME_SALES_ROUTE, Icons.Filled.PointOfSale, R.string.sales_label)
-    object Orders: HomeInnerScreen(HomeDestinations.HOME_ORDERS_ROUTE, Icons.Filled.Checklist, R.string.orders_label)
-    object Amazon: HomeInnerScreen(HomeDestinations.HOME_AMAZON_ROUTE, Icons.Filled.ShoppingBag, R.string.amazon_label)
-    object Deliveries: HomeInnerScreen(HomeDestinations.HOME_DELIVERIES_ROUTE, Icons.Filled.LocalShipping, R.string.deliveries_label)
-    object Catalog: HomeInnerScreen(HomeDestinations.HOME_CATALOG_ROUTE, Icons.Filled.ListAlt, R.string.catalog_label)
+sealed class HomeInnerScreen(
+    val route: String,
+    val icon: ImageVector,
+    @StringRes val resourceId: Int
+) {
+    object Stock: HomeInnerScreen(
+        route = HomeDestinations.HOME_STOCK_ROUTE,
+        icon = Icons.AutoMirrored.Filled.List,
+        resourceId = R.string.stock_label
+    )
+    object Sales: HomeInnerScreen(
+        route = HomeDestinations.HOME_SALES_ROUTE,
+        icon = Icons.Filled.PointOfSale,
+        resourceId = R.string.sales_label
+    )
+    object Orders: HomeInnerScreen(
+        route = HomeDestinations.HOME_ORDERS_ROUTE,
+        icon = Icons.Filled.Checklist,
+        resourceId = R.string.orders_label
+    )
+    object Amazon: HomeInnerScreen(
+        route = HomeDestinations.HOME_AMAZON_ROUTE,
+        icon = Icons.Filled.ShoppingBag,
+        resourceId = R.string.amazon_label
+    )
+    object Deliveries: HomeInnerScreen(
+        route = HomeDestinations.HOME_DELIVERIES_ROUTE,
+        icon = Icons.Filled.LocalShipping,
+        resourceId = R.string.deliveries_label
+    )
+    object Catalog: HomeInnerScreen(
+        route = HomeDestinations.HOME_CATALOG_ROUTE,
+        icon = Icons.AutoMirrored.Filled.ListAlt,
+        resourceId = R.string.catalog_label
+    )
 }

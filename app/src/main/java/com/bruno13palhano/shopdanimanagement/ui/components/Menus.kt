@@ -11,12 +11,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
@@ -182,12 +182,36 @@ fun BottomMenu(navController: NavController) {
 }
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    object Home: Screen(MainDestinations.HOME_ROUTE, Icons.Filled.Home, R.string.home_label)
-    object Financial: Screen(MainDestinations.FINANCIAL_ROUTE, Icons.Filled.Money, R.string.financial_label)
-    object Insights: Screen(MainDestinations.INSIGHTS_ROUTE, Icons.Filled.Insights, R.string.insights_label)
-    object Products: Screen(MainDestinations.PRODUCTS_ROUTE, Icons.Filled.PlaylistAdd, R.string.products_label)
-    object Customers: Screen(MainDestinations.CUSTOMERS_ROUTE, Icons.Filled.Person, R.string.customers_label)
-    object User: Screen(MainDestinations.USER_ROUTE, Icons.Filled.AccountCircle, R.string.account_label)
+    object Home: Screen(
+        route = MainDestinations.HOME_ROUTE,
+        icon = Icons.Filled.Home,
+        resourceId = R.string.home_label
+    )
+    object Financial: Screen(
+        route = MainDestinations.FINANCIAL_ROUTE,
+        icon = Icons.Filled.Money,
+        resourceId = R.string.financial_label
+    )
+    object Insights: Screen(
+        route = MainDestinations.INSIGHTS_ROUTE,
+        icon = Icons.Filled.Insights,
+        resourceId = R.string.insights_label
+    )
+    object Products: Screen(
+        route = MainDestinations.PRODUCTS_ROUTE,
+        icon = Icons.AutoMirrored.Filled.PlaylistAdd,
+        resourceId = R.string.products_label
+    )
+    object Customers: Screen(
+        route = MainDestinations.CUSTOMERS_ROUTE,
+        icon = Icons.Filled.Person,
+        resourceId = R.string.customers_label
+    )
+    object User: Screen(
+        route = MainDestinations.USER_ROUTE,
+        icon = Icons.Filled.AccountCircle,
+        resourceId = R.string.account_label
+    )
 }
 
 @Composable

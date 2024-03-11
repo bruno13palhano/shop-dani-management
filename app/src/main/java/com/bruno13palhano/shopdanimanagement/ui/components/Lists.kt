@@ -15,13 +15,12 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.bruno13palhano.shopdanimanagement.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockItem(
     modifier: Modifier,
@@ -127,7 +125,6 @@ fun StockItem(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleItemList(
     modifier: Modifier,
@@ -161,7 +158,6 @@ fun SimpleItemList(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommonItemList(
     modifier: Modifier = Modifier,
@@ -203,14 +199,13 @@ fun CommonItemList(
             }
             Icon(
                 modifier = Modifier.padding(8.dp),
-                imageVector = Icons.Filled.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null
             )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommonPhotoItemList(
     title: String,
@@ -268,7 +263,6 @@ fun CommonPhotoItemList(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HorizontalItemList(
     title: String,
@@ -332,7 +326,6 @@ fun HorizontalItemList(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CircularItemList(
     modifier: Modifier = Modifier,
@@ -436,7 +429,6 @@ fun InfoItemList(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatalogItemList(
     modifier: Modifier = Modifier,
@@ -530,7 +522,6 @@ fun CatalogItemList(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleExpandedItem(
     modifier: Modifier = Modifier,
@@ -590,7 +581,10 @@ fun SimpleExpandedItem(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null
+                    )
                     Text(
                         modifier = Modifier.padding(horizontal = 4.dp),
                         text = item2,
@@ -603,7 +597,10 @@ fun SimpleExpandedItem(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null
+                    )
                     Text(
                         modifier = Modifier.padding(horizontal = 4.dp),
                         text = item3,
@@ -616,7 +613,10 @@ fun SimpleExpandedItem(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null
+                    )
                     Text(
                         modifier = Modifier.padding(horizontal = 4.dp),
                         text = item4,
@@ -629,7 +629,10 @@ fun SimpleExpandedItem(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null
+                    )
                     Text(
                         modifier = Modifier.padding(horizontal = 4.dp),
                         text = item5,
@@ -643,7 +646,6 @@ fun SimpleExpandedItem(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpandedItem(
     modifier: Modifier = Modifier,
