@@ -17,9 +17,7 @@ data class CommonItem(
         if (!photo.contentEquals(other.photo)) return false
         if (title != other.title) return false
         if (subtitle != other.subtitle) return false
-        if (description != other.description) return false
-
-        return true
+        return description == other.description
     }
 
     override fun hashCode(): Int {

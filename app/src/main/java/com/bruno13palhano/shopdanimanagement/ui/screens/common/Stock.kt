@@ -17,9 +17,7 @@ data class Stock(
         if (name != other.name) return false
         if (!photo.contentEquals(other.photo)) return false
         if (purchasePrice != other.purchasePrice) return false
-        if (quantity != other.quantity) return false
-
-        return true
+        return quantity == other.quantity
     }
 
     override fun hashCode(): Int {

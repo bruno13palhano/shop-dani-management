@@ -21,9 +21,7 @@ data class ExtendedItem(
         if (firstSubtitle != other.firstSubtitle) return false
         if (secondSubtitle != other.secondSubtitle) return false
         if (description != other.description) return false
-        if (footer != other.footer) return false
-
-        return true
+        return footer == other.footer
     }
 
     override fun hashCode(): Int {
