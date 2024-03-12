@@ -400,7 +400,7 @@ sealed class HomeInnerScreen(
         icon = Icons.Filled.LocalShipping,
         resourceId = R.string.deliveries_label
     )
-    object Catalog: HomeInnerScreen(
+    data object Catalog: HomeInnerScreen(
         route = HomeDestinations.HOME_CATALOG_ROUTE,
         icon = Icons.AutoMirrored.Filled.ListAlt,
         resourceId = R.string.catalog_label
