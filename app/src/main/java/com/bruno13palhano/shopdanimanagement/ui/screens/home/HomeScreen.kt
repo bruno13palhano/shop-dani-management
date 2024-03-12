@@ -375,27 +375,27 @@ sealed class HomeInnerScreen(
     val icon: ImageVector,
     @StringRes val resourceId: Int
 ) {
-    object Stock: HomeInnerScreen(
+    data object Stock: HomeInnerScreen(
         route = HomeDestinations.HOME_STOCK_ROUTE,
         icon = Icons.AutoMirrored.Filled.List,
         resourceId = R.string.stock_label
     )
-    object Sales: HomeInnerScreen(
+    data object Sales: HomeInnerScreen(
         route = HomeDestinations.HOME_SALES_ROUTE,
         icon = Icons.Filled.PointOfSale,
         resourceId = R.string.sales_label
     )
-    object Orders: HomeInnerScreen(
+    data object Orders: HomeInnerScreen(
         route = HomeDestinations.HOME_ORDERS_ROUTE,
         icon = Icons.Filled.Checklist,
         resourceId = R.string.orders_label
     )
-    object Amazon: HomeInnerScreen(
+    data object Amazon: HomeInnerScreen(
         route = HomeDestinations.HOME_AMAZON_ROUTE,
         icon = Icons.Filled.ShoppingBag,
         resourceId = R.string.amazon_label
     )
-    object Deliveries: HomeInnerScreen(
+    data object Deliveries: HomeInnerScreen(
         route = HomeDestinations.HOME_DELIVERIES_ROUTE,
         icon = Icons.Filled.LocalShipping,
         resourceId = R.string.deliveries_label
