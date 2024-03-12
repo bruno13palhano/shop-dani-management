@@ -37,13 +37,12 @@ class HomeViewModel @Inject constructor(
         var lastSale = Info()
 
         sales.map { sale ->
-            salesPrice += sale.salePrice
-            purchasePrice += sale.purchasePrice
-            if (biggestSaleValue <= sale.salePrice) {
-                biggestSaleValue = sale.salePrice
+            salesPrice += (sale.salePrice * sale.quantity)
+            purchasePrice += (sale.purchasePrice * sale.quantity)
+            if (biggestSaleValue <= (sale.salePrice * sale.quantity)) {
+                biggestSaleValue = (sale.salePrice * sale.quantity)
                 biggestSale = Info(
                     id = sale.id,
-                    isOrderedByCustomer = sale.isOrderedByCustomer,
                     value = (sale.quantity * sale.salePrice),
                     customer = sale.customerName,
                     item = sale.name,
@@ -51,11 +50,10 @@ class HomeViewModel @Inject constructor(
                     date = sale.dateOfSale
                 )
             }
-            if (smallestSaleValue >= sale.salePrice) {
-                smallestSaleValue = sale.salePrice
+            if (smallestSaleValue >= (sale.salePrice * sale.quantity)) {
+                smallestSaleValue = (sale.salePrice * sale.quantity)
                 smallestSale = Info(
                     id = sale.id,
-                    isOrderedByCustomer = sale.isOrderedByCustomer,
                     value = (sale.quantity * sale.salePrice),
                     customer = sale.customerName,
                     item = sale.name,
@@ -67,7 +65,6 @@ class HomeViewModel @Inject constructor(
                 val last = sales.last()
                 lastSale = Info(
                     id = last.id,
-                    isOrderedByCustomer = last.isOrderedByCustomer,
                     value = (last.quantity * last.salePrice),
                     customer = last.customerName,
                     item = last.name,
@@ -134,7 +131,6 @@ class HomeViewModel @Inject constructor(
 
     data class Info(
         val id: Long = 0L,
-        val isOrderedByCustomer: Boolean = false,
         val value: Float = 0F,
         val customer: String = "",
         val item: String = "",
