@@ -25,9 +25,7 @@ data class Catalog(
         if (description != other.description) return false
         if (discount != other.discount) return false
         if (price != other.price) return false
-        if (timestamp != other.timestamp) return false
-
-        return true
+        return timestamp == other.timestamp
     }
 
     override fun hashCode(): Int {

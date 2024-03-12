@@ -38,9 +38,7 @@ data class Product(
         if (date != other.date) return false
         if (categories != other.categories) return false
         if (company != other.company) return false
-        if (timestamp != other.timestamp) return false
-
-        return true
+        return timestamp == other.timestamp
     }
 
     override fun hashCode(): Int {

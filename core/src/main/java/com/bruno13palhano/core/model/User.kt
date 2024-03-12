@@ -23,9 +23,7 @@ data class User(
         if (!photo.contentEquals(other.photo)) return false
         if (role != other.role) return false
         if (enabled != other.enabled) return false
-        if (timestamp != other.timestamp) return false
-
-        return true
+        return timestamp == other.timestamp
     }
 
     override fun hashCode(): Int {
