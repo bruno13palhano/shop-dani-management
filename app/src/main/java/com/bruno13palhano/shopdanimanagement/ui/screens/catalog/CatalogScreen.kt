@@ -84,15 +84,15 @@ fun CatalogScreen(
         onItemClick = onItemClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
-                0 -> {
+                CatalogMoreOptions.ORDERED_BY_NAME -> {
                     viewModel.getOrderedByName(isOrderedAsc = orderedByName)
                     orderedByName = toggleOrdered(orderedByName)
                 }
-                1 -> {
+                CatalogMoreOptions.ORDERED_BY_PRICE -> {
                     viewModel.getOrderedByPrice(isOrderedAsc = orderedByPrice)
                     orderedByPrice = toggleOrdered(orderedByPrice)
                 }
-                else -> { viewModel.getAll() }
+                CatalogMoreOptions.ALL_CATALOG_ITEMS -> { viewModel.getAll() }
             }
         },
         navigateUp = navigateUp
@@ -212,6 +212,12 @@ fun CatalogPreview() {
             )
         }
     }
+}
+
+private object CatalogMoreOptions {
+    const val ORDERED_BY_NAME = 0
+    const val ORDERED_BY_PRICE = 1
+    const val ALL_CATALOG_ITEMS = 3
 }
 
 private val fakeCatalogItems = listOf(
