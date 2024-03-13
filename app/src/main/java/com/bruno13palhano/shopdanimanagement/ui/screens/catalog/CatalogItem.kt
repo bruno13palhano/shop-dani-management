@@ -156,7 +156,7 @@ fun CatalogItemScreen(
             onPriceChange = viewModel::updatePrice,
             onMenuOptionsItemClick = { index ->
                 when (index) {
-                    0 -> {
+                    CatalogItemMoreOptions.DELETE -> {
                         viewModel.delete(
                             onError = { error ->
                                 scope.launch {
@@ -351,6 +351,10 @@ fun CatalogItemContent(
             )
         }
     }
+}
+
+private object CatalogItemMoreOptions {
+    const val DELETE = 0
 }
 
 @Preview(showBackground = true, showSystemUi = true)
