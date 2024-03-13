@@ -106,9 +106,29 @@ fun FinancialContent(
     }
 }
 
-sealed class FinancialInnerScreen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    object Info: FinancialInnerScreen(FinancialDestinations.FINANCIAL_INFO_ROUTE, Icons.Filled.Info, R.string.financial_info_label)
-    object CustomersDebit: FinancialInnerScreen(FinancialDestinations.FINANCIAL_CUSTOMERS_DEBITS_ROUTE, Icons.Filled.Payments, R.string.customers_debit_label)
-    object StockDebits: FinancialInnerScreen(FinancialDestinations.FINANCIAL_STOCK_DEBITS_ROUTE, Icons.Filled.Inventory, R.string.stock_debits_label)
-    object CanceledSales: FinancialInnerScreen(FinancialDestinations.FINANCIAL_CANCELED_SALES_ROUTE, Icons.Filled.CancelPresentation, R.string.canceled_sales_label)
+sealed class FinancialInnerScreen(
+    val route: String,
+    val icon: ImageVector,
+    @StringRes val resourceId: Int
+) {
+    data object Info: FinancialInnerScreen(
+        route = FinancialDestinations.FINANCIAL_INFO_ROUTE,
+        icon = Icons.Filled.Info,
+        resourceId = R.string.financial_info_label
+    )
+    data object CustomersDebit: FinancialInnerScreen(
+        route = FinancialDestinations.FINANCIAL_CUSTOMERS_DEBITS_ROUTE,
+        icon = Icons.Filled.Payments,
+        resourceId = R.string.customers_debit_label
+    )
+    data object StockDebits: FinancialInnerScreen(
+        route = FinancialDestinations.FINANCIAL_STOCK_DEBITS_ROUTE,
+        icon = Icons.Filled.Inventory,
+        resourceId = R.string.stock_debits_label
+    )
+    data object CanceledSales: FinancialInnerScreen(
+        route = FinancialDestinations.FINANCIAL_CANCELED_SALES_ROUTE,
+        icon = Icons.Filled.CancelPresentation,
+        resourceId = R.string.canceled_sales_label
+    )
 }
