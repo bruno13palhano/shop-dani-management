@@ -182,32 +182,32 @@ fun BottomMenu(navController: NavController) {
 }
 
 sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    object Home: Screen(
+    data object Home: Screen(
         route = MainDestinations.HOME_ROUTE,
         icon = Icons.Filled.Home,
         resourceId = R.string.home_label
     )
-    object Financial: Screen(
+    data object Financial: Screen(
         route = MainDestinations.FINANCIAL_ROUTE,
         icon = Icons.Filled.Money,
         resourceId = R.string.financial_label
     )
-    object Insights: Screen(
+    data object Insights: Screen(
         route = MainDestinations.INSIGHTS_ROUTE,
         icon = Icons.Filled.Insights,
         resourceId = R.string.insights_label
     )
-    object Products: Screen(
+    data object Products: Screen(
         route = MainDestinations.PRODUCTS_ROUTE,
         icon = Icons.AutoMirrored.Filled.PlaylistAdd,
         resourceId = R.string.products_label
     )
-    object Customers: Screen(
+    data object Customers: Screen(
         route = MainDestinations.CUSTOMERS_ROUTE,
         icon = Icons.Filled.Person,
         resourceId = R.string.customers_label
     )
-    object User: Screen(
+    data object User: Screen(
         route = MainDestinations.USER_ROUTE,
         icon = Icons.Filled.AccountCircle,
         resourceId = R.string.account_label
