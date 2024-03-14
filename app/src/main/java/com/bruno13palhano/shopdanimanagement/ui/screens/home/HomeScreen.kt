@@ -2,6 +2,7 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.home
 
 import android.graphics.Typeface
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -110,6 +111,7 @@ fun HomeScreen(
 
     val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
     var showProfit by rememberSaveable { mutableStateOf(false) }
+    var showContent by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = lastSalesEntry) {
         chart.setEntries(
@@ -119,23 +121,29 @@ fun HomeScreen(
         )
     }
 
+    AnimatedVisibility(visible = showContent) {
+        HomeContent(
+            homeInfo = homeInfo,
+            lastSalesEntry = chart,
+            onOptionsItemClick = onOptionsItemClick,
+            showProfit = showProfit,
+            onSalesItemClick = onSalesItemClick,
+            onShowProfitChange = { showProfit = it },
+            onMenuClick = onMenuClick
+        )
+    }
+
     when (state) {
         LoginState.SignedIn -> {
             showBottomMenu(true)
-            HomeContent(
-                homeInfo = homeInfo,
-                lastSalesEntry = chart,
-                onOptionsItemClick = onOptionsItemClick,
-                showProfit = showProfit,
-                onSalesItemClick = onSalesItemClick,
-                onShowProfitChange = { showProfit = it },
-                onMenuClick = onMenuClick
-            )
+            showContent = true
         }
         LoginState.InProgress -> {
+            showContent = false
             CircularProgress()
         }
         LoginState.SignedOut -> {
+            showContent = false
             onUnauthenticated()
             showBottomMenu(false)
         }
