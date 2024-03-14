@@ -3,6 +3,10 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.home
 import android.graphics.Typeface
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -121,7 +125,11 @@ fun HomeScreen(
         )
     }
 
-    AnimatedVisibility(visible = showContent) {
+    AnimatedVisibility(
+        visible = showContent,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessVeryLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
+    ) {
         HomeContent(
             homeInfo = homeInfo,
             lastSalesEntry = chart,
