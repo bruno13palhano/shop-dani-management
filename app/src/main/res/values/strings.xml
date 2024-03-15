@@ -29,6 +29,7 @@
     <string name="analytics_label">Analytics</string>
     <string name="analytics_image_label">Analytics image</string>
     <string name="stock_expired_item_label">Expired item.</string>
+    <string name="empty_label">Empty</string>
     <string name="sale_payment_label">Today is the day to receive payments.</string>
     <string name="stock_expired_item_tag">%s is expired.</string>
     <string name="stock_payment_label">Day to pay your debit.</string>
