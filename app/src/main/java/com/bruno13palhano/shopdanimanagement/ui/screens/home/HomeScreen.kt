@@ -291,35 +291,48 @@ fun HomeContent(
                         .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 ) {
                     infoSaleList.forEach { info ->
-                        InfoItemList(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            contentPadding = PaddingValues(vertical = 12.dp),
-                            title = info.second,
-                            subtitle = if (showProfit) {
-                                stringResource(
-                                    id = R.string.product_price_tag,
-                                    info.first.item,
-                                    info.first.value
-                                )
-                            } else {
-                                stringResource(
-                                    id = R.string.product_price_text_tag,
-                                    info.first.item,
-                                    dots
-                                )
-                            },
-                            description = pluralStringResource(
-                                id = R.plurals.description_label,
-                                count = info.first.quantity,
-                                info.first.customer,
-                                info.first.quantity,
-                                dateFormat.format(info.first.date)
-                            ),
-                            onEditClick = {
-                                onSalesItemClick(info.first.id)
-                            }
-                        )
-                        HorizontalDivider()
+                        if (info.first.value == 0F) {
+                            InfoItemList(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                contentPadding = PaddingValues(vertical = 12.dp),
+                                title = info.second,
+                                subtitle = stringResource(id = R.string.empty_label),
+                                description = "",
+                                onEditClick = {}
+                            )
+                            HorizontalDivider()
+
+                        } else {
+                            InfoItemList(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                contentPadding = PaddingValues(vertical = 12.dp),
+                                title = info.second,
+                                subtitle = if (showProfit) {
+                                    stringResource(
+                                        id = R.string.product_price_tag,
+                                        info.first.item,
+                                        info.first.value
+                                    )
+                                } else {
+                                    stringResource(
+                                        id = R.string.product_price_text_tag,
+                                        info.first.item,
+                                        dots
+                                    )
+                                },
+                                description = pluralStringResource(
+                                    id = R.plurals.description_label,
+                                    count = info.first.quantity,
+                                    info.first.customer,
+                                    info.first.quantity,
+                                    dateFormat.format(info.first.date)
+                                ),
+                                onEditClick = {
+                                    onSalesItemClick(info.first.id)
+                                }
+                            )
+                            HorizontalDivider()
+                        }
                     }
                 }
 
