@@ -30,6 +30,7 @@
     <string name="analytics_label">Análise</string>
     <string name="analytics_image_label">Análise imagem</string>
     <string name="stock_expired_item_label">Item fora do prazo de validade.</string>
+    <string name="empty_label">Vazio</string>
     <string name="sale_payment_label">Hoje é dia de receber pagamentos.</string>
     <string name="stock_expired_item_tag">%s está fora do prazo de validade.</string>
     <string name="stock_payment_label">Dia de pagar sua dívida.</string>
