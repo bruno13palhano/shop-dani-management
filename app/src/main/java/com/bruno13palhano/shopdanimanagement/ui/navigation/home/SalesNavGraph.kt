@@ -36,7 +36,7 @@ fun NavGraphBuilder.salesNavGraph(
         composable(route = SalesDestinations.MAIN_SALES_ROUTE) {
             SalesRoute(
                 sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = this@composable,
+                animatedContentScope = this@composable,
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 onItemClick = { saleId, productId ->

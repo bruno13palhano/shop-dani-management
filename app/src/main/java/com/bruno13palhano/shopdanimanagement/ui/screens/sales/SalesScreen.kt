@@ -1,7 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.sales
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Spring
@@ -63,7 +63,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesVie
 @Composable
 fun SalesRoute(
     sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    animatedContentScope: AnimatedContentScope,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
     onItemClick: (saleId: Long, productId: Long) -> Unit,
@@ -76,7 +76,7 @@ fun SalesRoute(
         isOrders = false,
         screenTitle = stringResource(id = R.string.sales_label),
         sharedTransitionScope = sharedTransitionScope,
-        animatedVisibilityScope = animatedVisibilityScope,
+        animatedContentScope = animatedContentScope,
         onItemClick = onItemClick,
         onAddButtonClick = onAddButtonClick,
         navigateUp = navigateUp
@@ -87,7 +87,7 @@ fun SalesRoute(
 @Composable
 fun OrdersRoute(
     sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    animatedContentScope: AnimatedContentScope,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
     onItemClick: (saleId: Long, productId: Long) -> Unit,
@@ -99,7 +99,7 @@ fun OrdersRoute(
         isOrders = true,
         screenTitle = stringResource(id = R.string.orders_label),
         sharedTransitionScope = sharedTransitionScope,
-        animatedVisibilityScope = animatedVisibilityScope,
+        animatedContentScope = animatedContentScope,
         onItemClick = onItemClick,
         onAddButtonClick = {},
         navigateUp = navigateUp
@@ -112,7 +112,7 @@ fun SalesScreen(
     isOrders: Boolean,
     screenTitle: String,
     sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    animatedContentScope: AnimatedContentScope,
     onItemClick: (saleId: Long, productId: Long) -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit,
@@ -147,7 +147,7 @@ fun SalesScreen(
         saleList = saleList,
         menuItems = menuItems,
         sharedTransitionScope = sharedTransitionScope,
-        animatedVisibilityScope = animatedVisibilityScope,
+        animatedContentScope = animatedContentScope,
         onItemClick = onItemClick,
         onSheetNameChange = viewModel::updateSheetName,
         onDialogOkClick = { viewModel.exportSalesSheet() },
@@ -195,7 +195,7 @@ fun SalesContent(
     saleList: List<SaleInfo>,
     menuItems: Array<String>,
     sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    animatedContentScope: AnimatedContentScope,
     onItemClick: (saleId: Long, productId: Long) -> Unit,
     onSheetNameChange: (sheetName: String) -> Unit,
     onDialogOkClick: () -> Unit,
@@ -278,7 +278,7 @@ fun SalesContent(
                                         sharedTransitionScope.rememberSharedContentState(
                                             key = "product-${item.productId}"
                                         ),
-                                        animatedVisibilityScope = animatedVisibilityScope
+                                        animatedVisibilityScope = animatedContentScope
                                     )
                                     .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
                                     .size(64.dp)

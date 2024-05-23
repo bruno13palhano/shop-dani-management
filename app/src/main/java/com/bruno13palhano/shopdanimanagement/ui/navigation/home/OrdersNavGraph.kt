@@ -28,7 +28,7 @@ fun NavGraphBuilder.ordersNavGraph(
         composable(route = OrdersDestinations.ORDERS_MAIN_ROUTE) {
             OrdersRoute(
                 sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = this@composable,
+                animatedContentScope = this@composable,
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 onItemClick = { orderId, productId ->

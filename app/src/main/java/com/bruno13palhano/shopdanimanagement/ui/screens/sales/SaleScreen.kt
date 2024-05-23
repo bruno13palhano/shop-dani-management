@@ -321,7 +321,7 @@ fun SaleScreen(
         isPaidByCustomer = viewModel.isPaidByCustomer,
         isAmazon = viewModel.isAmazon,
         sharedTransitionScope = sharedTransitionScope,
-        animatedVisibilityScope = animatedContentScope,
+        animatedContentScope = animatedContentScope,
         onQuantityChange = viewModel::updateQuantity,
         onAmazonCodeChange = viewModel::updateAmazonCode,
         onAmazonRequestNumberChange = viewModel::updateAmazonRequestNumber,

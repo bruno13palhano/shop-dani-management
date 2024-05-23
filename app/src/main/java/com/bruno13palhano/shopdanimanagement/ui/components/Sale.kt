@@ -93,7 +93,7 @@ fun SaleContent(
     isPaidByCustomer: Boolean,
     isAmazon: Boolean,
     sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedContentScope,
+    animatedContentScope: AnimatedContentScope,
     onQuantityChange: (quantity: String) -> Unit,
     onAmazonCodeChange: (amazonCode: String) -> Unit,
     onAmazonRequestNumberChange: (amazonRequestNumber: String) -> Unit,
@@ -220,7 +220,7 @@ fun SaleContent(
                                 sharedTransitionScope.rememberSharedContentState(
                                     key = "product-$productId"
                                 ),
-                                animatedVisibilityScope = animatedVisibilityScope
+                                animatedVisibilityScope = animatedContentScope
                             )
                             .aspectRatio(1f)
                             .fillMaxWidth()
