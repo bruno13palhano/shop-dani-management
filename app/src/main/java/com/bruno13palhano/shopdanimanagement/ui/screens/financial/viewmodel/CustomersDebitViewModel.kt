@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
+import com.bruno13palhano.core.model.SaleInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -22,12 +22,21 @@ class CustomersDebitViewModel @Inject constructor(
     val debits = _debits
         .map {
             it.map { sale ->
-                CommonItem(
-                    id = sale.id,
-                    photo = sale.photo,
-                    title = sale.customerName,
-                    subtitle = sale.salePrice.toString(),
-                    description = sale.dateOfPayment.toString()
+                SaleInfo(
+                    saleId = sale.id,
+                    productId = sale.productId,
+                    customerId = sale.customerId,
+                    productName = sale.name,
+                    customerName = sale.customerName,
+                    productPhoto = sale.photo,
+                    customerPhoto = byteArrayOf(),
+                    address = sale.address,
+                    phoneNumber = sale.phoneNumber,
+                    email = "",
+                    salePrice = sale.salePrice,
+                    deliveryPrice = sale.deliveryPrice,
+                    quantity = sale.quantity,
+                    dateOfSale = sale.dateOfPayment
                 )
             }
         }
