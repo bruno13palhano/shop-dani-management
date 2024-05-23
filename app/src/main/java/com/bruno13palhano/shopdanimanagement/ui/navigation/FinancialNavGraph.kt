@@ -76,26 +76,34 @@ fun NavGraphBuilder.financialNavGraph(
         }
         composable(route = FinancialDestinations.FINANCIAL_CUSTOMERS_DEBITS_ROUTE) {
             CustomersDebitRoute(
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = this@composable,
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
-                onItemClick = { saleId ->
+                onItemClick = { saleId, productId ->
                     navController.navigate(
-                        route = "${FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE}/$saleId"
+                        route = "${FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE}/$saleId/$productId"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
         composable(
-            route = "${FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE}/{$ITEM_ID}",
-            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
+            route = "${FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE}/{$SALE_ID}/{$PRODUCT_ID}",
+            arguments = listOf(
+                navArgument(SALE_ID) { type = NavType.LongType },
+                navArgument(PRODUCT_ID) { type = NavType.LongType }
+            )
         ) { backStackEntry ->
-            backStackEntry.arguments?.getLong(ITEM_ID)?.let { saleId ->
+            val saleId = backStackEntry.arguments?.getLong(SALE_ID)
+            val productId = backStackEntry.arguments?.getLong(PRODUCT_ID)
+
+            if (saleId != null && productId != null) {
                 FinancialEditSaleRoute(
                     showBottomMenu = showBottomMenu,
                     gesturesEnabled = gesturesEnabled,
                     saleId = saleId,
-                    productId = 0L,
+                    productId = productId,
                     sharedTransitionScope = sharedTransitionScope,
                     animatedContentScope = this@composable,
                     navigateUp = { navController.navigateUp() }

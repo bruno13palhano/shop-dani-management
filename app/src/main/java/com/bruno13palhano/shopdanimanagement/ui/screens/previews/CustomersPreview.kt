@@ -1,6 +1,9 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.previews
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -133,6 +136,7 @@ fun CustomerInfoPreview() {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -142,17 +146,24 @@ fun CustomersDebitDynamicPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            CustomersDebitContent(
-                debits = debits,
-                menuItems = arrayOf(),
-                onItemClick = {},
-                onMoreOptionsItemClick = {},
-                navigateUp = {}
-            )
+            SharedTransitionLayout {
+                AnimatedContent(targetState = Unit, label = "") {
+                    CustomersDebitContent(
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this@AnimatedContent,
+                        debits = listOf(),
+                        menuItems = arrayOf(),
+                        onItemClick = { _, _ -> },
+                        onMoreOptionsItemClick = {},
+                        navigateUp = { it }
+                    )
+                }
+            }
         }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -164,23 +175,19 @@ fun CustomersDebitPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            CustomersDebitContent(
-                debits = debits,
-                menuItems = arrayOf(),
-                onItemClick = {},
-                onMoreOptionsItemClick = {},
-                navigateUp = {}
-            )
+            SharedTransitionLayout {
+                AnimatedContent(targetState = Unit, label = "") {
+                    CustomersDebitContent(
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this@AnimatedContent,
+                        debits = listOf(),
+                        menuItems = arrayOf(),
+                        onItemClick = { _, _ -> },
+                        onMoreOptionsItemClick = {},
+                        navigateUp = { it }
+                    )
+                }
+            }
         }
     }
 }
-
-private val debits = listOf(
-    CommonItem(1L, byteArrayOf(), "Bruno", "R$12.50", "Feb 4, 2023"),
-    CommonItem(2L, byteArrayOf(), "Daniela", "R$170.90", "Feb 7, 2023"),
-    CommonItem(3L, byteArrayOf(), "Josué", "R$165.99", "Feb 8, 2023"),
-    CommonItem(4L, byteArrayOf(), "Helena", "R$9.90", "Feb 11, 2023"),
-    CommonItem(5L, byteArrayOf(), "Fernando", "R$160.50", "Feb 12, 2023"),
-    CommonItem(6L, byteArrayOf(), "Socorro","R$122.50", "Feb 14, 2023"),
-    CommonItem(7L, byteArrayOf(), "Brenda", "R$282.99", "Feb 14, 2023"),
-)
