@@ -7,14 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.SaleRep
-import com.bruno13palhano.core.data.di.SalesInformation
-import com.bruno13palhano.core.data.domain.SaleInfoUseCase
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.model.SaleInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -22,11 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SalesViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleRepository,
-    @SalesInformation private val salesInfoUseCase: SaleInfoUseCase
+    @SaleRep private val saleRepository: SaleRepository
 ) : ViewModel() {
-    private var _currentSaleInfo = MutableStateFlow(SaleInfo.emptySaleInfo())
-    val currentSale = _currentSaleInfo.asStateFlow()
 
     var sheetName by mutableStateOf("")
         private set
@@ -58,14 +52,6 @@ class SalesViewModel @Inject constructor(
             started = WhileSubscribed(5_000),
             initialValue = emptyList()
         )
-
-    fun getCurrentSale(saleId: Long, customerId: Long) {
-        viewModelScope.launch {
-            salesInfoUseCase(saleId = saleId, customerId = customerId).collect {
-                _currentSaleInfo.value = it
-            }
-        }
-    }
 
     fun updateSheetName(sheetName: String) {
         this.sheetName = sheetName
