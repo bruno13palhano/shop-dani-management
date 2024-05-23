@@ -1,5 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
@@ -15,7 +17,9 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsRou
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.FinancialEditSaleRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.FinancialEditStockItemRoute
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.financialNavGraph(
+    sharedTransitionScope: SharedTransitionScope,
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
@@ -91,6 +95,9 @@ fun NavGraphBuilder.financialNavGraph(
                     showBottomMenu = showBottomMenu,
                     gesturesEnabled = gesturesEnabled,
                     saleId = saleId,
+                    productId = 0L,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedContentScope = this@composable,
                     navigateUp = { navController.navigateUp() }
                 )
             }

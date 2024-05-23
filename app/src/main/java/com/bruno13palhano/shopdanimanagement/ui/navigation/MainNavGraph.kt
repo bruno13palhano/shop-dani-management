@@ -1,10 +1,13 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainNavGraph(
     modifier: Modifier = Modifier,
@@ -14,51 +17,55 @@ fun MainNavGraph(
     gesturesEnabled: (enabled: Boolean) -> Unit = {},
     onIconMenuClick: () -> Unit,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = startDestination,
-        modifier = modifier
-    ) {
-        homeNavGraph(
+    SharedTransitionLayout {
+        NavHost(
             navController = navController,
-            showBottomMenu = showBottomMenu,
-            onIconMenuClick = onIconMenuClick,
-            gesturesEnabled = gesturesEnabled,
-        )
-        financialNavGraph(
-            navController = navController,
-            showBottomMenu = showBottomMenu,
-            onIconMenuClick = onIconMenuClick,
-            gesturesEnabled = gesturesEnabled
-        )
-        insightsNavGraph(
-            navController = navController,
-            showBottomMenu = showBottomMenu,
-            onIconMenuClick = onIconMenuClick,
-            gesturesEnabled = gesturesEnabled
-        )
-        productsNavGraph(
-            navController = navController,
-            showBottomMenu = showBottomMenu,
-            onIconMenuClick = onIconMenuClick,
-            gesturesEnabled = gesturesEnabled
-        )
-        customersNavGraph(
-            navController = navController,
-            showBottomMenu = showBottomMenu,
-            onIconMenuClick = onIconMenuClick,
-            gesturesEnabled = gesturesEnabled
-        )
-        loginNavGraph(
-            navController = navController,
-            showBottomMenu = showBottomMenu,
-            gesturesEnabled = gesturesEnabled
-        )
-        userNavGraph(
-            navController = navController,
-            showBottomMenu = showBottomMenu,
-            gesturesEnabled = gesturesEnabled
-        )
+            startDestination = startDestination,
+            modifier = modifier
+        ) {
+            homeNavGraph(
+                navController = navController,
+                sharedTransitionScope = this@SharedTransitionLayout,
+                showBottomMenu = showBottomMenu,
+                onIconMenuClick = onIconMenuClick,
+                gesturesEnabled = gesturesEnabled,
+            )
+            financialNavGraph(
+                sharedTransitionScope = this@SharedTransitionLayout,
+                navController = navController,
+                showBottomMenu = showBottomMenu,
+                onIconMenuClick = onIconMenuClick,
+                gesturesEnabled = gesturesEnabled
+            )
+            insightsNavGraph(
+                navController = navController,
+                showBottomMenu = showBottomMenu,
+                onIconMenuClick = onIconMenuClick,
+                gesturesEnabled = gesturesEnabled
+            )
+            productsNavGraph(
+                navController = navController,
+                showBottomMenu = showBottomMenu,
+                onIconMenuClick = onIconMenuClick,
+                gesturesEnabled = gesturesEnabled
+            )
+            customersNavGraph(
+                navController = navController,
+                showBottomMenu = showBottomMenu,
+                onIconMenuClick = onIconMenuClick,
+                gesturesEnabled = gesturesEnabled
+            )
+            loginNavGraph(
+                navController = navController,
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled
+            )
+            userNavGraph(
+                navController = navController,
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled
+            )
+        }
     }
 }
 

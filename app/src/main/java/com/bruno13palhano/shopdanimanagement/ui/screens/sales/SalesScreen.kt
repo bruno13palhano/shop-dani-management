@@ -1,11 +1,13 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.sales
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,12 +23,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,29 +43,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.bruno13palhano.core.model.SaleInfo
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.BottomSheet
-import com.bruno13palhano.shopdanimanagement.ui.components.HorizontalItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.SingleInputDialog
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.viewmodel.SalesViewModel
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SalesRoute(
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
-    onItemClick: (id: Long) -> Unit,
+    onItemClick: (saleId: Long, productId: Long) -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
@@ -74,17 +75,22 @@ fun SalesRoute(
     SalesScreen(
         isOrders = false,
         screenTitle = stringResource(id = R.string.sales_label),
+        sharedTransitionScope = sharedTransitionScope,
+        animatedVisibilityScope = animatedVisibilityScope,
         onItemClick = onItemClick,
         onAddButtonClick = onAddButtonClick,
         navigateUp = navigateUp
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun OrdersRoute(
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
-    onItemClick: (id: Long) -> Unit,
+    onItemClick: (saleId: Long, productId: Long) -> Unit,
     navigateUp: () -> Unit
 ) {
     showBottomMenu(true)
@@ -92,17 +98,22 @@ fun OrdersRoute(
     SalesScreen(
         isOrders = true,
         screenTitle = stringResource(id = R.string.orders_label),
+        sharedTransitionScope = sharedTransitionScope,
+        animatedVisibilityScope = animatedVisibilityScope,
         onItemClick = onItemClick,
         onAddButtonClick = {},
         navigateUp = navigateUp
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SalesScreen(
     isOrders: Boolean,
     screenTitle: String,
-    onItemClick: (id: Long) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onItemClick: (saleId: Long, productId: Long) -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit,
     viewModel: SalesViewModel = hiltViewModel()
@@ -116,7 +127,7 @@ fun SalesScreen(
     }
 
     val saleList by viewModel.saleList.collectAsStateWithLifecycle()
-    val currentSale by viewModel.currentSale.collectAsStateWithLifecycle()
+
     val menuItems = arrayOf(
         stringResource(id = R.string.ordered_by_name_label),
         stringResource(id = R.string.ordered_by_price_label),
@@ -127,25 +138,17 @@ fun SalesScreen(
     var orderedByName by remember { mutableStateOf(false) }
     var orderedByPrice by remember { mutableStateOf(false) }
     var showSpreadsheetDialog by remember { mutableStateOf(false) }
-    var openBottomSheet by remember { mutableStateOf(false) }
 
     SalesContent(
         isOrders = isOrders,
         screenTitle = screenTitle,
         sheetName = viewModel.sheetName,
         showSpreadsheetDialog = showSpreadsheetDialog,
-        openBottomSheet = openBottomSheet,
         saleList = saleList,
-        currentSale = currentSale,
         menuItems = menuItems,
-        onItemClick = { saleId, customerId ->
-            openBottomSheet = true
-            viewModel.getCurrentSale(saleId = saleId, customerId = customerId)
-        },
-        onEditClick = {
-            openBottomSheet = false
-            onItemClick(it)
-        },
+        sharedTransitionScope = sharedTransitionScope,
+        animatedVisibilityScope = animatedVisibilityScope,
+        onItemClick = onItemClick,
         onSheetNameChange = viewModel::updateSheetName,
         onDialogOkClick = { viewModel.exportSalesSheet() },
         onMoreOptionsItemClick = { index ->
@@ -177,30 +180,27 @@ fun SalesScreen(
             }
         },
         onDismissDialog = { showSpreadsheetDialog = false },
-        onDismissBottomSheet = { openBottomSheet = false },
         onAddButtonClick = onAddButtonClick,
         navigateUp = navigateUp
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun SalesContent(
     isOrders: Boolean,
     screenTitle: String,
     sheetName: String,
     showSpreadsheetDialog: Boolean,
-    openBottomSheet: Boolean,
     saleList: List<SaleInfo>,
-    currentSale: SaleInfo,
     menuItems: Array<String>,
-    onItemClick: (saleId: Long, customerId: Long) -> Unit,
-    onEditClick: (id: Long) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onItemClick: (saleId: Long, productId: Long) -> Unit,
     onSheetNameChange: (sheetName: String) -> Unit,
     onDialogOkClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
     onDismissDialog: () -> Unit,
-    onDismissBottomSheet: () -> Unit,
     onAddButtonClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
@@ -263,166 +263,66 @@ fun SalesContent(
             reverseLayout = true
         ) {
             items(items = saleList, key = { item -> item.saleId }) { item ->
-                HorizontalItemList(
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    title = item.customerName,
-                    subtitle = stringResource(
-                        id = R.string.product_price_text_tag,
-                        item.productName,
-                        item.salePrice.toString()
-                    ),
-                    description = stringResource(
-                        id = R.string.date_of_sale_tag,
-                        dateFormat.format(item.dateOfSale)
-                    ),
-                    photo = item.productPhoto,
-                    onClick = { onItemClick(item.saleId, item.customerId) }
-                )
-            }
-        }
-
-        AnimatedVisibility(visible = openBottomSheet) {
-            BottomSheet(onDismissBottomSheet = onDismissBottomSheet) {
-                Column(
-                    modifier = Modifier
-                        .padding(bottom = 48.dp)
-                        .fillMaxWidth()
-                ) {
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            modifier = Modifier.align(Alignment.Center),
-                            text = stringResource(id = R.string.sale_information_label),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        IconButton(
-                            modifier = Modifier.align(Alignment.CenterEnd),
-                            onClick = { onEditClick(currentSale.saleId) }
+                with(sharedTransitionScope) {
+                    ElevatedCard(
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        onClick = { onItemClick(item.saleId, item.productId) }
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                imageVector = Icons.Filled.Edit,
-                                contentDescription = stringResource(id = R.string.edit_label)
-                            )
-                        }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                            .fillMaxWidth()
-                    ) {
-                        if (currentSale.productPhoto.isEmpty()) {
-                            Image(
+                            AsyncImage(
                                 modifier = Modifier
-                                    .size(128.dp)
-                                    .padding(16.dp)
+                                    .sharedElement(
+                                        sharedTransitionScope.rememberSharedContentState(
+                                            key = "product-${item.productId}"
+                                        ),
+                                        animatedVisibilityScope = animatedVisibilityScope
+                                    )
+                                    .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                                    .size(64.dp)
                                     .clip(RoundedCornerShape(5)),
-                                imageVector = Icons.Filled.Image,
-                                contentScale = ContentScale.Crop,
-                                contentDescription = stringResource(id = R.string.product_image_label)
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(item.productPhoto)
+                                    .crossfade(true)
+                                    .placeholderMemoryCacheKey("product-${item.productId}")
+                                    .memoryCacheKey("product-${item.productId}")
+                                    .build(),
+                                contentDescription = stringResource(id = R.string.item_image),
+                                contentScale = ContentScale.Crop
                             )
-                        } else {
-                            Image(
-                                modifier = Modifier
-                                    .size(128.dp)
-                                    .padding(16.dp)
-                                    .clip(RoundedCornerShape(5)),
-                                painter = rememberAsyncImagePainter(
-                                    model = currentSale.productPhoto
-                                ),
-                                contentScale = ContentScale.Crop,
-                                contentDescription = stringResource(id = R.string.product_image_label)
-                            )
-                        }
-                        Column(modifier = Modifier.align(Alignment.CenterVertically)) {
-                            Text(
-                                text = pluralStringResource(
-                                    id = R.plurals.simple_description_label,
-                                    count = currentSale.quantity,
-                                    currentSale.quantity,
-                                    currentSale.productName
-                                ),
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Text(
-                                text = stringResource(id = R.string.price_tag, currentSale.salePrice),
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontStyle = FontStyle.Italic
-                            )
-                            Text(
-                                text = stringResource(
-                                    id = R.string.delivery_price_tag,
-                                    currentSale.deliveryPrice.toString()
-                                ),
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontStyle = FontStyle.Italic
-                            )
-                            Text(
-                                text = stringResource(
-                                    id = R.string.date_of_sale_tag,
-                                    dateFormat.format(currentSale.dateOfSale)
-                                ),
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontStyle = FontStyle.Italic
-                            )
-                        }
-                    }
 
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = stringResource(id = R.string.customer_information_label),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-
-                    Row(
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                            .fillMaxWidth()
-                    ) {
-                        if (currentSale.customerName.isEmpty()) {
-                            Image(
+                            Column(
                                 modifier = Modifier
-                                    .size(128.dp)
-                                    .padding(16.dp)
-                                    .clip(RoundedCornerShape(5)),
-                                imageVector = Icons.Filled.Image,
-                                contentScale = ContentScale.Crop,
-                                contentDescription = stringResource(id = R.string.customer_photo_label)
-                            )
-                        } else {
-                            Image(
-                                modifier = Modifier
-                                    .size(128.dp)
-                                    .padding(16.dp)
-                                    .clip(RoundedCornerShape(5)),
-                                painter = rememberAsyncImagePainter(
-                                    model = currentSale.customerPhoto
-                                ),
-                                contentScale = ContentScale.Crop,
-                                contentDescription = stringResource(id = R.string.customer_photo_label)
-                            )
-                        }
-                        Column(modifier = Modifier.align(Alignment.CenterVertically)) {
-                            Text(
-                                text = currentSale.customerName,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontStyle = FontStyle.Italic
-                            )
-                            Text(
-                                text = currentSale.address,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontStyle = FontStyle.Italic
-                            )
-                            Text(
-                                text = currentSale.phoneNumber,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontStyle = FontStyle.Italic
-                            )
-                            Text(
-                                text = currentSale.email,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontStyle = FontStyle.Italic
-                            )
+                                    .fillMaxWidth()
+                                    .weight(1F, true)
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                                    text = item.customerName,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                                    text = stringResource(
+                                        id = R.string.product_price_text_tag,
+                                        item.productName,
+                                        item.salePrice.toString()
+                                     ),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Text(
+                                    modifier = Modifier
+                                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                                    text = stringResource(
+                                        id = R.string.date_of_sale_tag,
+                                        dateFormat.format(item.dateOfSale)
+                                    ),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
                         }
                     }
                 }

@@ -1,5 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation.home
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -8,6 +10,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
 import com.bruno13palhano.shopdanimanagement.ui.navigation.ITEM_ID
+import com.bruno13palhano.shopdanimanagement.ui.navigation.PRODUCT_ID
+import com.bruno13palhano.shopdanimanagement.ui.navigation.SALE_ID
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SalesProductListRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.SalesSearchProductRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.EditSaleRoute
@@ -18,8 +22,10 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.sales.SalesRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.SalesStockRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.StockSearchRoute
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.salesNavGraph(
     navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
@@ -29,11 +35,13 @@ fun NavGraphBuilder.salesNavGraph(
     ) {
         composable(route = SalesDestinations.MAIN_SALES_ROUTE) {
             SalesRoute(
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = this@composable,
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
-                onItemClick = { saleId ->
+                onItemClick = { saleId, productId ->
                     navController.navigate(
-                        route = "${SalesDestinations.SALES_EDIT_SALE_ROUTE}/$saleId"
+                        route = "${SalesDestinations.SALES_EDIT_SALE_ROUTE}/$saleId/$productId"
                     )
                 },
                 onAddButtonClick = {
@@ -119,33 +127,46 @@ fun NavGraphBuilder.salesNavGraph(
                 NewStockSaleRoute(
                     showBottomMenu = showBottomMenu,
                     gesturesEnabled = gesturesEnabled,
-                    stockOrderId = id,
+                    productId = id,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedContentScope = this@composable,
                     navigateUp = { navController.navigateUp() }
                 )
             }
         }
         composable(
-            route = "${SalesDestinations.SALES_NEW_ORDER_SALE_ROUTE}/{$ITEM_ID}",
-            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
+            route = "${SalesDestinations.SALES_NEW_ORDER_SALE_ROUTE}/{$PRODUCT_ID}",
+            arguments = listOf(navArgument(PRODUCT_ID) { type = NavType.LongType })
         ) { backStackEntry ->
-            backStackEntry.arguments?.getLong(ITEM_ID)?.let { id ->
+            backStackEntry.arguments?.getLong(PRODUCT_ID)?.let { id ->
                 NewOrderSaleRoute(
                     showBottomMenu = showBottomMenu,
                     gesturesEnabled = gesturesEnabled,
                     productId = id,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedContentScope = this@composable,
                     navigateUp = { navController.navigateUp() }
                 )
             }
         }
         composable(
-            route = "${SalesDestinations.SALES_EDIT_SALE_ROUTE}/{$ITEM_ID}",
-            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
+            route = "${SalesDestinations.SALES_EDIT_SALE_ROUTE}/{$SALE_ID}/{$PRODUCT_ID}",
+            arguments = listOf(
+                navArgument(SALE_ID) { type = NavType.LongType },
+                navArgument(PRODUCT_ID) { type = NavType.LongType }
+            )
         ) { backStackEntry ->
-            backStackEntry.arguments?.getLong(ITEM_ID)?.let { id ->
+            val saleId = backStackEntry.arguments?.getLong(SALE_ID)
+            val productId = backStackEntry.arguments?.getLong(PRODUCT_ID)
+
+            if (saleId != null && productId != null) {
                 EditSaleRoute(
                     showBottomMenu = showBottomMenu,
                     gesturesEnabled = gesturesEnabled,
-                    saleId = id,
+                    saleId = saleId,
+                    productId = productId,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedContentScope = this@composable,
                     navigateUp = { navController.navigateUp() }
                 )
             }

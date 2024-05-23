@@ -1,5 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -15,8 +17,10 @@ import com.bruno13palhano.shopdanimanagement.ui.navigation.home.stockNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.screens.home.HomeRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.EditSaleRoute
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.homeNavGraph(
     navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
     onIconMenuClick: () -> Unit
@@ -59,6 +63,9 @@ fun NavGraphBuilder.homeNavGraph(
                     showBottomMenu = showBottomMenu,
                     gesturesEnabled = gesturesEnabled,
                     saleId = saleId,
+                    productId = 0L,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedContentScope = this@composable,
                     navigateUp = { navController.navigateUp() }
                 )
             }
@@ -66,6 +73,7 @@ fun NavGraphBuilder.homeNavGraph(
 
         salesNavGraph(
             navController = navController,
+            sharedTransitionScope = sharedTransitionScope,
             showBottomMenu = showBottomMenu,
             gesturesEnabled = gesturesEnabled
         )
@@ -76,11 +84,13 @@ fun NavGraphBuilder.homeNavGraph(
         )
         ordersNavGraph(
             navController = navController,
+            sharedTransitionScope = sharedTransitionScope,
             showBottomMenu = showBottomMenu,
             gesturesEnabled = gesturesEnabled
         )
         amazonNavGraph(
             navController = navController,
+            sharedTransitionScope = sharedTransitionScope,
             showBottomMenu = showBottomMenu,
             gesturesEnabled = gesturesEnabled
         )
