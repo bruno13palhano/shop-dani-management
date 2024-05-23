@@ -2,6 +2,7 @@ package com.bruno13palhano.core.model
 
 data class SaleInfo(
     val saleId: Long,
+    val productId: Long,
     val customerId: Long,
     val productName: String,
     val customerName: String,
@@ -22,6 +23,7 @@ data class SaleInfo(
         other as SaleInfo
 
         if (saleId != other.saleId) return false
+        if (productId != other.productId) return false
         if (customerId != other.customerId) return false
         if (productName != other.productName) return false
         if (customerName != other.customerName) return false
@@ -38,6 +40,7 @@ data class SaleInfo(
 
     override fun hashCode(): Int {
         var result = saleId.hashCode()
+        result = 31 * result + productId.hashCode()
         result = 31 * result + customerId.hashCode()
         result = 31 * result + productName.hashCode()
         result = 31 * result + customerName.hashCode()
@@ -56,6 +59,7 @@ data class SaleInfo(
     companion object {
         fun emptySaleInfo() = SaleInfo(
             saleId = 0L,
+            productId = 0L,
             customerId = 0L,
             productName = "",
             customerName = "",

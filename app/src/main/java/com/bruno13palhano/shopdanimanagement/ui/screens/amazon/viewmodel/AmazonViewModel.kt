@@ -27,6 +27,7 @@ class AmazonViewModel @Inject constructor(
             it.map { sale ->
                 SaleInfo(
                     saleId = sale.id,
+                    productId = sale.productId,
                     customerId = sale.customerId,
                     productName = sale.name,
                     customerName = sale.customerName,

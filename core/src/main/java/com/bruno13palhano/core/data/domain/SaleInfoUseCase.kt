@@ -21,6 +21,7 @@ class SaleInfoUseCase @Inject constructor(
             if (sale.customerId == customer.id) {
                 SaleInfo(
                     saleId = sale.id,
+                    productId = sale.productId,
                     customerId = customer.id,
                     productName = sale.name,
                     customerName = customer.name,
