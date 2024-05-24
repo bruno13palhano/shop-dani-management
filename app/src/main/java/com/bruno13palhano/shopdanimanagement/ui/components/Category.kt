@@ -37,7 +37,7 @@ fun CategoriesContent(
     onCategoryChange: (newCategory: String) -> Unit,
     onDismissRequest: () -> Unit,
     onOkClick: () -> Unit,
-    onItemClick: (categoryId: String) -> Unit,
+    onItemClick: (categoryId: Long) -> Unit,
     onIconMenuClick: () -> Unit
 ) {
     Scaffold(
@@ -76,7 +76,7 @@ fun CategoriesContent(
                     itemName = category.category,
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward
                 ) {
-                    onItemClick(category.id.toString())
+                    onItemClick(category.id)
                 }
             }
         }
