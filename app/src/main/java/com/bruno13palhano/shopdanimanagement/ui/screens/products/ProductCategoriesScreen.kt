@@ -26,7 +26,7 @@ fun ProductCategoriesRoute(
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
     onIconMenuClick: () -> Unit,
-    onItemClick: (categoryId: String) -> Unit
+    onItemClick: (categoryId: Long) -> Unit
 ) {
     showBottomMenu(true)
     gesturesEnabled(true)
@@ -38,7 +38,7 @@ fun ProductCategoriesRoute(
 @Composable
 fun ProductCategoriesScreen(
     onIconMenuClick: () -> Unit,
-    onItemClick: (categoryId: String) -> Unit,
+    onItemClick: (categoryId: Long) -> Unit,
     viewModel: ProductCategoriesViewModel = hiltViewModel()
 ) {
     val categoryState by viewModel.categoryState.collectAsStateWithLifecycle()
