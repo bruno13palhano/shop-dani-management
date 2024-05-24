@@ -4,10 +4,9 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.bruno13palhano.shopdanimanagement.ui.navigation.home.amazonNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.navigation.home.catalogNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.navigation.home.deliveriesNAvGraph
@@ -16,6 +15,7 @@ import com.bruno13palhano.shopdanimanagement.ui.navigation.home.salesNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.navigation.home.stockNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.screens.home.HomeRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.EditSaleRoute
+import kotlinx.serialization.Serializable
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.homeNavGraph(
@@ -25,11 +25,8 @@ fun NavGraphBuilder.homeNavGraph(
     gesturesEnabled: (enabled: Boolean) -> Unit,
     onIconMenuClick: () -> Unit
 ) {
-    navigation(
-        startDestination = HomeDestinations.HOME_MAIN_ROUTE,
-        route = MainDestinations.HOME_ROUTE,
-    ) {
-        composable(route = HomeDestinations.HOME_MAIN_ROUTE) {
+    navigation<MainRoutes.Home>(startDestination = HomeRoutes.Main) {
+        composable<HomeRoutes.Main> {
             HomeRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
@@ -37,14 +34,12 @@ fun NavGraphBuilder.homeNavGraph(
                     navController.navigate(route = route)
                 },
                 onSalesItemClick = { id ->
-                    navController.navigate(
-                        route = "${HomeDestinations.HOME_SALE_ROUTE}/$id"
-                    )
+                    navController.navigate(route = HomeRoutes.Sale(id = id))
                 },
                 onMenuClick = onIconMenuClick,
                 onUnauthenticated = {
-                    navController.navigate(route = LoginDestinations.LOGIN_MAIN_ROUTE) {
-                        popUpTo(route = HomeDestinations.HOME_MAIN_ROUTE) {
+                    navController.navigate(route = LoginRoutes.Main) {
+                        popUpTo(route = HomeRoutes.Main) {
                             inclusive = true
                         }
                         launchSingleTop = true
@@ -54,11 +49,8 @@ fun NavGraphBuilder.homeNavGraph(
             )
         }
 
-        composable(
-            route = "${HomeDestinations.HOME_SALE_ROUTE}/{$ITEM_ID}",
-            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
-        ) { backStackEntry ->
-            backStackEntry.arguments?.getLong(ITEM_ID)?.let { saleId ->
+        composable<HomeRoutes.Sale> { backStackEntry ->
+            backStackEntry.toRoute<HomeRoutes.Sale>().id.let { saleId ->
                 EditSaleRoute(
                     showBottomMenu = showBottomMenu,
                     gesturesEnabled = gesturesEnabled,
@@ -77,28 +69,33 @@ fun NavGraphBuilder.homeNavGraph(
             showBottomMenu = showBottomMenu,
             gesturesEnabled = gesturesEnabled
         )
+
         stockNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu,
             gesturesEnabled = gesturesEnabled
         )
+
         ordersNavGraph(
             navController = navController,
             sharedTransitionScope = sharedTransitionScope,
             showBottomMenu = showBottomMenu,
             gesturesEnabled = gesturesEnabled
         )
+
         amazonNavGraph(
             navController = navController,
             sharedTransitionScope = sharedTransitionScope,
             showBottomMenu = showBottomMenu,
             gesturesEnabled = gesturesEnabled
         )
+
         deliveriesNAvGraph(
             navController = navController,
             showBottomMenu = showBottomMenu,
             gesturesEnabled = gesturesEnabled
         )
+
         catalogNavGraph(
             navController = navController,
             showBottomMenu = showBottomMenu,
@@ -107,13 +104,28 @@ fun NavGraphBuilder.homeNavGraph(
     }
 }
 
-object HomeDestinations {
-    const val HOME_MAIN_ROUTE = "home_main_route"
-    const val HOME_STOCK_ROUTE = "home_stock_route"
-    const val HOME_SALES_ROUTE = "home_sales_route"
-    const val HOME_ORDERS_ROUTE = "home_orders_route"
-    const val HOME_AMAZON_ROUTE = "home_amazon_route"
-    const val HOME_DELIVERIES_ROUTE = "home_deliveries_route"
-    const val HOME_CATALOG_ROUTE = "home_catalog_route"
-    const val HOME_SALE_ROUTE = "home_sale_route"
+sealed interface HomeRoutes {
+    @Serializable
+    object Main
+
+    @Serializable
+    object Stock
+
+    @Serializable
+    object Sales
+
+    @Serializable
+    object Orders
+
+    @Serializable
+    object Amazon
+
+    @Serializable
+    object Deliveries
+
+    @Serializable
+    object Catalog
+
+    @Serializable
+    data class Sale(val id: Long)
 }

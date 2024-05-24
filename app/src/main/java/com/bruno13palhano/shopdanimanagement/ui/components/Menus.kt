@@ -58,7 +58,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.navigation.MainDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.MainRoutes
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -181,34 +181,34 @@ fun BottomMenu(navController: NavController) {
     }
 }
 
-sealed class Screen(val route: String, val icon: ImageVector, @StringRes val resourceId: Int) {
-    data object Home: Screen(
-        route = MainDestinations.HOME_ROUTE,
+sealed class Screen<T: Any>(val route: T, val icon: ImageVector, @StringRes val resourceId: Int) {
+    data object Home: Screen<MainRoutes.Home>(
+        route = MainRoutes.Home,
         icon = Icons.Filled.Home,
         resourceId = R.string.home_label
     )
-    data object Financial: Screen(
-        route = MainDestinations.FINANCIAL_ROUTE,
+    data object Financial: Screen<MainRoutes.Financial>(
+        route = MainRoutes.Financial,
         icon = Icons.Filled.Money,
         resourceId = R.string.financial_label
     )
-    data object Insights: Screen(
-        route = MainDestinations.INSIGHTS_ROUTE,
+    data object Insights: Screen<MainRoutes.Insights>(
+        route = MainRoutes.Insights,
         icon = Icons.Filled.Insights,
         resourceId = R.string.insights_label
     )
-    data object Products: Screen(
-        route = MainDestinations.PRODUCTS_ROUTE,
+    data object Products: Screen<MainRoutes.Products>(
+        route = MainRoutes.Products,
         icon = Icons.AutoMirrored.Filled.PlaylistAdd,
         resourceId = R.string.products_label
     )
-    data object Customers: Screen(
-        route = MainDestinations.CUSTOMERS_ROUTE,
+    data object Customers: Screen<MainRoutes.Customers>(
+        route = MainRoutes.Customers,
         icon = Icons.Filled.Person,
         resourceId = R.string.customers_label
     )
-    data object User: Screen(
-        route = MainDestinations.USER_ROUTE,
+    data object User: Screen<MainRoutes.User>(
+        route = MainRoutes.User,
         icon = Icons.Filled.AccountCircle,
         resourceId = R.string.account_label
     )

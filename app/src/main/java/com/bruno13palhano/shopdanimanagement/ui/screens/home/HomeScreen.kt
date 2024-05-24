@@ -57,7 +57,7 @@ import com.bruno13palhano.shopdanimanagement.ui.components.CircularItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.InfoItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.rememberMarker
-import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeRoutes
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginState
@@ -80,7 +80,7 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 fun HomeRoute(
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
-    onOptionsItemClick: (route: String) -> Unit,
+    onOptionsItemClick: (route: Any) -> Unit,
     onSalesItemClick: (id: Long) -> Unit,
     onMenuClick: () -> Unit,
     onUnauthenticated: () -> Unit
@@ -97,7 +97,7 @@ fun HomeRoute(
 
 @Composable
 fun HomeScreen(
-    onOptionsItemClick: (route: String) -> Unit,
+    onOptionsItemClick: (route: Any) -> Unit,
     onSalesItemClick: (id: Long) -> Unit,
     onMenuClick: () -> Unit,
     onUnauthenticated: () -> Unit,
@@ -164,7 +164,7 @@ fun HomeContent(
     homeInfo: HomeViewModel.HomeInfo,
     lastSalesEntry: ChartEntryModelProducer,
     showProfit: Boolean,
-    onOptionsItemClick: (route: String) -> Unit,
+    onOptionsItemClick: (route: Any) -> Unit,
     onSalesItemClick: (id: Long) -> Unit,
     onShowProfitChange: (show: Boolean) -> Unit,
     onMenuClick: () -> Unit,
@@ -270,8 +270,9 @@ fun HomeContent(
                     modifier = Modifier.semantics { contentDescription = "Options" },
                     contentPadding = PaddingValues(vertical = 16.dp, horizontal = 4.dp)
                 ) {
-                    items(items = options, key = { option -> option.route }) { option ->
+                    items(items = options, key = { option -> option.resourceId }) { option ->
                         val description = stringResource(id = option.resourceId)
+
                         CircularItemList(
                             modifier = Modifier
                                 .semantics {
@@ -399,38 +400,38 @@ fun HomeContent(
     }
 }
 
-sealed class HomeInnerScreen(
-    val route: String,
+sealed class HomeInnerScreen<T: Any>(
+    val route: T,
     val icon: ImageVector,
     @StringRes val resourceId: Int
 ) {
-    data object Stock: HomeInnerScreen(
-        route = HomeDestinations.HOME_STOCK_ROUTE,
+    data object Stock: HomeInnerScreen<HomeRoutes.Stock>(
+        route = HomeRoutes.Stock,
         icon = Icons.AutoMirrored.Filled.List,
         resourceId = R.string.stock_label
     )
-    data object Sales: HomeInnerScreen(
-        route = HomeDestinations.HOME_SALES_ROUTE,
+    data object Sales: HomeInnerScreen<HomeRoutes.Sales>(
+        route = HomeRoutes.Sales,
         icon = Icons.Filled.PointOfSale,
         resourceId = R.string.sales_label
     )
-    data object Orders: HomeInnerScreen(
-        route = HomeDestinations.HOME_ORDERS_ROUTE,
+    data object Orders: HomeInnerScreen<HomeRoutes.Orders>(
+        route = HomeRoutes.Orders,
         icon = Icons.Filled.Checklist,
         resourceId = R.string.orders_label
     )
-    data object Amazon: HomeInnerScreen(
-        route = HomeDestinations.HOME_AMAZON_ROUTE,
+    data object Amazon: HomeInnerScreen<HomeRoutes.Amazon>(
+        route = HomeRoutes.Amazon,
         icon = Icons.Filled.ShoppingBag,
         resourceId = R.string.amazon_label
     )
-    data object Deliveries: HomeInnerScreen(
-        route = HomeDestinations.HOME_DELIVERIES_ROUTE,
+    data object Deliveries: HomeInnerScreen<HomeRoutes.Deliveries>(
+        route = HomeRoutes.Deliveries,
         icon = Icons.Filled.LocalShipping,
         resourceId = R.string.deliveries_label
     )
-    data object Catalog: HomeInnerScreen(
-        route = HomeDestinations.HOME_CATALOG_ROUTE,
+    data object Catalog: HomeInnerScreen<HomeRoutes.Catalog>(
+        route = HomeRoutes.Catalog,
         icon = Icons.AutoMirrored.Filled.ListAlt,
         resourceId = R.string.catalog_label
     )

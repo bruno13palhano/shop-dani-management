@@ -27,13 +27,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
-import com.bruno13palhano.shopdanimanagement.ui.navigation.FinancialDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.FinancialRoutes
 
 @Composable
 fun FinancialRoute(
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
-    onItemClick: (route: String) -> Unit,
+    onItemClick: (route: Any) -> Unit,
     onIconMenuClick: () -> Unit,
     goHome: () -> Unit
 ) {
@@ -48,7 +48,7 @@ fun FinancialRoute(
 
 @Composable
 fun FinancialScreen(
-    onItemClick: (route: String) -> Unit,
+    onItemClick: (route: Any) -> Unit,
     onIconMenuClick: () -> Unit,
     goHome: () -> Unit
 ) {
@@ -62,7 +62,7 @@ fun FinancialScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FinancialContent(
-    onItemClick: (route: String) -> Unit,
+    onItemClick: (route: Any) -> Unit,
     onIconMenuClick: () -> Unit,
     goHome: () -> Unit
 ) {
@@ -106,28 +106,28 @@ fun FinancialContent(
     }
 }
 
-sealed class FinancialInnerScreen(
-    val route: String,
+sealed class FinancialInnerScreen<T: Any>(
+    val route: T,
     val icon: ImageVector,
     @StringRes val resourceId: Int
 ) {
-    data object Info: FinancialInnerScreen(
-        route = FinancialDestinations.FINANCIAL_INFO_ROUTE,
+    data object Info: FinancialInnerScreen<FinancialRoutes.Info>(
+        route = FinancialRoutes.Info,
         icon = Icons.Filled.Info,
         resourceId = R.string.financial_info_label
     )
-    data object CustomersDebit: FinancialInnerScreen(
-        route = FinancialDestinations.FINANCIAL_CUSTOMERS_DEBITS_ROUTE,
+    data object CustomersDebit: FinancialInnerScreen<FinancialRoutes.CustomersDebits>(
+        route = FinancialRoutes.CustomersDebits,
         icon = Icons.Filled.Payments,
         resourceId = R.string.customers_debit_label
     )
-    data object StockDebits: FinancialInnerScreen(
-        route = FinancialDestinations.FINANCIAL_STOCK_DEBITS_ROUTE,
+    data object StockDebits: FinancialInnerScreen<FinancialRoutes.StockDebits>(
+        route = FinancialRoutes.StockDebits,
         icon = Icons.Filled.Inventory,
         resourceId = R.string.stock_debits_label
     )
-    data object CanceledSales: FinancialInnerScreen(
-        route = FinancialDestinations.FINANCIAL_CANCELED_SALES_ROUTE,
+    data object CanceledSales: FinancialInnerScreen<FinancialRoutes.CanceledSales>(
+        route = FinancialRoutes.CanceledSales,
         icon = Icons.Filled.CancelPresentation,
         resourceId = R.string.canceled_sales_label
     )

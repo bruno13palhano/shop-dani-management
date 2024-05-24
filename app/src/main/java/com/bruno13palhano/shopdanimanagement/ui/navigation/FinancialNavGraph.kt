@@ -5,10 +5,9 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CanceledSalesRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CustomersDebitRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialInfoRoute
@@ -16,6 +15,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.financial.FinancialRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.FinancialEditSaleRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.stock.FinancialEditStockItemRoute
+import kotlinx.serialization.Serializable
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.financialNavGraph(
@@ -25,11 +25,8 @@ fun NavGraphBuilder.financialNavGraph(
     gesturesEnabled: (enabled: Boolean) -> Unit,
     onIconMenuClick: () -> Unit
 ) {
-    navigation(
-        startDestination = FinancialDestinations.FINANCIAL_MAIN_ROUTE,
-        route = MainDestinations.FINANCIAL_ROUTE
-    ) {
-        composable(route = FinancialDestinations.FINANCIAL_MAIN_ROUTE) {
+    navigation<MainRoutes.Financial>(startDestination = FinancialRoutes.Main) {
+        composable<FinancialRoutes.Main> {
             FinancialRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
@@ -38,7 +35,7 @@ fun NavGraphBuilder.financialNavGraph(
                 },
                 onIconMenuClick = onIconMenuClick,
                 goHome = {
-                    navController.navigate(route = HomeDestinations.HOME_MAIN_ROUTE) {
+                    navController.navigate(route = HomeRoutes.Main) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
@@ -48,33 +45,37 @@ fun NavGraphBuilder.financialNavGraph(
                 }
             )
         }
-        composable(route = FinancialDestinations.FINANCIAL_INFO_ROUTE) {
+
+        composable<FinancialRoutes.Info> {
             FinancialInfoRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = FinancialDestinations.FINANCIAL_CANCELED_SALES_ROUTE) {
+
+        composable<FinancialRoutes.CanceledSales> {
             CanceledSalesRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = FinancialDestinations.FINANCIAL_STOCK_DEBITS_ROUTE) {
+
+        composable<FinancialRoutes.StockDebits> {
             StockDebitsRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 onItemClick = { stockItemId ->
                     navController.navigate(
-                        route = "${FinancialDestinations.FINANCIAL_STOCK_ITEM_ROUTE}/$stockItemId"
+                        route = FinancialRoutes.StockItem(id = stockItemId)
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = FinancialDestinations.FINANCIAL_CUSTOMERS_DEBITS_ROUTE) {
+
+        composable<FinancialRoutes.CustomersDebits> {
             CustomersDebitRoute(
                 sharedTransitionScope = sharedTransitionScope,
                 animatedContentScope = this@composable,
@@ -82,56 +83,62 @@ fun NavGraphBuilder.financialNavGraph(
                 gesturesEnabled = gesturesEnabled,
                 onItemClick = { saleId, productId ->
                     navController.navigate(
-                        route = "${FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE}/$saleId/$productId"
+                        route = FinancialRoutes.SaleItem(
+                            saleId = saleId, productId = productId
+                        )
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(
-            route = "${FinancialDestinations.FINANCIAL_SALE_ITEM_ROUTE}/{$SALE_ID}/{$PRODUCT_ID}",
-            arguments = listOf(
-                navArgument(SALE_ID) { type = NavType.LongType },
-                navArgument(PRODUCT_ID) { type = NavType.LongType }
-            )
-        ) { backStackEntry ->
-            val saleId = backStackEntry.arguments?.getLong(SALE_ID)
-            val productId = backStackEntry.arguments?.getLong(PRODUCT_ID)
 
-            if (saleId != null && productId != null) {
-                FinancialEditSaleRoute(
-                    showBottomMenu = showBottomMenu,
-                    gesturesEnabled = gesturesEnabled,
-                    saleId = saleId,
-                    productId = productId,
-                    sharedTransitionScope = sharedTransitionScope,
-                    animatedContentScope = this@composable,
-                    navigateUp = { navController.navigateUp() }
-                )
-            }
+        composable<FinancialRoutes.SaleItem> { backStackEntry ->
+            val saleId = backStackEntry.toRoute<FinancialRoutes.SaleItem>().saleId
+            val productId = backStackEntry.toRoute<FinancialRoutes.SaleItem>().productId
+
+            FinancialEditSaleRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
+                saleId = saleId,
+                productId = productId,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = this@composable,
+                navigateUp = { navController.navigateUp() }
+            )
         }
-        composable(
-            route = "${FinancialDestinations.FINANCIAL_STOCK_ITEM_ROUTE}/{$ITEM_ID}",
-            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
-        ) { backStackEntry ->
-            backStackEntry.arguments?.getLong(ITEM_ID)?.let { stockItemId ->
-                FinancialEditStockItemRoute(
-                    showBottomMenu = showBottomMenu,
-                    gesturesEnabled = gesturesEnabled,
-                    stockItemId = stockItemId,
-                    navigateUp = { navController.navigateUp() }
-                )
-            }
+
+        composable<FinancialRoutes.StockItem> { backStackEntry ->
+            val stockItemId = backStackEntry.toRoute<FinancialRoutes.StockItem>().id
+
+            FinancialEditStockItemRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
+                stockItemId = stockItemId,
+                navigateUp = { navController.navigateUp() }
+            )
         }
     }
 }
 
-object FinancialDestinations {
-    const val FINANCIAL_MAIN_ROUTE = "financial_main_route"
-    const val FINANCIAL_INFO_ROUTE = "financial_info_route"
-    const val FINANCIAL_CANCELED_SALES_ROUTE = "financial_canceled_sales_route"
-    const val FINANCIAL_CUSTOMERS_DEBITS_ROUTE = "financial_customers_debit_route"
-    const val FINANCIAL_STOCK_DEBITS_ROUTE = "financial_stock_debits_route"
-    const val FINANCIAL_SALE_ITEM_ROUTE = "financial_sale_item_route"
-    const val FINANCIAL_STOCK_ITEM_ROUTE = "financial_stock_item_route"
+sealed interface FinancialRoutes {
+    @Serializable
+    object Main
+
+    @Serializable
+    object Info
+
+    @Serializable
+    object CanceledSales
+
+    @Serializable
+    object CustomersDebits
+
+    @Serializable
+    object StockDebits
+
+    @Serializable
+    data class SaleItem(val saleId: Long, val productId: Long)
+
+    @Serializable
+    data class StockItem(val id: Long)
 }

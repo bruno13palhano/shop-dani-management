@@ -6,13 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import kotlinx.serialization.Serializable
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: String = MainDestinations.HOME_ROUTE,
     showBottomMenu: (show: Boolean) -> Unit = {},
     gesturesEnabled: (enabled: Boolean) -> Unit = {},
     onIconMenuClick: () -> Unit,
@@ -20,7 +20,7 @@ fun MainNavGraph(
     SharedTransitionLayout {
         NavHost(
             navController = navController,
-            startDestination = startDestination,
+            startDestination = MainRoutes.Home,
             modifier = modifier
         ) {
             homeNavGraph(
@@ -69,12 +69,26 @@ fun MainNavGraph(
     }
 }
 
-object MainDestinations {
-    const val HOME_ROUTE = "home_route"
-    const val LOGIN_ROUTE = "login_route"
-    const val USER_ROUTE = "user_route"
-    const val INSIGHTS_ROUTE = "insights_route"
-    const val FINANCIAL_ROUTE = "financial_route"
-    const val PRODUCTS_ROUTE = "products_route"
-    const val CUSTOMERS_ROUTE = "customers_route"
+sealed interface MainRoutes {
+
+    @Serializable
+    object Home
+
+    @Serializable
+    object Login
+
+    @Serializable
+    object Financial
+
+    @Serializable
+    object Insights
+
+    @Serializable
+    object Products
+
+    @Serializable
+    object Customers
+
+    @Serializable
+    object User
 }

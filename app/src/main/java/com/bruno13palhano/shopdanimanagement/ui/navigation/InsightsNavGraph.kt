@@ -10,6 +10,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.insights.InsightsRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.LastSalesRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.SalesByCompanyRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.insights.StockOrdersSalesRoute
+import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.insightsNavGraph(
     navController: NavController,
@@ -17,11 +18,8 @@ fun NavGraphBuilder.insightsNavGraph(
     gesturesEnabled: (enabled: Boolean) -> Unit,
     onIconMenuClick: () -> Unit
 ) {
-    navigation(
-        startDestination = InsightsDestinations.INSIGHTS_MAIN_ROUTE,
-        route = MainDestinations.INSIGHTS_ROUTE
-    ) {
-        composable(route = InsightsDestinations.INSIGHTS_MAIN_ROUTE) {
+    navigation<MainRoutes.Insights>(startDestination = InsightsRoutes.Main) {
+        composable<InsightsRoutes.Main> {
             InsightsRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
@@ -30,7 +28,7 @@ fun NavGraphBuilder.insightsNavGraph(
                 },
                 onIconMenuClick = onIconMenuClick,
                 goHome = {
-                    navController.navigate(route = HomeDestinations.HOME_MAIN_ROUTE) {
+                    navController.navigate(route = HomeRoutes.Main) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
@@ -40,28 +38,32 @@ fun NavGraphBuilder.insightsNavGraph(
                 }
             )
         }
-        composable(route = InsightsDestinations.INSIGHTS_CHARTS_ROUTE) {
+
+        composable<InsightsRoutes.Charts> {
             ChartsRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = InsightsDestinations.INSIGHTS_LAST_SALES_ROUTE) {
+
+        composable<InsightsRoutes.LastSales> {
             LastSalesRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = InsightsDestinations.INSIGHTS_STOCK_ORDERS_ROUTE) {
+
+        composable<InsightsRoutes.StockOrdersSales> {
             StockOrdersSalesRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = InsightsDestinations.INSIGHTS_COMPANY_SALES_ROUTE) {
+
+        composable<InsightsRoutes.CompanySales> {
             SalesByCompanyRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
@@ -71,10 +73,19 @@ fun NavGraphBuilder.insightsNavGraph(
     }
 }
 
-object InsightsDestinations {
-    const val INSIGHTS_MAIN_ROUTE = "insights_main_route"
-    const val INSIGHTS_CHARTS_ROUTE = "insights_charts_route"
-    const val INSIGHTS_LAST_SALES_ROUTE = "insights_last_sales_route"
-    const val INSIGHTS_STOCK_ORDERS_ROUTE = "insights_stock_orders_route"
-    const val INSIGHTS_COMPANY_SALES_ROUTE = "insights_company_sales_route"
+sealed interface InsightsRoutes {
+    @Serializable
+    object Main
+
+    @Serializable
+    object Charts
+
+    @Serializable
+    object LastSales
+
+    @Serializable
+    object StockOrdersSales
+
+    @Serializable
+    object CompanySales
 }

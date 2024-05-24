@@ -4,15 +4,13 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
-import com.bruno13palhano.shopdanimanagement.ui.navigation.PRODUCT_ID
-import com.bruno13palhano.shopdanimanagement.ui.navigation.SALE_ID
+import androidx.navigation.toRoute
+import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeRoutes
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.EditSaleRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.sales.OrdersRoute
+import kotlinx.serialization.Serializable
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.ordersNavGraph(
@@ -21,11 +19,8 @@ fun NavGraphBuilder.ordersNavGraph(
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
-    navigation(
-        startDestination = OrdersDestinations.ORDERS_MAIN_ROUTE,
-        route = HomeDestinations.HOME_ORDERS_ROUTE
-    ) {
-        composable(route = OrdersDestinations.ORDERS_MAIN_ROUTE) {
+    navigation<HomeRoutes.Orders>(startDestination = OrdersRoutes.Main) {
+        composable<OrdersRoutes.Main> {
             OrdersRoute(
                 sharedTransitionScope = sharedTransitionScope,
                 animatedContentScope = this@composable,
@@ -33,38 +28,33 @@ fun NavGraphBuilder.ordersNavGraph(
                 gesturesEnabled = gesturesEnabled,
                 onItemClick = { orderId, productId ->
                     navController.navigate(
-                        route = "${OrdersDestinations.ORDERS_EDIT_ITEM_ROUTE}/$orderId/$productId"
+                        route = OrdersRoutes.EditItem(saleId = orderId, productId = productId)
                     )
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(
-            route = "${OrdersDestinations.ORDERS_EDIT_ITEM_ROUTE}/{$SALE_ID}/{$PRODUCT_ID}",
-            arguments = listOf(
-                navArgument(SALE_ID) { type = NavType.LongType },
-                navArgument(PRODUCT_ID) { type = NavType.LongType }
-            )
-        ) { backStackEntry ->
-            val saleId = backStackEntry.arguments?.getLong(SALE_ID)
-            val productId = backStackEntry.arguments?.getLong(PRODUCT_ID)
+        composable<OrdersRoutes.EditItem> { backStackEntry ->
+            val saleId = backStackEntry.toRoute<OrdersRoutes.EditItem>().saleId
+            val productId = backStackEntry.toRoute<OrdersRoutes.EditItem>().productId
 
-            if (saleId != null && productId != null) {
-                EditSaleRoute(
-                    showBottomMenu = showBottomMenu,
-                    gesturesEnabled = gesturesEnabled,
-                    saleId = saleId,
-                    productId = productId,
-                    sharedTransitionScope = sharedTransitionScope,
-                    animatedContentScope = this@composable,
-                    navigateUp = { navController.navigateUp() }
-                )
-            }
+            EditSaleRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
+                saleId = saleId,
+                productId = productId,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = this@composable,
+                navigateUp = { navController.navigateUp() }
+            )
         }
     }
 }
 
-object OrdersDestinations {
-    const val ORDERS_MAIN_ROUTE = "orders_main_route"
-    const val ORDERS_EDIT_ITEM_ROUTE = "orders_edit_item_route"
+sealed interface OrdersRoutes {
+    @Serializable
+    object Main
+
+    @Serializable
+    data class EditItem(val saleId: Long, val productId: Long)
 }

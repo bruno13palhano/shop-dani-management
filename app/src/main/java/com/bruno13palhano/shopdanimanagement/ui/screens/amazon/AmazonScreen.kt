@@ -46,7 +46,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.dateFormat
 fun AmazonRoute(
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
-    onItemClick: (saleId: Long) -> Unit,
+    onItemClick: (saleId: Long, productId: Long) -> Unit,
     onSearchClick: () -> Unit,
     navigateUp: () -> Unit
 ) {
@@ -61,7 +61,7 @@ fun AmazonRoute(
 
 @Composable
 fun AmazonScreen(
-    onItemClick: (saleId: Long) -> Unit,
+    onItemClick: (saleId: Long, productId: Long) -> Unit,
     onSearchClick: () -> Unit,
     navigateUp: () -> Unit,
     viewModel: AmazonViewModel = hiltViewModel()
@@ -79,8 +79,8 @@ fun AmazonScreen(
         sheetName = viewModel.sheetName,
         showSpreadsheetDialog = showSpreadsheetDialog,
         onSheetNameChange = viewModel::updateSheetName,
-        onItemClick = { saleId ->
-            onItemClick(saleId)
+        onItemClick = { saleId, productId ->
+            onItemClick(saleId, productId)
         },
         onSearchClick = onSearchClick,
         onMoreOptionsItemClick = { index ->
@@ -103,7 +103,7 @@ fun AmazonContent(
     sheetName: String,
     showSpreadsheetDialog: Boolean,
     onSheetNameChange: (sheetName: String) -> Unit,
-    onItemClick: (saleId: Long) -> Unit,
+    onItemClick: (saleId: Long, productId: Long) -> Unit,
     onSearchClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
     onDialogOkClick: () -> Unit,
@@ -175,7 +175,7 @@ fun AmazonContent(
                     ),
                     photo = item.productPhoto,
                     onClick = {
-                        onItemClick(item.saleId)
+                        onItemClick(item.saleId, item.productId)
                     }
                 )
             }

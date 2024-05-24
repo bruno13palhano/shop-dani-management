@@ -6,37 +6,36 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.login.CreateAccountRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginRoute
+import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.loginNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
-    navigation(
-        startDestination = LoginDestinations.LOGIN_MAIN_ROUTE,
-        route = MainDestinations.LOGIN_ROUTE
-    ) {
-        composable(route = LoginDestinations.LOGIN_MAIN_ROUTE) {
+    navigation<MainRoutes.Login>(startDestination = LoginRoutes.Main) {
+        composable<LoginRoutes.Main> {
             LoginRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 onSuccess = {
-                    navController.navigate(route = MainDestinations.HOME_ROUTE) {
+                    navController.navigate(route = HomeRoutes.Main) {
                         popUpTo(0)
                         launchSingleTop = true
                     }
                 },
                 onCreateAccountClick = {
-                    navController.navigate(route = LoginDestinations.LOGIN_CREATE_ACCOUNT_ROUTE)
+                    navController.navigate(route = LoginRoutes.CreateAccount)
                 }
             )
         }
-        composable(route = LoginDestinations.LOGIN_CREATE_ACCOUNT_ROUTE) {
+
+        composable<LoginRoutes.CreateAccount> {
             CreateAccountRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 onSuccess = {
-                    navController.navigate(route = HomeDestinations.HOME_MAIN_ROUTE) {
+                    navController.navigate(route = HomeRoutes.Main) {
                         popUpTo(0)
                         launchSingleTop = true
                     }
@@ -47,7 +46,10 @@ fun NavGraphBuilder.loginNavGraph(
     }
 }
 
-object LoginDestinations {
-    const val LOGIN_MAIN_ROUTE = "login_main_route"
-    const val LOGIN_CREATE_ACCOUNT_ROUTE = "login_create_account_route"
+sealed interface LoginRoutes {
+    @Serializable
+    object Main
+
+    @Serializable
+    object CreateAccount
 }

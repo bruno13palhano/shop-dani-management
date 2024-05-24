@@ -2,53 +2,48 @@ package com.bruno13palhano.shopdanimanagement.ui.navigation.home
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import androidx.navigation.navArgument
-import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
-import com.bruno13palhano.shopdanimanagement.ui.navigation.ITEM_ID
+import androidx.navigation.toRoute
+import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeRoutes
 import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.CatalogRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.catalog.EditCatalogItemRoute
+import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.catalogNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
-    navigation(
-        startDestination = CatalogDestination.CATALOG_MAIN_ROUTE,
-        route = HomeDestinations.HOME_CATALOG_ROUTE
-    ) {
-        composable(route = CatalogDestination.CATALOG_MAIN_ROUTE) {
+    navigation<HomeRoutes.Catalog>(startDestination = CatalogRoutes.Main) {
+        composable<CatalogRoutes.Main> {
             CatalogRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 onItemClick = { id ->
-                    navController.navigate(
-                        route = "${CatalogDestination.CATALOG_ITEM_ROUTE}/$id"
-                    )
+                    navController.navigate(route = CatalogRoutes.Item(id))
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(
-            route = "${CatalogDestination.CATALOG_ITEM_ROUTE}/{$ITEM_ID}",
-            arguments = listOf(navArgument(ITEM_ID) { type = NavType.LongType })
-        ) { backStackEntry ->
-            backStackEntry.arguments?.getLong(ITEM_ID)?.let { catalogId ->
-                EditCatalogItemRoute(
-                    showBottomMenu = showBottomMenu,
-                    gesturesEnabled = gesturesEnabled,
-                    catalogId = catalogId,
-                    navigateUp = { navController.navigateUp() }
-                )
-            }
+
+        composable<CatalogRoutes.Item> { backStackEntry ->
+            val catalogId = backStackEntry.toRoute<CatalogRoutes.Item>().id
+
+            EditCatalogItemRoute(
+                showBottomMenu = showBottomMenu,
+                gesturesEnabled = gesturesEnabled,
+                catalogId = catalogId,
+                navigateUp = { navController.navigateUp() }
+            )
         }
     }
 }
 
-object CatalogDestination {
-    const val CATALOG_MAIN_ROUTE = "catalog_main_route"
-    const val CATALOG_ITEM_ROUTE = "catalog_item_route"
+sealed interface CatalogRoutes {
+    @Serializable
+    object Main
+
+    @Serializable
+    data class Item(val id: Long)
 }

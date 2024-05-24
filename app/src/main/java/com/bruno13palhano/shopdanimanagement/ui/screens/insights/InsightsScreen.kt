@@ -10,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Factory
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PointOfSale
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,13 +27,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.SimpleItemList
-import com.bruno13palhano.shopdanimanagement.ui.navigation.InsightsDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.InsightsRoutes
 
 @Composable
 fun InsightsRoute(
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
-    onItemClick: (route: String) -> Unit,
+    onItemClick: (route: Any) -> Unit,
     onIconMenuClick: () -> Unit,
     goHome: () -> Unit
 ) {
@@ -49,7 +48,7 @@ fun InsightsRoute(
 
 @Composable
 fun InsightsScreen(
-    onItemClick: (route: String) -> Unit,
+    onItemClick: (route: Any) -> Unit,
     onIconMenuClick: () -> Unit,
     goHome: () -> Unit
 ) {
@@ -63,7 +62,7 @@ fun InsightsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsightsContent(
-    onItemClick: (route: String) -> Unit,
+    onItemClick: (route: Any) -> Unit,
     onIconMenuClick: () -> Unit,
     goHome: () -> Unit
 ) {
@@ -108,25 +107,29 @@ fun InsightsContent(
     }
 }
 
-sealed class InsightsInnerScreen(
-    val route: String,
+sealed class InsightsInnerScreen<T: Any>(
+    val route: T,
     val icon: ImageVector,
     @StringRes val resourceId: Int
 ) {
-    object Charts: InsightsInnerScreen(
-        InsightsDestinations.INSIGHTS_CHARTS_ROUTE,
-        Icons.Filled.BarChart, R.string.charts_label
+    data object Charts: InsightsInnerScreen<InsightsRoutes.Charts>(
+        route = InsightsRoutes.Charts,
+        icon = Icons.Filled.BarChart,
+        resourceId = R.string.charts_label
     )
-    object LastSales: InsightsInnerScreen(
-        InsightsDestinations.INSIGHTS_LAST_SALES_ROUTE,
-        Icons.Filled.PointOfSale, R.string.last_sales_label
+    data object LastSales: InsightsInnerScreen<InsightsRoutes.LastSales>(
+        route = InsightsRoutes.LastSales,
+        icon = Icons.Filled.PointOfSale,
+        resourceId = R.string.last_sales_label
     )
-    object StockOrdersSales: InsightsInnerScreen(
-        InsightsDestinations.INSIGHTS_STOCK_ORDERS_ROUTE,
-        Icons.AutoMirrored.Filled.List, R.string.stock_vs_orders_label
+    data object StockOrdersSales: InsightsInnerScreen<InsightsRoutes.StockOrdersSales>(
+        route = InsightsRoutes.StockOrdersSales,
+        icon = Icons.AutoMirrored.Filled.List,
+        resourceId = R.string.stock_vs_orders_label
     )
-    object CompanySales: InsightsInnerScreen(
-        InsightsDestinations.INSIGHTS_COMPANY_SALES_ROUTE,
-        Icons.Filled.Factory, R.string.company_sales_label
+    data object CompanySales: InsightsInnerScreen<InsightsRoutes.CompanySales>(
+        route = InsightsRoutes.CompanySales,
+        icon = Icons.Filled.Factory,
+        resourceId = R.string.company_sales_label
     )
 }

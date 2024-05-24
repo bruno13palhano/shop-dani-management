@@ -6,32 +6,31 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.ChangePasswordRoute
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.UserRoute
+import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.userNavGraph(
     navController: NavController,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit
 ) {
-    navigation(
-        startDestination = UserDestinations.USER_MAIN_ROUTE,
-        route = MainDestinations.USER_ROUTE
-    ) {
-        composable(route = UserDestinations.USER_MAIN_ROUTE) {
+    navigation<MainRoutes.User>(startDestination = UserRoutes.Main) {
+        composable<UserRoutes.Main> {
             UserRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 onLogoutClick = {
-                    navController.navigate(route = MainDestinations.LOGIN_ROUTE) {
+                    navController.navigate(route = MainRoutes.Login) {
                         popUpTo(0)
                     }
                 },
                 onChangePasswordClick = {
-                    navController.navigate(route = UserDestinations.USER_CHANGE_PASSWORD_ROUTE)
+                    navController.navigate(route = UserRoutes.ChangePassword)
                 },
                 navigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = UserDestinations.USER_CHANGE_PASSWORD_ROUTE) {
+
+        composable<UserRoutes.ChangePassword> {
             ChangePasswordRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
@@ -41,7 +40,10 @@ fun NavGraphBuilder.userNavGraph(
     }
 }
 
-object UserDestinations {
-    const val USER_MAIN_ROUTE = "user_main_route"
-    const val USER_CHANGE_PASSWORD_ROUTE = "user_change_password_route"
+sealed interface UserRoutes {
+    @Serializable
+    object Main
+
+    @Serializable
+    object ChangePassword
 }
