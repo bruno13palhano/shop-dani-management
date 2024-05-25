@@ -6,6 +6,7 @@ import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.di.SaleRep
 import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.login.LoginState
 import com.bruno13palhano.shopdanimanagement.ui.screens.setQuantity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -95,7 +96,9 @@ class HomeViewModel @Inject constructor(
             it.map { sale -> setQuantity(days, sale.dateOfSale, sale.quantity) }
             setChartEntries(chart, days)
 
-            chart
+            chart.mapIndexed { index, (date, y) ->
+                DateChartEntry(date, index.toFloat(), y)
+            }
         }
         .stateIn(
             scope = viewModelScope,

@@ -118,11 +118,7 @@ fun HomeScreen(
     var showContent by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = lastSalesEntry) {
-        chart.setEntries(
-            lastSalesEntry.mapIndexed { index, (date, y) ->
-                DateChartEntry(date, index.toFloat(), y)
-            }
-        )
+        chart.setEntries(lastSalesEntry)
     }
 
     AnimatedVisibility(
