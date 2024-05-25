@@ -1,6 +1,7 @@
 package com.bruno13palhano.core.network.di
 
 import android.content.Context
+import com.bruno13palhano.core.BuildConfig
 import com.bruno13palhano.core.network.AuthenticatorInterceptor
 import com.bruno13palhano.core.network.Service
 import com.bruno13palhano.core.network.SessionManager
@@ -25,7 +26,7 @@ annotation class DefaultSessionManager
 @Qualifier
 annotation class DefaultAuthenticationInterceptor
 
-private const val BASE_URL = "http://10.0.0.111:8080/v1/"
+private const val BASE_URL = BuildConfig.apiUrl
 
 @Module
 @InstallIn(SingletonComponent::class)
