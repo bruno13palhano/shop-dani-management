@@ -18,8 +18,8 @@ class DependenciesApplication : Application(), Configuration.Provider {
     @UserRep
     lateinit var userRepository: UserRepository
 
-    override fun getWorkManagerConfiguration() =
-        Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
 
