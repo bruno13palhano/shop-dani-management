@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,14 +31,10 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -48,14 +43,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainRoutes
@@ -78,7 +72,6 @@ fun DrawerMenu(
     val orientation = LocalConfiguration.current.orientation
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    var selectedItem by remember { mutableStateOf(items[0]) }
     val scope = rememberCoroutineScope()
 
     ModalNavigationDrawer(
@@ -105,18 +98,15 @@ fun DrawerMenu(
                         )
                         HorizontalDivider()
                     }
-                    items(
-                        items = items
-                    ) { screen ->
+                    items(items = items) { screen ->
+                        val selected = currentDestination?.selectedRoute(screen = screen)
+
                         NavigationDrawerItem(
                             shape = RoundedCornerShape(0, 50, 50, 0),
                             icon = { Icon(imageVector = screen.icon, contentDescription = null) },
                             label = { Text(text = stringResource(id = screen.resourceId)) },
-                            selected = currentDestination?.hierarchy?.any { destination ->
-                                destination.route == screen.route
-                            } == true,
+                            selected = selected == true,
                             onClick = {
-                                selectedItem = screen
                                 navController.navigate(screen.route) {
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
@@ -141,16 +131,6 @@ fun DrawerMenu(
 }
 
 @Composable
-@Preview(showBackground = true)
-private fun DrawerPreview() {
-    DrawerMenu(
-        navController = rememberNavController(),
-        drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
-        content = {}
-    )
-}
-
-@Composable
 fun BottomMenu(navController: NavController) {
     val items = listOf(
         Screen.Home,
@@ -163,10 +143,12 @@ fun BottomMenu(navController: NavController) {
 
     NavigationBar {
         items.forEach { screen ->
+            val selected = currentDestination?.selectedRoute(screen = screen)
+
             NavigationBarItem(
                 icon = { Icon(imageVector = screen.icon, contentDescription = null) },
                 label = { Text(text = stringResource(id = screen.resourceId)) },
-                selected = currentDestination?.hierarchy?.any{ it.route == screen.route } == true,
+                selected = selected == true,
                 onClick = {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -178,6 +160,15 @@ fun BottomMenu(navController: NavController) {
                 }
             )
         }
+    }
+}
+
+//workaround to get the current selected route
+fun <T: Any> NavDestination.selectedRoute(screen: Screen<T>): Boolean {
+    return hierarchy.any {
+        it.route?.split(".")?.lastOrNull() ==
+                screen.route.toString().split("$").lastOrNull()?.split("@")
+                    ?.firstOrNull()
     }
 }
 
