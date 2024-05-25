@@ -70,25 +70,24 @@ fun MainNavGraph(
 }
 
 sealed interface MainRoutes {
+    @Serializable
+    data object Home: MainRoutes
 
     @Serializable
-    object Home
+    data object Login: MainRoutes
 
     @Serializable
-    object Login
+    data object Financial: MainRoutes
 
     @Serializable
-    object Financial
+    data object Insights: MainRoutes
 
     @Serializable
-    object Insights
+    data object Products: MainRoutes
 
     @Serializable
-    object Products
+    data object Customers: MainRoutes
 
     @Serializable
-    object Customers
-
-    @Serializable
-    object User
+    data object User: MainRoutes
 }

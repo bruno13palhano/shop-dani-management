@@ -122,23 +122,23 @@ fun NavGraphBuilder.financialNavGraph(
 
 sealed interface FinancialRoutes {
     @Serializable
-    object Main
+    data object Main: FinancialRoutes
 
     @Serializable
-    object Info
+    data object Info: FinancialRoutes
 
     @Serializable
-    object CanceledSales
+    data object CanceledSales: FinancialRoutes
 
     @Serializable
-    object CustomersDebits
+    data object CustomersDebits: FinancialRoutes
 
     @Serializable
-    object StockDebits
+    data object StockDebits: FinancialRoutes
 
     @Serializable
-    data class SaleItem(val saleId: Long, val productId: Long)
+    data class SaleItem(val saleId: Long, val productId: Long): FinancialRoutes
 
     @Serializable
-    data class StockItem(val id: Long)
+    data class StockItem(val id: Long): FinancialRoutes
 }

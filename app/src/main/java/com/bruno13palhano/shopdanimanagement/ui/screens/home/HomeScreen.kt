@@ -80,7 +80,7 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 fun HomeRoute(
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
-    onOptionsItemClick: (route: Any) -> Unit,
+    onOptionsItemClick: (route: HomeRoutes) -> Unit,
     onSalesItemClick: (id: Long) -> Unit,
     onMenuClick: () -> Unit,
     onUnauthenticated: () -> Unit
@@ -97,7 +97,7 @@ fun HomeRoute(
 
 @Composable
 fun HomeScreen(
-    onOptionsItemClick: (route: Any) -> Unit,
+    onOptionsItemClick: (route: HomeRoutes) -> Unit,
     onSalesItemClick: (id: Long) -> Unit,
     onMenuClick: () -> Unit,
     onUnauthenticated: () -> Unit,
@@ -164,7 +164,7 @@ fun HomeContent(
     homeInfo: HomeViewModel.HomeInfo,
     lastSalesEntry: ChartEntryModelProducer,
     showProfit: Boolean,
-    onOptionsItemClick: (route: Any) -> Unit,
+    onOptionsItemClick: (route: HomeRoutes) -> Unit,
     onSalesItemClick: (id: Long) -> Unit,
     onShowProfitChange: (show: Boolean) -> Unit,
     onMenuClick: () -> Unit,
@@ -400,37 +400,37 @@ fun HomeContent(
     }
 }
 
-sealed class HomeInnerScreen<T: Any>(
+sealed class HomeInnerScreen<T: HomeRoutes>(
     val route: T,
     val icon: ImageVector,
     @StringRes val resourceId: Int
 ) {
-    data object Stock: HomeInnerScreen<HomeRoutes.Stock>(
+    data object Stock: HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Stock,
         icon = Icons.AutoMirrored.Filled.List,
         resourceId = R.string.stock_label
     )
-    data object Sales: HomeInnerScreen<HomeRoutes.Sales>(
+    data object Sales: HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Sales,
         icon = Icons.Filled.PointOfSale,
         resourceId = R.string.sales_label
     )
-    data object Orders: HomeInnerScreen<HomeRoutes.Orders>(
+    data object Orders: HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Orders,
         icon = Icons.Filled.Checklist,
         resourceId = R.string.orders_label
     )
-    data object Amazon: HomeInnerScreen<HomeRoutes.Amazon>(
+    data object Amazon: HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Amazon,
         icon = Icons.Filled.ShoppingBag,
         resourceId = R.string.amazon_label
     )
-    data object Deliveries: HomeInnerScreen<HomeRoutes.Deliveries>(
+    data object Deliveries: HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Deliveries,
         icon = Icons.Filled.LocalShipping,
         resourceId = R.string.deliveries_label
     )
-    data object Catalog: HomeInnerScreen<HomeRoutes.Catalog>(
+    data object Catalog: HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Catalog,
         icon = Icons.AutoMirrored.Filled.ListAlt,
         resourceId = R.string.catalog_label

@@ -164,7 +164,7 @@ fun BottomMenu(navController: NavController) {
 }
 
 //workaround to get the current selected route
-fun <T: Any> NavDestination.selectedRoute(screen: Screen<T>): Boolean {
+fun NavDestination.selectedRoute(screen: Screen<MainRoutes>): Boolean {
     return hierarchy.any {
         it.route?.split(".")?.lastOrNull() ==
                 screen.route.toString().split("$").lastOrNull()?.split("@")
@@ -172,33 +172,37 @@ fun <T: Any> NavDestination.selectedRoute(screen: Screen<T>): Boolean {
     }
 }
 
-sealed class Screen<T: Any>(val route: T, val icon: ImageVector, @StringRes val resourceId: Int) {
-    data object Home: Screen<MainRoutes.Home>(
+sealed class Screen<T: MainRoutes>(
+    val route: T,
+    val icon: ImageVector,
+    @StringRes val resourceId: Int
+) {
+    data object Home: Screen<MainRoutes>(
         route = MainRoutes.Home,
         icon = Icons.Filled.Home,
         resourceId = R.string.home_label
     )
-    data object Financial: Screen<MainRoutes.Financial>(
+    data object Financial: Screen<MainRoutes>(
         route = MainRoutes.Financial,
         icon = Icons.Filled.Money,
         resourceId = R.string.financial_label
     )
-    data object Insights: Screen<MainRoutes.Insights>(
+    data object Insights: Screen<MainRoutes>(
         route = MainRoutes.Insights,
         icon = Icons.Filled.Insights,
         resourceId = R.string.insights_label
     )
-    data object Products: Screen<MainRoutes.Products>(
+    data object Products: Screen<MainRoutes>(
         route = MainRoutes.Products,
         icon = Icons.AutoMirrored.Filled.PlaylistAdd,
         resourceId = R.string.products_label
     )
-    data object Customers: Screen<MainRoutes.Customers>(
+    data object Customers: Screen<MainRoutes>(
         route = MainRoutes.Customers,
         icon = Icons.Filled.Person,
         resourceId = R.string.customers_label
     )
-    data object User: Screen<MainRoutes.User>(
+    data object User: Screen<MainRoutes>(
         route = MainRoutes.User,
         icon = Icons.Filled.AccountCircle,
         resourceId = R.string.account_label

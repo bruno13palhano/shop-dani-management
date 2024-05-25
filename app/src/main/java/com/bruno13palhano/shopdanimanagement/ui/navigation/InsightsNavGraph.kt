@@ -75,17 +75,17 @@ fun NavGraphBuilder.insightsNavGraph(
 
 sealed interface InsightsRoutes {
     @Serializable
-    object Main
+    data object Main: InsightsRoutes
 
     @Serializable
-    object Charts
+    data object Charts: InsightsRoutes
 
     @Serializable
-    object LastSales
+    data object LastSales: InsightsRoutes
 
     @Serializable
-    object StockOrdersSales
+    data object StockOrdersSales: InsightsRoutes
 
     @Serializable
-    object CompanySales
+    data object CompanySales: InsightsRoutes
 }

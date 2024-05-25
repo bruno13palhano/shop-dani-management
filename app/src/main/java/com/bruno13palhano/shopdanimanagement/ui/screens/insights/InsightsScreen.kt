@@ -33,7 +33,7 @@ import com.bruno13palhano.shopdanimanagement.ui.navigation.InsightsRoutes
 fun InsightsRoute(
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
-    onItemClick: (route: Any) -> Unit,
+    onItemClick: (route: InsightsRoutes) -> Unit,
     onIconMenuClick: () -> Unit,
     goHome: () -> Unit
 ) {
@@ -48,7 +48,7 @@ fun InsightsRoute(
 
 @Composable
 fun InsightsScreen(
-    onItemClick: (route: Any) -> Unit,
+    onItemClick: (route: InsightsRoutes) -> Unit,
     onIconMenuClick: () -> Unit,
     goHome: () -> Unit
 ) {
@@ -62,7 +62,7 @@ fun InsightsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsightsContent(
-    onItemClick: (route: Any) -> Unit,
+    onItemClick: (route: InsightsRoutes) -> Unit,
     onIconMenuClick: () -> Unit,
     goHome: () -> Unit
 ) {
@@ -107,27 +107,27 @@ fun InsightsContent(
     }
 }
 
-sealed class InsightsInnerScreen<T: Any>(
+sealed class InsightsInnerScreen<T: InsightsRoutes>(
     val route: T,
     val icon: ImageVector,
     @StringRes val resourceId: Int
 ) {
-    data object Charts: InsightsInnerScreen<InsightsRoutes.Charts>(
+    data object Charts: InsightsInnerScreen<InsightsRoutes>(
         route = InsightsRoutes.Charts,
         icon = Icons.Filled.BarChart,
         resourceId = R.string.charts_label
     )
-    data object LastSales: InsightsInnerScreen<InsightsRoutes.LastSales>(
+    data object LastSales: InsightsInnerScreen<InsightsRoutes>(
         route = InsightsRoutes.LastSales,
         icon = Icons.Filled.PointOfSale,
         resourceId = R.string.last_sales_label
     )
-    data object StockOrdersSales: InsightsInnerScreen<InsightsRoutes.StockOrdersSales>(
+    data object StockOrdersSales: InsightsInnerScreen<InsightsRoutes>(
         route = InsightsRoutes.StockOrdersSales,
         icon = Icons.AutoMirrored.Filled.List,
         resourceId = R.string.stock_vs_orders_label
     )
-    data object CompanySales: InsightsInnerScreen<InsightsRoutes.CompanySales>(
+    data object CompanySales: InsightsInnerScreen<InsightsRoutes>(
         route = InsightsRoutes.CompanySales,
         icon = Icons.Filled.Factory,
         resourceId = R.string.company_sales_label
