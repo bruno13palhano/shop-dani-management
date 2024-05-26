@@ -86,6 +86,28 @@ fun StockScreen(
     menuOptions.addAll(categories)
 
     AnimatedVisibility(
+        visible = showBarcodeReader,
+        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
+        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
+    ) {
+        showBottomMenu(false)
+
+        BarcodeReader(
+            onBarcodeClick = { code ->
+                if(code.isNotEmpty()) {
+                    viewModel.getItemsByCode(code = code)
+                    showBarcodeReader = false
+                    showContent = true
+                }
+            },
+            onClose = {
+                showBarcodeReader = false
+                showContent = true
+            }
+        )
+    }
+
+    AnimatedVisibility(
         visible = showContent,
         enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
         exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
@@ -115,27 +137,6 @@ fun StockScreen(
             },
             onAddButtonClick = onAddButtonClick,
             navigateUp = navigateUp
-        )
-    }
-
-    AnimatedVisibility(
-        visible = showBarcodeReader,
-        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)),
-        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow))
-    ) {
-        showBottomMenu(false)
-        BarcodeReader(
-            onBarcodeClick = { code ->
-                if(code.isNotEmpty()) {
-                    viewModel.getItemsByCode(code = code)
-                    showBarcodeReader = false
-                    showContent = true
-                }
-            },
-            onClose = {
-                showBarcodeReader = false
-                showContent = true
-            }
         )
     }
 }
