@@ -14,8 +14,11 @@ import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.mapAmazonSalesToSheet
 import com.bruno13palhano.core.data.repository.mapSalesToSheet
+import com.bruno13palhano.core.data.repository.saleNetToSale
+import com.bruno13palhano.core.data.repository.saleToSaleNet
 import com.bruno13palhano.core.data.repository.salesSheetHeaders
 import com.bruno13palhano.core.data.repository.version.VersionData
+import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.network.access.SaleNetwork
@@ -55,19 +58,21 @@ internal class DefaultSaleRepository @Inject constructor(
             pushed = true,
             onError = onError
         ) { saleId, quantity ->
-            val netModel = createSale(
-                sale = model,
-                saleId = saleId,
-                stockOrderId = model.stockId
+            val netModel = saleToSaleNet(
+                createSale(
+                    sale = model,
+                    saleId = saleId,
+                    stockOrderId = model.stockId
+                )
             )
 
             CoroutineScope(ioDispatcher).launch {
                 try {
                     saleNetwork.insert(data = netModel)
-                    versionNetwork.insert(data = saleVersion)
+                    versionNetwork.insert(data = versionToVersionNet(saleVersion))
                     if (!netModel.isOrderedByCustomer) {
                         stockNetwork.updateItemQuantity(id = netModel.stockId, quantity = quantity)
-                        versionNetwork.insert(data = stockVersion)
+                        versionNetwork.insert(data = versionToVersionNet(stockVersion))
                     }
                     onSuccess(netModel.id)
                 }
@@ -89,11 +94,11 @@ internal class DefaultSaleRepository @Inject constructor(
         saleData.update(model = model, version = saleVersion, onError = onError) { newItemQuantity ->
             CoroutineScope(ioDispatcher).launch {
                 try {
-                    saleNetwork.update(data = model)
-                    versionNetwork.update(saleVersion)
+                    saleNetwork.update(data = saleToSaleNet(model))
+                    versionNetwork.update(versionToVersionNet(saleVersion))
                     if (!model.isOrderedByCustomer) {
                         stockNetwork.updateItemQuantity(id = model.stockId, quantity = newItemQuantity)
-                        versionNetwork.update(stockVersion)
+                        versionNetwork.update(versionToVersionNet(stockVersion))
                     }
                     onSuccess()
                 }
@@ -180,7 +185,7 @@ internal class DefaultSaleRepository @Inject constructor(
             CoroutineScope(ioDispatcher).launch {
                 try {
                     saleNetwork.delete(id = id)
-                    versionNetwork.update(saleVersion)
+                    versionNetwork.update(versionToVersionNet(saleVersion))
                     onSuccess()
                 }
                 catch (e: Exception) { onError(Errors.DELETE_SERVER_ERROR) }
@@ -253,11 +258,11 @@ internal class DefaultSaleRepository @Inject constructor(
             dataVersion = getDataVersion(versionData, Versions.saleVersionId),
             networkVersion = getNetworkVersion(versionNetwork, Versions.saleVersionId),
             dataList = getDataList(saleData),
-            networkList = getNetworkList(saleNetwork),
+            networkList = getNetworkList(saleNetwork).map { saleNetToSale(it) },
             onPush = { deleteIds, saveList, dtVersion ->
                 deleteIds.forEach { saleNetwork.delete(it) }
-                saveList.forEach { saleNetwork.insert(it)}
-                versionNetwork.insert(dtVersion)
+                saveList.forEach { saleNetwork.insert(saleToSaleNet(it)) }
+                versionNetwork.insert(versionToVersionNet(dtVersion))
             },
             onPull = { deleteIds, saveList, netVersion ->
                 deleteIds.forEach { saleData.deleteById(it, netVersion, {}) {} }

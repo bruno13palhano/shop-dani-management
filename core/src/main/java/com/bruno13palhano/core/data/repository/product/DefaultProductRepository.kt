@@ -9,7 +9,10 @@ import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
+import com.bruno13palhano.core.data.repository.productNetToProduct
+import com.bruno13palhano.core.data.repository.productToProductNet
 import com.bruno13palhano.core.data.repository.version.VersionData
+import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.network.access.ProductNetwork
@@ -39,22 +42,24 @@ internal class DefaultProductRepository @Inject constructor(
         val productVersion = Versions.productVersion(timestamp = model.timestamp)
 
         val id = productData.insert(model = model, version = productVersion, onError = onError) {
-            val netModel = Product(
-                id = it,
-                name = model.name,
-                code = model.code,
-                description = model.description,
-                photo = model.photo,
-                date = model.date,
-                categories = model.categories,
-                company = model.company,
-                timestamp = model.timestamp
+            val netModel = productToProductNet(
+                Product(
+                    id = it,
+                    name = model.name,
+                    code = model.code,
+                    description = model.description,
+                    photo = model.photo,
+                    date = model.date,
+                    categories = model.categories,
+                    company = model.company,
+                    timestamp = model.timestamp
+                )
             )
 
             CoroutineScope(ioDispatcher).launch {
                 try {
                     productNetwork.insert(data = netModel)
-                    versionNetwork.insert(data = productVersion)
+                    versionNetwork.insert(data = versionToVersionNet(productVersion))
                     onSuccess(netModel.id)
                 }
                 catch (e: Exception) { onError(Errors.INSERT_SERVER_ERROR) }
@@ -74,8 +79,8 @@ internal class DefaultProductRepository @Inject constructor(
         productData.update(model = model, version = productVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
-                    productNetwork.insert(data = model)
-                    versionNetwork.insert(data = productVersion)
+                    productNetwork.insert(data = productToProductNet(model))
+                    versionNetwork.insert(data = versionToVersionNet(productVersion))
                     onSuccess()
                 }
                 catch (e: Exception) { onError(Errors.UPDATE_SERVER_ERROR) }
@@ -111,7 +116,7 @@ internal class DefaultProductRepository @Inject constructor(
             CoroutineScope(ioDispatcher).launch {
                 try {
                     productNetwork.delete(id = id)
-                    versionNetwork.update(data = productVersion)
+                    versionNetwork.update(data = versionToVersionNet(productVersion))
                     onSuccess()
                 }
                 catch (e: Exception) { onError(Errors.DELETE_SERVER_ERROR) }
@@ -136,11 +141,11 @@ internal class DefaultProductRepository @Inject constructor(
             dataVersion = getDataVersion(versionData, Versions.productVersionId),
             networkVersion = getNetworkVersion(versionNetwork, Versions.productVersionId),
             dataList = getDataList(productData),
-            networkList = getNetworkList(productNetwork),
+            networkList = getNetworkList(productNetwork).map { productNetToProduct(it) },
             onPush = { deleteIds, saveList, dtVersion ->
                 deleteIds.forEach { productNetwork.delete(it) }
-                saveList.forEach { productNetwork.insert(it) }
-                versionNetwork.insert(dtVersion)
+                saveList.forEach { productNetwork.insert(productToProductNet(it)) }
+                versionNetwork.insert(versionToVersionNet(dtVersion))
             },
             onPull = { deleteIds, saveList, netVersion ->
                 deleteIds.forEach { productData.deleteById(it, netVersion, {}) {} }

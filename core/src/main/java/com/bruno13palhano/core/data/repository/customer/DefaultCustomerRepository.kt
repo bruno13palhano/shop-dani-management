@@ -5,11 +5,14 @@ import com.bruno13palhano.core.data.di.InternalCustomerLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.Versions
+import com.bruno13palhano.core.data.repository.customerNetToCustomer
+import com.bruno13palhano.core.data.repository.customerToCustomerNet
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.version.VersionData
+import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.network.access.CustomerNetwork
@@ -39,23 +42,25 @@ internal class DefaultCustomerRepository @Inject constructor(
         val customerVersion = Versions.customerVersion(timestamp = model.timestamp)
 
         val id = customerData.insert(model = model, version = customerVersion, onError = onError) {
-            val netModel = Customer(
-                id = it,
-                name = model.name,
-                photo = model.photo,
-                email = model.email,
-                address = model.address,
-                city = model.city,
-                phoneNumber = model.phoneNumber,
-                gender = model.gender,
-                age = model.age,
-                timestamp = model.timestamp
+            val netModel = customerToCustomerNet(
+                Customer(
+                    id = it,
+                    name = model.name,
+                    photo = model.photo,
+                    email = model.email,
+                    address = model.address,
+                    city = model.city,
+                    phoneNumber = model.phoneNumber,
+                    gender = model.gender,
+                    age = model.age,
+                    timestamp = model.timestamp
+                )
             )
 
             CoroutineScope(ioDispatcher).launch {
                 try {
                     customerNetwork.insert(data = netModel)
-                    versionNetwork.insert(data = customerVersion)
+                    versionNetwork.insert(data = versionToVersionNet(customerVersion))
                     onSuccess(netModel.id)
                 }
                 catch (e: Exception) { onError(Errors.INSERT_SERVER_ERROR) }
@@ -75,8 +80,8 @@ internal class DefaultCustomerRepository @Inject constructor(
         customerData.update(model = model, version = customerVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
-                    customerNetwork.update(data = model)
-                    versionNetwork.update(data = customerVersion)
+                    customerNetwork.update(data = customerToCustomerNet(model))
+                    versionNetwork.update(data = versionToVersionNet(customerVersion))
                     onSuccess()
                 }
                 catch (e: Exception) { onError(Errors.UPDATE_SERVER_ERROR) }
@@ -96,7 +101,7 @@ internal class DefaultCustomerRepository @Inject constructor(
             CoroutineScope(ioDispatcher).launch {
                 try {
                     customerNetwork.delete(id = id)
-                    versionNetwork.update(data = customerVersion)
+                    versionNetwork.update(data = versionToVersionNet(customerVersion))
                     onSuccess()
                 }
                 catch (e: Exception) { onError(Errors.DELETE_SERVER_ERROR) }
@@ -133,11 +138,11 @@ internal class DefaultCustomerRepository @Inject constructor(
             dataVersion = getDataVersion(versionData, Versions.customerVersionId),
             networkVersion = getNetworkVersion(versionNetwork, Versions.customerVersionId),
             dataList = getDataList(customerData),
-            networkList = getNetworkList(customerNetwork),
+            networkList = getNetworkList(customerNetwork).map { customerNetToCustomer(it) },
             onPush = { deleteIds, saveList, dtVersion ->
                 deleteIds.forEach { customerNetwork.delete(it) }
-                saveList.forEach { customerNetwork.insert(it) }
-                versionNetwork.insert(dtVersion)
+                saveList.forEach { customerNetwork.insert(customerToCustomerNet(it)) }
+                versionNetwork.insert(versionToVersionNet(dtVersion))
             },
             onPull = { deleteIds, saveList, netVersion ->
                 deleteIds.forEach { customerData.deleteById(it, netVersion, {}) {} }

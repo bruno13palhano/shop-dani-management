@@ -5,11 +5,14 @@ import com.bruno13palhano.core.data.di.InternalCatalogLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.Versions
+import com.bruno13palhano.core.data.repository.catalogNetToCatalog
+import com.bruno13palhano.core.data.repository.catalogToCatalogNet
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.version.VersionData
+import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.core.network.access.CatalogNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
@@ -38,22 +41,24 @@ internal class DefaultCatalogRepository @Inject constructor(
         val catalogVersion = Versions.catalogVersion(timestamp = model.timestamp)
 
         val id = catalogData.insert(model = model, version = catalogVersion, onError = onError) {
-            val netModel = Catalog(
-                id = it,
-                productId = model.productId,
-                name = model.name,
-                photo = model.photo,
-                title = model.title,
-                description = model.description,
-                discount = model.discount,
-                price = model.price,
-                timestamp = model.timestamp
+            val netModel = catalogToCatalogNet(
+                Catalog(
+                    id = it,
+                    productId = model.productId,
+                    name = model.name,
+                    photo = model.photo,
+                    title = model.title,
+                    description = model.description,
+                    discount = model.discount,
+                    price = model.price,
+                    timestamp = model.timestamp
+                )
             )
 
             CoroutineScope(ioDispatcher).launch {
                 try {
                     catalogNetwork.insert(data = netModel)
-                    versionNetwork.insert(data = catalogVersion)
+                    versionNetwork.insert(data = versionToVersionNet(catalogVersion))
                     onSuccess(netModel.id)
                 }
                 catch (e: Exception) { onError(4) }
@@ -73,8 +78,8 @@ internal class DefaultCatalogRepository @Inject constructor(
         catalogData.update(model = model, version = catalogVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
-                    catalogNetwork.update(data = model)
-                    versionNetwork.update(data = catalogVersion)
+                    catalogNetwork.update(data = catalogToCatalogNet(model))
+                    versionNetwork.update(data = versionToVersionNet(catalogVersion))
                     onSuccess()
                 }
                 catch (e: Exception) { onError(5) }
@@ -94,7 +99,7 @@ internal class DefaultCatalogRepository @Inject constructor(
             CoroutineScope(ioDispatcher).launch {
                 try {
                     catalogNetwork.delete(id = id)
-                    versionNetwork.update(data = catalogVersion)
+                    versionNetwork.update(data = versionToVersionNet(catalogVersion))
                     onSuccess()
                 }
                 catch (e: Exception) { onError(6) }
@@ -127,11 +132,11 @@ internal class DefaultCatalogRepository @Inject constructor(
             dataVersion = getDataVersion(versionData, Versions.catalogVersionId),
             networkVersion = getNetworkVersion(versionNetwork, Versions.catalogVersionId),
             dataList = getDataList(catalogData),
-            networkList = getNetworkList(catalogNetwork),
+            networkList = getNetworkList(catalogNetwork).map { catalogNetToCatalog(it) },
             onPush = { deleteIds, saveList, dtVersion ->
                 deleteIds.forEach { catalogNetwork.delete(it) }
-                saveList.forEach { catalogNetwork.insert(it) }
-                versionNetwork.insert(dtVersion)
+                saveList.forEach { catalogNetwork.insert(catalogToCatalogNet(it)) }
+                versionNetwork.insert(versionToVersionNet(dtVersion))
             },
             onPull = { deleteIds, saveList, netVersion ->
                 deleteIds.forEach { catalogData.deleteById(it, netVersion, {}) {} }

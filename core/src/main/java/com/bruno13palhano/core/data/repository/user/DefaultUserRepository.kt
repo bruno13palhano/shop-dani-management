@@ -4,6 +4,8 @@ import android.content.Context
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalUserLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
+import com.bruno13palhano.core.data.repository.userNetToUser
+import com.bruno13palhano.core.data.repository.userToUserNet
 import com.bruno13palhano.core.model.User
 import com.bruno13palhano.core.model.UserCodeResponse
 import com.bruno13palhano.core.network.access.UserNetwork
@@ -11,7 +13,6 @@ import com.bruno13palhano.core.network.di.DefaultUserNet
 import com.bruno13palhano.core.network.SessionManager
 import com.bruno13palhano.core.network.di.DefaultSessionManager
 import com.bruno13palhano.core.network.model.UserNet
-import com.bruno13palhano.core.network.model.asExternal
 import com.bruno13palhano.core.sync.Sync
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -36,7 +37,7 @@ internal class DefaultUserRepository @Inject constructor(
     override suspend fun login(user: User, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         CoroutineScope(ioDispatcher).launch {
             try {
-                val response = userNetwork.login(user = user)
+                val response = userNetwork.login(user = userToUserNet(user))
                 response.headers()[CODE_RESPONSE]?.let { code ->
                     val responseCode = codeToInt(code = code)
                     if (responseCode == UserCodeResponse.OK) {
@@ -64,7 +65,7 @@ internal class DefaultUserRepository @Inject constructor(
     ) {
         CoroutineScope(ioDispatcher).launch {
             try {
-                val response = userNetwork.create(user = user)
+                val response = userNetwork.create(user = userToUserNet(user))
                 response.headers()[CODE_RESPONSE]?.let { code ->
                     val responseCode = codeToInt(code = code)
                     if (responseCode == UserCodeResponse.OK) {
@@ -82,7 +83,7 @@ internal class DefaultUserRepository @Inject constructor(
     override suspend fun update(user: User, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
         CoroutineScope(ioDispatcher).launch {
             try {
-                val response = userNetwork.update(user = user).headers()[CODE_RESPONSE]
+                val response = userNetwork.update(user = userToUserNet(user)).headers()[CODE_RESPONSE]
                 response?.let { code ->
                     val responseCode = codeToInt(code = code)
                     if (responseCode == UserCodeResponse.OK) {
@@ -166,7 +167,7 @@ internal class DefaultUserRepository @Inject constructor(
     ) {
         CoroutineScope(ioDispatcher).launch {
             try {
-                val response = userNetwork.updateUserPassword(user)
+                val response = userNetwork.updateUserPassword(userToUserNet(user))
                 response.headers()[CODE_RESPONSE]?.let { code ->
                     val responseCode = codeToInt(code = code)
                     if (responseCode == UserCodeResponse.OK) {
@@ -198,7 +199,7 @@ internal class DefaultUserRepository @Inject constructor(
         onError: (error: Int) -> Unit,
         onSuccess: (id: Long) -> Unit
     ) {
-        val newUser = response.body()?.asExternal()
+        val newUser = response.body()?.let { userNetToUser(it) }
         if (newUser != null) {
             userData.insert(user = newUser, onError = onError, onSuccess = onSuccess)
         }
@@ -212,7 +213,7 @@ internal class DefaultUserRepository @Inject constructor(
         val newUser = userNetwork.getByUsername(username = username)
         sessionManager.saveCurrentUserId(id = newUser.id)
         userData.insert(
-            user = newUser,
+            user = userNetToUser(newUser),
             onError = onError,
             onSuccess = onSuccess
         )

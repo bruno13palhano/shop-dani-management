@@ -5,11 +5,14 @@ import com.bruno13palhano.core.data.di.InternalCategoryLight
 import com.bruno13palhano.core.data.di.InternalVersionLight
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.Versions
+import com.bruno13palhano.core.data.repository.categoryNetToCategory
+import com.bruno13palhano.core.data.repository.categoryToCategoryNet
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.version.VersionData
+import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.network.access.CategoryNetwork
@@ -47,7 +50,7 @@ internal class DefaultCategoryRepository @Inject constructor(
             CoroutineScope(ioDispatcher).launch {
                 try {
                     categoryNetwork.delete(id = id)
-                    versionNetwork.update(data = categoryVersion)
+                    versionNetwork.update(data = versionToVersionNet(categoryVersion))
                     onSuccess()
                 } catch (e: Exception) { onError(Errors.DELETE_SERVER_ERROR) }
             }
@@ -71,11 +74,11 @@ internal class DefaultCategoryRepository @Inject constructor(
             dataVersion = getDataVersion(versionData, Versions.categoryVersionId),
             networkVersion = getNetworkVersion(versionNetwork, Versions.categoryVersionId),
             dataList = getDataList(categoryData),
-            networkList = getNetworkList(categoryNetwork),
+            networkList = getNetworkList(categoryNetwork).map { categoryNetToCategory(it) },
             onPush = { deleteIds, saveList, dtVersion ->
                 deleteIds.forEach { categoryNetwork.delete(it) }
-                saveList.forEach { categoryNetwork.insert(it) }
-                versionNetwork.insert(dtVersion)
+                saveList.forEach { categoryNetwork.insert(categoryToCategoryNet(it)) }
+                versionNetwork.insert(versionToVersionNet(dtVersion))
             },
             onPull = { deleteIds, saveList, netVersion ->
                 deleteIds.forEach { categoryData.deleteById(it, netVersion, {}) {} }
@@ -94,8 +97,8 @@ internal class DefaultCategoryRepository @Inject constructor(
         categoryData.update(model = model, version = categoryVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
-                    categoryNetwork.update(data = model)
-                    versionNetwork.update(data = categoryVersion)
+                    categoryNetwork.update(data = categoryToCategoryNet(model))
+                    versionNetwork.update(data = versionToVersionNet(categoryVersion))
                     onSuccess()
                 } catch (e: Exception) { onError(Errors.UPDATE_SERVER_ERROR) }
             }
@@ -110,16 +113,18 @@ internal class DefaultCategoryRepository @Inject constructor(
         val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
 
         val id = categoryData.insert(model = model, version = categoryVersion, onError = onError) {
-            val netModel = Category(
-                id = it,
-                category = model.category,
-                timestamp = model.timestamp
+            val netModel = categoryToCategoryNet(
+                Category(
+                    id = it,
+                    category = model.category,
+                    timestamp = model.timestamp
+                )
             )
 
             CoroutineScope(ioDispatcher).launch {
                 try {
                     categoryNetwork.insert(data = netModel)
-                    versionNetwork.insert(data = categoryVersion)
+                    versionNetwork.insert(data = versionToVersionNet(categoryVersion))
                     onSuccess(netModel.id)
                 }
                 catch (e: Exception) { onError(Errors.INSERT_SERVER_ERROR) }

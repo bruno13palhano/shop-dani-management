@@ -7,7 +7,6 @@ import com.bruno13palhano.core.model.Model
 import com.bruno13palhano.core.network.access.CrudNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
 import com.bruno13palhano.core.network.model.DataVersionNet
-import com.bruno13palhano.core.network.model.asNetwork
 import kotlinx.coroutines.flow.first
 
 suspend fun getDataVersion(versionData: VersionData, id: Long) =
@@ -15,7 +14,7 @@ suspend fun getDataVersion(versionData: VersionData, id: Long) =
     catch (ignored: Exception) { DataVersion() }
 
 suspend fun getNetworkVersion(versionNetwork: VersionNetwork, id: Long) =
-    try { versionNetwork.getAll().find { it.id == id }?.asNetwork()!! }
+    try { versionNetwork.getAll().find { it.id == id }!! }
     catch (ignored: Exception) { DataVersionNet() }
 
 suspend fun <T : Model> getDataList(data: DataOperations<T>) =

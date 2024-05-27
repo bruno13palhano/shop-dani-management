@@ -9,7 +9,10 @@ import com.bruno13palhano.core.data.repository.getDataList
 import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
+import com.bruno13palhano.core.data.repository.stockItemNetToStockItem
+import com.bruno13palhano.core.data.repository.stockItemToStockItemNet
 import com.bruno13palhano.core.data.repository.version.VersionData
+import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.core.network.access.StockNetwork
@@ -43,27 +46,29 @@ internal class DefaultStockRepository @Inject constructor(
             version = stockOrderVersion,
             onError = onError,
         ) {
-            val netModel = StockItem(
-                id = it,
-                productId = model.productId,
-                name = model.name,
-                photo = model.photo,
-                date = model.date,
-                dateOfPayment = model.dateOfPayment,
-                validity = model.validity,
-                quantity = model.quantity,
-                categories = model.categories,
-                company = model.company,
-                purchasePrice = model.purchasePrice,
-                salePrice = model.salePrice,
-                isPaid = model.isPaid,
-                timestamp = model.timestamp
+            val netModel = stockItemToStockItemNet(
+                StockItem(
+                    id = it,
+                    productId = model.productId,
+                    name = model.name,
+                    photo = model.photo,
+                    date = model.date,
+                    dateOfPayment = model.dateOfPayment,
+                    validity = model.validity,
+                    quantity = model.quantity,
+                    categories = model.categories,
+                    company = model.company,
+                    purchasePrice = model.purchasePrice,
+                    salePrice = model.salePrice,
+                    isPaid = model.isPaid,
+                    timestamp = model.timestamp
+                )
             )
 
             CoroutineScope(ioDispatcher).launch {
                 try {
                     stockNetwork.insert(data = netModel)
-                    versionNetwork.insert(data = stockOrderVersion)
+                    versionNetwork.insert(data = versionToVersionNet(stockOrderVersion))
                     onSuccess(netModel.id)
                 }
                 catch (e: Exception) { onError(Errors.INSERT_SERVER_ERROR) }
@@ -83,8 +88,8 @@ internal class DefaultStockRepository @Inject constructor(
         stockData.update(model = model, version = stockOrderVersion, onError = onError) {
             CoroutineScope(ioDispatcher).launch {
                 try {
-                    stockNetwork.update(data = model)
-                    versionNetwork.insert(data = stockOrderVersion)
+                    stockNetwork.update(data = stockItemToStockItemNet(model))
+                    versionNetwork.insert(data = versionToVersionNet(stockOrderVersion))
                     onSuccess()
                 }
                 catch (e: Exception) { onError(Errors.UPDATE_SERVER_ERROR) }
@@ -124,7 +129,7 @@ internal class DefaultStockRepository @Inject constructor(
             CoroutineScope(ioDispatcher).launch {
                 try {
                     stockNetwork.delete(id = id)
-                    versionNetwork.update(data = stockOrderVersion)
+                    versionNetwork.update(data = versionToVersionNet(stockOrderVersion))
                     onSuccess()
                 }
                 catch (e: Exception) { onError(Errors.DELETE_SERVER_ERROR) }
@@ -169,11 +174,11 @@ internal class DefaultStockRepository @Inject constructor(
             dataVersion = getDataVersion(versionData, Versions.stockVersionId),
             networkVersion = getNetworkVersion(versionNetwork, Versions.stockVersionId),
             dataList = getDataList(stockData),
-            networkList = getNetworkList(stockNetwork),
+            networkList = getNetworkList(stockNetwork).map { stockItemNetToStockItem(it) },
             onPush = { deleteIds, saveList, dtVersion ->
                 deleteIds.forEach { stockNetwork.delete(it) }
-                saveList.forEach { stockNetwork.insert(it) }
-                versionNetwork.insert(dtVersion)
+                saveList.forEach { stockNetwork.insert(stockItemToStockItemNet(it)) }
+                versionNetwork.insert(versionToVersionNet(dtVersion))
             },
             onPull = { deleteIds, saveList, netVersion ->
                 deleteIds.forEach { stockData.deleteById(it, netVersion, {}) {} }
