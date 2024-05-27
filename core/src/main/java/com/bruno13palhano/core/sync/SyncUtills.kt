@@ -1,9 +1,9 @@
 package com.bruno13palhano.core.sync
 
+import com.bruno13palhano.core.data.repository.versionNetToVersion
 import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Model
 import com.bruno13palhano.core.network.model.DataVersionNet
-import com.bruno13palhano.core.network.model.asExternal
 import kotlinx.coroutines.CancellationException
 
 interface Synchronizer {
@@ -29,7 +29,7 @@ suspend fun <T : Model> Synchronizer.syncData(
             }
         } else if (dataVersion.timestamp < networkVersion.timestamp) {
             if (networkList.isNotEmpty()) {
-                onPull(dataList.map { it.id }, networkList, networkVersion.asExternal())
+                onPull(dataList.map { it.id }, networkList, versionNetToVersion(networkVersion))
             }
         }
     }
