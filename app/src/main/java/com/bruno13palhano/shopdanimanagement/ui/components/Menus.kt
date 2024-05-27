@@ -166,9 +166,7 @@ fun BottomMenu(navController: NavController) {
 //workaround to get the current selected route
 fun NavDestination.selectedRoute(screen: Screen<MainRoutes>): Boolean {
     return hierarchy.any {
-        it.route?.split(".")?.lastOrNull() ==
-                screen.route.toString().split("$").lastOrNull()?.split("@")
-                    ?.firstOrNull()
+        it.route?.split(".")?.lastOrNull() == screen.route.toString()
     }
 }
 
