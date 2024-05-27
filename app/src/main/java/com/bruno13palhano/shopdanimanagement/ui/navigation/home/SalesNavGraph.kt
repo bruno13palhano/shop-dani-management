@@ -47,7 +47,7 @@ fun NavGraphBuilder.salesNavGraph(
             SalesOptionsRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
-                onOrdersOptionClick = { navController.navigate(route = SalesRoutes.Products) },
+                onOrdersOptionClick = { navController.navigate(route = SalesRoutes.SaleProducts) },
                 onStockOptionClick = { navController.navigate(route = SalesRoutes.Stock) },
                 navigateUp = { navController.navigateUp() }
             )
@@ -80,7 +80,7 @@ fun NavGraphBuilder.salesNavGraph(
             )
         }
 
-        composable<SalesRoutes.Products> {
+        composable<SalesRoutes.SaleProducts> {
             SalesProductListRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
@@ -164,7 +164,7 @@ sealed interface SalesRoutes {
     object SearchStock
 
     @Serializable
-    object Products
+    object SaleProducts
 
     @Serializable
     object SearchProduct
