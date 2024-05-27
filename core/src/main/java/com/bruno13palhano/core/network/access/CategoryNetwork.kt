@@ -1,5 +1,5 @@
 package com.bruno13palhano.core.network.access
 
-import com.bruno13palhano.core.model.Category
+import com.bruno13palhano.core.network.model.CategoryNet
 
-interface CategoryNetwork : CrudNetwork<Category>
+interface CategoryNetwork : CrudNetwork<CategoryNet>

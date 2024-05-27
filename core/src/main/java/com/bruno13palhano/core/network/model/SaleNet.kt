@@ -1,10 +1,10 @@
 package com.bruno13palhano.core.network.model
 
-import com.bruno13palhano.core.model.Sale
+import com.bruno13palhano.core.model.Model
 import com.squareup.moshi.Json
 
 data class SaleNet (
-    @Json(name = "id") val id: Long,
+    @Json(name = "id") override val id: Long,
     @Json(name = "productId") val productId: Long,
     @Json(name = "stockId") val stockId: Long,
     @Json(name = "customerId") val customerId: Long,
@@ -28,68 +28,5 @@ data class SaleNet (
     @Json(name = "delivered") val delivered: Boolean,
     @Json(name = "canceled") val canceled: Boolean,
     @Json(name = "isAmazon") val isAmazon: Boolean,
-    @Json(name = "timestamp") val timestamp: String
-)
-
-internal fun SaleNet.asExternal() = Sale(
-    id = id,
-    productId = productId,
-    stockId = stockId,
-    customerId = customerId,
-    name = "",
-    customerName = "",
-    photo = byteArrayOf(),
-    address = "",
-    phoneNumber = "",
-    quantity = quantity,
-    purchasePrice = purchasePrice,
-    salePrice = salePrice,
-    deliveryPrice = deliveryPrice,
-    categories = listOf(),
-    company = "",
-    amazonCode = amazonCode,
-    amazonRequestNumber = amazonRequestNumber,
-    amazonTax = amazonTax,
-    amazonProfit = amazonProfit,
-    amazonSKU = amazonSKU,
-    resaleProfit = resaleProfit,
-    totalProfit = totalProfit,
-    dateOfSale = dateOfSale,
-    dateOfPayment = dateOfPayment,
-    shippingDate = shippingDate,
-    deliveryDate = deliveryDate,
-    isOrderedByCustomer = isOrderedByCustomer,
-    isPaidByCustomer = isPaidByCustomer,
-    delivered = delivered,
-    canceled = canceled,
-    isAmazon = isAmazon,
-    timestamp = timestamp
-)
-
-internal fun Sale.asNetwork() = SaleNet(
-    id = id,
-    productId = productId,
-    stockId = stockId,
-    customerId = customerId,
-    quantity = quantity,
-    purchasePrice = purchasePrice,
-    salePrice = salePrice,
-    deliveryPrice = deliveryPrice,
-    amazonCode = amazonCode,
-    amazonRequestNumber = amazonRequestNumber,
-    amazonTax = amazonTax,
-    amazonProfit = amazonProfit,
-    amazonSKU = amazonSKU,
-    resaleProfit = resaleProfit,
-    totalProfit = totalProfit,
-    dateOfSale = dateOfSale,
-    dateOfPayment = dateOfPayment,
-    shippingDate = shippingDate,
-    deliveryDate = deliveryDate,
-    isOrderedByCustomer = isOrderedByCustomer,
-    isPaidByCustomer = isPaidByCustomer,
-    delivered = delivered,
-    canceled = canceled,
-    isAmazon = isAmazon,
-    timestamp = timestamp
-)
+    @Json(name = "timestamp") override val timestamp: String
+): Model(id = id, timestamp = timestamp)

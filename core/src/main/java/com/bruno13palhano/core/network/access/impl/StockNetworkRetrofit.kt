@@ -1,10 +1,8 @@
 package com.bruno13palhano.core.network.access.impl
 
-import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.core.network.Service
 import com.bruno13palhano.core.network.access.StockNetwork
-import com.bruno13palhano.core.network.model.asExternal
-import com.bruno13palhano.core.network.model.asNetwork
+import com.bruno13palhano.core.network.model.StockItemNet
 import javax.inject.Inject
 
 internal class StockNetworkRetrofit @Inject constructor(
@@ -13,9 +11,9 @@ internal class StockNetworkRetrofit @Inject constructor(
     override suspend fun updateItemQuantity(id: Long, quantity: Int) =
         apiService.updateStockItemQuantity(id = id, quantity = quantity)
 
-    override suspend fun getAll(): List<StockItem> {
+    override suspend fun getAll(): List<StockItemNet> {
         return try {
-            apiService.getAllItems().map { it.asExternal() }
+            apiService.getAllItems()
         } catch (ignored: Exception) {
             ignored.printStackTrace()
             emptyList()
@@ -24,7 +22,7 @@ internal class StockNetworkRetrofit @Inject constructor(
 
     override suspend fun delete(id: Long) = apiService.deleteItem(id)
 
-    override suspend fun update(data: StockItem) = apiService.updateItem(data.asNetwork())
+    override suspend fun update(data: StockItemNet) = apiService.updateItem(data)
 
-    override suspend fun insert(data: StockItem) = apiService.insertItem(data.asNetwork())
+    override suspend fun insert(data: StockItemNet) = apiService.insertItem(data)
 }

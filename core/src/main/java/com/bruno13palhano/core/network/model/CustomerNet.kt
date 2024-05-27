@@ -1,11 +1,10 @@
 package com.bruno13palhano.core.network.model
 
-import com.bruno13palhano.core.model.Customer
+import com.bruno13palhano.core.model.Model
 import com.squareup.moshi.Json
-import java.util.Base64
 
 data class CustomerNet(
-    @Json(name = "id") val id: Long,
+    @Json(name = "id") override val id: Long,
     @Json(name = "name") val name: String,
     @Json(name = "photo") val photo: String,
     @Json(name = "email") val email: String,
@@ -14,8 +13,8 @@ data class CustomerNet(
     @Json(name = "phoneNumber") val phoneNumber: String,
     @Json(name = "gender") val gender: String,
     @Json(name = "age") val age: Int,
-    @Json(name = "timestamp") val timestamp: String
-) {
+    @Json(name = "timestamp") override val timestamp: String
+): Model(id=  id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -44,29 +43,3 @@ data class CustomerNet(
         return result
     }
 }
-
-internal fun CustomerNet.asExternal() = Customer(
-    id = id,
-    name = name,
-    photo = Base64.getDecoder().decode(photo),
-    email = email,
-    address = address,
-    city = city,
-    phoneNumber = phoneNumber,
-    gender = gender,
-    age = age,
-    timestamp = timestamp
-)
-
-internal fun Customer.asNetwork() = CustomerNet(
-    id = id,
-    name = name,
-    photo = Base64.getEncoder().encodeToString(photo),
-    email = email,
-    address = address,
-    city = city,
-    phoneNumber = phoneNumber,
-    gender = gender,
-    age = age,
-    timestamp = timestamp
-)

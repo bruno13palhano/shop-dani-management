@@ -1,5 +1,5 @@
 package com.bruno13palhano.core.network.access
 
-import com.bruno13palhano.core.model.DataVersion
+import com.bruno13palhano.core.network.model.DataVersionNet
 
-interface VersionNetwork : CrudNetwork<DataVersion>
+interface VersionNetwork : CrudNetwork<DataVersionNet>

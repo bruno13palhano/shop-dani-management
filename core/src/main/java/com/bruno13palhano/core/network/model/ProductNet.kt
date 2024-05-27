@@ -1,11 +1,10 @@
 package com.bruno13palhano.core.network.model
 
-import com.bruno13palhano.core.model.Product
+import com.bruno13palhano.core.model.Model
 import com.squareup.moshi.Json
-import java.util.Base64
 
 data class ProductNet(
-    @Json(name = "id") val id: Long,
+    @Json(name = "id") override val id: Long,
     @Json(name = "name") val name: String,
     @Json(name = "code") val code: String,
     @Json(name = "description") val description: String,
@@ -13,8 +12,8 @@ data class ProductNet(
     @Json(name = "date") val date: Long,
     @Json(name = "categories") val categories: List<CategoryNet>,
     @Json(name = "company") val company: String,
-    @Json(name = "timestamp") val timestamp: String
-) {
+    @Json(name = "timestamp") override val timestamp: String
+): Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -47,27 +46,3 @@ data class ProductNet(
         return result
     }
 }
-
-internal fun Product.asNetwork() = ProductNet(
-    id = id,
-    name = name,
-    code = code,
-    description = description,
-    photo = Base64.getEncoder().encodeToString(photo),
-    date = date,
-    categories = categories.map { it.asNetwork() },
-    company = company,
-    timestamp = timestamp
-)
-
-internal fun ProductNet.asExternal() = Product(
-    id = id,
-    name = name,
-    code = code,
-    description = description,
-    photo = Base64.getDecoder().decode(photo),
-    date = date,
-    categories = categories.map { it.asExternal() },
-    company = company,
-    timestamp = timestamp
-)

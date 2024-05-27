@@ -1,5 +1,5 @@
 package com.bruno13palhano.core.network.access
 
-import com.bruno13palhano.core.model.Sale
+import com.bruno13palhano.core.network.model.SaleNet
 
-interface SaleNetwork : CrudNetwork<Sale>
+interface SaleNetwork : CrudNetwork<SaleNet>

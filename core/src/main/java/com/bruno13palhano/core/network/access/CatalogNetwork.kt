@@ -1,5 +1,5 @@
 package com.bruno13palhano.core.network.access
 
-import com.bruno13palhano.core.model.Catalog
+import com.bruno13palhano.core.network.model.CatalogNet
 
-interface CatalogNetwork : CrudNetwork<Catalog>
+interface CatalogNetwork : CrudNetwork<CatalogNet>
