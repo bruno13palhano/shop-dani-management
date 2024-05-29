@@ -1,0 +1,8 @@
+root = true
+
+[*]
+insert_final_newline=false
+ij_kotlin_packages_to_use_import_on_demand=false
+ij_kotlin_allow_trailing_comma_on_call_site=false
+ij_kotlin_allow_trailing_comma=false
+ktlint_function_naming_ignore_when_annotated_with=Composable
