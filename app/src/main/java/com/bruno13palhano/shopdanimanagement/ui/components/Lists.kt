@@ -67,20 +67,22 @@ fun StockItem(
             ) {
                 if (photo.isEmpty()) {
                     Image(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .padding(16.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .size(200.dp)
+                                .padding(16.dp)
+                                .clip(RoundedCornerShape(5)),
                         imageVector = Icons.Filled.Image,
                         contentDescription = stringResource(id = R.string.product_image_label),
                         contentScale = ContentScale.Crop
                     )
                 } else {
                     Image(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .padding(16.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .size(200.dp)
+                                .padding(16.dp)
+                                .clip(RoundedCornerShape(5)),
                         painter = rememberAsyncImagePainter(model = photo),
                         contentDescription = stringResource(id = R.string.product_image_label),
                         contentScale = ContentScale.Crop
@@ -90,22 +92,25 @@ fun StockItem(
         }
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp),
+                modifier =
+                    Modifier
+                        .padding(horizontal = 8.dp),
                 text = name,
                 style = MaterialTheme.typography.titleLarge,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
             Text(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp),
+                modifier =
+                    Modifier
+                        .padding(horizontal = 8.dp),
                 text = stringResource(id = R.string.price_tag, price),
                 style = MaterialTheme.typography.bodyLarge,
                 fontStyle = FontStyle.Italic,
@@ -113,8 +118,9 @@ fun StockItem(
                 maxLines = 1
             )
             Text(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp),
+                modifier =
+                    Modifier
+                        .padding(horizontal = 8.dp),
                 text = stringResource(id = R.string.quantity_tag, quantity),
                 style = MaterialTheme.typography.bodyLarge,
                 fontStyle = FontStyle.Italic,
@@ -137,15 +143,17 @@ fun SimpleItemList(
         onClick = onClick
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .sizeIn(minHeight = 68.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .sizeIn(minHeight = 68.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier
-                    .weight(1F, true)
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .weight(1F, true)
+                        .padding(16.dp),
                 text = itemName,
                 style = MaterialTheme.typography.titleMedium
             )
@@ -175,9 +183,10 @@ fun CommonItemList(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1F, true)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1F, true)
             ) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
@@ -212,7 +221,7 @@ fun CommonPhotoItemList(
     subtitle: String,
     photo: ByteArray,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     ElevatedCard(
         modifier = modifier,
@@ -224,29 +233,32 @@ fun CommonPhotoItemList(
         ) {
             if (photo.isEmpty()) {
                 Image(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(5)),
+                    modifier =
+                        Modifier
+                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(5)),
                     imageVector = Icons.Filled.Image,
                     contentDescription = stringResource(id = R.string.item_image),
                     contentScale = ContentScale.Crop
                 )
             } else {
                 Image(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(5)),
+                    modifier =
+                        Modifier
+                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(5)),
                     painter = rememberAsyncImagePainter(model = photo),
                     contentDescription = stringResource(id = R.string.item_image),
                     contentScale = ContentScale.Crop
                 )
             }
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1F, true)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1F, true)
             ) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
@@ -270,7 +282,7 @@ fun HorizontalItemList(
     description: String,
     photo: ByteArray,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     ElevatedCard(
         modifier = modifier,
@@ -282,29 +294,32 @@ fun HorizontalItemList(
         ) {
             if (photo.isEmpty()) {
                 Image(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(5)),
+                    modifier =
+                        Modifier
+                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(5)),
                     imageVector = Icons.Filled.Image,
                     contentDescription = stringResource(id = R.string.item_image),
                     contentScale = ContentScale.Crop
                 )
             } else {
                 Image(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(5)),
+                    modifier =
+                        Modifier
+                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(5)),
                     painter = rememberAsyncImagePainter(model = photo),
                     contentDescription = stringResource(id = R.string.item_image),
                     contentScale = ContentScale.Crop
                 )
             }
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1F, true)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1F, true)
             ) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
@@ -338,11 +353,12 @@ fun CircularItemList(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ElevatedCard(
-            modifier = Modifier
-                .padding(2.dp)
-                .size(104.dp),
+            modifier =
+                Modifier
+                    .padding(2.dp)
+                    .size(104.dp),
             shape = CircleShape,
-            onClick = onClick,
+            onClick = onClick
         ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -375,17 +391,19 @@ fun InfoItemList(
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
-            .clickable { expanded = !expanded }
-            .padding(contentPadding)
+        modifier =
+            Modifier
+                .clickable { expanded = !expanded }
+                .padding(contentPadding)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = modifier
-                    .weight(1F, true),
+                modifier =
+                    modifier
+                        .weight(1F, true),
                 text = title,
                 style = MaterialTheme.typography.bodyLarge,
                 fontStyle = FontStyle.Italic
@@ -410,9 +428,10 @@ fun InfoItemList(
 
         AnimatedVisibility(visible = expanded) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1F, true)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1F, true)
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -446,31 +465,34 @@ fun CatalogItemList(
     ) {
         if (photo.isEmpty()) {
             Image(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(144.dp)
-                    .clip(RoundedCornerShape(5))
-                    .align(Alignment.CenterHorizontally),
+                modifier =
+                    Modifier
+                        .padding(16.dp)
+                        .size(144.dp)
+                        .clip(RoundedCornerShape(5))
+                        .align(Alignment.CenterHorizontally),
                 imageVector = Icons.Filled.Image,
                 contentDescription = stringResource(id = R.string.item_image),
                 contentScale = ContentScale.Crop
             )
         } else {
             Image(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(144.dp)
-                    .clip(RoundedCornerShape(5))
-                    .align(Alignment.CenterHorizontally),
+                modifier =
+                    Modifier
+                        .padding(16.dp)
+                        .size(144.dp)
+                        .clip(RoundedCornerShape(5))
+                        .align(Alignment.CenterHorizontally),
                 painter = rememberAsyncImagePainter(model = photo),
                 contentDescription = stringResource(id = R.string.item_image),
                 contentScale = ContentScale.Crop
             )
         }
         Text(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth(),
             text = title,
             maxLines = 1,
             textAlign = TextAlign.Center,
@@ -478,9 +500,10 @@ fun CatalogItemList(
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth(),
             text = firstSubtitle,
             maxLines = 1,
             textAlign = TextAlign.Center,
@@ -488,9 +511,10 @@ fun CatalogItemList(
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth(),
             text = secondSubtitle,
             maxLines = 1,
             textAlign = TextAlign.Center,
@@ -499,9 +523,10 @@ fun CatalogItemList(
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth(),
             text = description,
             maxLines = 1,
             textAlign = TextAlign.Center,
@@ -510,9 +535,10 @@ fun CatalogItemList(
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                    .fillMaxWidth(),
             text = footer,
             maxLines = 1,
             textAlign = TextAlign.Center,
@@ -660,40 +686,46 @@ fun ExpandedItem(
     ElevatedCard(
         modifier = modifier,
         onClick = { expanded = !expanded },
-        colors = if (expanded) {
-            CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-        } else { CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface) }
+        colors =
+            if (expanded) {
+                CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+            } else {
+                CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            }
     ) {
-        AnimatedVisibility (expanded) {
+        AnimatedVisibility(expanded) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (photo.isEmpty()) {
                     Image(
-                        modifier = Modifier
-                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                            .size(64.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                                .size(64.dp)
+                                .clip(RoundedCornerShape(5)),
                         imageVector = Icons.Filled.Image,
                         contentDescription = stringResource(id = R.string.item_image),
                         contentScale = ContentScale.Crop
                     )
                 } else {
                     Image(
-                        modifier = Modifier
-                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                            .size(64.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                                .size(64.dp)
+                                .clip(RoundedCornerShape(5)),
                         painter = rememberAsyncImagePainter(model = photo),
                         contentDescription = stringResource(id = R.string.item_image),
                         contentScale = ContentScale.Crop
                     )
                 }
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1F, true)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .weight(1F, true)
                 ) {
                     Text(
                         modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
@@ -727,17 +759,19 @@ fun ExpandedItem(
             }
         }
 
-        AnimatedVisibility (!expanded) {
+        AnimatedVisibility(!expanded) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .sizeIn(minHeight = 68.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .sizeIn(minHeight = 68.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = Modifier
-                        .weight(1F, true)
-                        .padding(16.dp),
+                    modifier =
+                        Modifier
+                            .weight(1F, true)
+                            .padding(16.dp),
                     text = title,
                     maxLines = 1,
                     style = MaterialTheme.typography.titleMedium,

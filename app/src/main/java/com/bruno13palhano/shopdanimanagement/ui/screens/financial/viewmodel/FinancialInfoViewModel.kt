@@ -12,35 +12,39 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class FinancialInfoViewModel @Inject constructor(
-    @Financial private val financialUseCase: FinancialUseCase
-) : ViewModel() {
-    val financial = financialUseCase()
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = FinancialInfo()
-        )
+class FinancialInfoViewModel
+    @Inject
+    constructor(
+        @Financial private val financialUseCase: FinancialUseCase
+    ) : ViewModel() {
+        val financial =
+            financialUseCase()
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(5_000),
+                    initialValue = FinancialInfo()
+                )
 
-    val entry = financial
-        .map {
-            FinancialChartEntries(
-                allSalesEntries = Pair(0F, it.allSales),
-                stockSalesEntries = Pair(0F, it.stockSales),
-                ordersSalesEntries = Pair(0F, it.ordersSales),
-                profitEntries = Pair(0F, it.profit)
-            )
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = FinancialChartEntries()
-        )
+        val entry =
+            financial
+                .map {
+                    FinancialChartEntries(
+                        allSalesEntries = Pair(0F, it.allSales),
+                        stockSalesEntries = Pair(0F, it.stockSales),
+                        ordersSalesEntries = Pair(0F, it.ordersSales),
+                        profitEntries = Pair(0F, it.profit)
+                    )
+                }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(5_000),
+                    initialValue = FinancialChartEntries()
+                )
 
-    data class FinancialChartEntries(
-        val allSalesEntries: Pair<Float, Float> = Pair(0F, 0F),
-        val stockSalesEntries: Pair<Float, Float> = Pair(0F, 0F),
-        val ordersSalesEntries: Pair<Float, Float> = Pair(0F, 0F),
-        val profitEntries: Pair<Float, Float> = Pair(0F, 0F)
-    )
-}
+        data class FinancialChartEntries(
+            val allSalesEntries: Pair<Float, Float> = Pair(0F, 0F),
+            val stockSalesEntries: Pair<Float, Float> = Pair(0F, 0F),
+            val ordersSalesEntries: Pair<Float, Float> = Pair(0F, 0F),
+            val profitEntries: Pair<Float, Float> = Pair(0F, 0F)
+        )
+    }

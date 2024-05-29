@@ -2,7 +2,10 @@ package com.bruno13palhano.shopdanimanagement.repository
 
 import com.bruno13palhano.core.model.Model
 
-fun <T : Model> getIndex(id: Long, list: List<T>): Int {
+fun <T : Model> getIndex(
+    id: Long,
+    list: List<T>
+): Int {
     var index = -1
 
     for (i in list.indices) {

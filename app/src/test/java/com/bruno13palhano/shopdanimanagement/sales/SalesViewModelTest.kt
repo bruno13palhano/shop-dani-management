@@ -32,36 +32,36 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class SalesViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var salesRepository: SaleRepository
     private lateinit var sut: SalesViewModel
 
-    private val sales = listOf(
-        makeRandomSale(
-            id = 1L,
-            stockItem = makeRandomStockItem(id = 1L, salePrice = 50F),
-            customer = makeRandomCustomer(id = 1L, name = "Alex"),
-            canceled = false
-        ),
-        makeRandomSale(
-            id = 2L,
-            stockItem = makeRandomStockItem(id = 2L, salePrice = 100F),
-            customer = makeRandomCustomer(id = 2L, name = "Bruno"),
-            canceled = true
-        ),
-        makeRandomSale(
-            id = 3L,
-            stockItem = makeRandomStockItem(id = 3L, salePrice = 125F),
-            customer = makeRandomCustomer(id = 3L, "Carlos"),
-            canceled = false
+    private val sales =
+        listOf(
+            makeRandomSale(
+                id = 1L,
+                stockItem = makeRandomStockItem(id = 1L, salePrice = 50F),
+                customer = makeRandomCustomer(id = 1L, name = "Alex"),
+                canceled = false
+            ),
+            makeRandomSale(
+                id = 2L,
+                stockItem = makeRandomStockItem(id = 2L, salePrice = 100F),
+                customer = makeRandomCustomer(id = 2L, name = "Bruno"),
+                canceled = true
+            ),
+            makeRandomSale(
+                id = 3L,
+                stockItem = makeRandomStockItem(id = 3L, salePrice = 125F),
+                customer = makeRandomCustomer(id = 3L, "Carlos"),
+                canceled = false
+            )
         )
-    )
 
     @Before
     fun setup() {
@@ -70,93 +70,100 @@ class SalesViewModelTest {
     }
 
     @Test
-    fun getSales_shouldCallGetAllFromRepository() = runTest {
-        val salesRepository = mock<SaleRepository>()
-        val sut = SalesViewModel(salesRepository)
+    fun getSales_shouldCallGetAllFromRepository() =
+        runTest {
+            val salesRepository = mock<SaleRepository>()
+            val sut = SalesViewModel(salesRepository)
 
-        whenever(salesRepository.getAll()).doAnswer { flowOf() }
+            whenever(salesRepository.getAll()).doAnswer { flowOf() }
 
-        sut.getSales()
-        advanceUntilIdle()
+            sut.getSales()
+            advanceUntilIdle()
 
-        verify(salesRepository).getAll()
-    }
-
-    @Test
-    fun getSales_shouldSetSaleListProperty() = runTest {
-        val expectedSales = listOf(sales[0], sales[2])
-        sales.forEach { salesRepository.insert(it, {}, {}) }
-
-        val collectJob = launch { sut.saleList.collect() }
-        sut.getSales()
-        advanceUntilIdle()
-
-        assertEquals(mapToItem(expectedSales), sut.saleList.value)
-
-        collectJob.cancel()
-    }
+            verify(salesRepository).getAll()
+        }
 
     @Test
-    fun getSalesByCustomerName_shouldCallGetAllSalesByCustomerNameFromRepository() = runTest {
-        val salesRepository = mock<SaleRepository>()
-        val sut = SalesViewModel(salesRepository)
+    fun getSales_shouldSetSaleListProperty() =
+        runTest {
+            val expectedSales = listOf(sales[0], sales[2])
+            sales.forEach { salesRepository.insert(it, {}, {}) }
 
-        whenever(salesRepository.getAllSalesByCustomerName(any())).doAnswer { flowOf() }
+            val collectJob = launch { sut.saleList.collect() }
+            sut.getSales()
+            advanceUntilIdle()
 
-        sut.getSalesByCustomerName(isOrderedAsc = true)
-        advanceUntilIdle()
+            assertEquals(mapToItem(expectedSales), sut.saleList.value)
 
-        verify(salesRepository).getAllSalesByCustomerName(any())
-    }
-
-    @Test
-    fun getSalesByCustomerName_shouldSetSaleListProperty() = runTest {
-        val expectedSales = listOf(sales[2], sales[0])
-        sales.forEach { salesRepository.insert(it, {}, {}) }
-
-        val collectJob = launch { sut.saleList.collect() }
-        sut.getSalesByCustomerName(isOrderedAsc = false)
-        advanceUntilIdle()
-
-        assertEquals(mapToItem(expectedSales), sut.saleList.value)
-
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun getSalesBySalePrice_shouldCallGetAllSalesBySalePriceFromRepository() = runTest {
-        val salesRepository = mock<SaleRepository>()
-        val sut = SalesViewModel(salesRepository)
+    fun getSalesByCustomerName_shouldCallGetAllSalesByCustomerNameFromRepository() =
+        runTest {
+            val salesRepository = mock<SaleRepository>()
+            val sut = SalesViewModel(salesRepository)
 
-        whenever(salesRepository.getAllSalesBySalePrice(any())).doAnswer { flowOf() }
+            whenever(salesRepository.getAllSalesByCustomerName(any())).doAnswer { flowOf() }
 
-        sut.getSalesBySalePrice(isOrderedAsc = true)
-        advanceUntilIdle()
+            sut.getSalesByCustomerName(isOrderedAsc = true)
+            advanceUntilIdle()
 
-        verify(salesRepository).getAllSalesBySalePrice(any())
-    }
+            verify(salesRepository).getAllSalesByCustomerName(any())
+        }
 
     @Test
-    fun getSalesBySalePrice_shouldSetSaleListProperty() = runTest {
-        val expectedSales = listOf(sales[2], sales[0])
-        sales.forEach { salesRepository.insert(it, {}, {}) }
+    fun getSalesByCustomerName_shouldSetSaleListProperty() =
+        runTest {
+            val expectedSales = listOf(sales[2], sales[0])
+            sales.forEach { salesRepository.insert(it, {}, {}) }
 
-        val collectJob = launch { sut.saleList.collect() }
-        sut.getSalesBySalePrice(isOrderedAsc = false)
-        advanceUntilIdle()
+            val collectJob = launch { sut.saleList.collect() }
+            sut.getSalesByCustomerName(isOrderedAsc = false)
+            advanceUntilIdle()
 
-        assertEquals(mapToItem(expectedSales), sut.saleList.value)
+            assertEquals(mapToItem(expectedSales), sut.saleList.value)
 
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
-    private fun mapToItem(sales: List<Sale>) = sales.map {
-        CommonItem(
-            id = it.id,
-            photo = it.photo,
-            title = it.name,
-            subtitle = it.company,
-            description = it.dateOfSale.toString()
-        )
-    }
+    @Test
+    fun getSalesBySalePrice_shouldCallGetAllSalesBySalePriceFromRepository() =
+        runTest {
+            val salesRepository = mock<SaleRepository>()
+            val sut = SalesViewModel(salesRepository)
+
+            whenever(salesRepository.getAllSalesBySalePrice(any())).doAnswer { flowOf() }
+
+            sut.getSalesBySalePrice(isOrderedAsc = true)
+            advanceUntilIdle()
+
+            verify(salesRepository).getAllSalesBySalePrice(any())
+        }
+
+    @Test
+    fun getSalesBySalePrice_shouldSetSaleListProperty() =
+        runTest {
+            val expectedSales = listOf(sales[2], sales[0])
+            sales.forEach { salesRepository.insert(it, {}, {}) }
+
+            val collectJob = launch { sut.saleList.collect() }
+            sut.getSalesBySalePrice(isOrderedAsc = false)
+            advanceUntilIdle()
+
+            assertEquals(mapToItem(expectedSales), sut.saleList.value)
+
+            collectJob.cancel()
+        }
+
+    private fun mapToItem(sales: List<Sale>) =
+        sales.map {
+            CommonItem(
+                id = it.id,
+                photo = it.photo,
+                title = it.name,
+                subtitle = it.company,
+                description = it.dateOfSale.toString()
+            )
+        }
 }

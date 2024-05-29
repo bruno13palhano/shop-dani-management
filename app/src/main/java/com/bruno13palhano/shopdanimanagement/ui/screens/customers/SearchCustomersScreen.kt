@@ -83,11 +83,12 @@ fun SearchCustomersContent(
     var search by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
 
-    Scaffold(topBar = { TopAppBar(title = {})}) {
+    Scaffold(topBar = { TopAppBar(title = {}) }) {
         SearchBar(
-            modifier = Modifier
-                .semantics { contentDescription = "Search bar" }
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "Search bar" }
+                    .fillMaxWidth(),
             query = search,
             onQueryChange = { searchValue -> search = searchValue },
             onSearch = { searchValue ->
@@ -120,9 +121,10 @@ fun SearchCustomersContent(
             placeholder = { Text(text = stringResource(id = R.string.search_customers_label)) }
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .semantics { contentDescription = "List of search" }
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .semantics { contentDescription = "List of search" }
+                        .fillMaxWidth(),
                 reverseLayout = true
             ) {
                 items(
@@ -143,9 +145,10 @@ fun SearchCustomersContent(
         }
 
         LazyColumn(
-            modifier = Modifier
-                .semantics { contentDescription = "List of customers" }
-                .padding(it),
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "List of customers" }
+                    .padding(it),
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
             items(items = customers, key = { customer -> customer.id }) { customer ->

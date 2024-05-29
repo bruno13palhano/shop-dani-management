@@ -131,9 +131,10 @@ fun ItemScreen(
     var validityPickerState = rememberDatePickerState()
     var showValidityPickerDialog by remember { mutableStateOf(false) }
 
-    val menuItems = arrayOf(
-        stringResource(id = R.string.delete_label)
-    )
+    val menuItems =
+        arrayOf(
+            stringResource(id = R.string.delete_label)
+        )
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getErrors()
@@ -141,14 +142,17 @@ fun ItemScreen(
     val expiredTitle = stringResource(id = R.string.stock_expired_item_label)
     val expiredDescription = stringResource(id = R.string.stock_expired_item_tag, viewModel.name)
     val debitTitle = stringResource(id = R.string.stock_payment_label)
-    val debitDescription = stringResource(
-        id = R.string.payment_tag,
-        viewModel.name,
-        viewModel.purchasePrice
-    )
+    val debitDescription =
+        stringResource(
+            id = R.string.payment_tag,
+            viewModel.name,
+            viewModel.purchasePrice
+        )
 
     when (stockItemState) {
-        UiState.Fail -> { showContent = true }
+        UiState.Fail -> {
+            showContent = true
+        }
 
         UiState.InProgress -> {
             showContent = false
@@ -198,14 +202,16 @@ fun ItemScreen(
                 }
             }
         ) {
-            datePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.date,
-                initialDisplayMode = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    DisplayMode.Picker
-                } else {
-                    DisplayMode.Input
-                }
-            )
+            datePickerState =
+                rememberDatePickerState(
+                    initialSelectedDateMillis = viewModel.date,
+                    initialDisplayMode =
+                        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            DisplayMode.Picker
+                        } else {
+                            DisplayMode.Input
+                        }
+                )
             DatePicker(
                 state = datePickerState,
                 showModeToggle = orientation == Configuration.ORIENTATION_PORTRAIT
@@ -233,14 +239,16 @@ fun ItemScreen(
                 }
             }
         ) {
-            dateOfPaymentPickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.dateOfPayment,
-                initialDisplayMode = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    DisplayMode.Picker
-                } else {
-                    DisplayMode.Input
-                }
-            )
+            dateOfPaymentPickerState =
+                rememberDatePickerState(
+                    initialSelectedDateMillis = viewModel.dateOfPayment,
+                    initialDisplayMode =
+                        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            DisplayMode.Picker
+                        } else {
+                            DisplayMode.Input
+                        }
+                )
             DatePicker(
                 state = dateOfPaymentPickerState,
                 showModeToggle = orientation == Configuration.ORIENTATION_PORTRAIT
@@ -268,14 +276,16 @@ fun ItemScreen(
                 }
             }
         ) {
-            validityPickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.validity,
-                initialDisplayMode = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    DisplayMode.Picker
-                } else {
-                    DisplayMode.Input
-                }
-            )
+            validityPickerState =
+                rememberDatePickerState(
+                    initialSelectedDateMillis = viewModel.validity,
+                    initialDisplayMode =
+                        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            DisplayMode.Picker
+                        } else {
+                            DisplayMode.Input
+                        }
+                )
             DatePicker(
                 state = validityPickerState,
                 showModeToggle = orientation == Configuration.ORIENTATION_PORTRAIT
@@ -317,11 +327,12 @@ fun ItemScreen(
                             stockOrderId = stockItemId,
                             onError = { error ->
                                 scope.launch {
-                                    if (error == DataError.DeleteDatabase.error)
+                                    if (error == DataError.DeleteDatabase.error) {
                                         snackbarHostState.showSnackbar(
                                             message = errors[error],
                                             withDismissAction = true
                                         )
+                                    }
 
                                     navigateUp()
                                 }

@@ -5,7 +5,7 @@ data class Stock(
     val name: String,
     val photo: ByteArray,
     val purchasePrice: Float,
-    val quantity: Int,
+    val quantity: Int
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

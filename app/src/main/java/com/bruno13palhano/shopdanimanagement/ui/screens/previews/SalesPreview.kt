@@ -70,12 +70,13 @@ fun CanceledSalesPreview() {
     }
 }
 
-private val canceledList = listOf(
-    CommonItem(id = 1, photo = byteArrayOf(), title = "Homem", subtitle = "R$77.90", description = "Bruno Barbosa"),
-    CommonItem(id = 2, photo = byteArrayOf(), title = "Essencial", subtitle = "R$157.99", description = "Daniela"),
-    CommonItem(id = 3, photo = byteArrayOf(), title = "Kaiak", subtitle = "R$88.90", description = "Brenda"),
-    CommonItem(id = 4, photo = byteArrayOf(), title = "Luna", subtitle = "R$67.90", description = "Fernando"),
-    CommonItem(id = 5, photo = byteArrayOf(), title = "Una", subtitle = "R$99.99", description = "Socorro"),
-    CommonItem(id = 6, photo = byteArrayOf(), title = "Essencial", subtitle = "R$157.99", description = "Josué"),
-    CommonItem(id = 7, photo = byteArrayOf(), title = "Homem", subtitle = "R$77.90", description = "Helena"),
-)
+private val canceledList =
+    listOf(
+        CommonItem(id = 1, photo = byteArrayOf(), title = "Homem", subtitle = "R$77.90", description = "Bruno Barbosa"),
+        CommonItem(id = 2, photo = byteArrayOf(), title = "Essencial", subtitle = "R$157.99", description = "Daniela"),
+        CommonItem(id = 3, photo = byteArrayOf(), title = "Kaiak", subtitle = "R$88.90", description = "Brenda"),
+        CommonItem(id = 4, photo = byteArrayOf(), title = "Luna", subtitle = "R$67.90", description = "Fernando"),
+        CommonItem(id = 5, photo = byteArrayOf(), title = "Una", subtitle = "R$99.99", description = "Socorro"),
+        CommonItem(id = 6, photo = byteArrayOf(), title = "Essencial", subtitle = "R$157.99", description = "Josué"),
+        CommonItem(id = 7, photo = byteArrayOf(), title = "Homem", subtitle = "R$77.90", description = "Helena")
+    )

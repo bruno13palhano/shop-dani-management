@@ -135,13 +135,14 @@ fun SaleContent(
                 },
                 actions = {
                     if (isEdit) {
-                        IconButton(onClick = { expanded = true } ) {
+                        IconButton(onClick = { expanded = true }) {
                             Box(contentAlignment = Alignment.Center) {
                                 Icon(
                                     imageVector = Icons.Filled.MoreVert,
-                                    contentDescription = stringResource(
-                                        id = R.string.more_options_label
-                                    )
+                                    contentDescription =
+                                        stringResource(
+                                            id = R.string.more_options_label
+                                        )
                                 )
                                 Column(
                                     modifier = Modifier.fillMaxSize(),
@@ -160,7 +161,7 @@ fun SaleContent(
                             }
                         }
                     }
-                },
+                }
             )
         },
         floatingActionButton = {
@@ -173,10 +174,11 @@ fun SaleContent(
         }
     ) {
         Column(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState())
+            modifier =
+                Modifier
+                    .padding(it)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState())
         ) {
             AnimatedVisibility(visible = openCustomerSheet) {
                 BottomSheet(
@@ -185,12 +187,14 @@ fun SaleContent(
                         onDismissCustomer()
                     }
                 ) {
-                    val initialCustomer = customers
-                        .filter { customer -> customer.isChecked }
-                        .findLast { customer -> customer.isChecked }?.name
-                    val (selected, onOptionSelected) = rememberSaveable {
-                        mutableStateOf(initialCustomer)
-                    }
+                    val initialCustomer =
+                        customers
+                            .filter { customer -> customer.isChecked }
+                            .findLast { customer -> customer.isChecked }?.name
+                    val (selected, onOptionSelected) =
+                        rememberSaveable {
+                            mutableStateOf(initialCustomer)
+                        }
 
                     Column(modifier = Modifier.padding(bottom = 32.dp)) {
                         customers.forEach { customerItem ->
@@ -215,22 +219,24 @@ fun SaleContent(
                 ElevatedCard(modifier = Modifier.padding(8.dp)) {
                     AsyncImage(
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .sharedElement(
-                                sharedTransitionScope.rememberSharedContentState(
-                                    key = "product-$productId"
-                                ),
-                                animatedVisibilityScope = animatedContentScope
-                            )
-                            .aspectRatio(1f)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(5)),
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(photo)
-                            .crossfade(true)
-                            .placeholderMemoryCacheKey("product-$productId")
-                            .memoryCacheKey("product-$productId")
-                            .build(),
+                        modifier =
+                            Modifier
+                                .sharedElement(
+                                    sharedTransitionScope.rememberSharedContentState(
+                                        key = "product-$productId"
+                                    ),
+                                    animatedVisibilityScope = animatedContentScope
+                                )
+                                .aspectRatio(1f)
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(5)),
+                        model =
+                            ImageRequest.Builder(LocalContext.current)
+                                .data(photo)
+                                .crossfade(true)
+                                .placeholderMemoryCacheKey("product-$productId")
+                                .memoryCacheKey("product-$productId")
+                                .build(),
                         contentDescription = stringResource(id = R.string.product_image_label)
                     )
                 }
@@ -274,9 +280,10 @@ fun SaleContent(
                     )
 
                     Row(
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .fillMaxWidth(),
+                        modifier =
+                            Modifier
+                                .padding(end = 8.dp)
+                                .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.End
                     ) {
@@ -289,9 +296,10 @@ fun SaleContent(
 
                     AnimatedVisibility(visible = isAmazon) {
                         Column(
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp, vertical = 2.dp)
-                                .border(2.dp, MaterialTheme.colorScheme.primary, RectangleShape)
+                            modifier =
+                                Modifier
+                                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                                    .border(2.dp, MaterialTheme.colorScheme.primary, RectangleShape)
                         ) {
                             CustomIntegerField(
                                 value = amazonCode,
@@ -305,9 +313,10 @@ fun SaleContent(
                                 onValueChange = onAmazonRequestNumberChange,
                                 icon = Icons.Filled.Numbers,
                                 label = stringResource(id = R.string.amazon_request_number_label),
-                                placeholder = stringResource(
-                                    id = R.string.enter_amazon_request_number_label
-                                )
+                                placeholder =
+                                    stringResource(
+                                        id = R.string.enter_amazon_request_number_label
+                                    )
                             )
                             CustomFloatField(
                                 value = amazonPrice,

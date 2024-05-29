@@ -94,7 +94,7 @@ fun ProductListContent(
                                 contentDescription = stringResource(id = R.string.barcode_scanner_label)
                             )
                         }
-                        
+
                         IconButton(onClick = { expanded = true }) {
                             Box(contentAlignment = Alignment.Center) {
                                 Icon(
@@ -132,9 +132,10 @@ fun ProductListContent(
     ) {
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-            modifier = Modifier
-                .semantics { contentDescription = "List of items" }
-                .padding(it)
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "List of items" }
+                    .padding(it)
         ) {
             items(itemList) { item ->
                 CommonPhotoItemList(

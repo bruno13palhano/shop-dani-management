@@ -8,9 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.StockListContent
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.StockDebitsContent
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 
@@ -108,17 +108,18 @@ private fun StockDebitsPreview() {
     }
 }
 
-private val items = listOf(
-    Stock(id= 1L, name = "Essencial", photo = byteArrayOf(), purchasePrice = 120.45F, quantity = 12),
-    Stock(id= 2L, name = "Kaiak", photo = byteArrayOf(), purchasePrice = 40.33F, quantity = 2),
-    Stock(id= 3L, name = "Homem", photo = byteArrayOf(), purchasePrice = 99.99F, quantity = 7),
-    Stock(id= 4L, name = "Luna", photo = byteArrayOf(), purchasePrice = 12.39F, quantity = 2),
-    Stock(id= 5L, name = "Essencial", photo = byteArrayOf(), purchasePrice = 56.78F, quantity = 1),
-    Stock(id= 6L, name = "Una", photo = byteArrayOf(), purchasePrice = 12.12F, quantity = 2),
-    Stock(id= 7L, name = "Essencial", photo = byteArrayOf(), purchasePrice = 120.45F, quantity = 12),
-    Stock(id= 8L, name = "Kaiak", photo = byteArrayOf(), purchasePrice = 40.33F, quantity = 2),
-    Stock(id= 9L, name = "Homem", photo = byteArrayOf(), purchasePrice = 99.99F, quantity = 7),
-    Stock(id= 10L, name = "Luna", photo = byteArrayOf(), purchasePrice = 12.39F, quantity = 2),
-    Stock(id= 11L, name = "Essencial", photo = byteArrayOf(), purchasePrice = 56.78F, quantity = 1),
-    Stock(id= 12L, name = "Una", photo = byteArrayOf(), purchasePrice = 12.12F, quantity = 2)
-)
+private val items =
+    listOf(
+        Stock(id = 1L, name = "Essencial", photo = byteArrayOf(), purchasePrice = 120.45F, quantity = 12),
+        Stock(id = 2L, name = "Kaiak", photo = byteArrayOf(), purchasePrice = 40.33F, quantity = 2),
+        Stock(id = 3L, name = "Homem", photo = byteArrayOf(), purchasePrice = 99.99F, quantity = 7),
+        Stock(id = 4L, name = "Luna", photo = byteArrayOf(), purchasePrice = 12.39F, quantity = 2),
+        Stock(id = 5L, name = "Essencial", photo = byteArrayOf(), purchasePrice = 56.78F, quantity = 1),
+        Stock(id = 6L, name = "Una", photo = byteArrayOf(), purchasePrice = 12.12F, quantity = 2),
+        Stock(id = 7L, name = "Essencial", photo = byteArrayOf(), purchasePrice = 120.45F, quantity = 12),
+        Stock(id = 8L, name = "Kaiak", photo = byteArrayOf(), purchasePrice = 40.33F, quantity = 2),
+        Stock(id = 9L, name = "Homem", photo = byteArrayOf(), purchasePrice = 99.99F, quantity = 7),
+        Stock(id = 10L, name = "Luna", photo = byteArrayOf(), purchasePrice = 12.39F, quantity = 2),
+        Stock(id = 11L, name = "Essencial", photo = byteArrayOf(), purchasePrice = 56.78F, quantity = 1),
+        Stock(id = 12L, name = "Una", photo = byteArrayOf(), purchasePrice = 12.12F, quantity = 2)
+    )

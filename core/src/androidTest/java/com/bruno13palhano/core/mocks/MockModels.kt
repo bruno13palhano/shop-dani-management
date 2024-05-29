@@ -12,7 +12,7 @@ import com.bruno13palhano.core.model.StockItem
 import kotlin.random.Random
 
 private const val LENGTH = 10
-private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+private val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
 fun makeRandomCatalog(
     id: Long,
@@ -23,7 +23,7 @@ fun makeRandomCatalog(
     description: String = getRandomString(),
     discount: Long = getRandomLong(),
     price: Float = getRandomFloat(),
-    timestamp: String = getRandomString()
+    timestamp: String = getRandomString(),
 ) = Catalog(
     id = id,
     productId = productId,
@@ -33,13 +33,13 @@ fun makeRandomCatalog(
     description = description,
     discount = discount,
     price = price,
-    timestamp = timestamp
+    timestamp = timestamp,
 )
 
 fun makeRandomCategory(
     id: Long,
     name: String = getRandomString(),
-    timestamp: String = getRandomString()
+    timestamp: String = getRandomString(),
 ) = Category(id = id, category = name, timestamp = timestamp)
 
 fun makeRandomCustomer(
@@ -49,7 +49,7 @@ fun makeRandomCustomer(
     email: String = getRandomString(),
     address: String = getRandomString(),
     phoneNumber: String = getRandomString(),
-    timestamp: String = getRandomString()
+    timestamp: String = getRandomString(),
 ) = Customer(
     id = id,
     name = name,
@@ -57,7 +57,7 @@ fun makeRandomCustomer(
     email = email,
     address = address,
     phoneNumber = phoneNumber,
-    timestamp = timestamp
+    timestamp = timestamp,
 )
 
 fun makeRandomDelivery(
@@ -70,7 +70,7 @@ fun makeRandomDelivery(
     shippingDate: Long = getRandomLong(),
     deliveryDate: Long = getRandomLong(),
     delivered: Boolean = getRandomBoolean(),
-    timestamp: String = getRandomString()
+    timestamp: String = getRandomString(),
 ) = Delivery(
     id = id,
     saleId = saleId,
@@ -83,7 +83,7 @@ fun makeRandomDelivery(
     shippingDate = shippingDate,
     deliveryDate = deliveryDate,
     delivered = delivered,
-    timestamp = timestamp
+    timestamp = timestamp,
 )
 
 fun makeRandomProduct(
@@ -93,13 +93,14 @@ fun makeRandomProduct(
     description: String = getRandomString(),
     photo: ByteArray = byteArrayOf(),
     date: Long = getRandomLong(),
-    categories: List<Category> = listOf(
-        makeRandomCategory(1L),
-        makeRandomCategory(2L),
-        makeRandomCategory(3L)
-    ),
+    categories: List<Category> =
+        listOf(
+            makeRandomCategory(1L),
+            makeRandomCategory(2L),
+            makeRandomCategory(3L),
+        ),
     company: String = getRandomString(),
-    timestamp: String = getRandomString()
+    timestamp: String = getRandomString(),
 ) = Product(
     id = id,
     name = name,
@@ -109,7 +110,7 @@ fun makeRandomProduct(
     date = date,
     categories = categories,
     company = company,
-    timestamp = timestamp
+    timestamp = timestamp,
 )
 
 fun makeRandomSearchCache(search: String = getRandomString()) = SearchCache(search = search)
@@ -123,7 +124,7 @@ fun makeRandomStockOrder(
     purchasePrice: Float = getRandomFloat(),
     salePrice: Float = getRandomFloat(),
     isPaid: Boolean = getRandomBoolean(),
-    timestamp: String = getRandomString()
+    timestamp: String = getRandomString(),
 ) = StockItem(
     id = id,
     productId = product.id,
@@ -137,7 +138,7 @@ fun makeRandomStockOrder(
     purchasePrice = purchasePrice,
     salePrice = salePrice,
     isPaid = isPaid,
-    timestamp = timestamp
+    timestamp = timestamp,
 )
 
 fun makeRandomSale(
@@ -154,7 +155,7 @@ fun makeRandomSale(
     isPaidByCustomer: Boolean = getRandomBoolean(),
     delivered: Boolean = getRandomBoolean(),
     canceled: Boolean = getRandomBoolean(),
-    timestamp: String = getRandomString()
+    timestamp: String = getRandomString(),
 ) = Sale(
     id = id,
     productId = stockItem.productId,
@@ -179,27 +180,28 @@ fun makeRandomSale(
     isPaidByCustomer = isPaidByCustomer,
     delivered = delivered,
     canceled = canceled,
-    timestamp = timestamp
+    timestamp = timestamp,
 )
 
 fun makeRandomDataVersion(
     id: Long = getRandomLong(),
     name: String = getRandomString(),
-    timestamp: String = getRandomString()
+    timestamp: String = getRandomString(),
 ) = DataVersion(
     id = id,
     name = name,
-    timestamp = timestamp
+    timestamp = timestamp,
 )
 
-private fun getRandomString() = (1..LENGTH)
-    .map { Random.nextInt(0, charPool.size).let { charPool[it] } }
-    .joinToString("")
+private fun getRandomString() =
+    (1..LENGTH)
+        .map { Random.nextInt(0, charPool.size).let { charPool[it] } }
+        .joinToString("")
 
 private fun getRandomLong() = (1..LENGTH).sumOf { Random.nextLong(0, 1000L) }
 
 private fun getRandomInt() = (1..LENGTH).sumOf { Random.nextInt(0, 1000) }
 
-private fun getRandomFloat() = (1 .. LENGTH).map { Random.nextFloat() }.sum()
+private fun getRandomFloat() = (1..LENGTH).map { Random.nextFloat() }.sum()
 
 private fun getRandomBoolean() = Random.nextBoolean()

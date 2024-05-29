@@ -34,7 +34,7 @@ private fun CategoriesListDynamicPreview() {
                 onDismissRequest = {},
                 onOkClick = {},
                 onItemClick = {},
-                onIconMenuClick = {},
+                onIconMenuClick = {}
             )
         }
     }
@@ -61,35 +61,84 @@ private fun CategoriesListPreview() {
                 onDismissRequest = {},
                 onOkClick = {},
                 onItemClick = {},
-                onIconMenuClick = {},
+                onIconMenuClick = {}
             )
         }
     }
 }
 
-private val categories = listOf(
-    Category(1L, "Gifts", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC))),
-    Category(2L, "Infant", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC))),
-    Category(3L, "Perfumes", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC))),
-    Category(4L, "Soaps", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC))),
-    Category(5L, "Antiperspirant Deodorants", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC))),
-    Category(6L, "Deodorants Cologne", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC))),
-    Category(7L, "Sunscreens", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC))),
-    Category(8L, "Makeup", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC))),
-    Category(9L, "Face", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC))),
-    Category(10L, "Skin", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC))),
-    Category(11L, "Hair", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC))),
-    Category(12L, "Moisturizers", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .format(OffsetDateTime.now(ZoneOffset.UTC)))
-)
+private val categories =
+    listOf(
+        Category(
+            1L,
+            "Gifts",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        ),
+        Category(
+            2L,
+            "Infant",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        ),
+        Category(
+            3L,
+            "Perfumes",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        ),
+        Category(
+            4L,
+            "Soaps",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        ),
+        Category(
+            5L,
+            "Antiperspirant Deodorants",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        ),
+        Category(
+            6L,
+            "Deodorants Cologne",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        ),
+        Category(
+            7L,
+            "Sunscreens",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        ),
+        Category(
+            8L,
+            "Makeup",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        ),
+        Category(
+            9L,
+            "Face",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        ),
+        Category(
+            10L,
+            "Skin",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        ),
+        Category(
+            11L,
+            "Hair",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        ),
+        Category(
+            12L,
+            "Moisturizers",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .format(OffsetDateTime.now(ZoneOffset.UTC))
+        )
+    )

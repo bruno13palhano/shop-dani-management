@@ -32,7 +32,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class CustomerNavGraphTest {
-
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
@@ -138,7 +137,7 @@ class CustomerNavGraphTest {
             navController = TestNavHostController(LocalContext.current)
             navController.navigatorProvider.addNavigator(ComposeNavigator())
             MainNavGraph(
-                navController = navController,
+                navController = navController
             ) {}
             navController.navigate(CustomersDestinations.CUSTOMERS_SEARCH_ROUTE)
         }
@@ -169,7 +168,7 @@ class CustomerNavGraphTest {
             navController = TestNavHostController(LocalContext.current)
             navController.navigatorProvider.addNavigator(ComposeNavigator())
             MainNavGraph(
-                navController = navController,
+                navController = navController
             ) {}
             navController.navigate(CustomersDestinations.CUSTOMERS_SEARCH_ROUTE)
         }

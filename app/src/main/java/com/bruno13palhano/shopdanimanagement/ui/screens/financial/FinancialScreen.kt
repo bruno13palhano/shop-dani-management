@@ -82,17 +82,20 @@ fun FinancialContent(
             )
         }
     ) {
-        val items = listOf(
-            FinancialInnerScreen.Info,
-            FinancialInnerScreen.CustomersDebit,
-            FinancialInnerScreen.StockDebits,
-            FinancialInnerScreen.CanceledSales
-        )
-        Column(modifier = Modifier
-            .semantics { contentDescription = "Financial items" }
-            .padding(it)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .verticalScroll(rememberScrollState())
+        val items =
+            listOf(
+                FinancialInnerScreen.Info,
+                FinancialInnerScreen.CustomersDebit,
+                FinancialInnerScreen.StockDebits,
+                FinancialInnerScreen.CanceledSales
+            )
+        Column(
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "Financial items" }
+                    .padding(it)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .verticalScroll(rememberScrollState())
         ) {
             items.forEach { screen ->
                 SimpleItemList(
@@ -106,27 +109,30 @@ fun FinancialContent(
     }
 }
 
-sealed class FinancialInnerScreen<T: FinancialRoutes>(
+sealed class FinancialInnerScreen<T : FinancialRoutes>(
     val route: T,
     val icon: ImageVector,
     @StringRes val resourceId: Int
 ) {
-    data object Info: FinancialInnerScreen<FinancialRoutes>(
+    data object Info : FinancialInnerScreen<FinancialRoutes>(
         route = FinancialRoutes.Info,
         icon = Icons.Filled.Info,
         resourceId = R.string.financial_info_label
     )
-    data object CustomersDebit: FinancialInnerScreen<FinancialRoutes>(
+
+    data object CustomersDebit : FinancialInnerScreen<FinancialRoutes>(
         route = FinancialRoutes.CustomersDebits,
         icon = Icons.Filled.Payments,
         resourceId = R.string.customers_debit_label
     )
-    data object StockDebits: FinancialInnerScreen<FinancialRoutes>(
+
+    data object StockDebits : FinancialInnerScreen<FinancialRoutes>(
         route = FinancialRoutes.StockDebits,
         icon = Icons.Filled.Inventory,
         resourceId = R.string.stock_debits_label
     )
-    data object CanceledSales: FinancialInnerScreen<FinancialRoutes>(
+
+    data object CanceledSales : FinancialInnerScreen<FinancialRoutes>(
         route = FinancialRoutes.CanceledSales,
         icon = Icons.Filled.CancelPresentation,
         resourceId = R.string.canceled_sales_label

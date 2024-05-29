@@ -34,41 +34,43 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class CustomersDebitViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var saleRepository: SaleRepository
     private lateinit var sut: CustomersDebitViewModel
 
-    private val debits = listOf(
-        makeRandomSale(
-            id = 1L,
-            stockItem = makeRandomStockItem(
+    private val debits =
+        listOf(
+            makeRandomSale(
                 id = 1L,
-                product = makeRandomProduct(id =1L, name = "A"),
-                salePrice = 25F
+                stockItem =
+                    makeRandomStockItem(
+                        id = 1L,
+                        product = makeRandomProduct(id = 1L, name = "A"),
+                        salePrice = 25F
+                    ),
+                customer = makeRandomCustomer(id = 1L, name = "A"),
+                isPaidByCustomer = false,
+                canceled = false
             ),
-            customer = makeRandomCustomer(id = 1L, name = "A"),
-            isPaidByCustomer = false,
-            canceled = false
-        ),
-        makeRandomSale(
-            id = 2L,
-            stockItem = makeRandomStockItem(
+            makeRandomSale(
                 id = 2L,
-                product = makeRandomProduct(id =2L, name = "B"),
-                salePrice = 50F
+                stockItem =
+                    makeRandomStockItem(
+                        id = 2L,
+                        product = makeRandomProduct(id = 2L, name = "B"),
+                        salePrice = 50F
+                    ),
+                customer = makeRandomCustomer(id = 1L, name = "B"),
+                isPaidByCustomer = false,
+                canceled = false
             ),
-            customer = makeRandomCustomer(id = 1L, name = "B"),
-            isPaidByCustomer = false,
-            canceled = false
-        ),
-        makeRandomSale(id = 3L, canceled = true)
-    )
+            makeRandomSale(id = 3L, canceled = true)
+        )
 
     @Before
     fun setup() {
@@ -77,98 +79,105 @@ class CustomersDebitViewModelTest {
     }
 
     @Test
-    fun getDebits_shouldCallGetDebitSalesFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository>()
-        val sut = CustomersDebitViewModel(saleRepository)
+    fun getDebits_shouldCallGetDebitSalesFromRepository() =
+        runTest {
+            val saleRepository = mock<SaleRepository>()
+            val sut = CustomersDebitViewModel(saleRepository)
 
-        whenever(saleRepository.getDebitSales()).doAnswer { flowOf() }
+            whenever(saleRepository.getDebitSales()).doAnswer { flowOf() }
 
-        sut.getDebits()
-        advanceUntilIdle()
+            sut.getDebits()
+            advanceUntilIdle()
 
-        verify(saleRepository).getDebitSales()
-    }
-
-    @Test
-    fun getDebits_shouldSetDebitsProperty() = runTest {
-        insertSales()
-        val expected = mapToItem(listOf(debits[0], debits[1]))
-
-        val collectJob = launch { sut.debits.collect() }
-
-        sut.getDebits()
-        advanceUntilIdle()
-
-        assertEquals(expected, sut.debits.value)
-
-        collectJob.cancel()
-    }
+            verify(saleRepository).getDebitSales()
+        }
 
     @Test
-    fun getDebitByCustomerName_shouldCallGetSalesByCustomerNameFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository>()
-        val sut = CustomersDebitViewModel(saleRepository)
+    fun getDebits_shouldSetDebitsProperty() =
+        runTest {
+            insertSales()
+            val expected = mapToItem(listOf(debits[0], debits[1]))
 
-        whenever(saleRepository.getSalesByCustomerName(eq(false), any())).doAnswer { flowOf() }
+            val collectJob = launch { sut.debits.collect() }
 
-        sut.getDebitByCustomerName(isOrderedAsc = true)
-        advanceUntilIdle()
+            sut.getDebits()
+            advanceUntilIdle()
 
-        verify(saleRepository).getSalesByCustomerName(eq(false), any())
-    }
+            assertEquals(expected, sut.debits.value)
 
-    @Test
-    fun getDebitByCustomerName_shouldSetDebitsProperty() = runTest {
-        insertSales()
-        val expected = mapToItem(listOf(debits[1], debits[0]))
-
-        val collectJob = launch { sut.debits.collect() }
-
-        sut.getDebitByCustomerName(isOrderedAsc = false)
-        advanceUntilIdle()
-
-        assertEquals(expected, sut.debits.value)
-
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun getDebitBySalePrice_shouldCallGetSalesBySalePriceFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository>()
-        val sut = CustomersDebitViewModel(saleRepository)
+    fun getDebitByCustomerName_shouldCallGetSalesByCustomerNameFromRepository() =
+        runTest {
+            val saleRepository = mock<SaleRepository>()
+            val sut = CustomersDebitViewModel(saleRepository)
 
-        whenever(saleRepository.getSalesBySalePrice(eq(false), any())).doAnswer { flowOf() }
+            whenever(saleRepository.getSalesByCustomerName(eq(false), any())).doAnswer { flowOf() }
 
-        sut.getDebitBySalePrice(isOrderedAsc = false)
-        advanceUntilIdle()
+            sut.getDebitByCustomerName(isOrderedAsc = true)
+            advanceUntilIdle()
 
-        verify(saleRepository).getSalesBySalePrice(eq(false), any())
-    }
+            verify(saleRepository).getSalesByCustomerName(eq(false), any())
+        }
 
     @Test
-    fun getDebitBySalePrice_shouldSetDebitsProperty() = runTest {
-        insertSales()
-        val expected = mapToItem(listOf(debits[1], debits[0]))
+    fun getDebitByCustomerName_shouldSetDebitsProperty() =
+        runTest {
+            insertSales()
+            val expected = mapToItem(listOf(debits[1], debits[0]))
 
-        val collectJob = launch { sut.debits.collect() }
+            val collectJob = launch { sut.debits.collect() }
 
-        sut.getDebitBySalePrice(isOrderedAsc = false)
-        advanceUntilIdle()
+            sut.getDebitByCustomerName(isOrderedAsc = false)
+            advanceUntilIdle()
 
-        assertEquals(expected, sut.debits.value)
+            assertEquals(expected, sut.debits.value)
 
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
-    private fun mapToItem(debits: List<Sale>) = debits.map {
-        CommonItem(
-            id = it.id,
-            photo = it.photo,
-            title = it.customerName,
-            subtitle = it.salePrice.toString(),
-            description = it.dateOfPayment.toString()
-        )
-    }
+    @Test
+    fun getDebitBySalePrice_shouldCallGetSalesBySalePriceFromRepository() =
+        runTest {
+            val saleRepository = mock<SaleRepository>()
+            val sut = CustomersDebitViewModel(saleRepository)
+
+            whenever(saleRepository.getSalesBySalePrice(eq(false), any())).doAnswer { flowOf() }
+
+            sut.getDebitBySalePrice(isOrderedAsc = false)
+            advanceUntilIdle()
+
+            verify(saleRepository).getSalesBySalePrice(eq(false), any())
+        }
+
+    @Test
+    fun getDebitBySalePrice_shouldSetDebitsProperty() =
+        runTest {
+            insertSales()
+            val expected = mapToItem(listOf(debits[1], debits[0]))
+
+            val collectJob = launch { sut.debits.collect() }
+
+            sut.getDebitBySalePrice(isOrderedAsc = false)
+            advanceUntilIdle()
+
+            assertEquals(expected, sut.debits.value)
+
+            collectJob.cancel()
+        }
+
+    private fun mapToItem(debits: List<Sale>) =
+        debits.map {
+            CommonItem(
+                id = it.id,
+                photo = it.photo,
+                title = it.customerName,
+                subtitle = it.salePrice.toString(),
+                description = it.dateOfPayment.toString()
+            )
+        }
 
     private suspend fun insertSales() = debits.forEach { saleRepository.insert(it, {}, {}) }
 }

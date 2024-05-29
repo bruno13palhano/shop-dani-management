@@ -31,8 +31,7 @@ import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
-class SearchProductsViewModelTest {
-
+class SearchSaleProductsViewModelTest {
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
@@ -42,16 +41,18 @@ class SearchProductsViewModelTest {
     private lateinit var productRepository: ProductRepository
     private lateinit var searchCacheRepository: SearchCacheRepository
     private lateinit var sut: SearchProductsViewModel
-    private val products: List<Product>  = listOf(
-        makeRandomProduct(id = 1L, name = "Homem"),
-        makeRandomProduct(id = 2L, name = "Essencial"),
-        makeRandomProduct(id = 3L, name = "Homem")
-    )
-    private var searchList = listOf(
-        makeRandomSearchCache(search = "homem"),
-        makeRandomSearchCache(search = "perfumes"),
-        makeRandomSearchCache(search = "sabonetes")
-    )
+    private val products: List<Product> =
+        listOf(
+            makeRandomProduct(id = 1L, name = "Homem"),
+            makeRandomProduct(id = 2L, name = "Essencial"),
+            makeRandomProduct(id = 3L, name = "Homem")
+        )
+    private var searchList =
+        listOf(
+            makeRandomSearchCache(search = "homem"),
+            makeRandomSearchCache(search = "perfumes"),
+            makeRandomSearchCache(search = "sabonetes")
+        )
 
     @Before
     fun setup() {
@@ -61,136 +62,145 @@ class SearchProductsViewModelTest {
     }
 
     @Test
-    fun whenSearch_shouldDelegateToProductRepository() = runTest {
-        val search = "A"
-        val productRep = mock<ProductRepository>()
-        val searchCacheRep = mock<SearchCacheRepository>()
-        val sut = SearchProductsViewModel(productRep, searchCacheRep)
+    fun whenSearch_shouldDelegateToProductRepository() =
+        runTest {
+            val search = "A"
+            val productRep = mock<ProductRepository>()
+            val searchCacheRep = mock<SearchCacheRepository>()
+            val sut = SearchProductsViewModel(productRep, searchCacheRep)
 
-        whenever(productRep.search(any())).thenAnswer { flowOf(products) }
-        sut.search(search)
+            whenever(productRep.search(any())).thenAnswer { flowOf(products) }
+            sut.search(search)
 
-        advanceUntilIdle()
+            advanceUntilIdle()
 
-        verify(productRep).search(search)
-    }
-
-    @Test
-    fun whenSearch_ifThereIsAnyMatch_shouldSetTheReturnValueToProducts() = runTest {
-        insertProducts()
-        val search = "Homem"
-        val collectJob = launch { sut.products.collect() }
-
-        sut.search(search = search)
-
-        advanceUntilIdle()
-
-        assertEquals(mapToItems(listOf(products[0], products[2])), sut.products.value)
-
-        collectJob.cancel()
-    }
+            verify(productRep).search(search)
+        }
 
     @Test
-    fun whenSearch_ifThereIsNoMatch_shouldSetProductsToEmptyList() = runTest {
-        insertProducts()
-        val search = "Luna"
-        val collectJob = launch { sut.products.collect() }
+    fun whenSearch_ifThereIsAnyMatch_shouldSetTheReturnValueToProducts() =
+        runTest {
+            insertProducts()
+            val search = "Homem"
+            val collectJob = launch { sut.products.collect() }
 
-        sut.search(search = search)
+            sut.search(search = search)
 
-        advanceUntilIdle()
+            advanceUntilIdle()
 
-        assertEquals(emptyList<CommonItem>(), sut.products.value)
+            assertEquals(mapToItems(listOf(products[0], products[2])), sut.products.value)
 
-        collectJob.cancel()
-    }
-
-    @Test
-    fun whenSearchPerCategory_shouldDelegateToProductRepository() = runTest {
-        val search = "B"
-        val productRep = mock<ProductRepository>()
-        val searchCacheRep = mock<SearchCacheRepository>()
-        val sut = SearchProductsViewModel(productRep, searchCacheRep)
-
-        whenever(productRep.searchPerCategory(any(), any())).thenAnswer { flowOf(products) }
-        sut.searchPerCategory(search, 1L)
-
-        advanceUntilIdle()
-
-        verify(productRep).searchPerCategory(any(), any())
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun whenSearchPerCategory_ifThereIsAnyMatch_shouldSetTheReturnValueToProducts() = runTest {
-        insertProducts()
-        val search = "Homem"
-        val collectJob = launch { sut.products.collect() }
+    fun whenSearch_ifThereIsNoMatch_shouldSetProductsToEmptyList() =
+        runTest {
+            insertProducts()
+            val search = "Luna"
+            val collectJob = launch { sut.products.collect() }
 
-        sut.searchPerCategory(search = search, categoryId = 1L)
+            sut.search(search = search)
 
-        advanceUntilIdle()
+            advanceUntilIdle()
 
-        assertEquals(mapToItems(listOf(products[0])), sut.products.value)
+            assertEquals(emptyList<CommonItem>(), sut.products.value)
 
-        collectJob.cancel()
-    }
-
-    @Test
-    fun whenSearchPerCategory_ifThereIsNoAnyMatch_shouldSetProductsToEmptyList() = runTest {
-        insertProducts()
-        val search = "Homem"
-        val collectJob = launch { sut.products.collect() }
-
-        sut.searchPerCategory(search = search, categoryId = 2L)
-
-        advanceUntilIdle()
-
-        assertEquals(mapToItems(emptyList()), sut.products.value)
-
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun whenGetSearchCache_shouldDelegateToSearchCacheRepository() = runTest {
-        val productRep = mock<ProductRepository>()
-        val searchCacheRep = mock<SearchCacheRepository>()
-        val sut = SearchProductsViewModel(productRep, searchCacheRep)
+    fun whenSearchPerCategory_shouldDelegateToProductRepository() =
+        runTest {
+            val search = "B"
+            val productRep = mock<ProductRepository>()
+            val searchCacheRep = mock<SearchCacheRepository>()
+            val sut = SearchProductsViewModel(productRep, searchCacheRep)
 
-        whenever(searchCacheRep.getAll()).thenAnswer { flowOf(products) }
-        sut.getSearchCache()
+            whenever(productRep.searchPerCategory(any(), any())).thenAnswer { flowOf(products) }
+            sut.searchPerCategory(search, 1L)
 
-        advanceUntilIdle()
+            advanceUntilIdle()
 
-        verify(searchCacheRep).getAll()
-    }
-
-    @Test
-    fun whenGetSearchCache_shouldSetPropertySearchCache() = runTest {
-        insertSearchCache()
-
-        val collectJob = launch { sut.searchCache.collect() }
-        sut.getSearchCache()
-
-        advanceUntilIdle()
-
-        assertEquals(searchList, sut.searchCache.value)
-
-        collectJob.cancel()
-    }
+            verify(productRep).searchPerCategory(any(), any())
+        }
 
     @Test
-    fun whenInsertSearch_shouldDelegateToProductRepository() = runTest {
-        val search = "C"
-        val productRep = mock<ProductRepository>()
-        val searchCacheRep = mock<SearchCacheRepository>()
-        val sut = SearchProductsViewModel(productRep, searchCacheRep)
+    fun whenSearchPerCategory_ifThereIsAnyMatch_shouldSetTheReturnValueToProducts() =
+        runTest {
+            insertProducts()
+            val search = "Homem"
+            val collectJob = launch { sut.products.collect() }
 
-        sut.insertSearch(search = search)
+            sut.searchPerCategory(search = search, categoryId = 1L)
 
-        advanceUntilIdle()
+            advanceUntilIdle()
 
-        verify(searchCacheRep).insert(any())
-    }
+            assertEquals(mapToItems(listOf(products[0])), sut.products.value)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun whenSearchPerCategory_ifThereIsNoAnyMatch_shouldSetProductsToEmptyList() =
+        runTest {
+            insertProducts()
+            val search = "Homem"
+            val collectJob = launch { sut.products.collect() }
+
+            sut.searchPerCategory(search = search, categoryId = 2L)
+
+            advanceUntilIdle()
+
+            assertEquals(mapToItems(emptyList()), sut.products.value)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun whenGetSearchCache_shouldDelegateToSearchCacheRepository() =
+        runTest {
+            val productRep = mock<ProductRepository>()
+            val searchCacheRep = mock<SearchCacheRepository>()
+            val sut = SearchProductsViewModel(productRep, searchCacheRep)
+
+            whenever(searchCacheRep.getAll()).thenAnswer { flowOf(products) }
+            sut.getSearchCache()
+
+            advanceUntilIdle()
+
+            verify(searchCacheRep).getAll()
+        }
+
+    @Test
+    fun whenGetSearchCache_shouldSetPropertySearchCache() =
+        runTest {
+            insertSearchCache()
+
+            val collectJob = launch { sut.searchCache.collect() }
+            sut.getSearchCache()
+
+            advanceUntilIdle()
+
+            assertEquals(searchList, sut.searchCache.value)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun whenInsertSearch_shouldDelegateToProductRepository() =
+        runTest {
+            val search = "C"
+            val productRep = mock<ProductRepository>()
+            val searchCacheRep = mock<SearchCacheRepository>()
+            val sut = SearchProductsViewModel(productRep, searchCacheRep)
+
+            sut.insertSearch(search = search)
+
+            advanceUntilIdle()
+
+            verify(searchCacheRep).insert(any())
+        }
 
     private fun mapToItems(products: List<Product>) =
         products.map {
@@ -203,8 +213,7 @@ class SearchProductsViewModelTest {
             )
         }
 
-    private suspend fun insertProducts() =
-        products.forEach { productRepository.insert(it, {}, {}) }
-    private suspend fun insertSearchCache() =
-        searchList.forEach { searchCacheRepository.insert(it) }
+    private suspend fun insertProducts() = products.forEach { productRepository.insert(it, {}, {}) }
+
+    private suspend fun insertSearchCache() = searchList.forEach { searchCacheRepository.insert(it) }
 }

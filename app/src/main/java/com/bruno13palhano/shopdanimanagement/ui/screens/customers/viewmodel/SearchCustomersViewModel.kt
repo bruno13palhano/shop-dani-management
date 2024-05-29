@@ -2,10 +2,10 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.repository.customer.CustomerRepository
-import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.data.di.CustomerRep
 import com.bruno13palhano.core.data.di.SearchCacheRep
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
+import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
@@ -18,51 +18,55 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchCustomersViewModel @Inject constructor(
-    @CustomerRep private val customerRepository: CustomerRepository,
-    @SearchCacheRep private val searchCacheRepository: SearchCacheRepository
-) : ViewModel() {
-    val searchCache = searchCacheRepository.getAll()
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )
-
-    private val _customers = MutableStateFlow(emptyList<Customer>())
-    val customers = _customers
-        .map {
-            it.map { customer ->
-                CommonItem(
-                    id = customer.id,
-                    photo = customer.photo,
-                    title = customer.name,
-                    subtitle = customer.email,
-                    description = customer.address
+class SearchCustomersViewModel
+    @Inject
+    constructor(
+        @CustomerRep private val customerRepository: CustomerRepository,
+        @SearchCacheRep private val searchCacheRepository: SearchCacheRepository
+    ) : ViewModel() {
+        val searchCache =
+            searchCacheRepository.getAll()
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(5_000),
+                    initialValue = emptyList()
                 )
+
+        private val _customers = MutableStateFlow(emptyList<Customer>())
+        val customers =
+            _customers
+                .map {
+                    it.map { customer ->
+                        CommonItem(
+                            id = customer.id,
+                            photo = customer.photo,
+                            title = customer.name,
+                            subtitle = customer.email,
+                            description = customer.address
+                        )
+                    }
+                }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(5_000),
+                    initialValue = emptyList()
+                )
+
+        fun search(search: String) {
+            if (search.trim().isNotEmpty()) {
+                viewModelScope.launch {
+                    customerRepository.search(search = search).collect {
+                        _customers.value = it
+                    }
+                }
             }
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )
 
-    fun search(search: String) {
-        if (search.trim().isNotEmpty()) {
-            viewModelScope.launch {
-                customerRepository.search(search = search).collect {
-                    _customers.value = it
+        fun insertCache(search: String) {
+            if (search.trim().isNotEmpty()) {
+                viewModelScope.launch {
+                    searchCacheRepository.insert(SearchCache(search.trim()))
                 }
             }
         }
     }
-
-    fun insertCache(search: String) {
-        if (search.trim().isNotEmpty()) {
-            viewModelScope.launch {
-                searchCacheRepository.insert(SearchCache(search.trim()))
-            }
-        }
-    }
-}

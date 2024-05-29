@@ -95,16 +95,18 @@ fun ProductContent(
     var openCategorySheet by rememberSaveable { mutableStateOf(false) }
     var openCompanySheet by rememberSaveable { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
-    val items = arrayOf(
-        stringResource(id = R.string.add_to_catalog_label),
-        stringResource(id = R.string.delete_label),
-    )
+    val items =
+        arrayOf(
+            stringResource(id = R.string.add_to_catalog_label),
+            stringResource(id = R.string.delete_label)
+        )
 
     Scaffold(
-        modifier = Modifier
-            .clickableNoEffect {
-                onOutsideClick()
-            },
+        modifier =
+            Modifier
+                .clickableNoEffect {
+                    onOutsideClick()
+                },
         topBar = {
             TopAppBar(
                 title = { Text(text = screenTitle) },
@@ -156,10 +158,12 @@ fun ProductContent(
             }
         }
     ) {
-        Column(modifier = Modifier
-            .padding(it)
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState())
+        Column(
+            modifier =
+                Modifier
+                    .padding(it)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState())
         ) {
             AnimatedVisibility(visible = openCategorySheet) {
                 BottomSheet(
@@ -190,9 +194,10 @@ fun ProductContent(
             }
 
             AnimatedVisibility(visible = openCompanySheet) {
-                val initialCompany = companies
-                    .filter { company -> company.isChecked }
-                    .findLast { company -> company.isChecked }?.name?.company
+                val initialCompany =
+                    companies
+                        .filter { company -> company.isChecked }
+                        .findLast { company -> company.isChecked }?.name?.company
 
                 BottomSheet(
                     onDismissBottomSheet = {
@@ -200,7 +205,7 @@ fun ProductContent(
                         onDismissCompany()
                     }
                 ) {
-                    val (selected, onOptionSelected) = rememberSaveable { mutableStateOf(initialCompany)}
+                    val (selected, onOptionSelected) = rememberSaveable { mutableStateOf(initialCompany) }
 
                     Column(modifier = Modifier.padding(bottom = 32.dp)) {
                         companies.forEach { companyItem ->
@@ -225,25 +230,28 @@ fun ProductContent(
                 verticalAlignment = Alignment.Bottom
             ) {
                 ElevatedCard(
-                    modifier = Modifier
-                        .padding(start = 8.dp),
+                    modifier =
+                        Modifier
+                            .padding(start = 8.dp),
                     onClick = onImageClick
                 ) {
                     if (photo.isEmpty()) {
                         Image(
-                            modifier = Modifier
-                                .size(128.dp)
-                                .padding(8.dp)
-                                .clip(RoundedCornerShape(8.dp)),
+                            modifier =
+                                Modifier
+                                    .size(128.dp)
+                                    .padding(8.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
                             imageVector = Icons.Filled.Image,
                             contentDescription = stringResource(id = R.string.product_image_label)
                         )
                     } else {
                         Image(
-                            modifier = Modifier
-                                .size(128.dp)
-                                .padding(8.dp)
-                                .clip(RoundedCornerShape(8.dp)),
+                            modifier =
+                                Modifier
+                                    .size(128.dp)
+                                    .padding(8.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
                             painter = rememberAsyncImagePainter(model = photo),
                             contentDescription = stringResource(id = R.string.product_image_label)
                         )
@@ -290,18 +298,20 @@ fun ProductContent(
             )
             if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 OutlinedTextField(
-                    modifier = Modifier
-                        .padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 8.dp)
-                        .fillMaxWidth()
-                        .weight(1F, true)
-                        .clearFocusOnKeyboardDismiss(),
+                    modifier =
+                        Modifier
+                            .padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 8.dp)
+                            .fillMaxWidth()
+                            .weight(1F, true)
+                            .clearFocusOnKeyboardDismiss(),
                     value = description,
                     onValueChange = onDescriptionChange,
                     leadingIcon = {
                         Row(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .padding(top = 16.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxHeight()
+                                    .padding(top = 16.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Description,
@@ -310,9 +320,10 @@ fun ProductContent(
                         }
                     },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        defaultKeyboardAction(ImeAction.Done)
-                    }),
+                    keyboardActions =
+                        KeyboardActions(onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }),
                     label = {
                         Text(
                             text = stringResource(id = R.string.description_label),
@@ -324,24 +335,26 @@ fun ProductContent(
                             text = stringResource(id = R.string.enter_description_label),
                             fontStyle = FontStyle.Italic
                         )
-                    },
+                    }
                 )
             } else {
                 OutlinedTextField(
-                    modifier = Modifier
-                        .padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 8.dp)
-                        .sizeIn(minHeight = 200.dp)
-                        .fillMaxWidth()
-                        .sizeIn(minHeight = 200.dp)
-                        .clearFocusOnKeyboardDismiss(),
+                    modifier =
+                        Modifier
+                            .padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 8.dp)
+                            .sizeIn(minHeight = 200.dp)
+                            .fillMaxWidth()
+                            .sizeIn(minHeight = 200.dp)
+                            .clearFocusOnKeyboardDismiss(),
                     value = description,
                     onValueChange = onDescriptionChange,
                     leadingIcon = {
                         Row(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .sizeIn(minHeight = 200.dp)
-                                .padding(top = 16.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxHeight()
+                                    .sizeIn(minHeight = 200.dp)
+                                    .padding(top = 16.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Description,
@@ -350,9 +363,10 @@ fun ProductContent(
                         }
                     },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        defaultKeyboardAction(ImeAction.Done)
-                    }),
+                    keyboardActions =
+                        KeyboardActions(onDone = {
+                            defaultKeyboardAction(ImeAction.Done)
+                        }),
                     label = {
                         Text(
                             text = stringResource(id = R.string.description_label),
@@ -364,7 +378,7 @@ fun ProductContent(
                             text = stringResource(id = R.string.enter_description_label),
                             fontStyle = FontStyle.Italic
                         )
-                    },
+                    }
                 )
             }
         }
@@ -372,6 +386,6 @@ fun ProductContent(
 }
 
 object ProductMenuItem {
-    const val addToCatalog = 0
-    const val delete = 1
+    const val ADD_TO_CATALOG = 0
+    const val DELETE = 1
 }

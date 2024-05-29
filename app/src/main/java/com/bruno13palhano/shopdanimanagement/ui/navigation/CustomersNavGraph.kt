@@ -39,7 +39,7 @@ fun NavGraphBuilder.customersNavGraph(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 onItemClick = { id ->
-                    navController.navigate(route = CustomersRoutes.EditCustomer(id =id))
+                    navController.navigate(route = CustomersRoutes.EditCustomer(id = id))
                 },
                 navigateUp = { navController.navigateUp() }
             )

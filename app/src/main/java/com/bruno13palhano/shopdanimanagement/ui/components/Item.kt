@@ -127,34 +127,39 @@ fun ItemContent(
             }
         }
     ) {
-        Column(modifier = Modifier
-            .padding(it)
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState())
+        Column(
+            modifier =
+                Modifier
+                    .padding(it)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState())
         ) {
             Row(
                 verticalAlignment = Alignment.Bottom
             ) {
                 ElevatedCard(
-                    modifier = Modifier
-                        .padding(start = 8.dp),
+                    modifier =
+                        Modifier
+                            .padding(start = 8.dp)
                 ) {
                     if (photo.isEmpty()) {
                         Image(
-                            modifier = Modifier
-                                .size(128.dp)
-                                .padding(8.dp)
-                                .clip(RoundedCornerShape(8.dp)),
+                            modifier =
+                                Modifier
+                                    .size(128.dp)
+                                    .padding(8.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
                             imageVector = Icons.Filled.Image,
                             contentDescription = stringResource(id = R.string.product_image_label),
                             contentScale = ContentScale.Crop
                         )
                     } else {
                         Image(
-                            modifier = Modifier
-                                .size(128.dp)
-                                .padding(8.dp)
-                                .clip(RoundedCornerShape(8.dp)),
+                            modifier =
+                                Modifier
+                                    .size(128.dp)
+                                    .padding(8.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
                             painter = rememberAsyncImagePainter(model = photo),
                             contentDescription = stringResource(id = R.string.product_image_label),
                             contentScale = ContentScale.Crop

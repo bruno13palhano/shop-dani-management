@@ -129,14 +129,18 @@ fun ProductScreen(
     val errors = getErrors()
 
     when (productState) {
-        UiState.Fail -> { showContent = true }
+        UiState.Fail -> {
+            showContent = true
+        }
 
         UiState.InProgress -> {
             showContent = false
             CircularProgress()
         }
 
-        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+        UiState.Success -> {
+            LaunchedEffect(key1 = Unit) { navigateUp() }
+        }
     }
 
     if (showDatePickerDialog) {
@@ -157,14 +161,16 @@ fun ProductScreen(
                 }
             }
         ) {
-            datePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.date,
-                initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    DisplayMode.Picker
-                } else {
-                    DisplayMode.Input
-                }
-            )
+            datePickerState =
+                rememberDatePickerState(
+                    initialSelectedDateMillis = viewModel.date,
+                    initialDisplayMode =
+                        if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            DisplayMode.Picker
+                        } else {
+                            DisplayMode.Input
+                        }
+                )
             DatePicker(
                 state = datePickerState,
                 showModeToggle = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -203,11 +209,11 @@ fun ProductScreen(
             onDateClick = { showDatePickerDialog = true },
             onMoreOptionsItemClick = { index ->
                 when (index) {
-                    ProductMenuItem.addToCatalog -> {
+                    ProductMenuItem.ADD_TO_CATALOG -> {
                         onAddToCatalogClick(productId)
                     }
 
-                    ProductMenuItem.delete -> {
+                    ProductMenuItem.DELETE -> {
                         viewModel.deleteProduct(
                             id = productId,
                             onError = { error ->

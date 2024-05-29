@@ -31,11 +31,10 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class StockItemViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var productRepository: ProductRepository
@@ -50,32 +49,34 @@ class StockItemViewModelTest {
     }
 
     @Test
-    fun isItemNotEmpty_shouldReturnTrue_whenPropertiesIsNotEmpty() = runTest {
-        sut.updateQuantity(quantity = "10")
-        sut.updatePurchasePrice(purchasePrice = "11.20")
-        sut.updateSalePrice(salePrice = "12.30")
+    fun isItemNotEmpty_shouldReturnTrue_whenPropertiesIsNotEmpty() =
+        runTest {
+            sut.updateQuantity(quantity = "10")
+            sut.updatePurchasePrice(purchasePrice = "11.20")
+            sut.updateSalePrice(salePrice = "12.30")
 
-        val collectJob = launch { sut.isItemNotEmpty.collect() }
-        advanceUntilIdle()
+            val collectJob = launch { sut.isItemNotEmpty.collect() }
+            advanceUntilIdle()
 
-        assertEquals(true, sut.isItemNotEmpty.value)
+            assertEquals(true, sut.isItemNotEmpty.value)
 
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun isItemNotEmpty_shouldReturnFalse_whenPropertiesIsEmpty() = runTest {
-        sut.updateQuantity(quantity = "")
-        sut.updatePurchasePrice(purchasePrice = "11.20")
-        sut.updateSalePrice(salePrice = "12.30")
+    fun isItemNotEmpty_shouldReturnFalse_whenPropertiesIsEmpty() =
+        runTest {
+            sut.updateQuantity(quantity = "")
+            sut.updatePurchasePrice(purchasePrice = "11.20")
+            sut.updateSalePrice(salePrice = "12.30")
 
-        val collectJob = launch { sut.isItemNotEmpty.collect() }
-        advanceUntilIdle()
+            val collectJob = launch { sut.isItemNotEmpty.collect() }
+            advanceUntilIdle()
 
-        assertEquals(false, sut.isItemNotEmpty.value)
+            assertEquals(false, sut.isItemNotEmpty.value)
 
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     @Test
     fun updateQuantity_shouldChangeQuantity() {
@@ -126,101 +127,108 @@ class StockItemViewModelTest {
     }
 
     @Test
-    fun getProduct_shouldCallGetByIdFromProductRepository() = runTest {
-        val productRepository = mock<ProductRepository>()
-        val stockItemRepository = mock<StockRepository>()
-        val sut = StockItemViewModel(productRepository, stockItemRepository)
+    fun getProduct_shouldCallGetByIdFromProductRepository() =
+        runTest {
+            val productRepository = mock<ProductRepository>()
+            val stockItemRepository = mock<StockRepository>()
+            val sut = StockItemViewModel(productRepository, stockItemRepository)
 
-        whenever(productRepository.getById(any())).doAnswer { flowOf() }
+            whenever(productRepository.getById(any())).doAnswer { flowOf() }
 
-        sut.getProduct(id = 1L)
-        advanceUntilIdle()
+            sut.getProduct(id = 1L)
+            advanceUntilIdle()
 
-        verify(productRepository).getById(any())
-    }
-
-    @Test
-    fun getProduct_shouldSetItemPropertiesThatDependOnProduct() = runTest {
-        val product = makeRandomProduct(id = 1L)
-        productRepository.insert(model = product, {}, {})
-
-        sut.getProduct(id = product.id)
-        advanceUntilIdle()
-
-        assertEquals(product.name, sut.name)
-        assertEquals(product.photo, sut.photo)
-        assertEquals(product.company, sut.company)
-        assertEquals(product.date, sut.date)
-        assertEquals(product.categories.joinToString(", ") { it.category }, sut.category)
-    }
+            verify(productRepository).getById(any())
+        }
 
     @Test
-    fun getStockOrder_shouldSetStockOrderProperties() = runTest {
-        val stockOrder = makeRandomStockItem(id = 1L)
-        stockItemRepository.insert(model = stockOrder, {}, {})
+    fun getProduct_shouldSetItemPropertiesThatDependOnProduct() =
+        runTest {
+            val product = makeRandomProduct(id = 1L)
+            productRepository.insert(model = product, {}, {})
 
-        sut.getStockItem(stockItemId = stockOrder.id)
-        advanceUntilIdle()
+            sut.getProduct(id = product.id)
+            advanceUntilIdle()
 
-        assertEquals(stockOrder.name, sut.name)
-        assertEquals(stockOrder.photo, sut.photo)
-        assertEquals(stockOrder.quantity.toString(), sut.quantity)
-        assertEquals(stockOrder.company, sut.company)
-        assertEquals(stockOrder.date, sut.date)
-        assertEquals(stockOrder.validity, sut.validity)
-        assertEquals(stockOrder.categories.joinToString(", ") { it.category }, sut.category)
-        assertEquals(stockOrder.purchasePrice.toString(), sut.purchasePrice)
-        assertEquals(stockOrder.salePrice.toString(), sut.salePrice)
-        assertEquals(stockOrder.isPaid, sut.isPaid)
-    }
+            assertEquals(product.name, sut.name)
+            assertEquals(product.photo, sut.photo)
+            assertEquals(product.company, sut.company)
+            assertEquals(product.date, sut.date)
+            assertEquals(product.categories.joinToString(", ") { it.category }, sut.category)
+        }
 
     @Test
-    fun getStockOrder_shouldCallGetByIdFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductRepository>()
-        val stockItemRepository = mock<StockRepository>()
-        val sut = StockItemViewModel(productRepository, stockItemRepository)
+    fun getStockOrder_shouldSetStockOrderProperties() =
+        runTest {
+            val stockOrder = makeRandomStockItem(id = 1L)
+            stockItemRepository.insert(model = stockOrder, {}, {})
 
-        whenever(stockItemRepository.getById(any())).doAnswer { flowOf() }
+            sut.getStockItem(stockItemId = stockOrder.id)
+            advanceUntilIdle()
 
-        sut.getStockItem(stockItemId = 1L)
-        advanceUntilIdle()
-
-        verify(stockItemRepository).getById(any())
-    }
-
-    @Test
-    fun insertItems_shouldCallInsertFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductRepository>()
-        val stockItemRepository = mock<StockRepository>()
-        val sut = StockItemViewModel(productRepository, stockItemRepository)
-
-        sut.insertItems(productId = 1L, {}, {})
-        advanceUntilIdle()
-
-        verify(stockItemRepository).insert(any(), any(), any())
-    }
+            assertEquals(stockOrder.name, sut.name)
+            assertEquals(stockOrder.photo, sut.photo)
+            assertEquals(stockOrder.quantity.toString(), sut.quantity)
+            assertEquals(stockOrder.company, sut.company)
+            assertEquals(stockOrder.date, sut.date)
+            assertEquals(stockOrder.validity, sut.validity)
+            assertEquals(stockOrder.categories.joinToString(", ") { it.category }, sut.category)
+            assertEquals(stockOrder.purchasePrice.toString(), sut.purchasePrice)
+            assertEquals(stockOrder.salePrice.toString(), sut.salePrice)
+            assertEquals(stockOrder.isPaid, sut.isPaid)
+        }
 
     @Test
-    fun updateStockOrderItem_shouldCallUpdateFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductRepository>()
-        val stockItemRepository = mock<StockRepository>()
-        val sut = StockItemViewModel(productRepository, stockItemRepository)
+    fun getStockOrder_shouldCallGetByIdFromStockOrderRepository() =
+        runTest {
+            val productRepository = mock<ProductRepository>()
+            val stockItemRepository = mock<StockRepository>()
+            val sut = StockItemViewModel(productRepository, stockItemRepository)
 
-        sut.updateStockItem(stockItemId = 1L, {}, {})
-        advanceUntilIdle()
+            whenever(stockItemRepository.getById(any())).doAnswer { flowOf() }
 
-        verify(stockItemRepository).update(any(), any(), any())
-    }
+            sut.getStockItem(stockItemId = 1L)
+            advanceUntilIdle()
+
+            verify(stockItemRepository).getById(any())
+        }
 
     @Test
-    fun deleteStockOrderItem_shouldCallDeleteByIdFromStockOrderRepository() = runTest {
-        val productRepository = mock<ProductRepository>()
-        val stockItemRepository = mock<StockRepository>()
-        val sut = StockItemViewModel(productRepository, stockItemRepository)
+    fun insertItems_shouldCallInsertFromStockOrderRepository() =
+        runTest {
+            val productRepository = mock<ProductRepository>()
+            val stockItemRepository = mock<StockRepository>()
+            val sut = StockItemViewModel(productRepository, stockItemRepository)
 
-        sut.deleteStockItem(stockOrderId = 1L, {}, {})
-        advanceUntilIdle()
+            sut.insertItems(productId = 1L, {}, {})
+            advanceUntilIdle()
 
-        verify(stockItemRepository).deleteById(any(), any(), any(), any())
-    }
+            verify(stockItemRepository).insert(any(), any(), any())
+        }
+
+    @Test
+    fun updateStockOrderItem_shouldCallUpdateFromStockOrderRepository() =
+        runTest {
+            val productRepository = mock<ProductRepository>()
+            val stockItemRepository = mock<StockRepository>()
+            val sut = StockItemViewModel(productRepository, stockItemRepository)
+
+            sut.updateStockItem(stockItemId = 1L, {}, {})
+            advanceUntilIdle()
+
+            verify(stockItemRepository).update(any(), any(), any())
+        }
+
+    @Test
+    fun deleteStockOrderItem_shouldCallDeleteByIdFromStockOrderRepository() =
+        runTest {
+            val productRepository = mock<ProductRepository>()
+            val stockItemRepository = mock<StockRepository>()
+            val sut = StockItemViewModel(productRepository, stockItemRepository)
+
+            sut.deleteStockItem(stockOrderId = 1L, {}, {})
+            advanceUntilIdle()
+
+            verify(stockItemRepository).deleteById(any(), any(), any(), any())
+        }
 }

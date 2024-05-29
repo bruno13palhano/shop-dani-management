@@ -106,26 +106,26 @@ fun NavGraphBuilder.homeNavGraph(
 
 sealed interface HomeRoutes {
     @Serializable
-    data object Main: HomeRoutes
+    data object Main : HomeRoutes
 
     @Serializable
-    data object Stock: HomeRoutes
+    data object Stock : HomeRoutes
 
     @Serializable
-    data object Sales: HomeRoutes
+    data object Sales : HomeRoutes
 
     @Serializable
-    data object Orders: HomeRoutes
+    data object Orders : HomeRoutes
 
     @Serializable
-    data object Amazon: HomeRoutes
+    data object Amazon : HomeRoutes
 
     @Serializable
-    data object Deliveries: HomeRoutes
+    data object Deliveries : HomeRoutes
 
     @Serializable
-    data object Catalog: HomeRoutes
+    data object Catalog : HomeRoutes
 
     @Serializable
-    data class Sale(val id: Long): HomeRoutes
+    data class Sale(val id: Long) : HomeRoutes
 }

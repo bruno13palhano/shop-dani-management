@@ -65,10 +65,11 @@ fun CategoriesContent(
         }
     ) {
         LazyColumn(
-            modifier = Modifier
-                .semantics { contentDescription = "List of items" }
-                .padding(it),
-            contentPadding = PaddingValues(8.dp, vertical = 4.dp),
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "List of items" }
+                    .padding(it),
+            contentPadding = PaddingValues(8.dp, vertical = 4.dp)
         ) {
             items(categories) { category ->
                 SimpleItemList(
@@ -81,7 +82,7 @@ fun CategoriesContent(
             }
         }
     }
-    if(showCategoryDialog) {
+    if (showCategoryDialog) {
         SingleInputDialog(
             dialogTitle = stringResource(id = R.string.new_category_label),
             label = stringResource(id = R.string.name_label),

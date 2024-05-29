@@ -17,66 +17,69 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserViewModel @Inject constructor(
-    @UserRep private val userRepository: UserRepository
-): ViewModel() {
-    private var _updateState = MutableStateFlow<UiState>(UiState.Fail)
-    val updateState = _updateState.asStateFlow()
+class UserViewModel
+    @Inject
+    constructor(
+        @UserRep private val userRepository: UserRepository
+    ) : ViewModel() {
+        private var _updateState = MutableStateFlow<UiState>(UiState.Fail)
+        val updateState = _updateState.asStateFlow()
 
-    private var userId = 0L
-    var photo by mutableStateOf(byteArrayOf())
-        private set
-    var username by mutableStateOf("")
-        private set
-    var email by mutableStateOf("")
-        private set
-    var role by mutableStateOf("")
-        private set
+        private var userId = 0L
+        var photo by mutableStateOf(byteArrayOf())
+            private set
+        var username by mutableStateOf("")
+            private set
+        var email by mutableStateOf("")
+            private set
+        var role by mutableStateOf("")
+            private set
 
-    fun updatePhoto(photo: ByteArray) {
-        this.photo = photo
-    }
+        fun updatePhoto(photo: ByteArray) {
+            this.photo = photo
+        }
 
-    fun updateUsername(username: String) {
-        this.username = username
-    }
+        fun updateUsername(username: String) {
+            this.username = username
+        }
 
-    fun getCurrentUser() {
-        viewModelScope.launch {
-            userRepository.getCurrentUser(onError = {}, onSuccess = {}).collect {
-                userId = it.id
-                photo = it.photo
-                username = it.username
-                email = it.email
-                role = it.role
+        fun getCurrentUser() {
+            viewModelScope.launch {
+                userRepository.getCurrentUser(onError = {}, onSuccess = {}).collect {
+                    userId = it.id
+                    photo = it.photo
+                    username = it.username
+                    email = it.email
+                    role = it.role
+                }
+            }
+        }
+
+        fun updateUser(onError: (error: Int) -> Unit) {
+            val user =
+                User(
+                    id = userId,
+                    username = username,
+                    email = email,
+                    password = "",
+                    photo = photo,
+                    enabled = true,
+                    role = role,
+                    timestamp = getCurrentTimestamp()
+                )
+
+            viewModelScope.launch {
+                _updateState.value = UiState.InProgress
+                userRepository.update(
+                    user = user,
+                    onError = {
+                        onError(it)
+                        _updateState.value = UiState.Fail
+                    },
+                    onSuccess = {
+                        _updateState.value = UiState.Success
+                    }
+                )
             }
         }
     }
-
-    fun updateUser(onError: (error: Int) -> Unit) {
-        val user = User(
-            id = userId,
-            username = username,
-            email = email,
-            password = "",
-            photo = photo,
-            enabled = true,
-            role = role,
-            timestamp = getCurrentTimestamp()
-        )
-
-        viewModelScope.launch {
-            _updateState.value = UiState.InProgress
-            userRepository.update(
-                user = user,
-                onError = {
-                    onError(it)
-                    _updateState.value = UiState.Fail
-                },
-                onSuccess = {
-                    _updateState.value = UiState.Success
-                }
-            )
-        }
-    }
-}

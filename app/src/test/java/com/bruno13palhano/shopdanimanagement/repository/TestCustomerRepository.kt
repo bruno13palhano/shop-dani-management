@@ -13,8 +13,8 @@ class TestCustomerRepository : CustomerRepository {
     override fun search(search: String): Flow<List<Customer>> {
         return flowOf(customers).map {
             it.filter { customer ->
-                customer.name == search || customer.email == search || customer.address == search
-                        || customer.phoneNumber == search
+                customer.name == search || customer.email == search || customer.address == search ||
+                    customer.phoneNumber == search
             }
         }
     }

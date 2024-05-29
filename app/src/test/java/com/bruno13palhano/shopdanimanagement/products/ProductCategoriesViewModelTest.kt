@@ -25,7 +25,6 @@ import org.mockito.kotlin.verify
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class ProductCategoriesViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
@@ -35,11 +34,12 @@ class ProductCategoriesViewModelTest {
     private lateinit var categoryRepository: CategoryRepository
     private lateinit var sut: ProductCategoriesViewModel
 
-    private var categories = listOf(
-        Category(id = 1L, category = "Perfumes", timestamp = ""),
-        Category(id = 2L, category = "Soaps", timestamp = ""),
-        Category(id = 3L, category = "Others", timestamp = "")
-    )
+    private var categories =
+        listOf(
+            Category(id = 1L, category = "Perfumes", timestamp = ""),
+            Category(id = 2L, category = "Soaps", timestamp = ""),
+            Category(id = 3L, category = "Others", timestamp = "")
+        )
 
     @Before
     fun setup() {
@@ -56,37 +56,39 @@ class ProductCategoriesViewModelTest {
     }
 
     @Test
-    fun insertCategory_shouldCallInsertFromCategoryRepository() = runTest {
-        val categoryRepository = mock<CategoryRepository>()
-        val sut = ProductCategoriesViewModel(categoryRepository)
+    fun insertCategory_shouldCallInsertFromCategoryRepository() =
+        runTest {
+            val categoryRepository = mock<CategoryRepository>()
+            val sut = ProductCategoriesViewModel(categoryRepository)
 
-        sut.insertCategory({}, {})
-        advanceUntilIdle()
+            sut.insertCategory({}, {})
+            advanceUntilIdle()
 
-        verify(categoryRepository).insert(any(), any(), any())
-    }
-
-    @Test
-    fun insertCategory_shouldChangeNewNameToEmpty() = runTest {
-        val name = "Test"
-
-        sut.updateName(newName = name)
-        sut.insertCategory({}, {})
-
-        assertEquals("", sut.newName)
-    }
+            verify(categoryRepository).insert(any(), any(), any())
+        }
 
     @Test
-    fun collectCategories_shouldReturnAllCategories() = runTest {
-        insertCategories()
-        val collectJob = launch { sut.categories.collect() }
-        advanceUntilIdle()
+    fun insertCategory_shouldChangeNewNameToEmpty() =
+        runTest {
+            val name = "Test"
 
-        assertEquals(categories, sut.categories.value)
+            sut.updateName(newName = name)
+            sut.insertCategory({}, {})
 
-        collectJob.cancel()
-    }
+            assertEquals("", sut.newName)
+        }
 
-    private suspend fun insertCategories() =
-        categories.forEach { categoryRepository.insert(it, {}, {}) }
+    @Test
+    fun collectCategories_shouldReturnAllCategories() =
+        runTest {
+            insertCategories()
+            val collectJob = launch { sut.categories.collect() }
+            advanceUntilIdle()
+
+            assertEquals(categories, sut.categories.value)
+
+            collectJob.cancel()
+        }
+
+    private suspend fun insertCategories() = categories.forEach { categoryRepository.insert(it, {}, {}) }
 }

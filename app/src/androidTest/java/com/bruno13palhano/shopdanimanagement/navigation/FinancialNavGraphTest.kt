@@ -31,7 +31,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class FinancialNavGraphTest {
-
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 

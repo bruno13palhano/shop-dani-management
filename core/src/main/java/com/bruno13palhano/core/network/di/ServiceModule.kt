@@ -31,28 +31,30 @@ private const val BASE_URL = BuildConfig.apiUrl
 @Module
 @InstallIn(SingletonComponent::class)
 internal object ServiceModule {
-
     @Provides
     @Singleton
     fun provideApiService(
-        @DefaultAuthenticationInterceptor authenticatorInterceptor: Interceptor
+        @DefaultAuthenticationInterceptor authenticatorInterceptor: Interceptor,
     ): Service {
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
+        val moshi =
+            Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
 
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        val client = OkHttpClient.Builder()
-            .addInterceptor(authenticatorInterceptor)
-            .addInterceptor(interceptor)
-            .build()
-        val retrofit = Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(BASE_URL)
-            .client(client)
-            .build()
+        val client =
+            OkHttpClient.Builder()
+                .addInterceptor(authenticatorInterceptor)
+                .addInterceptor(interceptor)
+                .build()
+        val retrofit =
+            Retrofit.Builder()
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .baseUrl(BASE_URL)
+                .client(client)
+                .build()
 
         val apiService: Service by lazy { retrofit.create(Service::class.java) }
 
@@ -62,12 +64,14 @@ internal object ServiceModule {
     @Singleton
     @DefaultSessionManager
     @Provides
-    fun provideSession(@ApplicationContext context: Context): SessionManager = SessionManager(context)
+    fun provideSession(
+        @ApplicationContext context: Context,
+    ): SessionManager = SessionManager(context)
 
     @Singleton
     @DefaultAuthenticationInterceptor
     @Provides
     fun provideAuthenticationInterceptor(
-        @DefaultSessionManager sessionManager: SessionManager
+        @DefaultSessionManager sessionManager: SessionManager,
     ): Interceptor = AuthenticatorInterceptor(sessionManager)
 }

@@ -26,7 +26,6 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class DeliveryViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
@@ -75,87 +74,93 @@ class DeliveryViewModelTest {
     }
 
     @Test
-    fun getDeliveryById_shouldCallGetByIdFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository>()
-        val sut = DeliveryViewModel(saleRepository)
+    fun getDeliveryById_shouldCallGetByIdFromRepository() =
+        runTest {
+            val saleRepository = mock<SaleRepository>()
+            val sut = DeliveryViewModel(saleRepository)
 
-        whenever(saleRepository.getById(any())).doAnswer { flowOf() }
+            whenever(saleRepository.getById(any())).doAnswer { flowOf() }
 
-        sut.getDeliveryById(saleId = 1L)
-        advanceUntilIdle()
+            sut.getDeliveryById(saleId = 1L)
+            advanceUntilIdle()
 
-        verify(saleRepository).getById(any())
-    }
-
-    @Test
-    fun getDeliveryById_shouldSetDeliveryProperties() = runTest {
-        val sales = listOf(makeRandomSale(id = 1L), makeRandomSale(id = 2L))
-        val current = sales[1]
-        sales.forEach { saleRepository.insert(it, {}, {}) }
-
-        sut.getDeliveryById(saleId = current.id)
-        advanceUntilIdle()
-
-        assertEquals(current.customerName, sut.name)
-        assertEquals(current.address, sut.address)
-        assertEquals(current.phoneNumber, sut.phoneNumber)
-        assertEquals(current.name, sut.productName)
-        assertEquals(current.salePrice.toString(), sut.price)
-        assertEquals(current.deliveryPrice.toString(), sut.deliveryPrice)
-        assertEquals(current.shippingDate, sut.shippingDate)
-        assertEquals(current.deliveryDate, sut.deliveryDate)
-        assertEquals(current.delivered, sut.delivered)
-    }
+            verify(saleRepository).getById(any())
+        }
 
     @Test
-    fun updateDelivery_shouldCallUpdateDeliveryPriceFromRepository() = runTest {
-        val deliveryPrice = "123"
-        val saleRepository = mock<SaleRepository>()
-        val sut = DeliveryViewModel(saleRepository)
+    fun getDeliveryById_shouldSetDeliveryProperties() =
+        runTest {
+            val sales = listOf(makeRandomSale(id = 1L), makeRandomSale(id = 2L))
+            val current = sales[1]
+            sales.forEach { saleRepository.insert(it, {}, {}) }
 
-        sut.updateDeliveryPrice(deliveryPrice)
-        sut.updateDelivery(saleId = 1L, {}, {})
-        advanceUntilIdle()
+            sut.getDeliveryById(saleId = current.id)
+            advanceUntilIdle()
 
-        verify(saleRepository).update(any(), any(), any())
-    }
-
-    @Test
-    fun updateDelivery_shouldCallUpdateShippingDateFromRepository() = runTest {
-        val shippingDate = 2000L
-        val saleRepository = mock<SaleRepository>()
-        val sut = DeliveryViewModel(saleRepository)
-
-        sut.updateShippingDate(shippingDate)
-        sut.updateDelivery(saleId = 1L, {}, {})
-        advanceUntilIdle()
-
-        verify(saleRepository).update(any(), any(), any())
-    }
+            assertEquals(current.customerName, sut.name)
+            assertEquals(current.address, sut.address)
+            assertEquals(current.phoneNumber, sut.phoneNumber)
+            assertEquals(current.name, sut.productName)
+            assertEquals(current.salePrice.toString(), sut.price)
+            assertEquals(current.deliveryPrice.toString(), sut.deliveryPrice)
+            assertEquals(current.shippingDate, sut.shippingDate)
+            assertEquals(current.deliveryDate, sut.deliveryDate)
+            assertEquals(current.delivered, sut.delivered)
+        }
 
     @Test
-    fun updateDelivery_shouldCallUpdateDeliveryDateFromRepository() = runTest {
-        val deliveryDate = 2000L
-        val saleRepository = mock<SaleRepository>()
-        val sut = DeliveryViewModel(saleRepository)
+    fun updateDelivery_shouldCallUpdateDeliveryPriceFromRepository() =
+        runTest {
+            val deliveryPrice = "123"
+            val saleRepository = mock<SaleRepository>()
+            val sut = DeliveryViewModel(saleRepository)
 
-        sut.updateDeliveryDate(deliveryDate)
-        sut.updateDelivery(saleId = 1L, {}, {})
-        advanceUntilIdle()
+            sut.updateDeliveryPrice(deliveryPrice)
+            sut.updateDelivery(saleId = 1L, {}, {})
+            advanceUntilIdle()
 
-        verify(saleRepository).update(any(), any(), any())
-    }
+            verify(saleRepository).update(any(), any(), any())
+        }
 
     @Test
-    fun updateDelivery_shouldCallUpdateDeliveredFromRepository() = runTest {
-        val delivered = true
-        val saleRepository = mock<SaleRepository>()
-        val sut = DeliveryViewModel(saleRepository)
+    fun updateDelivery_shouldCallUpdateShippingDateFromRepository() =
+        runTest {
+            val shippingDate = 2000L
+            val saleRepository = mock<SaleRepository>()
+            val sut = DeliveryViewModel(saleRepository)
 
-        sut.updateDelivered(delivered)
-        sut.updateDelivery(saleId = 1L, {}, {})
-        advanceUntilIdle()
+            sut.updateShippingDate(shippingDate)
+            sut.updateDelivery(saleId = 1L, {}, {})
+            advanceUntilIdle()
 
-        verify(saleRepository).update(any(), any(), any())
-    }
+            verify(saleRepository).update(any(), any(), any())
+        }
+
+    @Test
+    fun updateDelivery_shouldCallUpdateDeliveryDateFromRepository() =
+        runTest {
+            val deliveryDate = 2000L
+            val saleRepository = mock<SaleRepository>()
+            val sut = DeliveryViewModel(saleRepository)
+
+            sut.updateDeliveryDate(deliveryDate)
+            sut.updateDelivery(saleId = 1L, {}, {})
+            advanceUntilIdle()
+
+            verify(saleRepository).update(any(), any(), any())
+        }
+
+    @Test
+    fun updateDelivery_shouldCallUpdateDeliveredFromRepository() =
+        runTest {
+            val delivered = true
+            val saleRepository = mock<SaleRepository>()
+            val sut = DeliveryViewModel(saleRepository)
+
+            sut.updateDelivered(delivered)
+            sut.updateDelivery(saleId = 1L, {}, {})
+            advanceUntilIdle()
+
+            verify(saleRepository).update(any(), any(), any())
+        }
 }

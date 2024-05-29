@@ -7,17 +7,18 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AuthenticatorInterceptor @Inject constructor(
-    @DefaultSessionManager private val sessionManager: SessionManager
-) : Interceptor {
+class AuthenticatorInterceptor
+    @Inject
+    constructor(
+        @DefaultSessionManager private val sessionManager: SessionManager,
+    ) : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val requestBuilder = chain.request().newBuilder()
 
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val requestBuilder = chain.request().newBuilder()
+            sessionManager.fetchAuthToken()?.let {
+                requestBuilder.addHeader("Authorization", "Bearer $it")
+            }
 
-        sessionManager.fetchAuthToken()?.let {
-            requestBuilder.addHeader("Authorization", "Bearer $it")
+            return chain.proceed(requestBuilder.build())
         }
-
-        return chain.proceed(requestBuilder.build())
     }
-}

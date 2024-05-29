@@ -112,20 +112,25 @@ fun UserScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getUserResponse()
 
-    val menuItems = arrayOf(
-        stringResource(id = R.string.logout_label),
-        stringResource(id = R.string.change_password_label)
-    )
+    val menuItems =
+        arrayOf(
+            stringResource(id = R.string.logout_label),
+            stringResource(id = R.string.change_password_label)
+        )
 
     when (updateState) {
-        UiState.Fail -> { showContent = true }
+        UiState.Fail -> {
+            showContent = true
+        }
 
         UiState.InProgress -> {
             showContent = false
             CircularProgress()
         }
 
-        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+        UiState.Success -> {
+            LaunchedEffect(key1 = Unit) { navigateUp() }
+        }
     }
 
     AnimatedVisibility(
@@ -144,8 +149,12 @@ fun UserScreen(
             onPhotoClick = { galleryLauncher.launch(arrayOf("image/*")) },
             onMoreOptionsItemClick = { index ->
                 when (index) {
-                    MoreOptions.LOGOUT -> { onLogoutClick() }
-                    MoreOptions.CHANGE_PASSWORD -> { onChangePasswordClick() }
+                    MoreOptions.LOGOUT -> {
+                        onLogoutClick()
+                    }
+                    MoreOptions.CHANGE_PASSWORD -> {
+                        onChangePasswordClick()
+                    }
                 }
             },
             onOutsideClick = {
@@ -237,34 +246,38 @@ fun UserContent(
         }
     ) {
         Column(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .padding(it)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ElevatedCard(
-                modifier = Modifier
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .padding(16.dp),
                 onClick = onPhotoClick,
                 shape = RoundedCornerShape(5)
             ) {
                 if (photo.isEmpty()) {
                     Image(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .size(200.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(5)),
                         imageVector = Icons.Filled.Image,
                         contentDescription = stringResource(id = R.string.customer_photo_label),
                         contentScale = ContentScale.Crop
                     )
                 } else {
                     Image(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .size(200.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(5)),
                         painter = rememberAsyncImagePainter(model = photo),
                         contentDescription = stringResource(id = R.string.customer_photo_label),
                         contentScale = ContentScale.Crop

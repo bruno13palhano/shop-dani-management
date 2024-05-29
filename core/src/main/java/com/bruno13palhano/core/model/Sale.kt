@@ -32,7 +32,7 @@ data class Sale(
     val delivered: Boolean,
     val canceled: Boolean,
     val isAmazon: Boolean,
-    override val timestamp: String
+    override val timestamp: String,
 ) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

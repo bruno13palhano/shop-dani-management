@@ -20,60 +20,64 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    @UserRep private val userRepository: UserRepository
-): ViewModel() {
-    private val _loginState = MutableStateFlow<LoginState>(LoginState.SignedOut)
-    val loginStatus = _loginState.asStateFlow()
+class LoginViewModel
+    @Inject
+    constructor(
+        @UserRep private val userRepository: UserRepository
+    ) : ViewModel() {
+        private val _loginState = MutableStateFlow<LoginState>(LoginState.SignedOut)
+        val loginState = _loginState.asStateFlow()
 
-    var username by mutableStateOf("")
-        private set
-    var password by mutableStateOf("")
-        private set
+        var username by mutableStateOf("")
+            private set
+        var password by mutableStateOf("")
+            private set
 
-    val isLoginValid = snapshotFlow { username.isNotEmpty() && password.isNotEmpty() }
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = false
-        )
+        val isLoginValid =
+            snapshotFlow { username.isNotEmpty() && password.isNotEmpty() }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(5_000),
+                    initialValue = false
+                )
 
-    fun updateUsername(username: String) {
-        this.username = username
-    }
+        fun updateUsername(username: String) {
+            this.username = username
+        }
 
-    fun updatePassword(password: String) {
-        this.password = password
-    }
+        fun updatePassword(password: String) {
+            this.password = password
+        }
 
-    fun login(onError: (error: Int) -> Unit) {
-        val user = User(
-            id = 0L,
-            username = username.trim(),
-            email = "",
-            password = password.trim(),
-            photo = byteArrayOf(),
-            role = "",
-            enabled = true,
-            timestamp = getCurrentTimestamp()
-        )
+        fun login(onError: (error: Int) -> Unit) {
+            val user =
+                User(
+                    id = 0L,
+                    username = username.trim(),
+                    email = "",
+                    password = password.trim(),
+                    photo = byteArrayOf(),
+                    role = "",
+                    enabled = true,
+                    timestamp = getCurrentTimestamp()
+                )
 
-        viewModelScope.launch {
-            _loginState.value = LoginState.InProgress
-            userRepository.login(
-                user = user,
-                onError = {
-                    onError(it)
-                    _loginState.value = LoginState.SignedOut
-                },
-                onSuccess = {
-                    _loginState.value = LoginState.SignedIn
-                }
-            )
+            viewModelScope.launch {
+                _loginState.value = LoginState.InProgress
+                userRepository.login(
+                    user = user,
+                    onError = {
+                        onError(it)
+                        _loginState.value = LoginState.SignedOut
+                    },
+                    onSuccess = {
+                        _loginState.value = LoginState.SignedIn
+                    }
+                )
+            }
+        }
+
+        fun logout() {
+            userRepository.logout()
         }
     }
-
-    fun logout() {
-        userRepository.logout()
-    }
-}

@@ -32,8 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,9 +111,10 @@ fun StockListContent(
         }
     ) {
         LazyColumn(
-            modifier = Modifier
-                .semantics { contentDescription = "List of items" }
-                .padding(it),
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "List of items" }
+                    .padding(it),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
             reverseLayout = true
         ) {

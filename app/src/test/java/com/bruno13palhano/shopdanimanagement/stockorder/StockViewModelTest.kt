@@ -33,11 +33,10 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class StockViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var stockItemRepository: StockRepository
@@ -52,120 +51,130 @@ class StockViewModelTest {
     }
 
     @Test
-    fun categories_shouldReturnAllCategories() = runTest {
-        val categories = listOf(makeRandomCategory(id = 1L), makeRandomCategory(id = 2L))
-        categories.forEach { categoryRepository.insert(it, {}, {}) }
+    fun categories_shouldReturnAllCategories() =
+        runTest {
+            val categories = listOf(makeRandomCategory(id = 1L), makeRandomCategory(id = 2L))
+            categories.forEach { categoryRepository.insert(it, {}, {}) }
 
-        val collectJob = launch { sut.categories.collect() }
-        advanceUntilIdle()
+            val collectJob = launch { sut.categories.collect() }
+            advanceUntilIdle()
 
-        assertEquals(categories.map { it.category }, sut.categories.value)
+            assertEquals(categories.map { it.category }, sut.categories.value)
 
-        collectJob.cancel()
-    }
-
-    @Test
-    fun getItems_shouldCallGetStockOrderItemsFromStockOrderRepository() = runTest {
-        val stockItemRepository = mock<StockRepository>()
-        val categoryRepository = mock<CategoryRepository>()
-        val sut = StockViewModel(stockItemRepository, categoryRepository)
-
-        whenever(stockItemRepository.getStockItems()).doAnswer { flowOf() }
-
-        sut.getItems()
-        advanceUntilIdle()
-
-        verify(stockItemRepository).getStockItems()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun getItems_shouldSetStockList() = runTest {
-        val items = listOf(
-            makeRandomStockItem(id = 1L, quantity = 0),
-            makeRandomStockItem(id = 2L),
-            makeRandomStockItem(id = 3L)
-        )
-        items.forEach { stockItemRepository.insert(it, {}, {}) }
-        val expectedItem = listOf(items[1], items[2])
+    fun getItems_shouldCallGetStockOrderItemsFromStockOrderRepository() =
+        runTest {
+            val stockItemRepository = mock<StockRepository>()
+            val categoryRepository = mock<CategoryRepository>()
+            val sut = StockViewModel(stockItemRepository, categoryRepository)
 
-        val collectJob = launch { sut.stockList.collect() }
+            whenever(stockItemRepository.getStockItems()).doAnswer { flowOf() }
 
-        sut.getItems()
-        advanceUntilIdle()
+            sut.getItems()
+            advanceUntilIdle()
 
-        assertEquals(mapToStock(expectedItem), sut.stockList.value)
-
-        collectJob.cancel()
-    }
+            verify(stockItemRepository).getStockItems()
+        }
 
     @Test
-    fun getItemsByCategories_shouldCallGetByCategoryFromStockOrderRepository() = runTest {
-        val stockItemRepository = mock<StockRepository>()
-        val categoryRepository = mock<CategoryRepository>()
-        val sut = StockViewModel(stockItemRepository, categoryRepository)
+    fun getItems_shouldSetStockList() =
+        runTest {
+            val items =
+                listOf(
+                    makeRandomStockItem(id = 1L, quantity = 0),
+                    makeRandomStockItem(id = 2L),
+                    makeRandomStockItem(id = 3L)
+                )
+            items.forEach { stockItemRepository.insert(it, {}, {}) }
+            val expectedItem = listOf(items[1], items[2])
 
-        whenever(stockItemRepository.getByCategory(any())).doAnswer { flowOf() }
+            val collectJob = launch { sut.stockList.collect() }
 
-        sut.getItemsByCategories(category = "Perfumes")
-        advanceUntilIdle()
+            sut.getItems()
+            advanceUntilIdle()
 
-        verify(stockItemRepository).getByCategory(any())
-    }
+            assertEquals(mapToStock(expectedItem), sut.stockList.value)
 
-    @Test
-    fun getItemsByCategory_shouldSetStockList() = runTest {
-        val items = listOf(
-            makeRandomStockItem(id = 1L, quantity = 0),
-            makeRandomStockItem(id = 2L),
-            makeRandomStockItem(id = 3L)
-        )
-        items.forEach { stockItemRepository.insert(it, {}, {}) }
-        val expectedItem = items[2]
-        val category = expectedItem.categories[0].category
-
-        val collectJob = launch { sut.stockList.collect() }
-
-        sut.getItemsByCategories(category = category)
-        advanceUntilIdle()
-
-        assertEquals(mapToStock(listOf(expectedItem)), sut.stockList.value)
-
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun getOutOfStock_shouldCallGetOutOfStockFromStockOrderRepository() = runTest {
-        val stockItemRepository = mock<StockRepository>()
-        val categoryRepository = mock<CategoryRepository>()
-        val sut = StockViewModel(stockItemRepository, categoryRepository)
+    fun getItemsByCategories_shouldCallGetByCategoryFromStockOrderRepository() =
+        runTest {
+            val stockItemRepository = mock<StockRepository>()
+            val categoryRepository = mock<CategoryRepository>()
+            val sut = StockViewModel(stockItemRepository, categoryRepository)
 
-        whenever(stockItemRepository.getOutOfStock()).doAnswer { flowOf() }
+            whenever(stockItemRepository.getByCategory(any())).doAnswer { flowOf() }
 
-        sut.getOutOfStock()
-        advanceUntilIdle()
+            sut.getItemsByCategories(category = "Perfumes")
+            advanceUntilIdle()
 
-        verify(stockItemRepository).getOutOfStock()
-    }
+            verify(stockItemRepository).getByCategory(any())
+        }
 
     @Test
-    fun getOutOfStock_shouldSetStockList() = runTest {
-        val items = listOf(
-            makeRandomStockItem(id = 1L, quantity = 0),
-            makeRandomStockItem(id = 2L),
-            makeRandomStockItem(id = 3L)
-        )
-        items.forEach { stockItemRepository.insert(it, {}, {}) }
-        val expectedItem = items[0]
+    fun getItemsByCategory_shouldSetStockList() =
+        runTest {
+            val items =
+                listOf(
+                    makeRandomStockItem(id = 1L, quantity = 0),
+                    makeRandomStockItem(id = 2L),
+                    makeRandomStockItem(id = 3L)
+                )
+            items.forEach { stockItemRepository.insert(it, {}, {}) }
+            val expectedItem = items[2]
+            val category = expectedItem.categories[0].category
 
-        val collectJob = launch { sut.stockList.collect() }
+            val collectJob = launch { sut.stockList.collect() }
 
-        sut.getOutOfStock()
-        advanceUntilIdle()
+            sut.getItemsByCategories(category = category)
+            advanceUntilIdle()
 
-        assertEquals(mapToStock(listOf(expectedItem)), sut.stockList.value)
+            assertEquals(mapToStock(listOf(expectedItem)), sut.stockList.value)
 
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
+
+    @Test
+    fun getOutOfStock_shouldCallGetOutOfStockFromStockOrderRepository() =
+        runTest {
+            val stockItemRepository = mock<StockRepository>()
+            val categoryRepository = mock<CategoryRepository>()
+            val sut = StockViewModel(stockItemRepository, categoryRepository)
+
+            whenever(stockItemRepository.getOutOfStock()).doAnswer { flowOf() }
+
+            sut.getOutOfStock()
+            advanceUntilIdle()
+
+            verify(stockItemRepository).getOutOfStock()
+        }
+
+    @Test
+    fun getOutOfStock_shouldSetStockList() =
+        runTest {
+            val items =
+                listOf(
+                    makeRandomStockItem(id = 1L, quantity = 0),
+                    makeRandomStockItem(id = 2L),
+                    makeRandomStockItem(id = 3L)
+                )
+            items.forEach { stockItemRepository.insert(it, {}, {}) }
+            val expectedItem = items[0]
+
+            val collectJob = launch { sut.stockList.collect() }
+
+            sut.getOutOfStock()
+            advanceUntilIdle()
+
+            assertEquals(mapToStock(listOf(expectedItem)), sut.stockList.value)
+
+            collectJob.cancel()
+        }
 
     private fun mapToStock(items: List<StockItem>) =
         items.map {

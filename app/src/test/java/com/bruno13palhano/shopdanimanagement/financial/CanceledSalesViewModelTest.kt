@@ -33,39 +33,41 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class CanceledSalesViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var saleRepository: SaleRepository
     private lateinit var sut: CanceledSalesViewModel
 
-    private val canceledSales = listOf(
-        makeRandomSale(
-            id = 1L,
-            stockItem = makeRandomStockItem(
+    private val canceledSales =
+        listOf(
+            makeRandomSale(
                 id = 1L,
-                product = makeRandomProduct(id =1L, name = "A"),
-                salePrice = 25F
+                stockItem =
+                    makeRandomStockItem(
+                        id = 1L,
+                        product = makeRandomProduct(id = 1L, name = "A"),
+                        salePrice = 25F
+                    ),
+                customer = makeRandomCustomer(id = 1L, name = "A"),
+                canceled = true
             ),
-            customer = makeRandomCustomer(id = 1L, name = "A"),
-            canceled = true
-        ),
-        makeRandomSale(
-            id = 2L,
-            stockItem = makeRandomStockItem(
+            makeRandomSale(
                 id = 2L,
-                product = makeRandomProduct(id =2L, name = "B"),
-                salePrice = 50F
+                stockItem =
+                    makeRandomStockItem(
+                        id = 2L,
+                        product = makeRandomProduct(id = 2L, name = "B"),
+                        salePrice = 50F
+                    ),
+                customer = makeRandomCustomer(id = 1L, name = "B"),
+                canceled = true
             ),
-            customer = makeRandomCustomer(id = 1L, name = "B"),
-            canceled = true
-        ),
-        makeRandomSale(id = 3L, canceled = false)
-    )
+            makeRandomSale(id = 3L, canceled = false)
+        )
 
     @Before
     fun setup() {
@@ -74,127 +76,135 @@ class CanceledSalesViewModelTest {
     }
 
     @Test
-    fun getAllCanceledSales_shouldCallGetAllCanceledSalesFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository>()
-        val sut = CanceledSalesViewModel(saleRepository)
+    fun getAllCanceledSales_shouldCallGetAllCanceledSalesFromRepository() =
+        runTest {
+            val saleRepository = mock<SaleRepository>()
+            val sut = CanceledSalesViewModel(saleRepository)
 
-        whenever(saleRepository.getAllCanceledSales()).doAnswer { flowOf() }
+            whenever(saleRepository.getAllCanceledSales()).doAnswer { flowOf() }
 
-        sut.getAllCanceledSales()
-        advanceUntilIdle()
+            sut.getAllCanceledSales()
+            advanceUntilIdle()
 
-        verify(saleRepository).getAllCanceledSales()
-    }
-
-    @Test
-    fun getAllCanceledSales_shouldSetCanceledSaleProperty() = runTest {
-        insertCanceledSales()
-        val expected = mapToItem(listOf(canceledSales[0], canceledSales[1]))
-
-        val collectJob = launch { sut.canceledSales.collect() }
-
-        sut.getAllCanceledSales()
-        advanceUntilIdle()
-
-        assertEquals(expected, sut.canceledSales.value)
-
-        collectJob.cancel()
-    }
+            verify(saleRepository).getAllCanceledSales()
+        }
 
     @Test
-    fun getAllCanceledSalesByName_shouldCallGetCanceledByNameFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository>()
-        val sut = CanceledSalesViewModel(saleRepository)
+    fun getAllCanceledSales_shouldSetCanceledSaleProperty() =
+        runTest {
+            insertCanceledSales()
+            val expected = mapToItem(listOf(canceledSales[0], canceledSales[1]))
 
-        whenever(saleRepository.getCanceledByName(any())).doAnswer { flowOf() }
+            val collectJob = launch { sut.canceledSales.collect() }
 
-        sut.getCanceledSalesByName(isOrderedAsc = true)
-        advanceUntilIdle()
+            sut.getAllCanceledSales()
+            advanceUntilIdle()
 
-        verify(saleRepository).getCanceledByName(any())
-    }
+            assertEquals(expected, sut.canceledSales.value)
 
-    @Test
-    fun getCanceledSalesByName_shouldSetCanceledSaleProperty() = runTest {
-        insertCanceledSales()
-        val expected = mapToItem(listOf(canceledSales[1], canceledSales[0]))
-
-        val collectJob = launch { sut.canceledSales.collect() }
-
-        sut.getCanceledSalesByName(isOrderedAsc = false)
-        advanceUntilIdle()
-
-        assertEquals(expected, sut.canceledSales.value)
-
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun getCanceledSalesByCustomerName_shouldCallGetCanceledByCustomerNameFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository>()
-        val sut = CanceledSalesViewModel(saleRepository)
+    fun getAllCanceledSalesByName_shouldCallGetCanceledByNameFromRepository() =
+        runTest {
+            val saleRepository = mock<SaleRepository>()
+            val sut = CanceledSalesViewModel(saleRepository)
 
-        whenever(saleRepository.getCanceledByCustomerName(any())).doAnswer { flowOf() }
+            whenever(saleRepository.getCanceledByName(any())).doAnswer { flowOf() }
 
-        sut.getCanceledSalesByCustomerName(isOrderedAsc = true)
-        advanceUntilIdle()
+            sut.getCanceledSalesByName(isOrderedAsc = true)
+            advanceUntilIdle()
 
-        verify(saleRepository).getCanceledByCustomerName(any())
-    }
-
-    @Test
-    fun getCanceledSalesByCustomerName_shouldSetCanceledSaleProperty() = runTest {
-        insertCanceledSales()
-        val expected = mapToItem(listOf(canceledSales[1], canceledSales[0]))
-
-        val collectJob = launch { sut.canceledSales.collect() }
-
-        sut.getCanceledSalesByCustomerName(isOrderedAsc = false)
-        advanceUntilIdle()
-
-        assertEquals(expected, sut.canceledSales.value)
-
-        collectJob.cancel()
-    }
+            verify(saleRepository).getCanceledByName(any())
+        }
 
     @Test
-    fun getCanceledSalesByPrice_shouldCallGetCanceledByPriceFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository>()
-        val sut = CanceledSalesViewModel(saleRepository)
+    fun getCanceledSalesByName_shouldSetCanceledSaleProperty() =
+        runTest {
+            insertCanceledSales()
+            val expected = mapToItem(listOf(canceledSales[1], canceledSales[0]))
 
-        whenever(saleRepository.getCanceledByPrice(any())).doAnswer { flowOf() }
+            val collectJob = launch { sut.canceledSales.collect() }
 
-        sut.getCanceledSalesByPrice(isOrderedAsc = true)
-        advanceUntilIdle()
+            sut.getCanceledSalesByName(isOrderedAsc = false)
+            advanceUntilIdle()
 
-        verify(saleRepository).getCanceledByPrice(any())
-    }
+            assertEquals(expected, sut.canceledSales.value)
+
+            collectJob.cancel()
+        }
 
     @Test
-    fun getCanceledSalesByPrice_shouldSetCanceledSaleProperty() = runTest {
-        insertCanceledSales()
-        val expected = mapToItem(listOf(canceledSales[0], canceledSales[1]))
+    fun getCanceledSalesByCustomerName_shouldCallGetCanceledByCustomerNameFromRepository() =
+        runTest {
+            val saleRepository = mock<SaleRepository>()
+            val sut = CanceledSalesViewModel(saleRepository)
 
-        val collectJob = launch { sut.canceledSales.collect() }
+            whenever(saleRepository.getCanceledByCustomerName(any())).doAnswer { flowOf() }
 
-        sut.getCanceledSalesByPrice(isOrderedAsc = true)
-        advanceUntilIdle()
+            sut.getCanceledSalesByCustomerName(isOrderedAsc = true)
+            advanceUntilIdle()
 
-        assertEquals(expected, sut.canceledSales.value)
+            verify(saleRepository).getCanceledByCustomerName(any())
+        }
 
-        collectJob.cancel()
-    }
+    @Test
+    fun getCanceledSalesByCustomerName_shouldSetCanceledSaleProperty() =
+        runTest {
+            insertCanceledSales()
+            val expected = mapToItem(listOf(canceledSales[1], canceledSales[0]))
 
-    private fun mapToItem(canceledSales: List<Sale>) = canceledSales.map {
-        CommonItem(
-            id = it.id,
-            photo = it.photo,
-            title = it.name,
-            subtitle = it.salePrice.toString(),
-            description = it.customerName
-        )
-    }
+            val collectJob = launch { sut.canceledSales.collect() }
 
-    private suspend fun insertCanceledSales() =
-        canceledSales.forEach { saleRepository.insert(it, {}, {}) }
+            sut.getCanceledSalesByCustomerName(isOrderedAsc = false)
+            advanceUntilIdle()
+
+            assertEquals(expected, sut.canceledSales.value)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun getCanceledSalesByPrice_shouldCallGetCanceledByPriceFromRepository() =
+        runTest {
+            val saleRepository = mock<SaleRepository>()
+            val sut = CanceledSalesViewModel(saleRepository)
+
+            whenever(saleRepository.getCanceledByPrice(any())).doAnswer { flowOf() }
+
+            sut.getCanceledSalesByPrice(isOrderedAsc = true)
+            advanceUntilIdle()
+
+            verify(saleRepository).getCanceledByPrice(any())
+        }
+
+    @Test
+    fun getCanceledSalesByPrice_shouldSetCanceledSaleProperty() =
+        runTest {
+            insertCanceledSales()
+            val expected = mapToItem(listOf(canceledSales[0], canceledSales[1]))
+
+            val collectJob = launch { sut.canceledSales.collect() }
+
+            sut.getCanceledSalesByPrice(isOrderedAsc = true)
+            advanceUntilIdle()
+
+            assertEquals(expected, sut.canceledSales.value)
+
+            collectJob.cancel()
+        }
+
+    private fun mapToItem(canceledSales: List<Sale>) =
+        canceledSales.map {
+            CommonItem(
+                id = it.id,
+                photo = it.photo,
+                title = it.name,
+                subtitle = it.salePrice.toString(),
+                description = it.customerName
+            )
+        }
+
+    private suspend fun insertCanceledSales() = canceledSales.forEach { saleRepository.insert(it, {}, {}) }
 }

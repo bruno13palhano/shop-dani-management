@@ -27,8 +27,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.bruno13palhano.core.model.SearchCache
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.Stock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,10 +42,11 @@ fun SearchContent(
     var search by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
 
-    Scaffold(topBar = { TopAppBar( title = {} ) }) {
+    Scaffold(topBar = { TopAppBar(title = {}) }) {
         SearchBar(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
             query = search,
             onQueryChange = { searchValue -> search = searchValue },
             onSearch = { searchValue ->
@@ -78,9 +79,10 @@ fun SearchContent(
             placeholder = { Text(text = stringResource(id = R.string.search_products_label)) }
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .semantics { contentDescription = "List of search" }
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .semantics { contentDescription = "List of search" }
+                        .fillMaxWidth(),
                 reverseLayout = true
             ) {
                 items(items = searchCacheList, key = { searchCache -> searchCache.search }) { searchCache ->
@@ -97,12 +99,13 @@ fun SearchContent(
             }
         }
         LazyColumn(
-            modifier = Modifier
-                .semantics { contentDescription = "List of items" }
-                .padding(it),
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "List of items" }
+                    .padding(it),
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
         ) {
-            items(items = stockProducts, key = { stock -> stock.id } ) { stock ->
+            items(items = stockProducts, key = { stock -> stock.id }) { stock ->
                 HorizontalItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
                     photo = stock.photo,

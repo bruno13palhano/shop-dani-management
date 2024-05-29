@@ -28,7 +28,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class InsightsNavGraphTest {
-
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 

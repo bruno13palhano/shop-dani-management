@@ -55,7 +55,7 @@ fun AmazonRoute(
     AmazonScreen(
         onItemClick = onItemClick,
         onSearchClick = onSearchClick,
-        navigateUp = navigateUp,
+        navigateUp = navigateUp
     )
 }
 
@@ -67,9 +67,10 @@ fun AmazonScreen(
     viewModel: AmazonViewModel = hiltViewModel()
 ) {
     val amazonSales by viewModel.amazonSale.collectAsStateWithLifecycle()
-    val menuItems = arrayOf(
-        stringResource(id = R.string.create_spreadsheet_label)
-    )
+    val menuItems =
+        arrayOf(
+            stringResource(id = R.string.create_spreadsheet_label)
+        )
 
     var showSpreadsheetDialog by remember { mutableStateOf(false) }
 
@@ -85,7 +86,9 @@ fun AmazonScreen(
         onSearchClick = onSearchClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
-                MoreOptions.CREATE_SPREADSHEET -> { showSpreadsheetDialog = true }
+                MoreOptions.CREATE_SPREADSHEET -> {
+                    showSpreadsheetDialog = true
+                }
                 else -> {}
             }
         },
@@ -164,15 +167,17 @@ fun AmazonContent(
                 HorizontalItemList(
                     modifier = Modifier.padding(vertical = 4.dp),
                     title = item.customerName,
-                    subtitle = stringResource(
-                        id = R.string.product_price_text_tag,
-                        item.productName,
-                        item.salePrice.toString()
-                    ),
-                    description = stringResource(
-                        id = R.string.date_of_sale_tag,
-                        dateFormat.format(item.dateOfSale)
-                    ),
+                    subtitle =
+                        stringResource(
+                            id = R.string.product_price_text_tag,
+                            item.productName,
+                            item.salePrice.toString()
+                        ),
+                    description =
+                        stringResource(
+                            id = R.string.date_of_sale_tag,
+                            dateFormat.format(item.dateOfSale)
+                        ),
                     photo = item.productPhoto,
                     onClick = {
                         onItemClick(item.saleId, item.productId)

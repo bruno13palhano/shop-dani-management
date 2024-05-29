@@ -68,7 +68,7 @@ fun LoginScreen(
     onCreateAccountClick: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
-    val loginStatus by viewModel.loginStatus.collectAsStateWithLifecycle()
+    val loginStatus by viewModel.loginState.collectAsStateWithLifecycle()
     val isLoginValid by viewModel.isLoginValid.collectAsStateWithLifecycle()
     var showContent by remember { mutableStateOf(true) }
 
@@ -141,7 +141,7 @@ fun LoginContent(
     onPasswordChange: (password: String) -> Unit,
     onOutsideClick: () -> Unit,
     onCreateAccountClick: () -> Unit,
-    onLogin: () -> Unit,
+    onLogin: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.clickableNoEffect { onOutsideClick() },
@@ -160,10 +160,12 @@ fun LoginContent(
             }
         }
     ) {
-        Column(modifier = Modifier
-            .padding(it)
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState())
+        Column(
+            modifier =
+                Modifier
+                    .padding(it)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState())
         ) {
             CustomTextField(
                 text = username,
@@ -180,9 +182,10 @@ fun LoginContent(
                 placeholder = stringResource(id = R.string.enter_password_label)
             )
             TextButton(
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(end = 8.dp),
+                modifier =
+                    Modifier
+                        .align(Alignment.End)
+                        .padding(end = 8.dp),
                 onClick = onCreateAccountClick
             ) {
                 Text(text = stringResource(id = R.string.create_account_label))

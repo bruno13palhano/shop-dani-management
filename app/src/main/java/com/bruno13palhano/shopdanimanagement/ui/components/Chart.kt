@@ -108,51 +108,61 @@ fun SimpleChart(
             )
         }
     ) {
-        val axisValuesFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
-            try {
-                (chartValues.chartEntryModel.entries.first()
-                    .getOrNull(value.toInt()) as? DateChartEntry)
-                    ?.date.orEmpty()
-            } catch (ignored: Exception) { "0" }
-        }
+        val axisValuesFormatter =
+            AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
+                try {
+                    (
+                        chartValues.chartEntryModel.entries.first()
+                            .getOrNull(value.toInt()) as? DateChartEntry
+                    )
+                        ?.date.orEmpty()
+                } catch (ignored: Exception) {
+                    "0"
+                }
+            }
         Column(modifier = Modifier.padding(it)) {
             ProvideChartStyle(chartStyle = m3ChartStyle(entityColors = entityColors)) {
                 Chart(
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                        .fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                            .fillMaxSize(),
                     chart = lineChart(),
                     runInitialAnimation = true,
                     chartModelProducer = entry,
                     marker = rememberMarker(),
                     legend = rememberLegend(legends = legends),
                     fadingEdges = rememberFadingEdges(),
-                    startAxis = startAxis(
-                        titleComponent = textComponent(
-                            color = MaterialTheme.colorScheme.onBackground,
-                            background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
-                            padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                            margins = dimensionsOf(end = 8.dp),
-                            typeface = Typeface.MONOSPACE
+                    startAxis =
+                        startAxis(
+                            titleComponent =
+                                textComponent(
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                    padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                    margins = dimensionsOf(end = 8.dp),
+                                    typeface = Typeface.MONOSPACE
+                                ),
+                            title = startAxisTitle
                         ),
-                        title = startAxisTitle
-                    ),
-                    bottomAxis = if (entry.getModel().entries.isEmpty()) {
-                        bottomAxis()
-                    } else {
-                        bottomAxis(
-                            guideline = null,
-                            valueFormatter = axisValuesFormatter,
-                            titleComponent = textComponent(
-                                color = MaterialTheme.colorScheme.onBackground,
-                                background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
-                                padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                                margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
-                                typeface = Typeface.MONOSPACE
-                            ),
-                            title = bottomAxisTitle
-                        )
-                    },
+                    bottomAxis =
+                        if (entry.getModel().entries.isEmpty()) {
+                            bottomAxis()
+                        } else {
+                            bottomAxis(
+                                guideline = null,
+                                valueFormatter = axisValuesFormatter,
+                                titleComponent =
+                                    textComponent(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                        padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                        margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
+                                        typeface = Typeface.MONOSPACE
+                                    ),
+                                title = bottomAxisTitle
+                            )
+                        },
                     chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End)
                 )
             }
@@ -213,61 +223,75 @@ fun ComposedChart(
             )
         }
     ) {
-        val axisValuesFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
-            try {
-                (chartValues.chartEntryModel.entries.first()
-                    .getOrNull(value.toInt()) as? DateChartEntry)
-                    ?.date.orEmpty()
-            } catch (ignored: Exception) { "0" }
-        }
+        val axisValuesFormatter =
+            AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
+                try {
+                    (
+                        chartValues.chartEntryModel.entries.first()
+                            .getOrNull(value.toInt()) as? DateChartEntry
+                    )
+                        ?.date.orEmpty()
+                } catch (ignored: Exception) {
+                    "0"
+                }
+            }
         Column(modifier = Modifier.padding(it)) {
             ProvideChartStyle(
                 chartStyle = m3ChartStyle(entityColors = listOf(firstChartEntityColor))
             ) {
                 val columnChart = columnChart()
-                val lineChart = lineChart(lines = listOf(
-                    LineChart.LineSpec(
-                        lineColor = android.graphics.Color.toArgb(secondChartEntityColor.value.toLong())
+                val lineChart =
+                    lineChart(
+                        lines =
+                            listOf(
+                                LineChart.LineSpec(
+                                    lineColor = android.graphics.Color.toArgb(secondChartEntityColor.value.toLong())
+                                )
+                            )
                     )
-                ))
                 val composedChart = remember(columnChart, lineChart) { columnChart + lineChart }
 
                 Chart(
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                        .fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                            .fillMaxSize(),
                     chart = composedChart,
                     runInitialAnimation = true,
                     chartModelProducer = entry,
                     marker = rememberMarker(),
                     legend = rememberLegend(legends = legends),
                     fadingEdges = rememberFadingEdges(),
-                    startAxis = startAxis(
-                        titleComponent = textComponent(
-                            color = MaterialTheme.colorScheme.onBackground,
-                            background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
-                            padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                            margins = dimensionsOf(end = 8.dp),
-                            typeface = Typeface.MONOSPACE
+                    startAxis =
+                        startAxis(
+                            titleComponent =
+                                textComponent(
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                    padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                    margins = dimensionsOf(end = 8.dp),
+                                    typeface = Typeface.MONOSPACE
+                                ),
+                            title = startAxisTitle
                         ),
-                        title = startAxisTitle
-                    ),
-                    bottomAxis = if (entry.getModel().entries.isEmpty()) {
-                        bottomAxis()
-                    } else {
-                        bottomAxis(
-                            guideline = null,
-                            valueFormatter = axisValuesFormatter,
-                            titleComponent = textComponent(
-                                color = MaterialTheme.colorScheme.onBackground,
-                                background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
-                                padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                                margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
-                                typeface = Typeface.MONOSPACE
-                            ),
-                            title = bottomAxisTitle
-                        )
-                    },
+                    bottomAxis =
+                        if (entry.getModel().entries.isEmpty()) {
+                            bottomAxis()
+                        } else {
+                            bottomAxis(
+                                guideline = null,
+                                valueFormatter = axisValuesFormatter,
+                                titleComponent =
+                                    textComponent(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                        padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                        margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
+                                        typeface = Typeface.MONOSPACE
+                                    ),
+                                title = bottomAxisTitle
+                            )
+                        },
                     chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End)
                 )
             }
@@ -278,17 +302,19 @@ fun ComposedChart(
 @Composable
 private fun rememberLegend(legends: List<Pair<String, Int>>): VerticalLegend {
     return verticalLegend(
-        items = legends.map { legend ->
-            verticalLegendItem(
-                icon = ShapeComponent(Shapes.pillShape, legend.second),
-                label = textComponent(
-                    color = currentChartStyle.axis.axisLabelColor,
-                    textSize = 12.sp,
-                    typeface = Typeface.MONOSPACE
-                ),
-                labelText = legend.first
-            )
-        },
+        items =
+            legends.map { legend ->
+                verticalLegendItem(
+                    icon = ShapeComponent(Shapes.pillShape, legend.second),
+                    label =
+                        textComponent(
+                            color = currentChartStyle.axis.axisLabelColor,
+                            textSize = 12.sp,
+                            typeface = Typeface.MONOSPACE
+                        ),
+                    labelText = legend.first
+                )
+            },
         iconSize = 8.dp,
         iconPadding = 10.dp,
         spacing = 4.dp

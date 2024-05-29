@@ -35,7 +35,7 @@ fun NavGraphBuilder.amazonNavGraph(
             )
         }
 
-        composable<AmazonRoutes.Sale>{ backStackEntry ->
+        composable<AmazonRoutes.Sale> { backStackEntry ->
             val saleId = backStackEntry.toRoute<AmazonRoutes.Sale>().saleId
             val productId = backStackEntry.toRoute<AmazonRoutes.Sale>().productId
 

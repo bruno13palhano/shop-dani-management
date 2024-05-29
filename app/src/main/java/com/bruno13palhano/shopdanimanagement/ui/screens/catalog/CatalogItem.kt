@@ -121,19 +121,24 @@ fun CatalogItemScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val errors = getErrors()
 
-    val menuOptions = arrayOf(
-        stringResource(id = R.string.delete_label),
-    )
+    val menuOptions =
+        arrayOf(
+            stringResource(id = R.string.delete_label)
+        )
 
     when (catalogState) {
-        UiState.Fail -> { showContent = true }
+        UiState.Fail -> {
+            showContent = true
+        }
 
         UiState.InProgress -> {
             showContent = false
             CircularProgress()
         }
 
-        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+        UiState.Success -> {
+            LaunchedEffect(key1 = Unit) { navigateUp() }
+        }
     }
 
     AnimatedVisibility(
@@ -281,33 +286,37 @@ fun CatalogItemContent(
         }
     ) {
         Column(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .padding(it)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ElevatedCard(
-                modifier = Modifier
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .padding(16.dp),
                 shape = RoundedCornerShape(5)
             ) {
                 if (photo.isEmpty()) {
                     Image(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .size(200.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(5)),
                         imageVector = Icons.Filled.Image,
                         contentDescription = stringResource(id = R.string.customer_photo_label),
                         contentScale = ContentScale.Crop
                     )
                 } else {
                     Image(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .size(200.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(5)),
                         painter = rememberAsyncImagePainter(model = photo),
                         contentDescription = stringResource(id = R.string.customer_photo_label),
                         contentScale = ContentScale.Crop

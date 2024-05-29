@@ -20,7 +20,7 @@ suspend fun <T : Model> Synchronizer.syncData(
     dataList: List<T>,
     networkList: List<T>,
     onPush: suspend (deleteIds: List<Long>, saveList: List<T>, dtVersion: DataVersion) -> Unit,
-    onPull: suspend (deleteIds: List<Long>, saveList: List<T>, netVersion: DataVersion) -> Unit
+    onPull: suspend (deleteIds: List<Long>, saveList: List<T>, netVersion: DataVersion) -> Unit,
 ) = suspendRunCatching {
     if (dataVersion.id != 0L || networkVersion.id != 0L) {
         if (dataVersion.timestamp > networkVersion.timestamp) {
@@ -35,10 +35,11 @@ suspend fun <T : Model> Synchronizer.syncData(
     }
 }.isSuccess
 
-private suspend fun <T> suspendRunCatching(block: suspend () -> T): Result<T> = try {
-    Result.success(block())
-} catch (cancellationException: CancellationException) {
-    throw cancellationException
-} catch (exception: Exception) {
-    Result.failure(exception)
-}
+private suspend fun <T> suspendRunCatching(block: suspend () -> T): Result<T> =
+    try {
+        Result.success(block())
+    } catch (cancellationException: CancellationException) {
+        throw cancellationException
+    } catch (exception: Exception) {
+        Result.failure(exception)
+    }

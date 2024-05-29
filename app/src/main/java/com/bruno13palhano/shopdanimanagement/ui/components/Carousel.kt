@@ -26,10 +26,11 @@ fun Carousel(
     transitionDuration: Int = 450,
     pageContent: @Composable (page: Int) -> Unit
 ) {
-    val pagerState = rememberPagerState(
-        initialPage = initialPage,
-        initialPageOffsetFraction = 0F
-    ) { pageCount }
+    val pagerState =
+        rememberPagerState(
+            initialPage = initialPage,
+            initialPageOffsetFraction = 0F
+        ) { pageCount }
 
     val isDragged by pagerState.interactionSource.collectIsDraggedAsState()
     if (isDragged.not()) {
@@ -40,10 +41,11 @@ fun Carousel(
                 val nextPage = (pagerState.currentPage + 1) % pageCount
                 pagerState.animateScrollToPage(
                     page = nextPage,
-                    animationSpec = tween(
-                        durationMillis = transitionDuration,
-                        easing = LinearOutSlowInEasing
-                    )
+                    animationSpec =
+                        tween(
+                            durationMillis = transitionDuration,
+                            easing = LinearOutSlowInEasing
+                        )
                 )
                 currentKey = nextPage
             }

@@ -82,7 +82,6 @@ fun NavGraphBuilder.stockNavGraph(
         composable<StockRoutes.EditItem> { backStackEntry ->
             val stockItemId = backStackEntry.toRoute<StockRoutes.EditItem>().stockItemId
 
-
             EditStockItemRoute(
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,

@@ -1,7 +1,5 @@
 package com.bruno13palhano.shopdanimanagement
 
-import android.app.Application
-import android.content.Context
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,19 +16,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
-import androidx.test.runner.AndroidJUnitRunner
 import com.bruno13palhano.shopdanimanagement.ui.components.BottomMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.DrawerMenu
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
-import dagger.hilt.android.testing.CustomTestApplication
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import kotlinx.coroutines.launch
 import org.junit.Before
 import org.junit.Rule
@@ -38,7 +32,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class MainUiTest {
-
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
@@ -71,7 +64,7 @@ class MainUiTest {
                             MainNavGraph(
                                 modifier = Modifier.padding(it),
                                 navController = navController,
-                                showBottomMenu = {show ->
+                                showBottomMenu = { show ->
                                     showBottomBar = show
                                 }
                             ) {

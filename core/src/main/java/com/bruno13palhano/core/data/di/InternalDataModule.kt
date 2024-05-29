@@ -60,7 +60,6 @@ internal annotation class InternalDefaultExcelSheet
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class InternalDataModule {
-
     @InternalUserLight
     @Singleton
     @Binds

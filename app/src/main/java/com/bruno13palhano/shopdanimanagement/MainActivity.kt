@@ -24,9 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.bruno13palhano.shopdanimanagement.ui.components.BottomMenu
-import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.bruno13palhano.shopdanimanagement.ui.components.DrawerMenu
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
+import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -57,14 +57,16 @@ class MainActivity : ComponentActivity() {
                             bottomBar = {
                                 AnimatedVisibility(
                                     visible = showBottomBar,
-                                    enter = slideInVertically(
-                                        animationSpec = spring(stiffness = Spring.StiffnessHigh),
-                                        initialOffsetY = { it/8 }
-                                    ),
-                                    exit = slideOutVertically(
-                                        animationSpec = spring(stiffness = Spring.StiffnessHigh),
-                                        targetOffsetY = { it/8 }
-                                    )
+                                    enter =
+                                        slideInVertically(
+                                            animationSpec = spring(stiffness = Spring.StiffnessHigh),
+                                            initialOffsetY = { it / 8 }
+                                        ),
+                                    exit =
+                                        slideOutVertically(
+                                            animationSpec = spring(stiffness = Spring.StiffnessHigh),
+                                            targetOffsetY = { it / 8 }
+                                        )
                                 ) {
                                     BottomMenu(navController = navController)
                                 }

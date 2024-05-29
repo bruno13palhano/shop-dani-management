@@ -29,8 +29,9 @@ private fun StockItemPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             StockItem(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier =
+                    Modifier
+                        .fillMaxSize(),
                 name = "Essencial",
                 photo = byteArrayOf(),
                 price = 178.99f,
@@ -58,6 +59,7 @@ private fun StockListPreview() {
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun SaleItemListPreview() {

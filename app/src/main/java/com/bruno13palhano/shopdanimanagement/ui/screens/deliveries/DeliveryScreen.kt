@@ -117,14 +117,16 @@ fun DeliveryScreen(
                 }
             }
         ) {
-            shippingDatePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.shippingDate,
-                initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    DisplayMode.Picker
-                } else {
-                    DisplayMode.Input
-                }
-            )
+            shippingDatePickerState =
+                rememberDatePickerState(
+                    initialSelectedDateMillis = viewModel.shippingDate,
+                    initialDisplayMode =
+                        if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            DisplayMode.Picker
+                        } else {
+                            DisplayMode.Input
+                        }
+                )
             DatePicker(
                 state = shippingDatePickerState,
                 showModeToggle = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -152,14 +154,16 @@ fun DeliveryScreen(
                 }
             }
         ) {
-            deliveryDatePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.deliveryDate,
-                initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    DisplayMode.Picker
-                } else {
-                    DisplayMode.Input
-                }
-            )
+            deliveryDatePickerState =
+                rememberDatePickerState(
+                    initialSelectedDateMillis = viewModel.deliveryDate,
+                    initialDisplayMode =
+                        if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            DisplayMode.Picker
+                        } else {
+                            DisplayMode.Input
+                        }
+                )
             DatePicker(
                 state = deliveryDatePickerState,
                 showModeToggle = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -172,14 +176,18 @@ fun DeliveryScreen(
     val errors = getErrors()
 
     when (deliveryState) {
-        UiState.Fail -> { showContent = true }
+        UiState.Fail -> {
+            showContent = true
+        }
 
         UiState.InProgress -> {
             showContent = false
             CircularProgress()
         }
 
-        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+        UiState.Success -> {
+            LaunchedEffect(key1 = Unit) { navigateUp() }
+        }
     }
 
     AnimatedVisibility(
@@ -242,7 +250,7 @@ fun DeliveryContent(
     onDeliveryDateClick: () -> Unit,
     onOutsideClick: () -> Unit,
     onDoneButtonClick: () -> Unit,
-    navigateUp: () -> Unit,
+    navigateUp: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.clickableNoEffect { onOutsideClick() },

@@ -16,12 +16,14 @@ class TestSearchCacheRepository : SearchCacheRepository {
     override suspend fun deleteById(search: String) {
         var index = -1
         for (i in 0 until searchCacheList.size) {
-            if (searchCacheList[i].search == search)
+            if (searchCacheList[i].search == search) {
                 index = i
+            }
         }
 
-        if (index != -1)
+        if (index != -1) {
             searchCacheList.removeAt(index)
+        }
     }
 
     override fun getAll(): Flow<List<SearchCache>> {

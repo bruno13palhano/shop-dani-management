@@ -14,7 +14,7 @@ data class StockItem(
     val purchasePrice: Float,
     val salePrice: Float,
     val isPaid: Boolean,
-    override val timestamp: String
+    override val timestamp: String,
 ) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

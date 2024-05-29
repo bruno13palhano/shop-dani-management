@@ -63,10 +63,11 @@ fun StockDebitsScreen(
     }
 
     val stockItems by viewModel.debitItems.collectAsStateWithLifecycle()
-    val menuItems = arrayOf(
-        stringResource(id = R.string.ordered_by_name_label),
-        stringResource(id = R.string.ordered_by_price_label)
-    )
+    val menuItems =
+        arrayOf(
+            stringResource(id = R.string.ordered_by_name_label),
+            stringResource(id = R.string.ordered_by_price_label)
+        )
 
     var orderedByName by remember { mutableStateOf(false) }
     var orderedByPrice by remember { mutableStateOf(false) }
@@ -144,9 +145,10 @@ fun StockDebitsContent(
         }
     ) {
         LazyColumn(
-            modifier = Modifier
-                .semantics { contentDescription = "List of items" }
-                .padding(it),
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "List of items" }
+                    .padding(it),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
             items(items = stockItems, key = { stockItem -> stockItem.id }) { stockItem ->

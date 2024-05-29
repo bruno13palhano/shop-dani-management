@@ -63,12 +63,13 @@ fun DrawerMenu(
     gesturesEnabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val items = listOf(
-        Screen.Home,
-        Screen.Financial,
-        Screen.Insights,
-        Screen.User
-    )
+    val items =
+        listOf(
+            Screen.Home,
+            Screen.Financial,
+            Screen.Insights,
+            Screen.User
+        )
     val orientation = LocalConfiguration.current.orientation
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -79,19 +80,21 @@ fun DrawerMenu(
         gesturesEnabled = gesturesEnabled,
         drawerContent = {
             ModalDrawerSheet(
-                modifier = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    Modifier.fillMaxWidth(.78F)
-                } else {
-                    Modifier
-                },
+                modifier =
+                    if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        Modifier.fillMaxWidth(.78F)
+                    } else {
+                        Modifier
+                    },
                 drawerShape = RectangleShape
             ) {
                 LazyColumn {
                     stickyHeader {
                         Text(
-                            modifier = Modifier
-                                .padding(24.dp)
-                                .fillMaxWidth(),
+                            modifier =
+                                Modifier
+                                    .padding(24.dp)
+                                    .fillMaxWidth(),
                             text = stringResource(id = R.string.app_name),
                             textAlign = TextAlign.Start,
                             style = MaterialTheme.typography.titleLarge
@@ -118,9 +121,10 @@ fun DrawerMenu(
                                     drawerState.close()
                                 }
                             },
-                            modifier = Modifier
-                                .padding(top = 4.dp, bottom = 4.dp, end = 8.dp)
-                                .height(52.dp)
+                            modifier =
+                                Modifier
+                                    .padding(top = 4.dp, bottom = 4.dp, end = 8.dp)
+                                    .height(52.dp)
                         )
                     }
                 }
@@ -132,11 +136,12 @@ fun DrawerMenu(
 
 @Composable
 fun BottomMenu(navController: NavController) {
-    val items = listOf(
-        Screen.Home,
-        Screen.Products,
-        Screen.Customers
-    )
+    val items =
+        listOf(
+            Screen.Home,
+            Screen.Products,
+            Screen.Customers
+        )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -163,44 +168,49 @@ fun BottomMenu(navController: NavController) {
     }
 }
 
-//workaround to get the current selected route
+// workaround to get the current selected route
 fun NavDestination.selectedRoute(screen: Screen<MainRoutes>): Boolean {
     return hierarchy.any {
         it.route?.split(".")?.lastOrNull() == screen.route.toString()
     }
 }
 
-sealed class Screen<T: MainRoutes>(
+sealed class Screen<T : MainRoutes>(
     val route: T,
     val icon: ImageVector,
     @StringRes val resourceId: Int
 ) {
-    data object Home: Screen<MainRoutes>(
+    data object Home : Screen<MainRoutes>(
         route = MainRoutes.Home,
         icon = Icons.Filled.Home,
         resourceId = R.string.home_label
     )
-    data object Financial: Screen<MainRoutes>(
+
+    data object Financial : Screen<MainRoutes>(
         route = MainRoutes.Financial,
         icon = Icons.Filled.Money,
         resourceId = R.string.financial_label
     )
-    data object Insights: Screen<MainRoutes>(
+
+    data object Insights : Screen<MainRoutes>(
         route = MainRoutes.Insights,
         icon = Icons.Filled.Insights,
         resourceId = R.string.insights_label
     )
-    data object Products: Screen<MainRoutes>(
+
+    data object Products : Screen<MainRoutes>(
         route = MainRoutes.Products,
         icon = Icons.AutoMirrored.Filled.PlaylistAdd,
         resourceId = R.string.products_label
     )
-    data object Customers: Screen<MainRoutes>(
+
+    data object Customers : Screen<MainRoutes>(
         route = MainRoutes.Customers,
         icon = Icons.Filled.Person,
         resourceId = R.string.customers_label
     )
-    data object User: Screen<MainRoutes>(
+
+    data object User : Screen<MainRoutes>(
         route = MainRoutes.User,
         icon = Icons.Filled.AccountCircle,
         resourceId = R.string.account_label
@@ -240,9 +250,10 @@ fun BottomSheet(
     val bottomSheetState = rememberModalBottomSheetState()
 
     ModalBottomSheet(
-        modifier = Modifier
-            .padding(bottom = 48.dp)
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .padding(bottom = 48.dp)
+                .fillMaxWidth(),
         onDismissRequest = onDismissBottomSheet,
         sheetState = bottomSheetState,
         content = content

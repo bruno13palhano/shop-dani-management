@@ -33,36 +33,38 @@ import java.time.ZoneOffset
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class LastSalesViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private val currentDay = LocalDate.now()
     private lateinit var saleRepository: SaleRepository
     private lateinit var sut: LastSalesViewModel
 
-    private val sales = listOf(
-        makeRandomSale(
-            id = 1L,
-            dateOfSale = currentDay.minusDays(2).atStartOfDay()
-                .toInstant(ZoneOffset.UTC).toEpochMilli(),
-            canceled = false
-        ),
-        makeRandomSale(
-            id = 2L,
-            dateOfSale = currentDay.minusDays(1).atStartOfDay()
-                .toInstant(ZoneOffset.UTC).toEpochMilli(),
-            canceled = false
-        ),
-        makeRandomSale(
-            id = 3L,
-            dateOfSale = currentDay.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
-            canceled = false
+    private val sales =
+        listOf(
+            makeRandomSale(
+                id = 1L,
+                dateOfSale =
+                    currentDay.minusDays(2).atStartOfDay()
+                        .toInstant(ZoneOffset.UTC).toEpochMilli(),
+                canceled = false
+            ),
+            makeRandomSale(
+                id = 2L,
+                dateOfSale =
+                    currentDay.minusDays(1).atStartOfDay()
+                        .toInstant(ZoneOffset.UTC).toEpochMilli(),
+                canceled = false
+            ),
+            makeRandomSale(
+                id = 3L,
+                dateOfSale = currentDay.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
+                canceled = false
+            )
         )
-    )
 
     @Before
     fun setup() {
@@ -71,31 +73,33 @@ class LastSalesViewModelTest {
     }
 
     @Test
-    fun setLastSalesEntryByRange_shouldCallGetLastSalesFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository>()
-        val sut = LastSalesViewModel(saleRepository)
+    fun setLastSalesEntryByRange_shouldCallGetLastSalesFromRepository() =
+        runTest {
+            val saleRepository = mock<SaleRepository>()
+            val sut = LastSalesViewModel(saleRepository)
 
-        whenever(saleRepository.getLastSales(any(), any())).doAnswer { flowOf() }
+            whenever(saleRepository.getLastSales(any(), any())).doAnswer { flowOf() }
 
-        sut.setLastSalesEntryByRange(rangeOfDays = 7)
-        advanceUntilIdle()
+            sut.setLastSalesEntryByRange(rangeOfDays = 7)
+            advanceUntilIdle()
 
-        verify(saleRepository).getLastSales(any(), any())
-    }
+            verify(saleRepository).getLastSales(any(), any())
+        }
 
     @Test
-    fun setLastSalesEntryByRange_shouldSetLastSalesEntryProperty() = runTest {
-        insertSales()
+    fun setLastSalesEntryByRange_shouldSetLastSalesEntryProperty() =
+        runTest {
+            insertSales()
 
-        val collectJob = launch { sut.lastSalesEntry.collect() }
+            val collectJob = launch { sut.lastSalesEntry.collect() }
 
-        sut.setLastSalesEntryByRange(rangeOfDays = 7)
-        advanceUntilIdle()
+            sut.setLastSalesEntryByRange(rangeOfDays = 7)
+            advanceUntilIdle()
 
-        assertEquals(mapToEntries(sales), sut.lastSalesEntry.value)
+            assertEquals(mapToEntries(sales), sut.lastSalesEntry.value)
 
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     private suspend fun insertSales() = sales.forEach { saleRepository.insert(it, {}, {}) }
 

@@ -12,11 +12,11 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import com.bruno13palhano.shopdanimanagement.MainActivity
-import com.bruno13palhano.shopdanimanagement.ui.navigation.CatalogDestination
 import com.bruno13palhano.shopdanimanagement.ui.navigation.EDITABLE
 import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
 import com.bruno13palhano.shopdanimanagement.ui.navigation.ITEM_ID
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
+import com.bruno13palhano.shopdanimanagement.ui.navigation.home.CatalogDestination
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -27,7 +27,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class CatalogNavGraphTest {
-
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 

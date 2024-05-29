@@ -104,14 +104,18 @@ fun CreateAccountScreen(
     val errors = getUserResponse()
 
     when (loginState) {
-        LoginState.SignedOut -> { showContent = true }
+        LoginState.SignedOut -> {
+            showContent = true
+        }
 
         LoginState.InProgress -> {
             showContent = false
             CircularProgress()
         }
 
-        LoginState.SignedIn -> { LaunchedEffect(key1 = Unit) { onSuccess() } }
+        LoginState.SignedIn -> {
+            LaunchedEffect(key1 = Unit) { onSuccess() }
+        }
     }
 
     AnimatedVisibility(
@@ -204,34 +208,38 @@ fun CreateAccountContent(
         }
     ) {
         Column(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .padding(it)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ElevatedCard(
-                modifier = Modifier
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .padding(16.dp),
                 onClick = onImageClick,
                 shape = RoundedCornerShape(5)
             ) {
                 if (photo.isEmpty()) {
                     Image(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .size(200.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(5)),
                         imageVector = Icons.Filled.Image,
                         contentDescription = stringResource(id = R.string.customer_photo_label),
                         contentScale = ContentScale.Crop
                     )
                 } else {
                     Image(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .size(200.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(5)),
                         painter = rememberAsyncImagePainter(model = photo),
                         contentDescription = stringResource(id = R.string.customer_photo_label),
                         contentScale = ContentScale.Crop
@@ -267,9 +275,10 @@ fun CreateAccountContent(
                 placeholder = stringResource(id = R.string.enter_repeat_password_label)
             )
             TextButton(
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(end = 8.dp),
+                modifier =
+                    Modifier
+                        .align(Alignment.End)
+                        .padding(end = 8.dp),
                 onClick = navigateUp
             ) {
                 Text(text = stringResource(id = R.string.already_have_account_label))

@@ -16,48 +16,51 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AmazonViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleRepository
-) : ViewModel() {
-    var sheetName by mutableStateOf("")
-        private set
+class AmazonViewModel
+    @Inject
+    constructor(
+        @SaleRep private val saleRepository: SaleRepository
+    ) : ViewModel() {
+        var sheetName by mutableStateOf("")
+            private set
 
-    val amazonSale = saleRepository.getAmazonSale()
-        .map {
-            it.map { sale ->
-                SaleInfo(
-                    saleId = sale.id,
-                    productId = sale.productId,
-                    customerId = sale.customerId,
-                    productName = sale.name,
-                    customerName = sale.customerName,
-                    productPhoto = sale.photo,
-                    customerPhoto = byteArrayOf(),
-                    address = sale.address,
-                    phoneNumber = sale.phoneNumber,
-                    email = "",
-                    salePrice = sale.salePrice,
-                    deliveryPrice = sale.deliveryPrice,
-                    quantity = sale.quantity,
-                    dateOfSale = sale.dateOfSale
+        val amazonSale =
+            saleRepository.getAmazonSale()
+                .map {
+                    it.map { sale ->
+                        SaleInfo(
+                            saleId = sale.id,
+                            productId = sale.productId,
+                            customerId = sale.customerId,
+                            productName = sale.name,
+                            customerName = sale.customerName,
+                            productPhoto = sale.photo,
+                            customerPhoto = byteArrayOf(),
+                            address = sale.address,
+                            phoneNumber = sale.phoneNumber,
+                            email = "",
+                            salePrice = sale.salePrice,
+                            deliveryPrice = sale.deliveryPrice,
+                            quantity = sale.quantity,
+                            dateOfSale = sale.dateOfSale
+                        )
+                    }
+                }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(5_000),
+                    initialValue = emptyList()
                 )
-            }
+
+        fun updateSheetName(sheetName: String) {
+            this.sheetName = sheetName
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )
 
-    fun updateSheetName(sheetName: String) {
-        this.sheetName = sheetName
-    }
-
-    fun createSpreadsheet() {
-        if (sheetName.isNotEmpty()) {
-            viewModelScope.launch {
-                saleRepository.exportAmazonExcelSheet(sheetName = sheetName)
+        fun createSpreadsheet() {
+            if (sheetName.isNotEmpty()) {
+                viewModelScope.launch {
+                    saleRepository.exportAmazonExcelSheet(sheetName = sheetName)
+                }
             }
         }
     }
-}

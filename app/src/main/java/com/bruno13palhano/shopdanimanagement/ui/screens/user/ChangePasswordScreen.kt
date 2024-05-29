@@ -40,8 +40,8 @@ import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomPasswordField
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getUserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel.ChangePasswordViewModel
 import kotlinx.coroutines.launch
@@ -78,14 +78,18 @@ fun ChangePasswordScreen(
     val errors = getUserResponse()
 
     when (updateState) {
-        UiState.Fail -> { showContent = true }
+        UiState.Fail -> {
+            showContent = true
+        }
 
         UiState.InProgress -> {
             showContent = false
             CircularProgress()
         }
 
-        UiState.Success -> { LaunchedEffect(key1 = Unit) { navigateUp() } }
+        UiState.Success -> {
+            LaunchedEffect(key1 = Unit) { navigateUp() }
+        }
     }
 
     AnimatedVisibility(
@@ -166,10 +170,12 @@ fun ChangePasswordContent(
             }
         }
     ) {
-        Column(modifier = Modifier
-            .padding(it)
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState())
+        Column(
+            modifier =
+                Modifier
+                    .padding(it)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState())
         ) {
             CustomPasswordField(
                 password = newPassword,

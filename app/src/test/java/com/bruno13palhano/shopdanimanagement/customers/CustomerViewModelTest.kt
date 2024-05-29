@@ -28,11 +28,10 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class CustomerViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var customerRepository: CustomerRepository
@@ -85,78 +84,84 @@ class CustomerViewModelTest {
     }
 
     @Test
-    fun isCustomerNotEmpty_shouldReturnTrue_ifNameAndAddressIsNotEmpty() = runTest {
-        sut.updateName(name = "name")
-        sut.updateAddress(address = "address")
+    fun isCustomerNotEmpty_shouldReturnTrue_ifNameAndAddressIsNotEmpty() =
+        runTest {
+            sut.updateName(name = "name")
+            sut.updateAddress(address = "address")
 
-        val collectJob = launch { sut.isCustomerNotEmpty.collect() }
-        advanceUntilIdle()
+            val collectJob = launch { sut.isCustomerNotEmpty.collect() }
+            advanceUntilIdle()
 
-        assertEquals(true, sut.isCustomerNotEmpty.value)
+            assertEquals(true, sut.isCustomerNotEmpty.value)
 
-        collectJob.cancel()
-    }
-
-    @Test
-    fun isCustomerNotEmpty_shouldReturnFalse_ifNameOrAddressNotEmpty() = runTest {
-        sut.updateName(name = "")
-        sut.updateAddress(address = "address")
-
-        val collectJob = launch { sut.isCustomerNotEmpty.collect() }
-        advanceUntilIdle()
-
-        assertEquals(false, sut.isCustomerNotEmpty.value)
-
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun getCustomer_shouldCallGetByIdFromRepository() = runTest {
-        val customerRepository = mock<CustomerRepository>()
-        val sut = CustomerViewModel(customerRepository)
+    fun isCustomerNotEmpty_shouldReturnFalse_ifNameOrAddressNotEmpty() =
+        runTest {
+            sut.updateName(name = "")
+            sut.updateAddress(address = "address")
 
-        whenever(customerRepository.getById(any())).doAnswer { flowOf() }
+            val collectJob = launch { sut.isCustomerNotEmpty.collect() }
+            advanceUntilIdle()
 
-        sut.getCustomer(id = 1L)
-        advanceUntilIdle()
+            assertEquals(false, sut.isCustomerNotEmpty.value)
 
-        verify(customerRepository).getById(any())
-    }
-
-    @Test
-    fun getCustomer_shouldSetCustomerProperties() = runTest {
-        val customer = makeRandomCustomer(id = 1L)
-        customerRepository.insert(model = customer, {}, {})
-
-        sut.getCustomer(id = 1L)
-        advanceUntilIdle()
-
-        assertEquals(customer.name, sut.name)
-        assertEquals(customer.photo, sut.photo)
-        assertEquals(customer.email, sut.email)
-        assertEquals(customer.address, sut.address)
-        assertEquals(customer.phoneNumber, sut.phoneNumber)
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun insertCustomer_shouldCallInsertFromRepository() = runTest {
-        val customerRepository = mock<CustomerRepository>()
-        val sut = CustomerViewModel(customerRepository)
+    fun getCustomer_shouldCallGetByIdFromRepository() =
+        runTest {
+            val customerRepository = mock<CustomerRepository>()
+            val sut = CustomerViewModel(customerRepository)
 
-        sut.insertCustomer({}, {})
-        advanceUntilIdle()
+            whenever(customerRepository.getById(any())).doAnswer { flowOf() }
 
-        verify(customerRepository).insert(any(), any(), any())
-    }
+            sut.getCustomer(id = 1L)
+            advanceUntilIdle()
+
+            verify(customerRepository).getById(any())
+        }
 
     @Test
-    fun updateCustomer_shouldCallUpdateFromRepository() = runTest {
-        val customerRepository = mock<CustomerRepository>()
-        val sut = CustomerViewModel(customerRepository)
+    fun getCustomer_shouldSetCustomerProperties() =
+        runTest {
+            val customer = makeRandomCustomer(id = 1L)
+            customerRepository.insert(model = customer, {}, {})
 
-        sut.updateCustomer(id = 1L, {}, {})
-        advanceUntilIdle()
+            sut.getCustomer(id = 1L)
+            advanceUntilIdle()
 
-        verify(customerRepository).update(any(), any(), any())
-    }
+            assertEquals(customer.name, sut.name)
+            assertEquals(customer.photo, sut.photo)
+            assertEquals(customer.email, sut.email)
+            assertEquals(customer.address, sut.address)
+            assertEquals(customer.phoneNumber, sut.phoneNumber)
+        }
+
+    @Test
+    fun insertCustomer_shouldCallInsertFromRepository() =
+        runTest {
+            val customerRepository = mock<CustomerRepository>()
+            val sut = CustomerViewModel(customerRepository)
+
+            sut.insertCustomer({}, {})
+            advanceUntilIdle()
+
+            verify(customerRepository).insert(any(), any(), any())
+        }
+
+    @Test
+    fun updateCustomer_shouldCallUpdateFromRepository() =
+        runTest {
+            val customerRepository = mock<CustomerRepository>()
+            val sut = CustomerViewModel(customerRepository)
+
+            sut.updateCustomer(id = 1L, {}, {})
+            advanceUntilIdle()
+
+            verify(customerRepository).update(any(), any(), any())
+        }
 }

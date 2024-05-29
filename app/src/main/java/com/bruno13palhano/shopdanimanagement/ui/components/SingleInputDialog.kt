@@ -44,16 +44,18 @@ fun SingleInputDialog(
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 8.dp)
+                            .fillMaxWidth(),
                     text = dialogTitle,
                     textAlign = TextAlign.Start
                 )
                 OutlinedTextField(
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                            .fillMaxWidth(),
                     value = input,
                     onValueChange = onInputChange,
                     label = { Text(text = label) },

@@ -83,9 +83,11 @@ fun NavGraphBuilder.financialNavGraph(
                 gesturesEnabled = gesturesEnabled,
                 onItemClick = { saleId, productId ->
                     navController.navigate(
-                        route = FinancialRoutes.SaleItem(
-                            saleId = saleId, productId = productId
-                        )
+                        route =
+                            FinancialRoutes.SaleItem(
+                                saleId = saleId,
+                                productId = productId
+                            )
                     )
                 },
                 navigateUp = { navController.navigateUp() }
@@ -122,23 +124,23 @@ fun NavGraphBuilder.financialNavGraph(
 
 sealed interface FinancialRoutes {
     @Serializable
-    data object Main: FinancialRoutes
+    data object Main : FinancialRoutes
 
     @Serializable
-    data object Info: FinancialRoutes
+    data object Info : FinancialRoutes
 
     @Serializable
-    data object CanceledSales: FinancialRoutes
+    data object CanceledSales : FinancialRoutes
 
     @Serializable
-    data object CustomersDebits: FinancialRoutes
+    data object CustomersDebits : FinancialRoutes
 
     @Serializable
-    data object StockDebits: FinancialRoutes
+    data object StockDebits : FinancialRoutes
 
     @Serializable
-    data class SaleItem(val saleId: Long, val productId: Long): FinancialRoutes
+    data class SaleItem(val saleId: Long, val productId: Long) : FinancialRoutes
 
     @Serializable
-    data class StockItem(val id: Long): FinancialRoutes
+    data class StockItem(val id: Long) : FinancialRoutes
 }

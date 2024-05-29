@@ -36,11 +36,12 @@ fun LastSalesScreen(
         viewModel.setLastSalesEntryByRange(7)
     }
     val lastSalesEntry by viewModel.lastSalesEntry.collectAsStateWithLifecycle()
-    val menuOptions = arrayOf(
-        stringResource(id = R.string.last_7_days_label),
-        stringResource(id = R.string.last_21_days_label),
-        stringResource(id = R.string.last_31_days_label)
-    )
+    val menuOptions =
+        arrayOf(
+            stringResource(id = R.string.last_7_days_label),
+            stringResource(id = R.string.last_21_days_label),
+            stringResource(id = R.string.last_31_days_label)
+        )
 
     var chartTitle by remember { mutableStateOf(menuOptions[0]) }
     val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
@@ -57,31 +58,33 @@ fun LastSalesScreen(
         screenTitle = stringResource(id = R.string.last_sales_label),
         startAxisTitle = stringResource(id = R.string.amount_of_sales_label),
         bottomAxisTitle = chartTitle,
-        entityColors = listOf(
-            MaterialTheme.colorScheme.primary
-        ),
+        entityColors =
+            listOf(
+                MaterialTheme.colorScheme.primary
+            ),
         entry = chart,
         legends = listOf(),
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
-            chartTitle = when (index) {
-                LastSalesMenu.DAYS_7 -> {
-                    viewModel.setLastSalesEntryByRange(7)
-                    menuOptions[0]
+            chartTitle =
+                when (index) {
+                    LastSalesMenu.DAYS_7 -> {
+                        viewModel.setLastSalesEntryByRange(7)
+                        menuOptions[0]
+                    }
+                    LastSalesMenu.DAYS_21 -> {
+                        viewModel.setLastSalesEntryByRange(21)
+                        menuOptions[1]
+                    }
+                    LastSalesMenu.DAYS_31 -> {
+                        viewModel.setLastSalesEntryByRange(31)
+                        menuOptions[2]
+                    }
+                    else -> {
+                        viewModel.setLastSalesEntryByRange(7)
+                        menuOptions[0]
+                    }
                 }
-                LastSalesMenu.DAYS_21 -> {
-                    viewModel.setLastSalesEntryByRange(21)
-                    menuOptions[1]
-                }
-                LastSalesMenu.DAYS_31 -> {
-                    viewModel.setLastSalesEntryByRange(31)
-                    menuOptions[2]
-                }
-                else -> {
-                    viewModel.setLastSalesEntryByRange(7)
-                    menuOptions[0]
-                }
-            }
         },
         navigateUp = navigateUp
     )

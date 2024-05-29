@@ -9,12 +9,12 @@ object Sync {
     fun initialize(context: Context) {
         WorkManager.getInstance(context).apply {
             enqueueUniqueWork(
-                SyncWorkName,
+                SYNC_WORK_NAME,
                 ExistingWorkPolicy.KEEP,
-                FetchDataWork.startUpSyncWork()
+                FetchDataWork.startUpSyncWork(),
             )
         }
     }
 }
 
-internal const val SyncWorkName = "SyncWorkName"
+internal const val SYNC_WORK_NAME = "SyncWorkName"

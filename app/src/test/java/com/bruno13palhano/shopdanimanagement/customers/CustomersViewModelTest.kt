@@ -30,20 +30,20 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class CustomersViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var customerRepository: CustomerRepository
     private lateinit var sut: CustomersViewModel
-    private val customers = listOf(
-        makeRandomCustomer(id = 1L, name = "Alex", address = "1"),
-        makeRandomCustomer(id = 2L, name = "Bruno", address = "2"),
-        makeRandomCustomer(id = 3L, name = "Carlos", address = "3")
-    )
+    private val customers =
+        listOf(
+            makeRandomCustomer(id = 1L, name = "Alex", address = "1"),
+            makeRandomCustomer(id = 2L, name = "Bruno", address = "2"),
+            makeRandomCustomer(id = 3L, name = "Carlos", address = "3")
+        )
 
     @Before
     fun setup() {
@@ -52,90 +52,96 @@ class CustomersViewModelTest {
     }
 
     @Test
-    fun getAllCustomers_shouldCallGetAllFromRepository() = runTest {
-        val customerRepository = mock<CustomerRepository>()
-        val sut = CustomersViewModel(customerRepository)
+    fun getAllCustomers_shouldCallGetAllFromRepository() =
+        runTest {
+            val customerRepository = mock<CustomerRepository>()
+            val sut = CustomersViewModel(customerRepository)
 
-        whenever(customerRepository.getAll()).doAnswer { flowOf() }
+            whenever(customerRepository.getAll()).doAnswer { flowOf() }
 
-        sut.getAllCustomers()
-        advanceUntilIdle()
+            sut.getAllCustomers()
+            advanceUntilIdle()
 
-        verify(customerRepository).getAll()
-    }
-
-    @Test
-    fun getAllCustomers_shouldSetCustomerListProperty() = runTest {
-        insertCustomers()
-
-        val collectJob = launch { sut.customerList.collect() }
-        sut.getAllCustomers()
-        advanceUntilIdle()
-
-        assertEquals(mapToItem(customers), sut.customerList.value)
-        collectJob.cancel()
-    }
+            verify(customerRepository).getAll()
+        }
 
     @Test
-    fun getOrderedByName_shouldCallGetOrderedByNameFromRepository() = runTest {
-        val customerRepository = mock<CustomerRepository>()
-        val sut = CustomersViewModel(customerRepository)
+    fun getAllCustomers_shouldSetCustomerListProperty() =
+        runTest {
+            insertCustomers()
 
-        whenever(customerRepository.getOrderedByName(any())).doAnswer { flowOf() }
+            val collectJob = launch { sut.customerList.collect() }
+            sut.getAllCustomers()
+            advanceUntilIdle()
 
-        sut.getOrderedByName(isOrderedAsc = true)
-        advanceUntilIdle()
-
-        verify(customerRepository).getOrderedByName(any())
-    }
-
-    @Test
-    fun getOrderedByName_shouldSetCustomerListProperty() = runTest {
-        insertCustomers()
-
-        val collectJob = launch { sut.customerList.collect() }
-        sut.getOrderedByName(isOrderedAsc = true)
-        advanceUntilIdle()
-
-        assertEquals(mapToItem(customers), sut.customerList.value)
-        collectJob.cancel()
-    }
+            assertEquals(mapToItem(customers), sut.customerList.value)
+            collectJob.cancel()
+        }
 
     @Test
-    fun getOrderedByAddress_shouldCallGetOrderedByAddressFromRepository() = runTest {
-        val customerRepository = mock<CustomerRepository>()
-        val sut = CustomersViewModel(customerRepository)
+    fun getOrderedByName_shouldCallGetOrderedByNameFromRepository() =
+        runTest {
+            val customerRepository = mock<CustomerRepository>()
+            val sut = CustomersViewModel(customerRepository)
 
-        whenever(customerRepository.getOrderedByAddress(any())).doAnswer { flowOf() }
+            whenever(customerRepository.getOrderedByName(any())).doAnswer { flowOf() }
 
-        sut.getOrderedByAddress(isOrderedAsc = true)
-        advanceUntilIdle()
+            sut.getOrderedByName(isOrderedAsc = true)
+            advanceUntilIdle()
 
-        verify(customerRepository).getOrderedByAddress(any())
-    }
+            verify(customerRepository).getOrderedByName(any())
+        }
 
     @Test
-    fun getOrderedByAddress_shouldSetCustomerListProperty() = runTest {
-        insertCustomers()
+    fun getOrderedByName_shouldSetCustomerListProperty() =
+        runTest {
+            insertCustomers()
 
-        val collectJob = launch { sut.customerList.collect() }
-        sut.getOrderedByAddress(isOrderedAsc = true)
-        advanceUntilIdle()
+            val collectJob = launch { sut.customerList.collect() }
+            sut.getOrderedByName(isOrderedAsc = true)
+            advanceUntilIdle()
 
-        assertEquals(mapToItem(customers), sut.customerList.value)
-        collectJob.cancel()
-    }
+            assertEquals(mapToItem(customers), sut.customerList.value)
+            collectJob.cancel()
+        }
 
-    private fun mapToItem(customers: List<Customer>) = customers.map {
-        CommonItem(
-            id = it.id,
-            photo = it.photo,
-            title = it.name,
-            subtitle = it.address,
-            description = it.email
-        )
-    }
+    @Test
+    fun getOrderedByAddress_shouldCallGetOrderedByAddressFromRepository() =
+        runTest {
+            val customerRepository = mock<CustomerRepository>()
+            val sut = CustomersViewModel(customerRepository)
 
-    private suspend fun insertCustomers() =
-        customers.forEach { customerRepository.insert(it, {}, {}) }
+            whenever(customerRepository.getOrderedByAddress(any())).doAnswer { flowOf() }
+
+            sut.getOrderedByAddress(isOrderedAsc = true)
+            advanceUntilIdle()
+
+            verify(customerRepository).getOrderedByAddress(any())
+        }
+
+    @Test
+    fun getOrderedByAddress_shouldSetCustomerListProperty() =
+        runTest {
+            insertCustomers()
+
+            val collectJob = launch { sut.customerList.collect() }
+            sut.getOrderedByAddress(isOrderedAsc = true)
+            advanceUntilIdle()
+
+            assertEquals(mapToItem(customers), sut.customerList.value)
+            collectJob.cancel()
+        }
+
+    private fun mapToItem(customers: List<Customer>) =
+        customers.map {
+            CommonItem(
+                id = it.id,
+                photo = it.photo,
+                title = it.name,
+                subtitle = it.address,
+                description = it.email
+            )
+        }
+
+    private suspend fun insertCustomers() = customers.forEach { customerRepository.insert(it, {}, {}) }
 }

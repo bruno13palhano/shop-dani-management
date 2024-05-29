@@ -13,18 +13,21 @@ class ExpiredProductsNotification(
     private val notificationManager: NotificationManager,
     private val alarmManager: AlarmManager
 ) {
-
-    fun setAlarmManager(notifyPendingIntent: PendingIntent, date: Long) {
+    fun setAlarmManager(
+        notifyPendingIntent: PendingIntent,
+        date: Long
+    ) {
         alarmManager.set(AlarmManager.RTC_WAKEUP, date, notifyPendingIntent)
         createNotificationChannel()
     }
 
     private fun createNotificationChannel() {
-        val notificationChannel = NotificationChannel(
-            PRIMARY_CHANNEL_ID,
-            PRIMARY_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
+        val notificationChannel =
+            NotificationChannel(
+                PRIMARY_CHANNEL_ID,
+                PRIMARY_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
         notificationChannel.enableLights(false)
         notificationChannel.enableVibration(false)
         notificationChannel.description = PRIMARY_CHANNEL_DESCRIPTION

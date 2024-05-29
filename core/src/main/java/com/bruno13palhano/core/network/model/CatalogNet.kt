@@ -10,5 +10,5 @@ data class CatalogNet(
     @Json(name = "description") val description: String,
     @Json(name = "discount") val discount: Long,
     @Json(name = "price") val price: Float,
-    @Json(name = "timestamp") override val timestamp: String
-): Model(id = id, timestamp = timestamp)
+    @Json(name = "timestamp") override val timestamp: String,
+) : Model(id = id, timestamp = timestamp)

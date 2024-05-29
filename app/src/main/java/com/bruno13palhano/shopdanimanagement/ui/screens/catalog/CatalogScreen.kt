@@ -69,11 +69,12 @@ fun CatalogScreen(
 
     val catalogItems by viewModel.catalogItems.collectAsStateWithLifecycle()
 
-    val menuOptions = arrayOf(
-        stringResource(id = R.string.ordered_by_name_label),
-        stringResource(id = R.string.ordered_by_price_label),
-        stringResource(id = R.string.ordered_by_last_label)
-    )
+    val menuOptions =
+        arrayOf(
+            stringResource(id = R.string.ordered_by_name_label),
+            stringResource(id = R.string.ordered_by_price_label),
+            stringResource(id = R.string.ordered_by_last_label)
+        )
 
     var orderedByName by remember { mutableStateOf(false) }
     var orderedByPrice by remember { mutableStateOf(false) }
@@ -92,7 +93,9 @@ fun CatalogScreen(
                     viewModel.getOrderedByPrice(isOrderedAsc = orderedByPrice)
                     orderedByPrice = toggleOrdered(orderedByPrice)
                 }
-                CatalogMoreOptions.ALL_CATALOG_ITEMS -> { viewModel.getAll() }
+                CatalogMoreOptions.ALL_CATALOG_ITEMS -> {
+                    viewModel.getAll()
+                }
             }
         },
         navigateUp = navigateUp
@@ -148,9 +151,10 @@ fun CatalogContent(
         }
     ) {
         LazyVerticalStaggeredGrid(
-            modifier = Modifier
-                .semantics { contentDescription = "List of items" }
-                .padding(it),
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "List of items" }
+                    .padding(it),
             columns = StaggeredGridCells.Adaptive(144.dp),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
         ) {
@@ -160,9 +164,11 @@ fun CatalogContent(
                     photo = item.photo,
                     title = item.title,
                     firstSubtitle = item.firstSubtitle,
-                    secondSubtitle = stringResource(
-                        id = R.string.price_text_tag, item.secondSubtitle
-                    ),
+                    secondSubtitle =
+                        stringResource(
+                            id = R.string.price_text_tag,
+                            item.secondSubtitle
+                        ),
                     description = item.description,
                     footer = stringResource(id = R.string.discount_tag, item.footer),
                     onClick = { onItemClick(item.id) }
@@ -220,11 +226,12 @@ private object CatalogMoreOptions {
     const val ALL_CATALOG_ITEMS = 3
 }
 
-private val fakeCatalogItems = listOf(
-    ExtendedItem(1L, byteArrayOf(), "Homem Del Parfum", "High quality", "98.99", "The most sale Parfum", "10"),
-    ExtendedItem(2L, byteArrayOf(), "Essencial", "High quality", "154.90", "Top 10 requested", "25"),
-    ExtendedItem(3L, byteArrayOf(), "Kaiak", "High quality", "122.44", "Top 10 requested", "5"),
-    ExtendedItem(4L, byteArrayOf(), "Luna", "High quality", "100.99", "Light fragrance", "5"),
-    ExtendedItem(5L, byteArrayOf(), "Una", "High quality", "88.99", "Light fragrance", "20"),
-    ExtendedItem(6L, byteArrayOf(), "Homem", "High quality", "110.90", "New fragrance", "15"),
-)
+private val fakeCatalogItems =
+    listOf(
+        ExtendedItem(1L, byteArrayOf(), "Homem Del Parfum", "High quality", "98.99", "The most sale Parfum", "10"),
+        ExtendedItem(2L, byteArrayOf(), "Essencial", "High quality", "154.90", "Top 10 requested", "25"),
+        ExtendedItem(3L, byteArrayOf(), "Kaiak", "High quality", "122.44", "Top 10 requested", "5"),
+        ExtendedItem(4L, byteArrayOf(), "Luna", "High quality", "100.99", "Light fragrance", "5"),
+        ExtendedItem(5L, byteArrayOf(), "Una", "High quality", "88.99", "Light fragrance", "20"),
+        ExtendedItem(6L, byteArrayOf(), "Homem", "High quality", "110.90", "New fragrance", "15")
+    )

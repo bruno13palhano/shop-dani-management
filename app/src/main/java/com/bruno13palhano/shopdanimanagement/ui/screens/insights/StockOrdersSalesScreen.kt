@@ -38,11 +38,12 @@ fun StockOrdersSalesScreen(
         viewModel.setStockOrdersSalesRange(7)
     }
     val stockVsOrdersEntries by viewModel.allSales.collectAsStateWithLifecycle()
-    val menuOptions = arrayOf(
-        stringResource(id = R.string.last_7_days_label),
-        stringResource(id = R.string.last_21_days_label),
-        stringResource(id = R.string.last_31_days_label)
-    )
+    val menuOptions =
+        arrayOf(
+            stringResource(id = R.string.last_7_days_label),
+            stringResource(id = R.string.last_21_days_label),
+            stringResource(id = R.string.last_31_days_label)
+        )
 
     var chartTitle by remember { mutableStateOf(menuOptions[0]) }
     val stockChart by remember { mutableStateOf(ChartEntryModelProducer()) }
@@ -69,36 +70,38 @@ fun StockOrdersSalesScreen(
         firstChartEntityColor = MaterialTheme.colorScheme.primary,
         secondChartEntityColor = MaterialTheme.colorScheme.tertiary,
         entry = chart,
-        legends = listOf(
-            Pair(
-                stringResource(id = R.string.stock_label),
-                Color.toArgb(MaterialTheme.colorScheme.primary.value.toLong())
+        legends =
+            listOf(
+                Pair(
+                    stringResource(id = R.string.stock_label),
+                    Color.toArgb(MaterialTheme.colorScheme.primary.value.toLong())
+                ),
+                Pair(
+                    stringResource(id = R.string.orders_label),
+                    Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
+                )
             ),
-            Pair(
-                stringResource(id = R.string.orders_label),
-                Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
-            )
-        ),
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
-            chartTitle = when (index) {
-                StockOrdersSalesMenu.DAYS_7 -> {
-                    viewModel.setStockOrdersSalesRange(7)
-                    menuOptions[0]
+            chartTitle =
+                when (index) {
+                    StockOrdersSalesMenu.DAYS_7 -> {
+                        viewModel.setStockOrdersSalesRange(7)
+                        menuOptions[0]
+                    }
+                    StockOrdersSalesMenu.DAYS_21 -> {
+                        viewModel.setStockOrdersSalesRange(21)
+                        menuOptions[1]
+                    }
+                    StockOrdersSalesMenu.DAYS_31 -> {
+                        viewModel.setStockOrdersSalesRange(31)
+                        menuOptions[2]
+                    }
+                    else -> {
+                        viewModel.setStockOrdersSalesRange(7)
+                        menuOptions[0]
+                    }
                 }
-                StockOrdersSalesMenu.DAYS_21 -> {
-                    viewModel.setStockOrdersSalesRange(21)
-                    menuOptions[1]
-                }
-                StockOrdersSalesMenu.DAYS_31 -> {
-                    viewModel.setStockOrdersSalesRange(31)
-                    menuOptions[2]
-                }
-                else -> {
-                    viewModel.setStockOrdersSalesRange(7)
-                    menuOptions[0]
-                }
-            }
         },
         navigateUp = navigateUp
     )

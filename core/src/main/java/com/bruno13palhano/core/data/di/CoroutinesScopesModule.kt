@@ -17,11 +17,10 @@ annotation class ApplicationScope
 @InstallIn(SingletonComponent::class)
 @Module
 object CoroutinesScopesModule {
-
     @Singleton
     @ApplicationScope
     @Provides
     fun providesCoroutineScope(
-        @Dispatcher(ShopDaniManagementDispatchers.DEFAULT) dispatcher: CoroutineDispatcher
+        @Dispatcher(ShopDaniManagementDispatchers.DEFAULT) dispatcher: CoroutineDispatcher,
     ): CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
 }

@@ -18,7 +18,7 @@ interface DataOperations<T> {
         id: Long,
         version: DataVersion,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
+        onSuccess: () -> Unit,
     )
 
     /**

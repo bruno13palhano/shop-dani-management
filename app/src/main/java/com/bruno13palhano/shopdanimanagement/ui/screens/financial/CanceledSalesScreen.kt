@@ -56,12 +56,13 @@ fun CanceledSalesScreen(
     }
 
     val canceledList by viewModel.canceledSales.collectAsStateWithLifecycle()
-    val menuItems = arrayOf(
-        stringResource(id = R.string.ordered_by_name_label),
-        stringResource(id = R.string.ordered_by_customer_name_label),
-        stringResource(id = R.string.ordered_by_price_label),
-        stringResource(id = R.string.ordered_by_last_label)
-    )
+    val menuItems =
+        arrayOf(
+            stringResource(id = R.string.ordered_by_name_label),
+            stringResource(id = R.string.ordered_by_customer_name_label),
+            stringResource(id = R.string.ordered_by_price_label),
+            stringResource(id = R.string.ordered_by_last_label)
+        )
 
     var orderedByName by remember { mutableStateOf(false) }
     var orderedByCustomerName by remember { mutableStateOf(false) }
@@ -84,7 +85,9 @@ fun CanceledSalesScreen(
                     viewModel.getCanceledSalesByPrice(isOrderedAsc = orderedByPrice)
                     orderedByPrice = toggleOrdered(orderedByPrice)
                 }
-                CanceledSalesMenu.ALL_CANCELED_SALES -> { viewModel.getAllCanceledSales() }
+                CanceledSalesMenu.ALL_CANCELED_SALES -> {
+                    viewModel.getAllCanceledSales()
+                }
             }
         },
         navigateUp = navigateUp

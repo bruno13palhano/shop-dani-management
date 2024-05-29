@@ -8,7 +8,7 @@ data class User(
     val photo: ByteArray,
     val role: String,
     val enabled: Boolean,
-    val timestamp: String
+    val timestamp: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

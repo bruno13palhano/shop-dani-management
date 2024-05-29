@@ -38,8 +38,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.core.model.CustomerInfo
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.BottomSheet
+import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
@@ -89,11 +89,12 @@ fun CustomersScreen(
     }
 
     val customerList by viewModel.customerList.collectAsStateWithLifecycle()
-    val menuItems = arrayOf(
-        stringResource(id = R.string.ordered_by_name_label),
-        stringResource(id = R.string.ordered_by_address_label),
-        stringResource(id = R.string.ordered_by_last_label)
-    )
+    val menuItems =
+        arrayOf(
+            stringResource(id = R.string.ordered_by_name_label),
+            stringResource(id = R.string.ordered_by_address_label),
+            stringResource(id = R.string.ordered_by_last_label)
+        )
 
     var orderedByName by remember { mutableStateOf(false) }
     var orderedByAddress by remember { mutableStateOf(false) }
@@ -121,7 +122,9 @@ fun CustomersScreen(
                     viewModel.getOrderedByAddress(isOrderedAsc = orderedByAddress)
                     orderedByAddress = !orderedByAddress
                 }
-                else -> { viewModel.getAllCustomers() }
+                else -> {
+                    viewModel.getAllCustomers()
+                }
             }
         },
         onEditCustomerClick = onItemClick,
@@ -203,9 +206,10 @@ fun CustomersContent(
         }
     ) {
         LazyColumn(
-            modifier = Modifier
-                .semantics { contentDescription = "List of customers" }
-                .padding(it),
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "List of customers" }
+                    .padding(it),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
             items(items = customerList, key = { item -> item.id }) { item ->

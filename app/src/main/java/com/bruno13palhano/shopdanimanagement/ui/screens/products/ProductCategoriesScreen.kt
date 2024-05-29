@@ -35,6 +35,7 @@ fun ProductCategoriesRoute(
         onItemClick = onItemClick
     )
 }
+
 @Composable
 fun ProductCategoriesScreen(
     onIconMenuClick: () -> Unit,
@@ -51,14 +52,18 @@ fun ProductCategoriesScreen(
     val errors = getErrors()
 
     when (categoryState) {
-        UiState.Fail -> { showContent = true }
+        UiState.Fail -> {
+            showContent = true
+        }
 
         UiState.InProgress -> {
             showContent = false
             CircularProgress()
         }
 
-        UiState.Success -> { showContent = true }
+        UiState.Success -> {
+            showContent = true
+        }
     }
 
     AnimatedVisibility(

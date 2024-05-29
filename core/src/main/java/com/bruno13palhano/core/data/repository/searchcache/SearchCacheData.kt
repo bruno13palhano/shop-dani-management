@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface SearchCacheData {
     suspend fun insert(model: SearchCache): Long
+
     suspend fun deleteById(search: String)
+
     fun getAll(): Flow<List<SearchCache>>
 }

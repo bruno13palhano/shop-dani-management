@@ -33,11 +33,10 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class SearchCustomersViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var customerRepository: CustomerRepository
@@ -52,75 +51,81 @@ class SearchCustomersViewModelTest {
     }
 
     @Test
-    fun searchCache_shouldGetAllSearch() = runTest {
-        val cache = listOf(makeRandomSearchCache(), makeRandomSearchCache(), makeRandomSearchCache())
-        cache.forEach { searchCacheRepository.insert(it) }
+    fun searchCache_shouldGetAllSearch() =
+        runTest {
+            val cache = listOf(makeRandomSearchCache(), makeRandomSearchCache(), makeRandomSearchCache())
+            cache.forEach { searchCacheRepository.insert(it) }
 
-        val collectJob = launch { sut.searchCache.collect() }
-        advanceUntilIdle()
+            val collectJob = launch { sut.searchCache.collect() }
+            advanceUntilIdle()
 
-        assertEquals(cache, sut.searchCache.value)
+            assertEquals(cache, sut.searchCache.value)
 
-        collectJob.cancel()
-    }
-
-    @Test
-    fun search_shouldCallSearchFromCustomerRepository() = runTest {
-        val searchCacheRepository = mock<SearchCacheRepository>()
-        val customerRepository = mock<CustomerRepository>()
-        val sut = SearchCustomersViewModel(customerRepository, searchCacheRepository)
-
-        whenever(customerRepository.search(any())).doAnswer { flowOf() }
-        val search = "test"
-
-        sut.search(search = search)
-        advanceUntilIdle()
-
-        verify(customerRepository).search(any())
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun search_shouldSetCustomersProperty() = runTest {
-        val customers = listOf(
-            makeRandomCustomer(id = 1L),
-            makeRandomCustomer(id = 2L),
-            makeRandomCustomer(id = 3L)
-        )
-        customers.forEach { customerRepository.insert(it, {}, {}) }
+    fun search_shouldCallSearchFromCustomerRepository() =
+        runTest {
+            val searchCacheRepository = mock<SearchCacheRepository>()
+            val customerRepository = mock<CustomerRepository>()
+            val sut = SearchCustomersViewModel(customerRepository, searchCacheRepository)
 
-        val collectJob = launch { sut.customers.collect() }
+            whenever(customerRepository.search(any())).doAnswer { flowOf() }
+            val search = "test"
 
-        val current = customers[0]
-        val search = current.name
+            sut.search(search = search)
+            advanceUntilIdle()
 
-        sut.search(search = search)
-        advanceUntilIdle()
-
-        assertEquals(mapToItem(listOf(current)), sut.customers.value)
-
-        collectJob.cancel()
-    }
+            verify(customerRepository).search(any())
+        }
 
     @Test
-    fun insert_shouldCallInsertFromSearchCacheRepository() = runTest {
-        val customerRepository = mock<CustomerRepository>()
-        val searchCacheRepository = mock<SearchCacheRepository>()
-        val sut = SearchCustomersViewModel(customerRepository, searchCacheRepository)
+    fun search_shouldSetCustomersProperty() =
+        runTest {
+            val customers =
+                listOf(
+                    makeRandomCustomer(id = 1L),
+                    makeRandomCustomer(id = 2L),
+                    makeRandomCustomer(id = 3L)
+                )
+            customers.forEach { customerRepository.insert(it, {}, {}) }
 
-        val search = "test"
-        sut.insertCache(search = search)
-        advanceUntilIdle()
+            val collectJob = launch { sut.customers.collect() }
 
-        verify(searchCacheRepository).insert(any())
-    }
+            val current = customers[0]
+            val search = current.name
 
-    private fun mapToItem(customers: List<Customer>) = customers.map {
-        CommonItem(
-            id = it.id,
-            photo = it.photo,
-            title = it.name,
-            subtitle = it.email,
-            description = it.address
-        )
-    }
+            sut.search(search = search)
+            advanceUntilIdle()
+
+            assertEquals(mapToItem(listOf(current)), sut.customers.value)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun insert_shouldCallInsertFromSearchCacheRepository() =
+        runTest {
+            val customerRepository = mock<CustomerRepository>()
+            val searchCacheRepository = mock<SearchCacheRepository>()
+            val sut = SearchCustomersViewModel(customerRepository, searchCacheRepository)
+
+            val search = "test"
+            sut.insertCache(search = search)
+            advanceUntilIdle()
+
+            verify(searchCacheRepository).insert(any())
+        }
+
+    private fun mapToItem(customers: List<Customer>) =
+        customers.map {
+            CommonItem(
+                id = it.id,
+                photo = it.photo,
+                title = it.name,
+                subtitle = it.email,
+                description = it.address
+            )
+        }
 }

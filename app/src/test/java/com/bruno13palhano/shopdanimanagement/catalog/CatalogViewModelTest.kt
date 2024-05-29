@@ -31,7 +31,6 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class CatalogViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
@@ -41,107 +40,115 @@ class CatalogViewModelTest {
     private lateinit var catalogRepository: CatalogRepository
     private lateinit var sut: CatalogViewModel
 
-    private var catalogItems = listOf(
-        makeRandomCatalog(id = 1L),
-        makeRandomCatalog(id = 2L),
-        makeRandomCatalog(id = 3L)
-    )
+    private var catalogItems =
+        listOf(
+            makeRandomCatalog(id = 1L),
+            makeRandomCatalog(id = 2L),
+            makeRandomCatalog(id = 3L)
+        )
 
     @Before
-    fun setup() = runBlocking {
-        catalogRepository = TestCatalogRepository()
-        sut = CatalogViewModel(catalogRepository)
-        insertCatalogItems()
-    }
+    fun setup() =
+        runBlocking {
+            catalogRepository = TestCatalogRepository()
+            sut = CatalogViewModel(catalogRepository)
+            insertCatalogItems()
+        }
 
     @Test
-    fun getAll_shouldSetCatalogItemsProperty() = runTest {
-        val collectJob = launch { sut.catalogItems.collect() }
+    fun getAll_shouldSetCatalogItemsProperty() =
+        runTest {
+            val collectJob = launch { sut.catalogItems.collect() }
 
-        sut.getAll()
-        advanceUntilIdle()
+            sut.getAll()
+            advanceUntilIdle()
 
-        assertEquals(mapToItems(catalogItems), sut.catalogItems.value)
+            assertEquals(mapToItems(catalogItems), sut.catalogItems.value)
 
-        collectJob.cancel()
-    }
-
-    @Test
-    fun getAll_shouldCallGetAllFromCatalogRepository() = runTest {
-        val catalogRepository = mock<CatalogRepository>()
-        val sut = CatalogViewModel(catalogRepository)
-
-        whenever(catalogRepository.getAll()).doAnswer { flowOf() }
-
-        sut.getAll()
-        advanceUntilIdle()
-
-        verify(catalogRepository).getAll()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun getOrderedByName_shouldSetCatalogItemsProperty() = runTest {
-        val collectJob = launch { sut.catalogItems.collect() }
+    fun getAll_shouldCallGetAllFromCatalogRepository() =
+        runTest {
+            val catalogRepository = mock<CatalogRepository>()
+            val sut = CatalogViewModel(catalogRepository)
 
-        sut.getOrderedByName(isOrderedAsc = true)
-        advanceUntilIdle()
+            whenever(catalogRepository.getAll()).doAnswer { flowOf() }
 
-        assertEquals(mapToItems(catalogItems.sortedBy { it.name }), sut.catalogItems.value)
+            sut.getAll()
+            advanceUntilIdle()
 
-        collectJob.cancel()
-    }
-
-    @Test
-    fun getOrderedByName_shouldCallGetOrderByNameFormRepositories() = runTest {
-        val catalogRepository = mock<CatalogRepository>()
-        val sut = CatalogViewModel(catalogRepository)
-
-        whenever(catalogRepository.getOrderedByName(any())).doAnswer { flowOf() }
-
-        sut.getOrderedByName(isOrderedAsc = false)
-        advanceUntilIdle()
-
-        verify(catalogRepository).getOrderedByName(any())
-    }
+            verify(catalogRepository).getAll()
+        }
 
     @Test
-    fun getOrderedByPrice_shouldSetCatalogItemsProperty() = runTest {
-        val collectJob = launch { sut.catalogItems.collect() }
+    fun getOrderedByName_shouldSetCatalogItemsProperty() =
+        runTest {
+            val collectJob = launch { sut.catalogItems.collect() }
 
-        sut.getOrderedByPrice(isOrderedAsc = true)
+            sut.getOrderedByName(isOrderedAsc = true)
+            advanceUntilIdle()
 
-        advanceUntilIdle()
+            assertEquals(mapToItems(catalogItems.sortedBy { it.name }), sut.catalogItems.value)
 
-        assertEquals(mapToItems(catalogItems.sortedBy { it.price }), sut.catalogItems.value)
-
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun getOrderedByPrice_shouldCallGetOrderedByPriceFromRepository() = runTest {
-        val catalogRepository = mock<CatalogRepository>()
-        val sut = CatalogViewModel(catalogRepository)
+    fun getOrderedByName_shouldCallGetOrderByNameFormRepositories() =
+        runTest {
+            val catalogRepository = mock<CatalogRepository>()
+            val sut = CatalogViewModel(catalogRepository)
 
-        whenever(catalogRepository.getOrderedByPrice(any())).doAnswer { flowOf() }
-        sut.getOrderedByPrice(isOrderedAsc = true)
+            whenever(catalogRepository.getOrderedByName(any())).doAnswer { flowOf() }
 
-        advanceUntilIdle()
+            sut.getOrderedByName(isOrderedAsc = false)
+            advanceUntilIdle()
 
-        verify(catalogRepository).getOrderedByPrice(any())
-    }
+            verify(catalogRepository).getOrderedByName(any())
+        }
 
-    private suspend fun insertCatalogItems() =
-        catalogItems.forEach { catalogRepository.insert(model = it, {}, {}) }
+    @Test
+    fun getOrderedByPrice_shouldSetCatalogItemsProperty() =
+        runTest {
+            val collectJob = launch { sut.catalogItems.collect() }
 
-    private fun mapToItems(catalogItems: List<Catalog>) = catalogItems.map { item ->
-        ExtendedItem(
-            id = item.id,
-            photo = item.photo,
-            title = item.title,
-            firstSubtitle = item.name,
-            secondSubtitle = item.price.toString(),
-            description = item.description,
-            footer = item.discount.toString()
-        )
-    }
+            sut.getOrderedByPrice(isOrderedAsc = true)
+
+            advanceUntilIdle()
+
+            assertEquals(mapToItems(catalogItems.sortedBy { it.price }), sut.catalogItems.value)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun getOrderedByPrice_shouldCallGetOrderedByPriceFromRepository() =
+        runTest {
+            val catalogRepository = mock<CatalogRepository>()
+            val sut = CatalogViewModel(catalogRepository)
+
+            whenever(catalogRepository.getOrderedByPrice(any())).doAnswer { flowOf() }
+            sut.getOrderedByPrice(isOrderedAsc = true)
+
+            advanceUntilIdle()
+
+            verify(catalogRepository).getOrderedByPrice(any())
+        }
+
+    private suspend fun insertCatalogItems() = catalogItems.forEach { catalogRepository.insert(model = it, {}, {}) }
+
+    private fun mapToItems(catalogItems: List<Catalog>) =
+        catalogItems.map { item ->
+            ExtendedItem(
+                id = item.id,
+                photo = item.photo,
+                title = item.title,
+                firstSubtitle = item.name,
+                secondSubtitle = item.price.toString(),
+                description = item.description,
+                footer = item.discount.toString()
+            )
+        }
 }

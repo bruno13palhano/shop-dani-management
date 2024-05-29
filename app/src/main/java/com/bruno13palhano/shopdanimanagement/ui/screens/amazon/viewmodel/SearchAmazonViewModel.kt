@@ -16,44 +16,49 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchAmazonViewModel @Inject constructor(
-    @SaleRep private val saleRepository: SaleRepository,
-    @SearchCacheRep private val searchCacheRepository: SearchCacheRepository
-) : ViewModel() {
-    val searchCache = searchCacheRepository.getAll()
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )
+class SearchAmazonViewModel
+    @Inject
+    constructor(
+        @SaleRep private val saleRepository: SaleRepository,
+        @SearchCacheRep private val searchCacheRepository: SearchCacheRepository
+    ) : ViewModel() {
+        val searchCache =
+            searchCacheRepository.getAll()
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(5_000),
+                    initialValue = emptyList()
+                )
 
-    private val _amazonSales = MutableStateFlow(emptyList<CommonItem>())
-    val amazonSales = _amazonSales
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )
+        private val _amazonSales = MutableStateFlow(emptyList<CommonItem>())
+        val amazonSales =
+            _amazonSales
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(5_000),
+                    initialValue = emptyList()
+                )
 
-    fun search(search: String) {
-        if (search.trim().isNotEmpty()) {
-            viewModelScope.launch {
-                searchCacheRepository.insert(SearchCache(search = search.trim()))
-            }
+        fun search(search: String) {
+            if (search.trim().isNotEmpty()) {
+                viewModelScope.launch {
+                    searchCacheRepository.insert(SearchCache(search = search.trim()))
+                }
 
-            viewModelScope.launch {
-                saleRepository.searchAmazonSales(search = search).collect {
-                    _amazonSales.value = it.map { sale ->
-                        CommonItem(
-                            id = sale.id,
-                            photo = sale.photo,
-                            title = sale.name,
-                            subtitle = sale.company,
-                            description = sale.customerName
-                        )
+                viewModelScope.launch {
+                    saleRepository.searchAmazonSales(search = search).collect {
+                        _amazonSales.value =
+                            it.map { sale ->
+                                CommonItem(
+                                    id = sale.id,
+                                    photo = sale.photo,
+                                    title = sale.name,
+                                    subtitle = sale.company,
+                                    description = sale.customerName
+                                )
+                            }
                     }
                 }
             }
         }
     }
-}

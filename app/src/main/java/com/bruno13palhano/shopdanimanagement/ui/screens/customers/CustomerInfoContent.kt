@@ -65,11 +65,12 @@ fun CustomerInfoContent(
     onOutsideClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .padding(bottom = 48.dp)
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-            .clickableNoEffect { onOutsideClick() }
+        modifier =
+            Modifier
+                .padding(bottom = 48.dp)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .clickableNoEffect { onOutsideClick() }
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             Text(
@@ -91,19 +92,21 @@ fun CustomerInfoContent(
             ElevatedCard(modifier = Modifier.padding(start = 8.dp)) {
                 if (photo.isEmpty()) {
                     Image(
-                        modifier = Modifier
-                            .size(128.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(8.dp)),
+                        modifier =
+                            Modifier
+                                .size(128.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(8.dp)),
                         imageVector = Icons.Filled.Image,
                         contentDescription = stringResource(id = R.string.product_image_label)
                     )
                 } else {
                     Image(
-                        modifier = Modifier
-                            .size(128.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(8.dp)),
+                        modifier =
+                            Modifier
+                                .size(128.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(8.dp)),
                         contentScale = ContentScale.Crop,
                         painter = rememberAsyncImagePainter(model = photo),
                         contentDescription = stringResource(id = R.string.product_image_label)
@@ -131,70 +134,83 @@ fun CustomerInfoContent(
         }
         ElevatedCard(modifier = Modifier.padding(8.dp)) {
             Text(
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
+                        .fillMaxWidth(),
                 text = stringResource(id = R.string.owing_tag, owingValue)
             )
             Text(
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                        .fillMaxWidth(),
                 text = stringResource(id = R.string.amount_of_all_purchases_tag, purchasesValue)
             )
             Text(
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        .fillMaxWidth(),
                 text = stringResource(id = R.string.last_purchase_tag, lastPurchaseValue)
             )
         }
-        val axisValuesFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
-            try {
-                (chartValues.chartEntryModel.entries.first()
-                    .getOrNull(value.toInt()) as? DateChartEntry)
-                    ?.date.orEmpty()
-            } catch (ignored: Exception) { "0" }
-        }
+        val axisValuesFormatter =
+            AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
+                try {
+                    (
+                        chartValues.chartEntryModel.entries.first()
+                            .getOrNull(value.toInt()) as? DateChartEntry
+                    )
+                        ?.date.orEmpty()
+                } catch (ignored: Exception) {
+                    "0"
+                }
+            }
         ProvideChartStyle(
             chartStyle = m3ChartStyle(entityColors = listOf(MaterialTheme.colorScheme.tertiary))
         ) {
             Chart(
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                    .fillMaxWidth()
-                    .height(264.dp),
+                modifier =
+                    Modifier
+                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                        .fillMaxWidth()
+                        .height(264.dp),
                 chart = lineChart(),
                 runInitialAnimation = true,
                 chartModelProducer = entry,
                 marker = rememberMarker(),
                 fadingEdges = rememberFadingEdges(),
-                startAxis = startAxis(
-                    titleComponent = textComponent(
-                        color = MaterialTheme.colorScheme.onBackground,
-                        background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
-                        padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                        margins = dimensionsOf(end = 8.dp),
-                        typeface = Typeface.MONOSPACE
+                startAxis =
+                    startAxis(
+                        titleComponent =
+                            textComponent(
+                                color = MaterialTheme.colorScheme.onBackground,
+                                background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                margins = dimensionsOf(end = 8.dp),
+                                typeface = Typeface.MONOSPACE
+                            ),
+                        title = stringResource(id = R.string.amount_of_purchases_label)
                     ),
-                    title = stringResource(id = R.string.amount_of_purchases_label)
-                ),
-                bottomAxis = if (entry.getModel().entries.isEmpty()) {
-                    bottomAxis()
-                } else {
-                    bottomAxis(
-                        guideline = null,
-                        valueFormatter = axisValuesFormatter,
-                        titleComponent = textComponent(
-                            color = MaterialTheme.colorScheme.onBackground,
-                            background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
-                            padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                            margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
-                            typeface = Typeface.MONOSPACE
-                        ),
-                        title = stringResource(id = R.string.last_31_days_label)
-                    )
-                },
+                bottomAxis =
+                    if (entry.getModel().entries.isEmpty()) {
+                        bottomAxis()
+                    } else {
+                        bottomAxis(
+                            guideline = null,
+                            valueFormatter = axisValuesFormatter,
+                            titleComponent =
+                                textComponent(
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    background = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.primaryContainer),
+                                    padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                    margins = dimensionsOf(top = 8.dp, start = 8.dp, end = 8.dp),
+                                    typeface = Typeface.MONOSPACE
+                                ),
+                            title = stringResource(id = R.string.last_31_days_label)
+                        )
+                    },
                 chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End)
             )
         }

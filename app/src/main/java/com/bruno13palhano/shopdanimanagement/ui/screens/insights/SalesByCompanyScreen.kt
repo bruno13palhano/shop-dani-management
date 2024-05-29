@@ -37,11 +37,12 @@ fun SalesByCompanyScreen(
         viewModel.getChartByRange(7)
     }
     val salesByCompanyEntries by viewModel.chartEntry.collectAsStateWithLifecycle()
-    val menuOptions = arrayOf(
-        stringResource(id = R.string.last_7_days_label),
-        stringResource(id = R.string.last_21_days_label),
-        stringResource(id = R.string.last_31_days_label)
-    )
+    val menuOptions =
+        arrayOf(
+            stringResource(id = R.string.last_7_days_label),
+            stringResource(id = R.string.last_21_days_label),
+            stringResource(id = R.string.last_31_days_label)
+        )
 
     var chartTitle by remember { mutableStateOf(menuOptions[0]) }
     val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
@@ -73,61 +74,64 @@ fun SalesByCompanyScreen(
         screenTitle = stringResource(id = R.string.company_sales_label),
         startAxisTitle = stringResource(id = R.string.amount_of_sales_label),
         bottomAxisTitle = chartTitle,
-        entityColors = listOf(
-            MaterialTheme.colorScheme.primary,
-            MaterialTheme.colorScheme.tertiary,
-            MaterialTheme.colorScheme.secondary,
-            MaterialTheme.colorScheme.error,
-            MaterialTheme.colorScheme.errorContainer,
-            MaterialTheme.colorScheme.inversePrimary
-        ),
+        entityColors =
+            listOf(
+                MaterialTheme.colorScheme.primary,
+                MaterialTheme.colorScheme.tertiary,
+                MaterialTheme.colorScheme.secondary,
+                MaterialTheme.colorScheme.error,
+                MaterialTheme.colorScheme.errorContainer,
+                MaterialTheme.colorScheme.inversePrimary
+            ),
         entry = chart,
-        legends = listOf(
-            Pair(
-                stringResource(id = R.string.avon_company_label),
-                Color.toArgb(MaterialTheme.colorScheme.primary.value.toLong())
+        legends =
+            listOf(
+                Pair(
+                    stringResource(id = R.string.avon_company_label),
+                    Color.toArgb(MaterialTheme.colorScheme.primary.value.toLong())
+                ),
+                Pair(
+                    stringResource(id = R.string.natura_company_label),
+                    Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
+                ),
+                Pair(
+                    stringResource(id = R.string.boticario_company_label),
+                    Color.toArgb(MaterialTheme.colorScheme.secondary.value.toLong())
+                ),
+                Pair(
+                    stringResource(id = R.string.eudora_company_label),
+                    Color.toArgb(MaterialTheme.colorScheme.error.value.toLong())
+                ),
+                Pair(
+                    stringResource(id = R.string.berenice_company_label),
+                    Color.toArgb(MaterialTheme.colorScheme.errorContainer.value.toLong())
+                ),
+                Pair(
+                    stringResource(id = R.string.oui_company_label),
+                    Color.toArgb(MaterialTheme.colorScheme.inversePrimary.value.toLong())
+                )
             ),
-            Pair(
-                stringResource(id = R.string.natura_company_label),
-                Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
-            ),
-            Pair(
-                stringResource(id = R.string.boticario_company_label),
-                Color.toArgb(MaterialTheme.colorScheme.secondary.value.toLong())
-            ),
-            Pair(
-                stringResource(id = R.string.eudora_company_label),
-                Color.toArgb(MaterialTheme.colorScheme.error.value.toLong())
-            ),
-            Pair(
-                stringResource(id = R.string.berenice_company_label),
-                Color.toArgb(MaterialTheme.colorScheme.errorContainer.value.toLong())
-            ),
-            Pair(
-                stringResource(id = R.string.oui_company_label),
-                Color.toArgb(MaterialTheme.colorScheme.inversePrimary.value.toLong())
-            )
-        ),
         menuOptions = menuOptions,
         onMenuItemClick = { index ->
-            chartTitle = when (index) {
-                SalesByCompanyMenu.DAYS_7 -> {
-                    viewModel.getChartByRange(7)
-                    menuOptions[0]
+            chartTitle =
+                when (index) {
+                    SalesByCompanyMenu.DAYS_7 -> {
+                        viewModel.getChartByRange(7)
+                        menuOptions[0]
+                    }
+                    SalesByCompanyMenu.DAYS_21 -> {
+                        viewModel.getChartByRange(21)
+                        menuOptions[1]
+                    }
+                    SalesByCompanyMenu.DAYS_31 -> {
+                        viewModel.getChartByRange(31)
+                        menuOptions[2]
+                    }
+                    else -> {
+                        viewModel.getChartByRange(7)
+                        menuOptions[0]
+                    }
                 }
-                SalesByCompanyMenu.DAYS_21 -> {
-                    viewModel.getChartByRange(21)
-                    menuOptions[1]
-                }
-                SalesByCompanyMenu.DAYS_31 -> {
-                    viewModel.getChartByRange(31)
-                    menuOptions[2]
-                }
-                else -> {
-                    viewModel.getChartByRange(7)
-                    menuOptions[0]
-                }
-            }
         },
         navigateUp = navigateUp
     )

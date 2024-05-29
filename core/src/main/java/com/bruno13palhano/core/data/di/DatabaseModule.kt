@@ -24,14 +24,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 internal object DatabaseModule {
-
     @Provides
     @Singleton
     fun provideShopDatabaseFactoryDriver(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): ShopDatabase {
         return DatabaseFactory(
-            driverFactory = DriverFactory(context = context)
+            driverFactory = DriverFactory(context = context),
         ).createDriver()
     }
 
@@ -49,43 +48,29 @@ internal object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideCustomerTable(
-        database: ShopDatabase
-    ): CustomerTableQueries = database.customerTableQueries
+    fun provideCustomerTable(database: ShopDatabase): CustomerTableQueries = database.customerTableQueries
 
     @Provides
     @Singleton
-    fun provideStockTable(
-        database: ShopDatabase
-    ): StockTableQueries = database.stockTableQueries
+    fun provideStockTable(database: ShopDatabase): StockTableQueries = database.stockTableQueries
 
     @Provides
     @Singleton
-    fun provideCategoryTable(
-        database: ShopDatabase
-    ): CategoryTableQueries = database.categoryTableQueries
+    fun provideCategoryTable(database: ShopDatabase): CategoryTableQueries = database.categoryTableQueries
 
     @Provides
     @Singleton
-    fun provideSearchCacheTable(
-        database: ShopDatabase
-    ): SearchCacheTableQueries = database.searchCacheTableQueries
+    fun provideSearchCacheTable(database: ShopDatabase): SearchCacheTableQueries = database.searchCacheTableQueries
 
     @Provides
     @Singleton
-    fun provideProductCategoriesTable(
-        database: ShopDatabase
-    ): ProductCategoriesTableQueries = database.productCategoriesTableQueries
+    fun provideProductCategoriesTable(database: ShopDatabase): ProductCategoriesTableQueries = database.productCategoriesTableQueries
 
     @Provides
     @Singleton
-    fun provideCatalogTable(
-        database: ShopDatabase
-    ): CatalogTableQueries = database.catalogTableQueries
+    fun provideCatalogTable(database: ShopDatabase): CatalogTableQueries = database.catalogTableQueries
 
     @Provides
     @Singleton
-    fun provideVersionTable(
-        database: ShopDatabase
-    ): VersionTableQueries = database.versionTableQueries
+    fun provideVersionTable(database: ShopDatabase): VersionTableQueries = database.versionTableQueries
 }

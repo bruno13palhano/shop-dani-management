@@ -151,126 +151,145 @@ fun FinancialInfoContent(
         val orientation = LocalConfiguration.current.orientation
 
         Column(
-            modifier = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                Modifier.padding(it)
-            } else {
-                Modifier
-                    .padding(it)
-                    .verticalScroll(rememberScrollState())
-            }
+            modifier =
+                if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    Modifier.padding(it)
+                } else {
+                    Modifier
+                        .padding(it)
+                        .verticalScroll(rememberScrollState())
+                }
         ) {
             ElevatedCard(modifier = Modifier.padding(8.dp)) {
                 Text(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
                     text = stringResource(id = R.string.all_sales_tag, allSales)
                 )
                 Text(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                            .fillMaxWidth(),
                     text = stringResource(id = R.string.stock_sales_tag, stockSales)
                 )
                 Text(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                            .fillMaxWidth(),
                     text = stringResource(id = R.string.orders_sales_tag, ordersSales)
                 )
                 Text(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                            .fillMaxWidth(),
                     text = stringResource(id = R.string.profit_tag, profit)
                 )
             }
             val axisValuesFormatter =
                 AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
-                try {
-                    (chartValues.chartEntryModel.entries.first()
-                        .getOrNull(value.toInt()) as? DateChartEntry)
-                        ?.date.orEmpty()
-                } catch (ignored: Exception) { "0" }
-            }
-            ProvideChartStyle(chartStyle =
-                m3ChartStyle(
-                    entityColors = listOf(
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.secondary,
-                        MaterialTheme.colorScheme.tertiary,
-                        MaterialTheme.colorScheme.outline
+                    try {
+                        (
+                            chartValues.chartEntryModel.entries.first()
+                                .getOrNull(value.toInt()) as? DateChartEntry
+                        )
+                            ?.date.orEmpty()
+                    } catch (ignored: Exception) {
+                        "0"
+                    }
+                }
+            ProvideChartStyle(
+                chartStyle =
+                    m3ChartStyle(
+                        entityColors =
+                            listOf(
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.secondary,
+                                MaterialTheme.colorScheme.tertiary,
+                                MaterialTheme.colorScheme.outline
+                            )
                     )
-                )
             ) {
                 Chart(
-                    modifier = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        Modifier
-                            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                    } else {
-                        Modifier
-                            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                            .fillMaxWidth()
-                            .height(304.dp)
-                    },
+                    modifier =
+                        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            Modifier
+                                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                        } else {
+                            Modifier
+                                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                                .fillMaxWidth()
+                                .height(304.dp)
+                        },
                     chart = columnChart(),
                     runInitialAnimation = true,
                     chartModelProducer = entry,
                     marker = rememberMarker(),
-                    legend = rememberLegend(
-                        listOf(
-                            Pair(
-                                stringResource(id = R.string.sales_label),
-                                Color.toArgb(MaterialTheme.colorScheme.primary.value.toLong())
-                            ),
-                            Pair(
-                                stringResource(id = R.string.stock_label),
-                                Color.toArgb(MaterialTheme.colorScheme.secondary.value.toLong())
-                            ),
-                            Pair(
-                                stringResource(id = R.string.orders_label),
-                                Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
-                            ),
-                            Pair(
-                                stringResource(id = R.string.profit_label),
-                                Color.toArgb(MaterialTheme.colorScheme.outline.value.toLong())
-                            )
-                        )
-                    ),
-                    fadingEdges = rememberFadingEdges(),
-                    startAxis = startAxis(
-                        titleComponent = textComponent(
-                            color = MaterialTheme.colorScheme.onBackground,
-                            background = shapeComponent(
-                                Shapes.pillShape,
-                                MaterialTheme.colorScheme.primaryContainer
-                            ),
-                            padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                            margins = dimensionsOf(end = 8.dp),
-                            typeface = Typeface.MONOSPACE
-                        ),
-                        title = stringResource(id = R.string.amount_of_money_label)
-                    ),
-                    bottomAxis = if (entry.getModel().entries.isEmpty()) {
-                        bottomAxis()
-                    } else {
-                        bottomAxis(
-                            guideline = null,
-                            valueFormatter = axisValuesFormatter,
-                            titleComponent = textComponent(
-                                color = MaterialTheme.colorScheme.onBackground,
-                                background = shapeComponent(
-                                    Shapes.pillShape,
-                                    MaterialTheme.colorScheme.primaryContainer
+                    legend =
+                        rememberLegend(
+                            listOf(
+                                Pair(
+                                    stringResource(id = R.string.sales_label),
+                                    Color.toArgb(MaterialTheme.colorScheme.primary.value.toLong())
                                 ),
-                                padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                                margins = dimensionsOf(top = 8.dp, start = 8.dp),
-                                typeface = Typeface.MONOSPACE
+                                Pair(
+                                    stringResource(id = R.string.stock_label),
+                                    Color.toArgb(MaterialTheme.colorScheme.secondary.value.toLong())
+                                ),
+                                Pair(
+                                    stringResource(id = R.string.orders_label),
+                                    Color.toArgb(MaterialTheme.colorScheme.tertiary.value.toLong())
+                                ),
+                                Pair(
+                                    stringResource(id = R.string.profit_label),
+                                    Color.toArgb(MaterialTheme.colorScheme.outline.value.toLong())
+                                )
                             )
-                        )
-                    },
+                        ),
+                    fadingEdges = rememberFadingEdges(),
+                    startAxis =
+                        startAxis(
+                            titleComponent =
+                                textComponent(
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    background =
+                                        shapeComponent(
+                                            Shapes.pillShape,
+                                            MaterialTheme.colorScheme.primaryContainer
+                                        ),
+                                    padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                    margins = dimensionsOf(end = 8.dp),
+                                    typeface = Typeface.MONOSPACE
+                                ),
+                            title = stringResource(id = R.string.amount_of_money_label)
+                        ),
+                    bottomAxis =
+                        if (entry.getModel().entries.isEmpty()) {
+                            bottomAxis()
+                        } else {
+                            bottomAxis(
+                                guideline = null,
+                                valueFormatter = axisValuesFormatter,
+                                titleComponent =
+                                    textComponent(
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        background =
+                                            shapeComponent(
+                                                Shapes.pillShape,
+                                                MaterialTheme.colorScheme.primaryContainer
+                                            ),
+                                        padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                        margins = dimensionsOf(top = 8.dp, start = 8.dp),
+                                        typeface = Typeface.MONOSPACE
+                                    )
+                            )
+                        },
                     chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End)
                 )
             }
@@ -281,17 +300,19 @@ fun FinancialInfoContent(
 @Composable
 private fun rememberLegend(legends: List<Pair<String, Int>>): VerticalLegend {
     return verticalLegend(
-        items = legends.map { legend ->
-            verticalLegendItem(
-                icon = ShapeComponent(Shapes.pillShape, legend.second),
-                label = textComponent(
-                    color = currentChartStyle.axis.axisLabelColor,
-                    textSize = 12.sp,
-                    typeface = Typeface.MONOSPACE
-                ),
-                labelText = legend.first
-            )
-        },
+        items =
+            legends.map { legend ->
+                verticalLegendItem(
+                    icon = ShapeComponent(Shapes.pillShape, legend.second),
+                    label =
+                        textComponent(
+                            color = currentChartStyle.axis.axisLabelColor,
+                            textSize = 12.sp,
+                            typeface = Typeface.MONOSPACE
+                        ),
+                    labelText = legend.first
+                )
+            },
         iconSize = 8.dp,
         iconPadding = 10.dp,
         spacing = 4.dp

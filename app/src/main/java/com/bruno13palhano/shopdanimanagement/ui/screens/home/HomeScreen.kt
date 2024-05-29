@@ -163,7 +163,7 @@ fun HomeContent(
     onOptionsItemClick: (route: HomeRoutes) -> Unit,
     onSalesItemClick: (id: Long) -> Unit,
     onShowProfitChange: (show: Boolean) -> Unit,
-    onMenuClick: () -> Unit,
+    onMenuClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -181,42 +181,51 @@ fun HomeContent(
             )
         }
     ) {
-        val infoSaleList = listOf(
-            Pair(homeInfo.biggestSale, stringResource(id = R.string.biggest_sale_label)),
-            Pair(homeInfo.smallestSale, stringResource(id = R.string.smallest_sale_label)),
-            Pair(homeInfo.lastSale, stringResource(id = R.string.last_sale_label))
-        )
-        val options = listOf(
-            HomeInnerScreen.Sales,
-            HomeInnerScreen.Stock,
-            HomeInnerScreen.Orders,
-            HomeInnerScreen.Amazon,
-            HomeInnerScreen.Deliveries,
-            HomeInnerScreen.Catalog
-        )
-        val axisValuesFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
-            try {
-                (chartValues.chartEntryModel.entries.first()
-                    .getOrNull(value.toInt()) as? DateChartEntry)
-                    ?.date
-                    .orEmpty()
-            } catch (ignored: Exception) { "0" }
-        }
+        val infoSaleList =
+            listOf(
+                Pair(homeInfo.biggestSale, stringResource(id = R.string.biggest_sale_label)),
+                Pair(homeInfo.smallestSale, stringResource(id = R.string.smallest_sale_label)),
+                Pair(homeInfo.lastSale, stringResource(id = R.string.last_sale_label))
+            )
+        val options =
+            listOf(
+                HomeInnerScreen.Sales,
+                HomeInnerScreen.Stock,
+                HomeInnerScreen.Orders,
+                HomeInnerScreen.Amazon,
+                HomeInnerScreen.Deliveries,
+                HomeInnerScreen.Catalog
+            )
+        val axisValuesFormatter =
+            AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
+                try {
+                    (
+                        chartValues.chartEntryModel.entries.first()
+                            .getOrNull(value.toInt()) as? DateChartEntry
+                    )
+                        ?.date
+                        .orEmpty()
+                } catch (ignored: Exception) {
+                    "0"
+                }
+            }
 
         val dots = stringResource(id = R.string.dots_label)
 
         LazyColumn(modifier = Modifier.padding(it)) {
             item {
                 Row(
-                    modifier = Modifier
-                        .padding(top = 16.dp, bottom = 8.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(top = 16.dp, bottom = 8.dp)
+                            .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1F, true)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(1F, true)
                     ) {
                         Text(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
@@ -224,23 +233,26 @@ fun HomeContent(
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            text = if (showProfit) {
-                                stringResource(id = R.string.value_tag, homeInfo.profit)
-                            } else {
-                                stringResource(id = R.string.value_text_tag, dots)
-                            },
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                            text =
+                                if (showProfit) {
+                                    stringResource(id = R.string.value_tag, homeInfo.profit)
+                                } else {
+                                    stringResource(id = R.string.value_text_tag, dots)
+                                },
                             style = MaterialTheme.typography.titleLarge
                         )
                         Text(
                             modifier = Modifier.padding(horizontal = 16.dp),
-                            text = if (showProfit) {
-                                stringResource(id = R.string.total_sales_value_tag, homeInfo.sales)
-                            } else {
-                                stringResource(id = R.string.total_sales_text_value_tag, dots)
-                            },
+                            text =
+                                if (showProfit) {
+                                    stringResource(id = R.string.total_sales_value_tag, homeInfo.sales)
+                                } else {
+                                    stringResource(id = R.string.total_sales_text_value_tag, dots)
+                                },
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -270,11 +282,12 @@ fun HomeContent(
                         val description = stringResource(id = option.resourceId)
 
                         CircularItemList(
-                            modifier = Modifier
-                                .semantics {
-                                    contentDescription = description
-                                }
-                                .padding(horizontal = 4.dp),
+                            modifier =
+                                Modifier
+                                    .semantics {
+                                        contentDescription = description
+                                    }
+                                    .padding(horizontal = 4.dp),
                             title = stringResource(id = option.resourceId),
                             icon = option.icon,
                             onClick = { onOptionsItemClick(option.route) }
@@ -283,9 +296,10 @@ fun HomeContent(
                 }
 
                 ElevatedCard(
-                    modifier = Modifier
-                        .semantics { contentDescription = "List of sales" }
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    modifier =
+                        Modifier
+                            .semantics { contentDescription = "List of sales" }
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 ) {
                     infoSaleList.forEach { info ->
                         if (info.first.value == 0F) {
@@ -298,32 +312,33 @@ fun HomeContent(
                                 onEditClick = {}
                             )
                             HorizontalDivider()
-
                         } else {
                             InfoItemList(
                                 modifier = Modifier.padding(horizontal = 16.dp),
                                 contentPadding = PaddingValues(vertical = 12.dp),
                                 title = info.second,
-                                subtitle = if (showProfit) {
-                                    stringResource(
-                                        id = R.string.product_price_tag,
-                                        info.first.item,
-                                        info.first.value
-                                    )
-                                } else {
-                                    stringResource(
-                                        id = R.string.product_price_text_tag,
-                                        info.first.item,
-                                        dots
-                                    )
-                                },
-                                description = pluralStringResource(
-                                    id = R.plurals.description_label,
-                                    count = info.first.quantity,
-                                    info.first.customer,
-                                    info.first.quantity,
-                                    dateFormat.format(info.first.date)
-                                ),
+                                subtitle =
+                                    if (showProfit) {
+                                        stringResource(
+                                            id = R.string.product_price_tag,
+                                            info.first.item,
+                                            info.first.value
+                                        )
+                                    } else {
+                                        stringResource(
+                                            id = R.string.product_price_text_tag,
+                                            info.first.item,
+                                            dots
+                                        )
+                                    },
+                                description =
+                                    pluralStringResource(
+                                        id = R.plurals.description_label,
+                                        count = info.first.quantity,
+                                        info.first.customer,
+                                        info.first.quantity,
+                                        dateFormat.format(info.first.date)
+                                    ),
                                 onEditClick = {
                                     onSalesItemClick(info.first.id)
                                 }
@@ -337,57 +352,66 @@ fun HomeContent(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     ProvideChartStyle(
-                        chartStyle = m3ChartStyle(
-                            entityColors = listOf(MaterialTheme.colorScheme.tertiary)
-                        )
+                        chartStyle =
+                            m3ChartStyle(
+                                entityColors = listOf(MaterialTheme.colorScheme.tertiary)
+                            )
                     ) {
                         val marker = rememberMarker()
                         Chart(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth()
-                                .height(264.dp),
+                            modifier =
+                                Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth()
+                                    .height(264.dp),
                             chart = lineChart(),
                             runInitialAnimation = true,
                             chartModelProducer = lastSalesEntry,
                             marker = marker,
                             fadingEdges = rememberFadingEdges(),
-                            startAxis = startAxis(
-                                titleComponent = textComponent(
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    background = shapeComponent(
-                                        Shapes.pillShape,
-                                        MaterialTheme.colorScheme.primaryContainer
-                                    ),
-                                    padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                                    margins = dimensionsOf(end = 8.dp),
-                                    typeface = Typeface.MONOSPACE
+                            startAxis =
+                                startAxis(
+                                    titleComponent =
+                                        textComponent(
+                                            color = MaterialTheme.colorScheme.onBackground,
+                                            background =
+                                                shapeComponent(
+                                                    Shapes.pillShape,
+                                                    MaterialTheme.colorScheme.primaryContainer
+                                                ),
+                                            padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                            margins = dimensionsOf(end = 8.dp),
+                                            typeface = Typeface.MONOSPACE
+                                        ),
+                                    title = stringResource(id = R.string.amount_of_sales_label)
                                 ),
-                                title = stringResource(id = R.string.amount_of_sales_label)
-                            ),
-                            bottomAxis = if (lastSalesEntry.getModel().entries.isEmpty()) {
-                                bottomAxis()
-                            } else {
-                                bottomAxis(
-                                    guideline = null,
-                                    valueFormatter = axisValuesFormatter,
-                                    titleComponent = textComponent(
-                                        color = MaterialTheme.colorScheme.onBackground,
-                                        background = shapeComponent(
-                                            Shapes.pillShape,
-                                            MaterialTheme.colorScheme.primaryContainer
-                                        ),
-                                        padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
-                                        margins = dimensionsOf(
-                                            top = 8.dp,
-                                            start = 8.dp,
-                                            end = 8.dp
-                                        ),
-                                        typeface = Typeface.MONOSPACE
-                                    ),
-                                    title = stringResource(id = R.string.last_sales_label)
-                                )
-                            }
+                            bottomAxis =
+                                if (lastSalesEntry.getModel().entries.isEmpty()) {
+                                    bottomAxis()
+                                } else {
+                                    bottomAxis(
+                                        guideline = null,
+                                        valueFormatter = axisValuesFormatter,
+                                        titleComponent =
+                                            textComponent(
+                                                color = MaterialTheme.colorScheme.onBackground,
+                                                background =
+                                                    shapeComponent(
+                                                        Shapes.pillShape,
+                                                        MaterialTheme.colorScheme.primaryContainer
+                                                    ),
+                                                padding = dimensionsOf(horizontal = 8.dp, vertical = 2.dp),
+                                                margins =
+                                                    dimensionsOf(
+                                                        top = 8.dp,
+                                                        start = 8.dp,
+                                                        end = 8.dp
+                                                    ),
+                                                typeface = Typeface.MONOSPACE
+                                            ),
+                                        title = stringResource(id = R.string.last_sales_label)
+                                    )
+                                }
                         )
                     }
                 }
@@ -396,37 +420,42 @@ fun HomeContent(
     }
 }
 
-sealed class HomeInnerScreen<T: HomeRoutes>(
+sealed class HomeInnerScreen<T : HomeRoutes>(
     val route: T,
     val icon: ImageVector,
     @StringRes val resourceId: Int
 ) {
-    data object Stock: HomeInnerScreen<HomeRoutes>(
+    data object Stock : HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Stock,
         icon = Icons.AutoMirrored.Filled.List,
         resourceId = R.string.stock_label
     )
-    data object Sales: HomeInnerScreen<HomeRoutes>(
+
+    data object Sales : HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Sales,
         icon = Icons.Filled.PointOfSale,
         resourceId = R.string.sales_label
     )
-    data object Orders: HomeInnerScreen<HomeRoutes>(
+
+    data object Orders : HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Orders,
         icon = Icons.Filled.Checklist,
         resourceId = R.string.orders_label
     )
-    data object Amazon: HomeInnerScreen<HomeRoutes>(
+
+    data object Amazon : HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Amazon,
         icon = Icons.Filled.ShoppingBag,
         resourceId = R.string.amazon_label
     )
-    data object Deliveries: HomeInnerScreen<HomeRoutes>(
+
+    data object Deliveries : HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Deliveries,
         icon = Icons.Filled.LocalShipping,
         resourceId = R.string.deliveries_label
     )
-    data object Catalog: HomeInnerScreen<HomeRoutes>(
+
+    data object Catalog : HomeInnerScreen<HomeRoutes>(
         route = HomeRoutes.Catalog,
         icon = Icons.AutoMirrored.Filled.ListAlt,
         resourceId = R.string.catalog_label

@@ -7,7 +7,7 @@ data class CustomerInfo(
     val photo: ByteArray,
     val owingValue: String,
     val purchasesValue: String,
-    val lastPurchaseValue: String
+    val lastPurchaseValue: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -36,14 +36,15 @@ data class CustomerInfo(
     }
 
     companion object {
-        fun emptyCustomerInfo() = CustomerInfo(
-            id = 0L,
-            name = "",
-            address = "",
-            photo = byteArrayOf(),
-            owingValue = "",
-            purchasesValue = "",
-            lastPurchaseValue = ""
-        )
+        fun emptyCustomerInfo() =
+            CustomerInfo(
+                id = 0L,
+                name = "",
+                address = "",
+                photo = byteArrayOf(),
+                owingValue = "",
+                purchasesValue = "",
+                lastPurchaseValue = "",
+            )
     }
 }

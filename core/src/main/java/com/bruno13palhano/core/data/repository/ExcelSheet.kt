@@ -4,6 +4,6 @@ interface ExcelSheet {
     suspend fun createExcel(
         sheetName: String,
         headers: List<String>,
-        data: List<List<String>>
+        data: List<List<String>>,
     )
 }

@@ -33,7 +33,6 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class ProductListViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
@@ -43,16 +42,18 @@ class ProductListViewModelTest {
     private lateinit var productRepository: ProductRepository
     private lateinit var categoryRepository: CategoryRepository
     private lateinit var sut: ProductListViewModel
-    private var products = listOf(
-        makeRandomProduct(id = 1L, name = "Homem"),
-        makeRandomProduct(id = 2L, name = "Essencial"),
-        makeRandomProduct(id = 3L, name = "Homem")
-    )
-    private var categories = listOf(
-        Category(id = 1L, category = "Perfumes", timestamp = ""),
-        Category(id = 2L, category = "Soaps", timestamp = ""),
-        Category(id = 3L, category = "Others", timestamp = "")
-    )
+    private var products =
+        listOf(
+            makeRandomProduct(id = 1L, name = "Homem"),
+            makeRandomProduct(id = 2L, name = "Essencial"),
+            makeRandomProduct(id = 3L, name = "Homem")
+        )
+    private var categories =
+        listOf(
+            Category(id = 1L, category = "Perfumes", timestamp = ""),
+            Category(id = 2L, category = "Soaps", timestamp = ""),
+            Category(id = 3L, category = "Others", timestamp = "")
+        )
 
     @Before
     fun setUp() {
@@ -70,104 +71,112 @@ class ProductListViewModelTest {
     }
 
     @Test
-    fun updateCategory_shouldCallUpdateFromCategoryRepository() = runTest {
-        val productRep = mock<ProductRepository>()
-        val categoryRep = mock<CategoryRepository>()
-        val sut = ProductListViewModel(categoryRep, productRep)
+    fun updateCategory_shouldCallUpdateFromCategoryRepository() =
+        runTest {
+            val productRep = mock<ProductRepository>()
+            val categoryRep = mock<CategoryRepository>()
+            val sut = ProductListViewModel(categoryRep, productRep)
 
-        sut.updateCategory(id = 1L)
-        advanceUntilIdle()
+            sut.updateCategory(id = 1L)
+            advanceUntilIdle()
 
-        verify(categoryRep).update(any(), any(), any())
-    }
-
-    @Test
-    fun getCategory_shouldCallGetByIdFromCategoryRepository() = runTest {
-        val productRep = mock<ProductRepository>()
-        val categoryRep = mock<CategoryRepository>()
-        val sut = ProductListViewModel(categoryRep, productRep)
-
-        whenever(categoryRep.getById(any())).doAnswer { flowOf() }
-        sut.getCategory(id = 1L)
-        advanceUntilIdle()
-
-        verify(categoryRep).getById(any())
-    }
+            verify(categoryRep).update(any(), any(), any())
+        }
 
     @Test
-    fun getCategory_shouldSetName_ifCategoryExists() = runTest {
-        val name = categories[0].category
-        insertCategories()
+    fun getCategory_shouldCallGetByIdFromCategoryRepository() =
+        runTest {
+            val productRep = mock<ProductRepository>()
+            val categoryRep = mock<CategoryRepository>()
+            val sut = ProductListViewModel(categoryRep, productRep)
 
-        sut.getCategory(id = 1L)
-        advanceUntilIdle()
+            whenever(categoryRep.getById(any())).doAnswer { flowOf() }
+            sut.getCategory(id = 1L)
+            advanceUntilIdle()
 
-        assertEquals(name, sut.name)
-    }
-
-    @Test
-    fun whenCollectCategories_shouldReturnAllCategories() = runTest {
-        insertCategories()
-        val collectJob = launch { sut.categories.collect() }
-        advanceUntilIdle()
-
-        assertEquals(categories.map { it.category }, sut.categories.value)
-        collectJob.cancel()
-    }
+            verify(categoryRep).getById(any())
+        }
 
     @Test
-    fun getAllProducts_shouldCallGetAllFromProductRepository() = runTest {
-        val productRep = mock<ProductRepository>()
-        val categoryRep = mock<CategoryRepository>()
-        val sut = ProductListViewModel(categoryRep, productRep)
+    fun getCategory_shouldSetName_ifCategoryExists() =
+        runTest {
+            val name = categories[0].category
+            insertCategories()
 
-        whenever(productRep.getAll()).doAnswer { flowOf() }
-        sut.getAllProducts()
-        advanceUntilIdle()
+            sut.getCategory(id = 1L)
+            advanceUntilIdle()
 
-        verify(productRep).getAll()
-    }
-
-    @Test
-    fun getAllProducts_shouldSetOrderProperty() = runTest {
-        insertProducts()
-        val collectJob = launch { sut.orders.collect() }
-
-        sut.getAllProducts()
-        advanceUntilIdle()
-
-        assertEquals(mapToItems(products), sut.orders.value)
-
-        collectJob.cancel()
-    }
+            assertEquals(name, sut.name)
+        }
 
     @Test
-    fun getProductsByCategory_shouldCallGetProductsByCategoryFromProductRepository() = runTest {
-        val category = "Perfumes"
-        val productRep = mock<ProductRepository>()
-        val categoryRep = mock<CategoryRepository>()
-        val sut = ProductListViewModel(categoryRep, productRep)
+    fun whenCollectCategories_shouldReturnAllCategories() =
+        runTest {
+            insertCategories()
+            val collectJob = launch { sut.categories.collect() }
+            advanceUntilIdle()
 
-        whenever(productRep.getByCategory(any())).doAnswer { flowOf() }
-        sut.getProductsByCategory(category = category)
-        advanceUntilIdle()
-
-        verify(productRep).getByCategory(any())
-    }
+            assertEquals(categories.map { it.category }, sut.categories.value)
+            collectJob.cancel()
+        }
 
     @Test
-    fun getProductsByCategory_shouldSetOrderProperty() = runTest {
-        insertProducts()
-        val category = products[2].categories[1].category
-        val collectJob = launch { sut.orders.collect() }
+    fun getAllProducts_shouldCallGetAllFromProductRepository() =
+        runTest {
+            val productRep = mock<ProductRepository>()
+            val categoryRep = mock<CategoryRepository>()
+            val sut = ProductListViewModel(categoryRep, productRep)
 
-        sut.getProductsByCategory(category = category)
-        advanceUntilIdle()
+            whenever(productRep.getAll()).doAnswer { flowOf() }
+            sut.getAllProducts()
+            advanceUntilIdle()
 
-        assertEquals(mapToItems(listOf(products[2])), sut.orders.value)
+            verify(productRep).getAll()
+        }
 
-        collectJob.cancel()
-    }
+    @Test
+    fun getAllProducts_shouldSetOrderProperty() =
+        runTest {
+            insertProducts()
+            val collectJob = launch { sut.orders.collect() }
+
+            sut.getAllProducts()
+            advanceUntilIdle()
+
+            assertEquals(mapToItems(products), sut.orders.value)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun getProductsByCategory_shouldCallGetProductsByCategoryFromProductRepository() =
+        runTest {
+            val category = "Perfumes"
+            val productRep = mock<ProductRepository>()
+            val categoryRep = mock<CategoryRepository>()
+            val sut = ProductListViewModel(categoryRep, productRep)
+
+            whenever(productRep.getByCategory(any())).doAnswer { flowOf() }
+            sut.getProductsByCategory(category = category)
+            advanceUntilIdle()
+
+            verify(productRep).getByCategory(any())
+        }
+
+    @Test
+    fun getProductsByCategory_shouldSetOrderProperty() =
+        runTest {
+            insertProducts()
+            val category = products[2].categories[1].category
+            val collectJob = launch { sut.orders.collect() }
+
+            sut.getProductsByCategory(category = category)
+            advanceUntilIdle()
+
+            assertEquals(mapToItems(listOf(products[2])), sut.orders.value)
+
+            collectJob.cancel()
+        }
 
     private fun mapToItems(products: List<Product>) =
         products.map {
@@ -180,7 +189,7 @@ class ProductListViewModelTest {
             )
         }
 
-    private suspend fun insertCategories() =
-        categories.forEach { categoryRepository.insert(it, {}, {}) }
+    private suspend fun insertCategories() = categories.forEach { categoryRepository.insert(it, {}, {}) }
+
     private suspend fun insertProducts() = products.forEach { productRepository.insert(it, {}, {}) }
 }

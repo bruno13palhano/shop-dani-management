@@ -20,8 +20,8 @@ fun InsightsDynamicPreview() {
     ShopDaniManagementTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background)
-        {
+            color = MaterialTheme.colorScheme.background
+        ) {
             InsightsContent(
                 onItemClick = {},
                 onIconMenuClick = {},
@@ -40,8 +40,8 @@ fun InsightsPreview() {
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background)
-        {
+            color = MaterialTheme.colorScheme.background
+        ) {
             InsightsContent(
                 onItemClick = {},
                 onIconMenuClick = {},

@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.core.data.di.UserRep
 import com.bruno13palhano.core.data.repository.user.UserRepository
 import com.bruno13palhano.core.model.User
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
+import com.bruno13palhano.shopdanimanagement.ui.screens.common.UserResponse
 import com.bruno13palhano.shopdanimanagement.ui.screens.getCurrentTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,80 +21,84 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ChangePasswordViewModel @Inject constructor(
-    @UserRep private val userRepository: UserRepository
-) : ViewModel() {
-    private var _updateState = MutableStateFlow<UiState>(UiState.Fail)
-    val updateState = _updateState.asStateFlow()
+class ChangePasswordViewModel
+    @Inject
+    constructor(
+        @UserRep private val userRepository: UserRepository
+    ) : ViewModel() {
+        private var _updateState = MutableStateFlow<UiState>(UiState.Fail)
+        val updateState = _updateState.asStateFlow()
 
-    private var userId = 0L
-    private var username = ""
-    private var email = ""
-    private var timestamp = ""
+        private var userId = 0L
+        private var username = ""
+        private var email = ""
+        private var timestamp = ""
 
-    var newPassword by mutableStateOf("")
-        private set
-    var repeatNewPassword by mutableStateOf("")
-        private set
+        var newPassword by mutableStateOf("")
+            private set
+        var repeatNewPassword by mutableStateOf("")
+            private set
 
-    val isFieldsNotEmpty = snapshotFlow {
-        newPassword.isNotEmpty() && repeatNewPassword.isNotEmpty()
-    }
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = false
-        )
-
-    fun updateNewPassword(newPassword: String) {
-        this.newPassword = newPassword
-    }
-
-    fun updateRepeatNewPassword(repeatNewPassword: String) {
-        this.repeatNewPassword = repeatNewPassword
-    }
-
-    fun getCurrentUser() {
-        viewModelScope.launch {
-            userRepository.getCurrentUser(onError = {}, onSuccess = {}).collect {
-                userId = it.id
-                username = it.username
-                email = it.email
-                timestamp = getCurrentTimestamp()
+        val isFieldsNotEmpty =
+            snapshotFlow {
+                newPassword.isNotEmpty() && repeatNewPassword.isNotEmpty()
             }
-        }
-    }
-
-    fun changePassword(onError: (error: Int) -> Unit) {
-        if(newPassword == repeatNewPassword) {
-            _updateState.value = UiState.InProgress
-
-            val user = User(
-                id = userId,
-                username = username,
-                email = email,
-                password = newPassword,
-                photo = byteArrayOf(),
-                role = "",
-                enabled = true,
-                timestamp = timestamp
-            )
-
-            viewModelScope.launch {
-                userRepository.updateUserPassword(
-                    user = user,
-                    onError = {
-                        onError(it)
-                        _updateState.value = UiState.Fail
-                    },
-                    onSuccess = {
-                        _updateState.value = UiState.Success
-                    }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(5_000),
+                    initialValue = false
                 )
+
+        fun updateNewPassword(newPassword: String) {
+            this.newPassword = newPassword
+        }
+
+        fun updateRepeatNewPassword(repeatNewPassword: String) {
+            this.repeatNewPassword = repeatNewPassword
+        }
+
+        fun getCurrentUser() {
+            viewModelScope.launch {
+                userRepository.getCurrentUser(onError = {}, onSuccess = {}).collect {
+                    userId = it.id
+                    username = it.username
+                    email = it.email
+                    timestamp = getCurrentTimestamp()
+                }
             }
-        } else {
-            onError(UserResponse.WrongPasswordValidation.code)
-            _updateState.value = UiState.Fail
+        }
+
+        fun changePassword(onError: (error: Int) -> Unit) {
+            if (newPassword == repeatNewPassword) {
+                _updateState.value = UiState.InProgress
+
+                val user =
+                    User(
+                        id = userId,
+                        username = username,
+                        email = email,
+                        password = newPassword,
+                        photo = byteArrayOf(),
+                        role = "",
+                        enabled = true,
+                        timestamp = timestamp
+                    )
+
+                viewModelScope.launch {
+                    userRepository.updateUserPassword(
+                        user = user,
+                        onError = {
+                            onError(it)
+                            _updateState.value = UiState.Fail
+                        },
+                        onSuccess = {
+                            _updateState.value = UiState.Success
+                        }
+                    )
+                }
+            } else {
+                onError(UserResponse.WrongPasswordValidation.code)
+                _updateState.value = UiState.Fail
+            }
         }
     }
-}

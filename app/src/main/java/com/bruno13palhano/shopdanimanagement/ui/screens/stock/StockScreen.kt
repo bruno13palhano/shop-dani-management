@@ -94,7 +94,7 @@ fun StockScreen(
 
         BarcodeReader(
             onBarcodeClick = { code ->
-                if(code.isNotEmpty()) {
+                if (code.isNotEmpty()) {
                     viewModel.getItemsByCode(code = code)
                     showBarcodeReader = false
                     showContent = true
@@ -126,9 +126,13 @@ fun StockScreen(
             },
             onMenuItemClick = { index ->
                 when (index) {
-                    StockMenuItems.ALL_ITEMS -> { viewModel.getItems() }
+                    StockMenuItems.ALL_ITEMS -> {
+                        viewModel.getItems()
+                    }
 
-                    StockMenuItems.OUT_OF_STOCK -> { viewModel.getOutOfStock() }
+                    StockMenuItems.OUT_OF_STOCK -> {
+                        viewModel.getOutOfStock()
+                    }
 
                     StockMenuItems.ITEMS_BY_CATEGORY -> {
                         viewModel.getItemsByCategories(menuOptions[index])

@@ -33,36 +33,38 @@ import java.time.ZoneOffset
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class StockOrdersSalesVIewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private val currentDay = LocalDate.now()
     private lateinit var saleRepository: SaleRepository
     private lateinit var sut: StockOrdersSalesViewModel
 
-    private val sales = listOf(
-        makeRandomSale(
-            id = 1L,
-            dateOfSale = currentDay.minusDays(2).atStartOfDay()
-                .toInstant(ZoneOffset.UTC).toEpochMilli(),
-            canceled = false
-        ),
-        makeRandomSale(
-            id = 2L,
-            dateOfSale = currentDay.minusDays(1).atStartOfDay()
-                .toInstant(ZoneOffset.UTC).toEpochMilli(),
-            canceled = false
-        ),
-        makeRandomSale(
-            id = 3L,
-            dateOfSale = currentDay.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
-            canceled = false
+    private val sales =
+        listOf(
+            makeRandomSale(
+                id = 1L,
+                dateOfSale =
+                    currentDay.minusDays(2).atStartOfDay()
+                        .toInstant(ZoneOffset.UTC).toEpochMilli(),
+                canceled = false
+            ),
+            makeRandomSale(
+                id = 2L,
+                dateOfSale =
+                    currentDay.minusDays(1).atStartOfDay()
+                        .toInstant(ZoneOffset.UTC).toEpochMilli(),
+                canceled = false
+            ),
+            makeRandomSale(
+                id = 3L,
+                dateOfSale = currentDay.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
+                canceled = false
+            )
         )
-    )
 
     @Before
     fun setup() {
@@ -71,31 +73,33 @@ class StockOrdersSalesVIewModelTest {
     }
 
     @Test
-    fun setStockOrderSalesRange_shouldCallGetLastSalesFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository>()
-        val sut = StockOrdersSalesViewModel(saleRepository)
+    fun setStockOrderSalesRange_shouldCallGetLastSalesFromRepository() =
+        runTest {
+            val saleRepository = mock<SaleRepository>()
+            val sut = StockOrdersSalesViewModel(saleRepository)
 
-        whenever(saleRepository.getLastSales(any(), any())).doAnswer { flowOf() }
+            whenever(saleRepository.getLastSales(any(), any())).doAnswer { flowOf() }
 
-        sut.setStockOrdersSalesRange(7)
-        advanceUntilIdle()
+            sut.setStockOrdersSalesRange(7)
+            advanceUntilIdle()
 
-        verify(saleRepository).getLastSales(any(), any())
-    }
+            verify(saleRepository).getLastSales(any(), any())
+        }
 
     @Test
-    fun setStockOrderSalesRange_shouldSetAllSalesProperty() = runTest {
-        insertSales()
+    fun setStockOrderSalesRange_shouldSetAllSalesProperty() =
+        runTest {
+            insertSales()
 
-        val collectJob = launch { sut.allSales.collect() }
+            val collectJob = launch { sut.allSales.collect() }
 
-        sut.setStockOrdersSalesRange(rangeOfDays = 7)
-        advanceUntilIdle()
+            sut.setStockOrdersSalesRange(rangeOfDays = 7)
+            advanceUntilIdle()
 
-        assertEquals(mapToSalesEntries(sales), sut.allSales.value)
+            assertEquals(mapToSalesEntries(sales), sut.allSales.value)
 
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     private suspend fun insertSales() = sales.forEach { saleRepository.insert(it, {}, {}) }
 

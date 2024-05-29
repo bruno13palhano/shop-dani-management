@@ -19,14 +19,16 @@ class DependenciesApplication : Application(), Configuration.Provider {
     lateinit var userRepository: UserRepository
 
     override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
+        get() =
+            Configuration.Builder()
+                .setWorkerFactory(workerFactory)
+                .build()
 
     override fun onCreate() {
         super.onCreate()
 
-        if (userRepository.isAuthenticated())
+        if (userRepository.isAuthenticated()) {
             Sync.initialize(this)
+        }
     }
 }

@@ -74,17 +74,18 @@ fun CustomerPreview() {
     }
 }
 
-private val customerList = listOf(
-    CommonItem(1L, byteArrayOf(), "Bruno", "Rua 15 de novembro", ""),
-    CommonItem(2L, byteArrayOf(), "Brenda",  "13 de maio", ""),
-    CommonItem(3L, byteArrayOf(), "Daniela", "Rua do serrote", ""),
-    CommonItem(4L, byteArrayOf(), "Josué", "Rua 15 de novembro", ""),
-    CommonItem(5L, byteArrayOf(), "Helena", "Rua 13 de maio", ""),
-    CommonItem(6L, byteArrayOf(),"Socorro","Rua do serrote", ""),
-    CommonItem(7L, byteArrayOf(),"Fernando","Rua do serrote", ""),
-    CommonItem(8L, byteArrayOf(),"Henrique","Carão", ""),
-    CommonItem(9L, byteArrayOf(), "Bruno","Rua 15 de novembro", ""),
-)
+private val customerList =
+    listOf(
+        CommonItem(1L, byteArrayOf(), "Bruno", "Rua 15 de novembro", ""),
+        CommonItem(2L, byteArrayOf(), "Brenda", "13 de maio", ""),
+        CommonItem(3L, byteArrayOf(), "Daniela", "Rua do serrote", ""),
+        CommonItem(4L, byteArrayOf(), "Josué", "Rua 15 de novembro", ""),
+        CommonItem(5L, byteArrayOf(), "Helena", "Rua 13 de maio", ""),
+        CommonItem(6L, byteArrayOf(), "Socorro", "Rua do serrote", ""),
+        CommonItem(7L, byteArrayOf(), "Fernando", "Rua do serrote", ""),
+        CommonItem(8L, byteArrayOf(), "Henrique", "Carão", ""),
+        CommonItem(9L, byteArrayOf(), "Bruno", "Rua 15 de novembro", "")
+    )
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)

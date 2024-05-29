@@ -13,5 +13,5 @@ data class StockItemNet(
     @Json(name = "purchasePrice") val purchasePrice: Float,
     @Json(name = "salePrice") val salePrice: Float,
     @Json(name = "isPaid") val isPaid: Boolean,
-    @Json(name = "timestamp") override val timestamp: String
-): Model(id = id, timestamp = timestamp)
+    @Json(name = "timestamp") override val timestamp: String,
+) : Model(id = id, timestamp = timestamp)

@@ -82,18 +82,20 @@ fun InsightsContent(
             )
         }
     ) {
-        val items = listOf(
-            InsightsInnerScreen.Charts,
-            InsightsInnerScreen.LastSales,
-            InsightsInnerScreen.StockOrdersSales,
-            InsightsInnerScreen.CompanySales
-        )
+        val items =
+            listOf(
+                InsightsInnerScreen.Charts,
+                InsightsInnerScreen.LastSales,
+                InsightsInnerScreen.StockOrdersSales,
+                InsightsInnerScreen.CompanySales
+            )
         Column(
-            modifier = Modifier
-                .semantics { contentDescription = "List of items" }
-                .padding(it)
-                .padding(horizontal = 8.dp, vertical = 4.dp)
-                .verticalScroll(rememberScrollState())
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "List of items" }
+                    .padding(it)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .verticalScroll(rememberScrollState())
         ) {
             items.forEach { screen ->
                 SimpleItemList(
@@ -107,27 +109,30 @@ fun InsightsContent(
     }
 }
 
-sealed class InsightsInnerScreen<T: InsightsRoutes>(
+sealed class InsightsInnerScreen<T : InsightsRoutes>(
     val route: T,
     val icon: ImageVector,
     @StringRes val resourceId: Int
 ) {
-    data object Charts: InsightsInnerScreen<InsightsRoutes>(
+    data object Charts : InsightsInnerScreen<InsightsRoutes>(
         route = InsightsRoutes.Charts,
         icon = Icons.Filled.BarChart,
         resourceId = R.string.charts_label
     )
-    data object LastSales: InsightsInnerScreen<InsightsRoutes>(
+
+    data object LastSales : InsightsInnerScreen<InsightsRoutes>(
         route = InsightsRoutes.LastSales,
         icon = Icons.Filled.PointOfSale,
         resourceId = R.string.last_sales_label
     )
-    data object StockOrdersSales: InsightsInnerScreen<InsightsRoutes>(
+
+    data object StockOrdersSales : InsightsInnerScreen<InsightsRoutes>(
         route = InsightsRoutes.StockOrdersSales,
         icon = Icons.AutoMirrored.Filled.List,
         resourceId = R.string.stock_vs_orders_label
     )
-    data object CompanySales: InsightsInnerScreen<InsightsRoutes>(
+
+    data object CompanySales : InsightsInnerScreen<InsightsRoutes>(
         route = InsightsRoutes.CompanySales,
         icon = Icons.Filled.Factory,
         resourceId = R.string.company_sales_label

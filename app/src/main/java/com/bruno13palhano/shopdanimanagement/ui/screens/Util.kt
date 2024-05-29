@@ -1,6 +1,5 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens
 
-
 import android.app.AlarmManager
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -24,9 +23,10 @@ private const val NOTIFICATION_ACTION_PREFIX = "com.bruno13palhano.shopdanimanag
 
 val currentDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
 
-val dateFormat: DateFormat = SimpleDateFormat.getDateInstance().apply {
-    timeZone = TimeZone.getTimeZone("UTC")
-}
+val dateFormat: DateFormat =
+    SimpleDateFormat.getDateInstance().apply {
+        timeZone = TimeZone.getTimeZone("UTC")
+    }
 
 fun setAlarmNotification(
     id: Long,
@@ -47,23 +47,28 @@ fun setAlarmNotification(
         putExtra("description", description)
     }
 
-    val notifyPendingIntent = PendingIntent.getBroadcast(
-        context,
-        id.toInt(),
-        notifyIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-    )
+    val notifyPendingIntent =
+        PendingIntent.getBroadcast(
+            context,
+            id.toInt(),
+            notifyIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
-    val alarmNotification = ExpiredProductsNotification(
-        notificationManager = notificationManager,
-        alarmManager = alarmManager
-    )
+    val alarmNotification =
+        ExpiredProductsNotification(
+            notificationManager = notificationManager,
+            alarmManager = alarmManager
+        )
 
     alarmNotification.setAlarmManager(notifyPendingIntent = notifyPendingIntent, date = date)
 }
 
 @Throws(IOException::class)
-fun getBytes(context: Context, uri: Uri): ByteArray? {
+fun getBytes(
+    context: Context,
+    uri: Uri
+): ByteArray? {
     return context.contentResolver.openInputStream(uri)?.use {
         val outputStream = ByteArrayOutputStream()
         val byteArray = it.buffered().readBytes()

@@ -29,7 +29,6 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class CatalogStockItemViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
@@ -39,11 +38,12 @@ class CatalogStockItemViewModelTest {
     private lateinit var sut: CatalogItemViewModel
     private lateinit var catalogRepository: CatalogRepository
     private lateinit var productRepository: ProductRepository
-    private val catalogItems = listOf(
-        makeRandomCatalog(id = 1L),
-        makeRandomCatalog(id = 2L),
-        makeRandomCatalog(id = 3L)
-    )
+    private val catalogItems =
+        listOf(
+            makeRandomCatalog(id = 1L),
+            makeRandomCatalog(id = 2L),
+            makeRandomCatalog(id = 3L)
+        )
 
     @Before
     fun setup() {
@@ -85,97 +85,103 @@ class CatalogStockItemViewModelTest {
     }
 
     @Test
-    fun getProduct_shouldCallGetByIdFromProductRepository() = runTest {
-        val productRepository = mock<ProductRepository>()
-        val catalogRepository = mock<CatalogRepository>()
-        val sut = CatalogItemViewModel(catalogRepository, productRepository)
+    fun getProduct_shouldCallGetByIdFromProductRepository() =
+        runTest {
+            val productRepository = mock<ProductRepository>()
+            val catalogRepository = mock<CatalogRepository>()
+            val sut = CatalogItemViewModel(catalogRepository, productRepository)
 
-        whenever(productRepository.getById(any())).doAnswer { flowOf() }
+            whenever(productRepository.getById(any())).doAnswer { flowOf() }
 
-        sut.getProduct(id = 1L)
-        advanceUntilIdle()
+            sut.getProduct(id = 1L)
+            advanceUntilIdle()
 
-        verify(productRepository).getById(any())
-    }
-
-    @Test
-    fun getProduct_shouldSetNameAndPhotoProperty() = runTest {
-        val product = makeRandomProduct(id = 1L)
-        productRepository.insert(model = product, {}, {})
-
-        sut.getProduct(id = 1L)
-        advanceUntilIdle()
-
-        assertEquals(product.name, sut.name)
-        assertEquals(product.photo, sut.photo)
-    }
+            verify(productRepository).getById(any())
+        }
 
     @Test
-    fun getCatalogItem_shouldCallGetByIdFromCatalogRepository() = runTest {
-        val productRepository = mock<ProductRepository>()
-        val catalogRepository = mock<CatalogRepository>()
-        val sut = CatalogItemViewModel(catalogRepository, productRepository)
+    fun getProduct_shouldSetNameAndPhotoProperty() =
+        runTest {
+            val product = makeRandomProduct(id = 1L)
+            productRepository.insert(model = product, {}, {})
 
-        whenever(catalogRepository.getById(any())).doAnswer { flowOf() }
+            sut.getProduct(id = 1L)
+            advanceUntilIdle()
 
-        sut.getCatalogItem(id = 1L)
-        advanceUntilIdle()
-
-        verify(catalogRepository).getById(any())
-    }
-
-    @Test
-    fun getCatalogItem_shouldSetCatalogItemProperties() = runTest {
-        val item = catalogItems[1]
-        insertCatalogItems()
-
-        sut.getCatalogItem(id = item.id)
-        advanceUntilIdle()
-
-        assertEquals(item.name, sut.name)
-        assertEquals(item.photo, sut.photo)
-        assertEquals(item.title, sut.title)
-        assertEquals(item.description, sut.description)
-        assertEquals(item.discount.toString(), sut.discount)
-        assertEquals(item.price.toString(), sut.price)
-    }
+            assertEquals(product.name, sut.name)
+            assertEquals(product.photo, sut.photo)
+        }
 
     @Test
-    fun insert_shouldCallInsertFromCatalogRepository() = runTest {
-        val productRepository = mock<ProductRepository>()
-        val catalogRepository = mock<CatalogRepository>()
-        val sut = CatalogItemViewModel(catalogRepository, productRepository)
+    fun getCatalogItem_shouldCallGetByIdFromCatalogRepository() =
+        runTest {
+            val productRepository = mock<ProductRepository>()
+            val catalogRepository = mock<CatalogRepository>()
+            val sut = CatalogItemViewModel(catalogRepository, productRepository)
 
-        sut.insert({}, {})
-        advanceUntilIdle()
+            whenever(catalogRepository.getById(any())).doAnswer { flowOf() }
 
-        verify(catalogRepository).insert(any(), any(), any())
-    }
+            sut.getCatalogItem(id = 1L)
+            advanceUntilIdle()
 
-    @Test
-    fun update_shouldCallUpdateFromCatalogRepository() = runTest {
-        val productRepository = mock<ProductRepository>()
-        val catalogRepository = mock<CatalogRepository>()
-        val sut = CatalogItemViewModel(catalogRepository, productRepository)
-
-        sut.update({}, {})
-        advanceUntilIdle()
-
-        verify(catalogRepository).update(any(), any(), any())
-    }
+            verify(catalogRepository).getById(any())
+        }
 
     @Test
-    fun delete_shouldCallDeleteByIdFromCatalogRepository() = runTest {
-        val productRepository = mock<ProductRepository>()
-        val catalogRepository = mock<CatalogRepository>()
-        val sut = CatalogItemViewModel(catalogRepository, productRepository)
+    fun getCatalogItem_shouldSetCatalogItemProperties() =
+        runTest {
+            val item = catalogItems[1]
+            insertCatalogItems()
 
-        sut.delete({}, {})
-        advanceUntilIdle()
+            sut.getCatalogItem(id = item.id)
+            advanceUntilIdle()
 
-        verify(catalogRepository).deleteById(any(), any(), any(), any())
-    }
+            assertEquals(item.name, sut.name)
+            assertEquals(item.photo, sut.photo)
+            assertEquals(item.title, sut.title)
+            assertEquals(item.description, sut.description)
+            assertEquals(item.discount.toString(), sut.discount)
+            assertEquals(item.price.toString(), sut.price)
+        }
 
-    private suspend fun insertCatalogItems() =
-        catalogItems.forEach { catalogRepository.insert(it, {}, {}) }
+    @Test
+    fun insert_shouldCallInsertFromCatalogRepository() =
+        runTest {
+            val productRepository = mock<ProductRepository>()
+            val catalogRepository = mock<CatalogRepository>()
+            val sut = CatalogItemViewModel(catalogRepository, productRepository)
+
+            sut.insert({}, {})
+            advanceUntilIdle()
+
+            verify(catalogRepository).insert(any(), any(), any())
+        }
+
+    @Test
+    fun update_shouldCallUpdateFromCatalogRepository() =
+        runTest {
+            val productRepository = mock<ProductRepository>()
+            val catalogRepository = mock<CatalogRepository>()
+            val sut = CatalogItemViewModel(catalogRepository, productRepository)
+
+            sut.update({}, {})
+            advanceUntilIdle()
+
+            verify(catalogRepository).update(any(), any(), any())
+        }
+
+    @Test
+    fun delete_shouldCallDeleteByIdFromCatalogRepository() =
+        runTest {
+            val productRepository = mock<ProductRepository>()
+            val catalogRepository = mock<CatalogRepository>()
+            val sut = CatalogItemViewModel(catalogRepository, productRepository)
+
+            sut.delete({}, {})
+            advanceUntilIdle()
+
+            verify(catalogRepository).deleteById(any(), any(), any(), any())
+        }
+
+    private suspend fun insertCatalogItems() = catalogItems.forEach { catalogRepository.insert(it, {}, {}) }
 }

@@ -73,7 +73,7 @@ fun SearchAmazonContent(
     searchCacheList: List<SearchCache>,
     onSearchClick: (search: String) -> Unit,
     onItemClick: (id: Long) -> Unit,
-    navigateUp: () -> Unit,
+    navigateUp: () -> Unit
 ) {
     var search by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
@@ -83,7 +83,7 @@ fun SearchAmazonContent(
             modifier = Modifier.fillMaxWidth(),
             query = search,
             onQueryChange = { searchValue -> search = searchValue },
-            onSearch = {  searchValue ->
+            onSearch = { searchValue ->
                 active = false
                 onSearchClick(searchValue)
             },

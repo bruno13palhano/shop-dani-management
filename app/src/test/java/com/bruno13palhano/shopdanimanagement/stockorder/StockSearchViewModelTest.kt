@@ -33,11 +33,10 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class StockSearchViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var stockItemRepository: StockRepository
@@ -52,80 +51,86 @@ class StockSearchViewModelTest {
     }
 
     @Test
-    fun insertSearch_shouldCallInsertFromSearchCacheRepository() = runTest {
-        val search = "test"
-        val stockItemRepository = mock<StockRepository>()
-        val searchCacheRepository = mock<SearchCacheRepository>()
-        val sut = StockSearchViewModel(stockItemRepository, searchCacheRepository)
+    fun insertSearch_shouldCallInsertFromSearchCacheRepository() =
+        runTest {
+            val search = "test"
+            val stockItemRepository = mock<StockRepository>()
+            val searchCacheRepository = mock<SearchCacheRepository>()
+            val sut = StockSearchViewModel(stockItemRepository, searchCacheRepository)
 
-        sut.insertSearch(search = search)
-        advanceUntilIdle()
+            sut.insertSearch(search = search)
+            advanceUntilIdle()
 
-        verify(searchCacheRepository).insert(any())
-    }
-
-    @Test
-    fun getSearchCache_shouldSetSearchCacheProperty() = runTest {
-        val cache = listOf(makeRandomSearchCache(), makeRandomSearchCache(), makeRandomSearchCache())
-        cache.forEach { searchCacheRepository.insert(it) }
-
-        val collectJob = launch { sut.searchCache.collect() }
-        sut.getSearchCache()
-        advanceUntilIdle()
-
-        assertEquals(cache, sut.searchCache.value)
-
-        collectJob.cancel()
-    }
+            verify(searchCacheRepository).insert(any())
+        }
 
     @Test
-    fun getSearchCache_shouldCallGetAllFromSearchCacheRepository() = runTest {
-        val stockItemRepository = mock<StockRepository>()
-        val searchCacheRepository = mock<SearchCacheRepository>()
-        val sut = StockSearchViewModel(stockItemRepository, searchCacheRepository)
+    fun getSearchCache_shouldSetSearchCacheProperty() =
+        runTest {
+            val cache = listOf(makeRandomSearchCache(), makeRandomSearchCache(), makeRandomSearchCache())
+            cache.forEach { searchCacheRepository.insert(it) }
 
-        whenever(searchCacheRepository.getAll()).doAnswer { flowOf() }
+            val collectJob = launch { sut.searchCache.collect() }
+            sut.getSearchCache()
+            advanceUntilIdle()
 
-        sut.getSearchCache()
-        advanceUntilIdle()
+            assertEquals(cache, sut.searchCache.value)
 
-        verify(searchCacheRepository).getAll()
-    }
-
-    @Test
-    fun search_shouldSetStockOrderItemsProperty() = runTest {
-        val items = listOf(
-            makeRandomStockItem(id = 1L),
-            makeRandomStockItem(id = 2L),
-            makeRandomStockItem(id = 3L)
-        )
-        val item = items[1]
-        val search = item.name
-        items.forEach { stockItemRepository.insert(it, {}, {}) }
-
-        val collectJob = launch { sut.stockOrderItems.collect() }
-        sut.search(search = search)
-        advanceUntilIdle()
-
-        assertEquals(mapToStock(listOf(item)), sut.stockOrderItems.value)
-
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun search_shouldCallSearchFromStockOrderRepository() = runTest {
-        val search = "Perfumes"
-        val stockItemRepository = mock<StockRepository>()
-        val searchCacheRepository = mock<SearchCacheRepository>()
-        val sut = StockSearchViewModel(stockItemRepository, searchCacheRepository)
+    fun getSearchCache_shouldCallGetAllFromSearchCacheRepository() =
+        runTest {
+            val stockItemRepository = mock<StockRepository>()
+            val searchCacheRepository = mock<SearchCacheRepository>()
+            val sut = StockSearchViewModel(stockItemRepository, searchCacheRepository)
 
-        whenever(stockItemRepository.search(any())).doAnswer { flowOf() }
+            whenever(searchCacheRepository.getAll()).doAnswer { flowOf() }
 
-        sut.search(search = search)
-        advanceUntilIdle()
+            sut.getSearchCache()
+            advanceUntilIdle()
 
-        verify(stockItemRepository).search(any())
-    }
+            verify(searchCacheRepository).getAll()
+        }
+
+    @Test
+    fun search_shouldSetStockOrderItemsProperty() =
+        runTest {
+            val items =
+                listOf(
+                    makeRandomStockItem(id = 1L),
+                    makeRandomStockItem(id = 2L),
+                    makeRandomStockItem(id = 3L)
+                )
+            val item = items[1]
+            val search = item.name
+            items.forEach { stockItemRepository.insert(it, {}, {}) }
+
+            val collectJob = launch { sut.stockOrderItems.collect() }
+            sut.search(search = search)
+            advanceUntilIdle()
+
+            assertEquals(mapToStock(listOf(item)), sut.stockOrderItems.value)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun search_shouldCallSearchFromStockOrderRepository() =
+        runTest {
+            val search = "Perfumes"
+            val stockItemRepository = mock<StockRepository>()
+            val searchCacheRepository = mock<SearchCacheRepository>()
+            val sut = StockSearchViewModel(stockItemRepository, searchCacheRepository)
+
+            whenever(stockItemRepository.search(any())).doAnswer { flowOf() }
+
+            sut.search(search = search)
+            advanceUntilIdle()
+
+            verify(stockItemRepository).search(any())
+        }
 
     private fun mapToStock(items: List<StockItem>) =
         items.map {

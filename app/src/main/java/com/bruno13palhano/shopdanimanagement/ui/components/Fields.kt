@@ -40,10 +40,11 @@ fun CustomTextField(
     readOnly: Boolean = false
 ) {
     OutlinedTextField(
-        modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-            .fillMaxWidth()
-            .clearFocusOnKeyboardDismiss(),
+        modifier =
+            modifier
+                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .fillMaxWidth()
+                .clearFocusOnKeyboardDismiss(),
         value = text,
         onValueChange = onTextChange,
         leadingIcon = { Icon(imageVector = icon, contentDescription = label) },
@@ -52,7 +53,7 @@ fun CustomTextField(
         singleLine = singleLine,
         readOnly = readOnly,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) }),
+        keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) })
     )
 }
 
@@ -70,10 +71,11 @@ fun CustomIntegerField(
     val patternInt = remember { Regex("^\\d*") }
 
     OutlinedTextField(
-        modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-            .fillMaxWidth()
-            .clearFocusOnKeyboardDismiss(),
+        modifier =
+            modifier
+                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .fillMaxWidth()
+                .clearFocusOnKeyboardDismiss(),
         value = value,
         onValueChange = { newValue ->
             if (newValue.isEmpty() || newValue.matches(patternInt)) {
@@ -85,15 +87,18 @@ fun CustomIntegerField(
         placeholder = { Text(text = placeholder, fontStyle = FontStyle.Italic) },
         singleLine = singleLine,
         readOnly = readOnly,
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Done,
-            keyboardType = KeyboardType.Number
-        ),
-        keyboardActions = KeyboardActions(onDone = {
-            defaultKeyboardAction(ImeAction.Done)
-        })
+        keyboardOptions =
+            KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Number
+            ),
+        keyboardActions =
+            KeyboardActions(onDone = {
+                defaultKeyboardAction(ImeAction.Done)
+            })
     )
 }
+
 @Composable
 fun CustomFloatField(
     modifier: Modifier = Modifier,
@@ -110,10 +115,11 @@ fun CustomFloatField(
     val pattern = remember { Regex("^\\d*\\$decimalSeparator?\\d*\$") }
 
     OutlinedTextField(
-        modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-            .fillMaxWidth()
-            .clearFocusOnKeyboardDismiss(),
+        modifier =
+            modifier
+                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .fillMaxWidth()
+                .clearFocusOnKeyboardDismiss(),
         value = value,
         onValueChange = { newValue ->
             if (newValue.isEmpty() || newValue.matches(pattern)) {
@@ -123,15 +129,17 @@ fun CustomFloatField(
         leadingIcon = { Icon(imageVector = icon, contentDescription = label) },
         label = { Text(text = label, fontStyle = FontStyle.Italic) },
         placeholder = { Text(text = placeholder, fontStyle = FontStyle.Italic) },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Done,
-            keyboardType = KeyboardType.Decimal
-        ),
-        keyboardActions = KeyboardActions(onDone = {
-            defaultKeyboardAction(ImeAction.Done)
-        }),
+        keyboardOptions =
+            KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Decimal
+            ),
+        keyboardActions =
+            KeyboardActions(onDone = {
+                defaultKeyboardAction(ImeAction.Done)
+            }),
         singleLine = singleLine,
-        readOnly = readOnly,
+        readOnly = readOnly
     )
 }
 
@@ -147,14 +155,15 @@ fun CustomClickField(
     readOnly: Boolean = true
 ) {
     OutlinedTextField(
-        modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-            .fillMaxWidth()
-            .onFocusChanged { focusState ->
-                if (focusState.hasFocus) {
-                    onClick()
-                }
-            },
+        modifier =
+            modifier
+                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .fillMaxWidth()
+                .onFocusChanged { focusState ->
+                    if (focusState.hasFocus) {
+                        onClick()
+                    }
+                },
         value = value,
         onValueChange = {},
         leadingIcon = { Icon(imageVector = icon, contentDescription = label) },
@@ -179,17 +188,19 @@ fun CustomPasswordField(
     var showPassword by remember { mutableStateOf(false) }
 
     OutlinedTextField(
-        modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-            .fillMaxWidth()
-            .clearFocusOnKeyboardDismiss(),
+        modifier =
+            modifier
+                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .fillMaxWidth()
+                .clearFocusOnKeyboardDismiss(),
         value = password,
         onValueChange = onPasswordChange,
         leadingIcon = { Icon(imageVector = icon, contentDescription = label) },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done
-        ),
+        keyboardOptions =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
         keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) }),
         trailingIcon = {
             if (showPassword) {
@@ -202,11 +213,12 @@ fun CustomPasswordField(
                 }
             }
         },
-        visualTransformation = if (showPassword) {
-            VisualTransformation.None
-        } else {
-            PasswordVisualTransformation()
-        },
+        visualTransformation =
+            if (showPassword) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
         singleLine = singleLine,
         readOnly = readOnly,
         label = { Text(text = label, fontStyle = FontStyle.Italic) },

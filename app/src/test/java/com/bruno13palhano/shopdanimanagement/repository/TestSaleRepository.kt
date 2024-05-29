@@ -34,15 +34,24 @@ class TestSaleRepository : SaleRepository {
         return flowOf(sales.filter { it.delivered == delivered })
     }
 
-    override fun getLastSales(offset: Int, limit: Int): Flow<List<Sale>> {
+    override fun getLastSales(
+        offset: Int,
+        limit: Int
+    ): Flow<List<Sale>> {
         return flowOf(sales)
     }
 
-    override fun getAllStockSales(offset: Int, limit: Int): Flow<List<Sale>> {
+    override fun getAllStockSales(
+        offset: Int,
+        limit: Int
+    ): Flow<List<Sale>> {
         return flowOf(sales.filter { !it.isOrderedByCustomer })
     }
 
-    override fun getAllOrdersSales(offset: Int, limit: Int): Flow<List<Sale>> {
+    override fun getAllOrdersSales(
+        offset: Int,
+        limit: Int
+    ): Flow<List<Sale>> {
         return flowOf(sales.filter { it.isOrderedByCustomer })
     }
 
@@ -80,39 +89,39 @@ class TestSaleRepository : SaleRepository {
         if (isIndexValid(index = index)) {
             val currentSale = sales[index]
 
-            val sale = Sale(
-                id = currentSale.id,
-                productId = currentSale.productId,
-                stockId = currentSale.stockId,
-                customerId = currentSale.customerId,
-                name = currentSale.name,
-                customerName = currentSale.customerName,
-                photo = currentSale.photo,
-                address = currentSale.address,
-                phoneNumber = currentSale.phoneNumber,
-                quantity = currentSale.quantity,
-                purchasePrice = currentSale.purchasePrice,
-                salePrice = currentSale.salePrice,
-                deliveryPrice = currentSale.deliveryPrice,
-                categories = currentSale.categories,
-                company = currentSale.company,
-                dateOfSale = currentSale.dateOfSale,
-                dateOfPayment = currentSale.dateOfPayment,
-                shippingDate = currentSale.shippingDate,
-                deliveryDate = currentSale.deliveryDate,
-                isOrderedByCustomer = currentSale.isOrderedByCustomer,
-                isPaidByCustomer = currentSale.isPaidByCustomer,
-                delivered = currentSale.delivered,
-                canceled = true,
-                timestamp = currentSale.timestamp
-            )
+            val sale =
+                Sale(
+                    id = currentSale.id,
+                    productId = currentSale.productId,
+                    stockId = currentSale.stockId,
+                    customerId = currentSale.customerId,
+                    name = currentSale.name,
+                    customerName = currentSale.customerName,
+                    photo = currentSale.photo,
+                    address = currentSale.address,
+                    phoneNumber = currentSale.phoneNumber,
+                    quantity = currentSale.quantity,
+                    purchasePrice = currentSale.purchasePrice,
+                    salePrice = currentSale.salePrice,
+                    deliveryPrice = currentSale.deliveryPrice,
+                    categories = currentSale.categories,
+                    company = currentSale.company,
+                    dateOfSale = currentSale.dateOfSale,
+                    dateOfPayment = currentSale.dateOfPayment,
+                    shippingDate = currentSale.shippingDate,
+                    deliveryDate = currentSale.deliveryDate,
+                    isOrderedByCustomer = currentSale.isOrderedByCustomer,
+                    isPaidByCustomer = currentSale.isPaidByCustomer,
+                    delivered = currentSale.delivered,
+                    canceled = true,
+                    timestamp = currentSale.timestamp
+                )
 
             sales[index] = sale
         }
     }
 
-    override fun getDebitSales(): Flow<List<Sale>> =
-        flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled})
+    override fun getDebitSales(): Flow<List<Sale>> = flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled })
 
     override fun getSalesByCustomerName(
         isPaidByCustomer: Boolean,
@@ -120,19 +129,27 @@ class TestSaleRepository : SaleRepository {
     ): Flow<List<Sale>> {
         return if (isOrderedAsc) {
             if (isPaidByCustomer) {
-                flowOf(sales.filter { it.isPaidByCustomer && !it.canceled }
-                    .sortedBy { it.customerName })
+                flowOf(
+                    sales.filter { it.isPaidByCustomer && !it.canceled }
+                        .sortedBy { it.customerName }
+                )
             } else {
-                flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled }
-                    .sortedBy { it.customerName })
+                flowOf(
+                    sales.filter { !it.isPaidByCustomer && !it.canceled }
+                        .sortedBy { it.customerName }
+                )
             }
         } else {
             if (isPaidByCustomer) {
-                flowOf(sales.filter { it.isPaidByCustomer && !it.canceled }
-                    .sortedByDescending { it.customerName })
+                flowOf(
+                    sales.filter { it.isPaidByCustomer && !it.canceled }
+                        .sortedByDescending { it.customerName }
+                )
             } else {
-                flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled }
-                    .sortedByDescending { it.customerName })
+                flowOf(
+                    sales.filter { !it.isPaidByCustomer && !it.canceled }
+                        .sortedByDescending { it.customerName }
+                )
             }
         }
     }
@@ -143,19 +160,27 @@ class TestSaleRepository : SaleRepository {
     ): Flow<List<Sale>> {
         return if (isOrderedAsc) {
             if (isPaidByCustomer) {
-                flowOf(sales.filter { it.isPaidByCustomer && !it.canceled }
-                    .sortedBy { it.salePrice })
+                flowOf(
+                    sales.filter { it.isPaidByCustomer && !it.canceled }
+                        .sortedBy { it.salePrice }
+                )
             } else {
-                flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled }
-                    .sortedBy { it.salePrice })
+                flowOf(
+                    sales.filter { !it.isPaidByCustomer && !it.canceled }
+                        .sortedBy { it.salePrice }
+                )
             }
         } else {
             if (isPaidByCustomer) {
-                flowOf(sales.filter { it.isPaidByCustomer && !it.canceled}
-                    .sortedByDescending { it.salePrice })
+                flowOf(
+                    sales.filter { it.isPaidByCustomer && !it.canceled }
+                        .sortedByDescending { it.salePrice }
+                )
             } else {
-                flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled}
-                    .sortedByDescending { it.salePrice })
+                flowOf(
+                    sales.filter { !it.isPaidByCustomer && !it.canceled }
+                        .sortedByDescending { it.salePrice }
+                )
             }
         }
     }
@@ -186,7 +211,11 @@ class TestSaleRepository : SaleRepository {
         return model.id
     }
 
-    override suspend fun update(model: Sale, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+    override suspend fun update(
+        model: Sale,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         val index = getIndex(id = model.id, list = sales)
         if (isIndexValid(index = index)) {
             sales[index] = model
@@ -201,15 +230,16 @@ class TestSaleRepository : SaleRepository {
         onSuccess: () -> Unit
     ) {
         val index = getIndex(id = id, list = sales)
-        if(isIndexValid(index = index)) {
+        if (isIndexValid(index = index)) {
             sales.removeAt(index)
             onSuccess()
         }
     }
 
-    override fun getAll(): Flow<List<Sale>> = flow {
-        emit(sales.filter { !it.canceled })
-    }
+    override fun getAll(): Flow<List<Sale>> =
+        flow {
+            emit(sales.filter { !it.canceled })
+        }
 
     override fun getById(id: Long): Flow<Sale> {
         val index = getIndex(id = id, list = sales)

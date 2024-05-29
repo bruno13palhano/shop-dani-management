@@ -90,34 +90,38 @@ fun CustomerContent(
         }
     ) {
         Column(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .padding(it)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ElevatedCard(
-                modifier = Modifier
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .padding(16.dp),
                 onClick = onPhotoClick,
                 shape = RoundedCornerShape(5)
             ) {
                 if (photo.isEmpty()) {
                     Image(
-                        modifier = Modifier
-                            .size(160.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .size(160.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(5)),
                         imageVector = Icons.Filled.Image,
                         contentDescription = stringResource(id = R.string.customer_photo_label),
                         contentScale = ContentScale.Crop
                     )
                 } else {
                     Image(
-                        modifier = Modifier
-                            .size(160.dp)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(5)),
+                        modifier =
+                            Modifier
+                                .size(160.dp)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(5)),
                         painter = rememberAsyncImagePainter(model = photo),
                         contentDescription = stringResource(id = R.string.customer_photo_label),
                         contentScale = ContentScale.Crop

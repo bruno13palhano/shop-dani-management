@@ -15,16 +15,21 @@ class TestProductRepository : ProductRepository {
         return flowOf(productList).map {
             it.filter { product ->
                 product.name == value || product.company == value || product.description == value ||
-                product.categories.joinToString(", ") { category ->  category.category } == value
+                    product.categories.joinToString(", ") { category -> category.category } == value
             }
         }
     }
 
-    override fun searchPerCategory(value: String, categoryId: Long): Flow<List<Product>> {
+    override fun searchPerCategory(
+        value: String,
+        categoryId: Long
+    ): Flow<List<Product>> {
         return flowOf(productList).map {
             it.filter { product ->
-                product.id == categoryId && (product.name == value || product.company == value ||
-                        product.description == value)
+                product.id == categoryId && (
+                    product.name == value || product.company == value ||
+                        product.description == value
+                )
             }
         }
     }

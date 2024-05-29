@@ -1,19 +1,19 @@
 package com.bruno13palhano.core.network.di
 
 import com.bruno13palhano.core.network.access.CatalogNetwork
-import com.bruno13palhano.core.network.access.impl.CatalogNetworkRetrofit
 import com.bruno13palhano.core.network.access.CategoryNetwork
-import com.bruno13palhano.core.network.access.impl.CategoryNetworkRetrofit
 import com.bruno13palhano.core.network.access.CustomerNetwork
-import com.bruno13palhano.core.network.access.impl.CustomerNetworkRetrofit
 import com.bruno13palhano.core.network.access.ProductNetwork
-import com.bruno13palhano.core.network.access.impl.ProductNetworkRetrofit
 import com.bruno13palhano.core.network.access.SaleNetwork
-import com.bruno13palhano.core.network.access.impl.SaleNetworkRetrofit
 import com.bruno13palhano.core.network.access.StockNetwork
 import com.bruno13palhano.core.network.access.UserNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
+import com.bruno13palhano.core.network.access.impl.CatalogNetworkRetrofit
+import com.bruno13palhano.core.network.access.impl.CategoryNetworkRetrofit
+import com.bruno13palhano.core.network.access.impl.CustomerNetworkRetrofit
 import com.bruno13palhano.core.network.access.impl.DataVersionNetworkRetrofit
+import com.bruno13palhano.core.network.access.impl.ProductNetworkRetrofit
+import com.bruno13palhano.core.network.access.impl.SaleNetworkRetrofit
 import com.bruno13palhano.core.network.access.impl.StockNetworkRetrofit
 import com.bruno13palhano.core.network.access.impl.UserNetworkRetrofit
 import dagger.Binds

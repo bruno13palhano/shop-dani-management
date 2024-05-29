@@ -7,5 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface CatalogRepository : RepositoryOperations<Catalog>, Syncable {
     fun getOrderedByName(isOrderedAsc: Boolean): Flow<List<Catalog>>
+
     fun getOrderedByPrice(isOrderedAsc: Boolean): Flow<List<Catalog>>
 }

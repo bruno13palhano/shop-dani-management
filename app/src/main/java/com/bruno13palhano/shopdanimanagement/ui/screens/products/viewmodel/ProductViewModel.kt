@@ -7,10 +7,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.repository.category.CategoryRepository
-import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.di.CategoryRep
 import com.bruno13palhano.core.data.di.ProductRep
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
+import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Company
 import com.bruno13palhano.core.model.Product
@@ -28,225 +28,241 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductViewModel @Inject constructor(
-    @ProductRep private val productRepository: ProductRepository,
-    @CategoryRep private val categoryRepository: CategoryRepository
-) : ViewModel() {
-    private var _productState = MutableStateFlow<UiState>(UiState.Fail)
-    val productState = _productState.asStateFlow()
+class ProductViewModel
+    @Inject
+    constructor(
+        @ProductRep private val productRepository: ProductRepository,
+        @CategoryRep private val categoryRepository: CategoryRepository
+    ) : ViewModel() {
+        private var _productState = MutableStateFlow<UiState>(UiState.Fail)
+        val productState = _productState.asStateFlow()
 
-    private val companiesCheck = listOf(
-        CompanyCheck(Company.AVON, true),
-        CompanyCheck(Company.NATURA, false),
-        CompanyCheck(Company.BOTICARIO, false),
-        CompanyCheck(Company.EUDORA, false),
-        CompanyCheck(Company.BERENICE, false),
-        CompanyCheck(Company.OUI, false)
-    )
-    var name by mutableStateOf("")
-        private set
-    var code by mutableStateOf("")
-        private set
-    var description by mutableStateOf("")
-        private set
-    var photo by mutableStateOf(byteArrayOf())
-        private set
-    var date by mutableLongStateOf(0L)
-        private set
-    var category by mutableStateOf("")
-        private set
-    var company by mutableStateOf(companiesCheck[0].name.company)
-        private set
-    private var categories by mutableStateOf(listOf<Category>())
-    var allCategories by mutableStateOf((listOf<CategoryCheck>()))
-        private set
-    var allCompanies by mutableStateOf(companiesCheck)
-        private set
-
-    val isProductValid = snapshotFlow { name != "" && code != "" && category != "" }
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = false
-        )
-
-    fun getAllCategories(onCategoriesDone: () -> Unit) {
-        viewModelScope.launch {
-            categoryRepository.getAll()
-                .map {
-                    it.map { category ->
-                        CategoryCheck(category.id, category.category, false)
-                    }
-                }.collect {
-                    allCategories = it
-                    onCategoriesDone()
-                }
-        }
-    }
-
-    fun updateName(name: String) {
-        this.name = name
-    }
-
-    fun updateCode(code: String) {
-        this.code = code
-    }
-
-    fun updateDescription(description: String) {
-        this.description = description
-    }
-
-    fun updatePhoto(photo: ByteArray) {
-        this.photo = photo
-    }
-
-    fun updateDate(date: Long) {
-        this.date = date
-    }
-
-    fun updateCategories(categories: List<CategoryCheck>) {
-        this.categories = categories
-            .filter { it.isChecked }
-            .map { Category(it.id, it.category, getCurrentTimestamp()) }
-        category = this.categories.joinToString(", ") { it.category }
-    }
-
-    fun setCategoryChecked(category: Long) {
-        allCategories.forEach { categoryCheck ->
-            if (categoryCheck.id == category) {
-                categoryCheck.isChecked = true
-            }
-        }
-        this.category = allCategories
-            .filter { it.isChecked }
-            .map { it.category }.toString()
-            .replace("[", "").replace("]", "")
-        categories = allCategories
-            .filter { it.isChecked }
-            .map { categoryChecked ->
-                Category(
-                    id = categoryChecked.id,
-                    category = categoryChecked.category,
-                    timestamp = getCurrentTimestamp()
-                )
-            }
-    }
-
-    fun updateCompany(company: String) {
-        this.company = company
-        allCompanies
-            .map {
-                it.isChecked = false
-                it
-            }
-            .filter { it.name.company == company }
-            .map {
-                it.isChecked = true
-                it
-            }
-    }
-
-    fun insertProduct(onError: (error: Int) -> Unit) {
-        _productState.value = UiState.InProgress
-        viewModelScope.launch {
-            productRepository.insert(
-                model = createProduct(id = 0L),
-                onError = {
-                    onError(it)
-                    _productState.value = UiState.Fail
-                },
-                onSuccess =  { _productState.value = UiState.Success }
+        private val companiesCheck =
+            listOf(
+                CompanyCheck(Company.AVON, true),
+                CompanyCheck(Company.NATURA, false),
+                CompanyCheck(Company.BOTICARIO, false),
+                CompanyCheck(Company.EUDORA, false),
+                CompanyCheck(Company.BERENICE, false),
+                CompanyCheck(Company.OUI, false)
             )
-        }
-    }
+        var name by mutableStateOf("")
+            private set
+        var code by mutableStateOf("")
+            private set
+        var description by mutableStateOf("")
+            private set
+        var photo by mutableStateOf(byteArrayOf())
+            private set
+        var date by mutableLongStateOf(0L)
+            private set
+        var category by mutableStateOf("")
+            private set
+        var company by mutableStateOf(companiesCheck[0].name.company)
+            private set
+        private var categories by mutableStateOf(listOf<Category>())
+        var allCategories by mutableStateOf((listOf<CategoryCheck>()))
+            private set
+        var allCompanies by mutableStateOf(companiesCheck)
+            private set
 
-    fun getProduct(id: Long) {
-        viewModelScope.launch {
-            productRepository.getById(id).collect {
-                name = it.name
-                code = it.code
-                description = it.description
-                photo = it.photo
-                date = it.date
-                categories = it.categories
-                company = it.company
-                setCategoriesChecked(it.categories)
-                category = it.categories.joinToString(", ") { category ->
-                    category.category
-                }
-                setCompanyChecked(it.company)
+        val isProductValid =
+            snapshotFlow { name != "" && code != "" && category != "" }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(5_000),
+                    initialValue = false
+                )
+
+        fun getAllCategories(onCategoriesDone: () -> Unit) {
+            viewModelScope.launch {
+                categoryRepository.getAll()
+                    .map {
+                        it.map { category ->
+                            CategoryCheck(category.id, category.category, false)
+                        }
+                    }.collect {
+                        allCategories = it
+                        onCategoriesDone()
+                    }
             }
         }
-    }
 
-    //Sets all current categories
-    private fun setCategoriesChecked(allCategories: List<Category>) {
-        this.allCategories.forEach { categoryCheck ->
-            allCategories.forEach {
-                if (categoryCheck.id == it.id) {
+        fun updateName(name: String) {
+            this.name = name
+        }
+
+        fun updateCode(code: String) {
+            this.code = code
+        }
+
+        fun updateDescription(description: String) {
+            this.description = description
+        }
+
+        fun updatePhoto(photo: ByteArray) {
+            this.photo = photo
+        }
+
+        fun updateDate(date: Long) {
+            this.date = date
+        }
+
+        fun updateCategories(categories: List<CategoryCheck>) {
+            this.categories =
+                categories
+                    .filter { it.isChecked }
+                    .map { Category(it.id, it.category, getCurrentTimestamp()) }
+            category = this.categories.joinToString(", ") { it.category }
+        }
+
+        fun setCategoryChecked(category: Long) {
+            allCategories.forEach { categoryCheck ->
+                if (categoryCheck.id == category) {
                     categoryCheck.isChecked = true
                 }
             }
+            this.category =
+                allCategories
+                    .filter { it.isChecked }
+                    .map { it.category }.toString()
+                    .replace("[", "").replace("]", "")
+            categories =
+                allCategories
+                    .filter { it.isChecked }
+                    .map { categoryChecked ->
+                        Category(
+                            id = categoryChecked.id,
+                            category = categoryChecked.category,
+                            timestamp = getCurrentTimestamp()
+                        )
+                    }
         }
-        updateCategories(this.allCategories)
-    }
 
-    //Sets the current company
-    private fun setCompanyChecked(company: String) {
-        companiesCheck.forEach { companyCheck ->
-            if (companyCheck.name.company == company) {
-                companyCheck.isChecked = true
+        fun updateCompany(company: String) {
+            this.company = company
+            allCompanies
+                .map {
+                    it.isChecked = false
+                    it
+                }
+                .filter { it.name.company == company }
+                .map {
+                    it.isChecked = true
+                    it
+                }
+        }
+
+        fun insertProduct(onError: (error: Int) -> Unit) {
+            _productState.value = UiState.InProgress
+            viewModelScope.launch {
+                productRepository.insert(
+                    model = createProduct(id = 0L),
+                    onError = {
+                        onError(it)
+                        _productState.value = UiState.Fail
+                    },
+                    onSuccess = { _productState.value = UiState.Success }
+                )
             }
         }
-        allCompanies = companiesCheck
-    }
 
-    fun updateProduct(id: Long, onError: (error: Int) -> Unit) {
-        _productState.value = UiState.InProgress
-        viewModelScope.launch {
-            productRepository.update(
-                model = createProduct(id = id),
-                onError = {
-                    onError(it)
-                    _productState.value = UiState.Fail
-                },
-                onSuccess = { _productState.value = UiState.Success }
-            )
+        fun getProduct(id: Long) {
+            viewModelScope.launch {
+                productRepository.getById(id).collect {
+                    name = it.name
+                    code = it.code
+                    description = it.description
+                    photo = it.photo
+                    date = it.date
+                    categories = it.categories
+                    company = it.company
+                    setCategoriesChecked(it.categories)
+                    category =
+                        it.categories.joinToString(", ") { category ->
+                            category.category
+                        }
+                    setCompanyChecked(it.company)
+                }
+            }
         }
-    }
 
-    fun deleteProduct(id: Long, onError: (error: Int) -> Unit) {
-        _productState.value = UiState.InProgress
-        viewModelScope.launch {
-            productRepository.deleteById(
-                id = id,
-                timestamp = getCurrentTimestamp(),
-                onError = {
-                    onError(it)
-                    _productState.value = UiState.Fail
-                },
-                onSuccess = { _productState.value = UiState.Success }
-            )
+        // Sets all current categories
+        private fun setCategoriesChecked(allCategories: List<Category>) {
+            this.allCategories.forEach { categoryCheck ->
+                allCategories.forEach {
+                    if (categoryCheck.id == it.id) {
+                        categoryCheck.isChecked = true
+                    }
+                }
+            }
+            updateCategories(this.allCategories)
         }
-    }
 
-    private fun createProduct(id: Long) = Product(
-        id = id,
-        name = name,
-        code = code,
-        description = description,
-        photo = photo,
-        date = date,
-        categories = allCategories
-            .filter { it.isChecked }
-            .map {
-                Category(
-                    id = it.id,
-                    category = it.category,
-                    timestamp = getCurrentTimestamp()
+        // Sets the current company
+        private fun setCompanyChecked(company: String) {
+            companiesCheck.forEach { companyCheck ->
+                if (companyCheck.name.company == company) {
+                    companyCheck.isChecked = true
+                }
+            }
+            allCompanies = companiesCheck
+        }
+
+        fun updateProduct(
+            id: Long,
+            onError: (error: Int) -> Unit
+        ) {
+            _productState.value = UiState.InProgress
+            viewModelScope.launch {
+                productRepository.update(
+                    model = createProduct(id = id),
+                    onError = {
+                        onError(it)
+                        _productState.value = UiState.Fail
+                    },
+                    onSuccess = { _productState.value = UiState.Success }
                 )
-            },
-        company = company,
-        timestamp = getCurrentTimestamp()
-    )
-}
+            }
+        }
+
+        fun deleteProduct(
+            id: Long,
+            onError: (error: Int) -> Unit
+        ) {
+            _productState.value = UiState.InProgress
+            viewModelScope.launch {
+                productRepository.deleteById(
+                    id = id,
+                    timestamp = getCurrentTimestamp(),
+                    onError = {
+                        onError(it)
+                        _productState.value = UiState.Fail
+                    },
+                    onSuccess = { _productState.value = UiState.Success }
+                )
+            }
+        }
+
+        private fun createProduct(id: Long) =
+            Product(
+                id = id,
+                name = name,
+                code = code,
+                description = description,
+                photo = photo,
+                date = date,
+                categories =
+                    allCategories
+                        .filter { it.isChecked }
+                        .map {
+                            Category(
+                                id = it.id,
+                                category = it.category,
+                                timestamp = getCurrentTimestamp()
+                            )
+                        },
+                company = company,
+                timestamp = getCurrentTimestamp()
+            )
+    }

@@ -25,27 +25,32 @@ class TestStockRepository : StockRepository {
         )
     }
 
-    override suspend fun updateStockQuantity(id: Long, quantity: Int, timestamp: String) {
+    override suspend fun updateStockQuantity(
+        id: Long,
+        quantity: Int,
+        timestamp: String
+    ) {
         val index = getIndex(id = id, list = stockItemList)
 
         if (isIndexValid(index = index)) {
             val currentItem = stockItemList[index]
 
-            val item = StockItem(
-                id = currentItem.id,
-                productId = currentItem.productId,
-                name = currentItem.name,
-                photo = currentItem.photo,
-                date = currentItem.date,
-                validity = currentItem.validity,
-                quantity = quantity,
-                categories = currentItem.categories,
-                company = currentItem.company,
-                purchasePrice = currentItem.purchasePrice,
-                salePrice = currentItem.salePrice,
-                isPaid = currentItem.isPaid,
-                timestamp = currentItem.timestamp
-            )
+            val item =
+                StockItem(
+                    id = currentItem.id,
+                    productId = currentItem.productId,
+                    name = currentItem.name,
+                    photo = currentItem.photo,
+                    date = currentItem.date,
+                    validity = currentItem.validity,
+                    quantity = quantity,
+                    categories = currentItem.categories,
+                    company = currentItem.company,
+                    purchasePrice = currentItem.purchasePrice,
+                    salePrice = currentItem.salePrice,
+                    isPaid = currentItem.isPaid,
+                    timestamp = currentItem.timestamp
+                )
 
             stockItemList[index] = item
         }
@@ -55,12 +60,9 @@ class TestStockRepository : StockRepository {
         return flowOf(stockItemList.filter { it.quantity > 0 })
     }
 
-    override fun getDebitStock(): Flow<List<StockItem>> =
-        flowOf(stockItemList.filter { !it.isPaid })
+    override fun getDebitStock(): Flow<List<StockItem>> = flowOf(stockItemList.filter { !it.isPaid })
 
-    override fun getOutOfStock(): Flow<List<StockItem>> =
-        flowOf(stockItemList.filter { it.quantity == 0 })
-
+    override fun getOutOfStock(): Flow<List<StockItem>> = flowOf(stockItemList.filter { it.quantity == 0 })
 
     override fun getDebitStockByPrice(isOrderedAsc: Boolean): Flow<List<StockItem>> {
         return if (isOrderedAsc) {

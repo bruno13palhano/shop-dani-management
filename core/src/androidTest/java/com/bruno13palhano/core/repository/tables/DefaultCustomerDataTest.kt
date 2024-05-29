@@ -35,11 +35,12 @@ class DefaultCustomerDataTest {
     fun before() {
         hiltTestRule.inject()
 
-        customerTable = DefaultCustomerData(
-            database.customerTableQueries,
-            database.versionTableQueries,
-            Dispatchers.IO
-        )
+        customerTable =
+            DefaultCustomerData(
+                database.customerTableQueries,
+                database.versionTableQueries,
+                Dispatchers.IO,
+            )
 
         dataVersion = makeRandomDataVersion(id = 1L)
         firstCustomer = makeRandomCustomer(id = 1L, name = "Alan", address = "Rua 15 de Novembro")
@@ -48,193 +49,209 @@ class DefaultCustomerDataTest {
     }
 
     @Test
-    fun shouldInsertCustomerInTheDatabase() = runTest {
-        customerTable.insert(firstCustomer, dataVersion, {}, {})
+    fun shouldInsertCustomerInTheDatabase() =
+        runTest {
+            customerTable.insert(firstCustomer, dataVersion, {}, {})
 
-        launch(Dispatchers.IO) {
-            customerTable.getAll().collect {
-                assertThat(it).contains(firstCustomer)
-                cancel()
+            launch(Dispatchers.IO) {
+                customerTable.getAll().collect {
+                    assertThat(it).contains(firstCustomer)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldReturnAllCustomersInTheDatabase_ifDatabaseIsNotEmpty() = runTest {
-        insertAllCustomers()
-        launch(Dispatchers.IO) {
-            customerTable.getAll().collect {
-                assertThat(it).containsAnyOf(firstCustomer, secondCustomer, thirdCustomer)
-                cancel()
+    fun shouldReturnAllCustomersInTheDatabase_ifDatabaseIsNotEmpty() =
+        runTest {
+            insertAllCustomers()
+            launch(Dispatchers.IO) {
+                customerTable.getAll().collect {
+                    assertThat(it).containsAnyOf(firstCustomer, secondCustomer, thirdCustomer)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runTest {
-        launch(Dispatchers.IO) {
-            customerTable.getAll().collect {
-                assertThat(it).isEmpty()
-                cancel()
+    fun shouldReturnEmptyList_ifDatabaseIsEmpty() =
+        runTest {
+            launch(Dispatchers.IO) {
+                customerTable.getAll().collect {
+                    assertThat(it).isEmpty()
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldUpdateCustomerInTheDatabase_IfCustomerExists() = runTest {
-        val updateCustomer = makeRandomCustomer(id = 1L)
-        customerTable.insert(firstCustomer, dataVersion, {}, {})
-        customerTable.update(updateCustomer, dataVersion, {}, {})
+    fun shouldUpdateCustomerInTheDatabase_IfCustomerExists() =
+        runTest {
+            val updateCustomer = makeRandomCustomer(id = 1L)
+            customerTable.insert(firstCustomer, dataVersion, {}, {})
+            customerTable.update(updateCustomer, dataVersion, {}, {})
 
-        launch(Dispatchers.IO) {
-            customerTable.getAll().collect {
-                assertThat(it).contains(updateCustomer)
-                cancel()
+            launch(Dispatchers.IO) {
+                customerTable.getAll().collect {
+                    assertThat(it).contains(updateCustomer)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldDoNotUpdateCustomerInTheDatabase_IfCustomerNotExists() = runTest {
-        customerTable.insert(firstCustomer, dataVersion, {}, {})
-        customerTable.update(secondCustomer, dataVersion, {}, {})
+    fun shouldDoNotUpdateCustomerInTheDatabase_IfCustomerNotExists() =
+        runTest {
+            customerTable.insert(firstCustomer, dataVersion, {}, {})
+            customerTable.update(secondCustomer, dataVersion, {}, {})
 
-        launch(Dispatchers.IO) {
-            customerTable.getAll().collect {
-                assertThat(it).doesNotContain(secondCustomer)
-                cancel()
+            launch(Dispatchers.IO) {
+                customerTable.getAll().collect {
+                    assertThat(it).doesNotContain(secondCustomer)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldDeleteCustomerWhitThisIdInTheDatabase_ifCustomerExists() = runTest {
-        insertTwoCustomers()
-        customerTable.deleteById(firstCustomer.id, dataVersion, {}, {})
+    fun shouldDeleteCustomerWhitThisIdInTheDatabase_ifCustomerExists() =
+        runTest {
+            insertTwoCustomers()
+            customerTable.deleteById(firstCustomer.id, dataVersion, {}, {})
 
-        launch(Dispatchers.IO) {
-            customerTable.getAll().collect {
-                assertThat(it).doesNotContain(firstCustomer)
-                cancel()
+            launch(Dispatchers.IO) {
+                customerTable.getAll().collect {
+                    assertThat(it).doesNotContain(firstCustomer)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldNotDeleteCustomerInTheDatabase_ifCustomerWithThisIdNotExists() = runTest {
-        insertTwoCustomers()
-        customerTable.deleteById(thirdCustomer.id, dataVersion, {}, {})
+    fun shouldNotDeleteCustomerInTheDatabase_ifCustomerWithThisIdNotExists() =
+        runTest {
+            insertTwoCustomers()
+            customerTable.deleteById(thirdCustomer.id, dataVersion, {}, {})
 
-        launch(Dispatchers.IO) {
-            customerTable.getAll().collect {
-                assertThat(it).containsAnyOf(firstCustomer, secondCustomer)
-                cancel()
+            launch(Dispatchers.IO) {
+                customerTable.getAll().collect {
+                    assertThat(it).containsAnyOf(firstCustomer, secondCustomer)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldReturnCustomersThatMatchesWithThisSearch() = runTest {
-        val currentCustomer = makeRandomCustomer(id = 1L, "Bruno")
-        customerTable.insert(currentCustomer, dataVersion, {}, {})
-        customerTable.insert(secondCustomer, dataVersion, {}, {})
-        customerTable.insert(thirdCustomer, dataVersion, {}, {})
+    fun shouldReturnCustomersThatMatchesWithThisSearch() =
+        runTest {
+            val currentCustomer = makeRandomCustomer(id = 1L, "Bruno")
+            customerTable.insert(currentCustomer, dataVersion, {}, {})
+            customerTable.insert(secondCustomer, dataVersion, {}, {})
+            customerTable.insert(thirdCustomer, dataVersion, {}, {})
 
-        launch(Dispatchers.IO) {
-            customerTable.search(search = currentCustomer.name).collect {
-                assertThat(it).contains(currentCustomer)
-                cancel()
+            launch(Dispatchers.IO) {
+                customerTable.search(search = currentCustomer.name).collect {
+                    assertThat(it).contains(currentCustomer)
+                    cancel()
+                }
             }
         }
-    }
-
-    @Test
-    fun shouldReturnEmptyList_ifThereIsNothingThatMatchesThisSearch() = runTest {
-        insertAllCustomers()
-        launch(Dispatchers.IO) {
-            customerTable.search(search = "*").collect {
-                assertThat(it).containsNoneOf(firstCustomer, secondCustomer, thirdCustomer)
-                cancel()
-            }
-        }
-    }
 
     @Test
-    fun shouldReturnAllCustomers_ifThisSearchIsEmpty() = runTest {
-        insertAllCustomers()
-        launch(Dispatchers.IO) {
-            customerTable.search(search = "").collect { value ->
-                assertThat(value).containsExactly(firstCustomer, secondCustomer, thirdCustomer)
-                cancel()
+    fun shouldReturnEmptyList_ifThereIsNothingThatMatchesThisSearch() =
+        runTest {
+            insertAllCustomers()
+            launch(Dispatchers.IO) {
+                customerTable.search(search = "*").collect {
+                    assertThat(it).containsNoneOf(firstCustomer, secondCustomer, thirdCustomer)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldReturnCustomersOrderedByNameDesc() = runTest {
-        insertAllCustomers()
-        launch(Dispatchers.IO) {
-            customerTable.getOrderedByName(isOrderedAsc = false).collect {
-                assertThat(it).containsExactly(thirdCustomer, secondCustomer, firstCustomer).inOrder()
-                cancel()
+    fun shouldReturnAllCustomers_ifThisSearchIsEmpty() =
+        runTest {
+            insertAllCustomers()
+            launch(Dispatchers.IO) {
+                customerTable.search(search = "").collect { value ->
+                    assertThat(value).containsExactly(firstCustomer, secondCustomer, thirdCustomer)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldReturnCustomersOrderedByNameAsc() = runTest {
-        insertAllCustomers()
-        launch(Dispatchers.IO) {
-            customerTable.getOrderedByName(isOrderedAsc = true).collect {
-                assertThat(it).containsExactly(firstCustomer, secondCustomer, thirdCustomer).inOrder()
-                cancel()
+    fun shouldReturnCustomersOrderedByNameDesc() =
+        runTest {
+            insertAllCustomers()
+            launch(Dispatchers.IO) {
+                customerTable.getOrderedByName(isOrderedAsc = false).collect {
+                    assertThat(it).containsExactly(thirdCustomer, secondCustomer, firstCustomer).inOrder()
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldReturnCustomersOrderedByAddressDesc() = runTest {
-        insertAllCustomers()
-        launch(Dispatchers.IO) {
-            customerTable.getOrderedByAddress(isOrderedAsc = false).collect {
-                assertThat(it).containsExactly(thirdCustomer, firstCustomer, secondCustomer).inOrder()
-                cancel()
+    fun shouldReturnCustomersOrderedByNameAsc() =
+        runTest {
+            insertAllCustomers()
+            launch(Dispatchers.IO) {
+                customerTable.getOrderedByName(isOrderedAsc = true).collect {
+                    assertThat(it).containsExactly(firstCustomer, secondCustomer, thirdCustomer).inOrder()
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldReturnCustomersOrderedByAddressAsc() = runTest {
-        insertAllCustomers()
-        launch(Dispatchers.IO) {
-            customerTable.getOrderedByAddress(isOrderedAsc = true).collect {
-                assertThat(it).containsExactly(secondCustomer, firstCustomer, thirdCustomer).inOrder()
-                cancel()
+    fun shouldReturnCustomersOrderedByAddressDesc() =
+        runTest {
+            insertAllCustomers()
+            launch(Dispatchers.IO) {
+                customerTable.getOrderedByAddress(isOrderedAsc = false).collect {
+                    assertThat(it).containsExactly(thirdCustomer, firstCustomer, secondCustomer).inOrder()
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldReturnCustomerWithThisId_ifExists() = runTest {
-        insertTwoCustomers()
-        launch(Dispatchers.IO) {
-            customerTable.getById(secondCustomer.id).collect {
-                assertThat(it).isEqualTo(secondCustomer)
-                cancel()
+    fun shouldReturnCustomersOrderedByAddressAsc() =
+        runTest {
+            insertAllCustomers()
+            launch(Dispatchers.IO) {
+                customerTable.getOrderedByAddress(isOrderedAsc = true).collect {
+                    assertThat(it).containsExactly(secondCustomer, firstCustomer, thirdCustomer).inOrder()
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldReturnLastCustomer_ifExists() = runTest {
-        insertTwoCustomers()
-        launch(Dispatchers.IO) {
-            customerTable.getLast().collect {
-                assertThat(it).isEqualTo(secondCustomer)
-                cancel()
+    fun shouldReturnCustomerWithThisId_ifExists() =
+        runTest {
+            insertTwoCustomers()
+            launch(Dispatchers.IO) {
+                customerTable.getById(secondCustomer.id).collect {
+                    assertThat(it).isEqualTo(secondCustomer)
+                    cancel()
+                }
             }
         }
-    }
+
+    @Test
+    fun shouldReturnLastCustomer_ifExists() =
+        runTest {
+            insertTwoCustomers()
+            launch(Dispatchers.IO) {
+                customerTable.getLast().collect {
+                    assertThat(it).isEqualTo(secondCustomer)
+                    cancel()
+                }
+            }
+        }
 
     private suspend fun insertTwoCustomers() {
         customerTable.insert(firstCustomer, dataVersion, {}, {})

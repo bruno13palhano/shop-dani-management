@@ -3,7 +3,7 @@ package com.bruno13palhano.core.network.model
 import com.bruno13palhano.core.model.Model
 import com.squareup.moshi.Json
 
-data class SaleNet (
+data class SaleNet(
     @Json(name = "id") override val id: Long,
     @Json(name = "productId") val productId: Long,
     @Json(name = "stockId") val stockId: Long,
@@ -28,5 +28,5 @@ data class SaleNet (
     @Json(name = "delivered") val delivered: Boolean,
     @Json(name = "canceled") val canceled: Boolean,
     @Json(name = "isAmazon") val isAmazon: Boolean,
-    @Json(name = "timestamp") override val timestamp: String
-): Model(id = id, timestamp = timestamp)
+    @Json(name = "timestamp") override val timestamp: String,
+) : Model(id = id, timestamp = timestamp)

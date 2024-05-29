@@ -17,9 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.shopdanimanagement.R
+import com.bruno13palhano.shopdanimanagement.ui.components.BarcodeReader
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.ProductListContent
-import com.bruno13palhano.shopdanimanagement.ui.components.BarcodeReader
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getErrors
 import com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel.ProductListViewModel
@@ -127,7 +127,7 @@ fun ProductListScreen(
         showBottomMenu(false)
         BarcodeReader(
             onBarcodeClick = { code ->
-                if(code.isNotEmpty()) {
+                if (code.isNotEmpty()) {
                     viewModel.getProductsByCode(code = code)
                     showBarcodeReader = false
                     showContent = true
@@ -168,10 +168,15 @@ fun ProductListScreen(
             onItemClick = onItemClick,
             onSearchClick = onSearchClick,
             onEditItemClick = { showCategoryDialog = true },
-            onBarcodeClick = { showBarcodeReader = true; showContent = false },
+            onBarcodeClick = {
+                showBarcodeReader = true
+                showContent = false
+            },
             onMenuItemClick = { index ->
                 when (index) {
-                    ProductCategoriesMenu.ALL_PRODUCTS -> { viewModel.getAllProducts() }
+                    ProductCategoriesMenu.ALL_PRODUCTS -> {
+                        viewModel.getAllProducts()
+                    }
 
                     ProductCategoriesMenu.PRODUCTS_BY_CATEGORY -> {
                         viewModel.getProductsByCategory(menuOptions[index])

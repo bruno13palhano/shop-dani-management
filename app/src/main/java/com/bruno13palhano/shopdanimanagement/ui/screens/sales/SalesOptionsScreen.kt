@@ -69,10 +69,11 @@ fun SalesOptionsScreen(
             modifier = Modifier.padding(it)
         ) {
             ElevatedCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.5F)
-                    .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 4.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.5F)
+                        .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 4.dp),
                 onClick = onOrdersOptionClick
             ) {
                 Column(
@@ -93,10 +94,11 @@ fun SalesOptionsScreen(
             }
 
             ElevatedCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(1F)
-                    .padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(1F)
+                        .padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 8.dp),
                 onClick = onStockOptionClick
             ) {
                 Column(

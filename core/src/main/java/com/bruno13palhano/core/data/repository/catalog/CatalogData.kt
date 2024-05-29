@@ -10,14 +10,17 @@ interface CatalogData : DataOperations<Catalog> {
         model: Catalog,
         version: DataVersion,
         onError: (error: Int) -> Unit,
-        onSuccess: (id: Long) -> Unit
+        onSuccess: (id: Long) -> Unit,
     ): Long
+
     suspend fun update(
         model: Catalog,
         version: DataVersion,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
+        onSuccess: () -> Unit,
     )
+
     fun getOrderedByName(isOrderedAsc: Boolean): Flow<List<Catalog>>
+
     fun getOrderedByPrice(isOrderedAsc: Boolean): Flow<List<Catalog>>
 }

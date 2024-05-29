@@ -7,8 +7,8 @@ import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.categoryNetToCategory
 import com.bruno13palhano.core.data.repository.categoryToCategoryNet
-import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getDataList
+import com.bruno13palhano.core.data.repository.getDataVersion
 import com.bruno13palhano.core.data.repository.getNetworkList
 import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.version.VersionData
@@ -27,110 +27,119 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-internal class DefaultCategoryRepository @Inject constructor(
-    @DefaultCategoryNet private val categoryNetwork: CategoryNetwork,
-    @InternalCategoryLight private val categoryData: CategoryData,
-    @InternalVersionLight private val versionData: VersionData,
-    @DefaultVersionNet private val versionNetwork: VersionNetwork,
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
-): CategoryRepository {
-    override fun search(value: String): Flow<List<Category>> {
-        return categoryData.search(value = value)
-    }
+internal class DefaultCategoryRepository
+    @Inject
+    constructor(
+        @DefaultCategoryNet private val categoryNetwork: CategoryNetwork,
+        @InternalCategoryLight private val categoryData: CategoryData,
+        @InternalVersionLight private val versionData: VersionData,
+        @DefaultVersionNet private val versionNetwork: VersionNetwork,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    ) : CategoryRepository {
+        override fun search(value: String): Flow<List<Category>> {
+            return categoryData.search(value = value)
+        }
 
-    override suspend fun deleteById(
-        id: Long,
-        timestamp: String,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
-        val categoryVersion = Versions.categoryVersion(timestamp = timestamp)
+        override suspend fun deleteById(
+            id: Long,
+            timestamp: String,
+            onError: (error: Int) -> Unit,
+            onSuccess: () -> Unit,
+        ) {
+            val categoryVersion = Versions.categoryVersion(timestamp = timestamp)
 
-        categoryData.deleteById(id = id, version = categoryVersion, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try {
-                    categoryNetwork.delete(id = id)
-                    versionNetwork.update(data = versionToVersionNet(categoryVersion))
-                    onSuccess()
-                } catch (e: Exception) { onError(Errors.DELETE_SERVER_ERROR) }
+            categoryData.deleteById(id = id, version = categoryVersion, onError = onError) {
+                CoroutineScope(ioDispatcher).launch {
+                    try {
+                        categoryNetwork.delete(id = id)
+                        versionNetwork.update(data = versionToVersionNet(categoryVersion))
+                        onSuccess()
+                    } catch (e: Exception) {
+                        onError(Errors.DELETE_SERVER_ERROR)
+                    }
+                }
             }
         }
-    }
 
-    override fun getAll(): Flow<List<Category>> {
-        return categoryData.getAll()
-    }
-
-    override fun getById(id: Long): Flow<Category> {
-        return categoryData.getById(id = id)
-    }
-
-    override fun getLast(): Flow<Category> {
-        return categoryData.getLast()
-    }
-
-    override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
-        synchronizer.syncData(
-            dataVersion = getDataVersion(versionData, Versions.categoryVersionId),
-            networkVersion = getNetworkVersion(versionNetwork, Versions.categoryVersionId),
-            dataList = getDataList(categoryData),
-            networkList = getNetworkList(categoryNetwork).map { categoryNetToCategory(it) },
-            onPush = { deleteIds, saveList, dtVersion ->
-                deleteIds.forEach { categoryNetwork.delete(it) }
-                saveList.forEach { categoryNetwork.insert(categoryToCategoryNet(it)) }
-                versionNetwork.insert(versionToVersionNet(dtVersion))
-            },
-            onPull = { deleteIds, saveList, netVersion ->
-                deleteIds.forEach { categoryData.deleteById(it, netVersion, {}) {} }
-                saveList.forEach { categoryData.insert(it, netVersion, {}) {} }
-                versionData.insert(netVersion, {}) {}
-            }
-        )
-
-    override suspend fun update(
-        model: Category,
-        onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit
-    ) {
-        val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
-
-        categoryData.update(model = model, version = categoryVersion, onError = onError) {
-            CoroutineScope(ioDispatcher).launch {
-                try {
-                    categoryNetwork.update(data = categoryToCategoryNet(model))
-                    versionNetwork.update(data = versionToVersionNet(categoryVersion))
-                    onSuccess()
-                } catch (e: Exception) { onError(Errors.UPDATE_SERVER_ERROR) }
-            }
+        override fun getAll(): Flow<List<Category>> {
+            return categoryData.getAll()
         }
-    }
 
-    override suspend fun insert(
-        model: Category,
-        onError: (error: Int) -> Unit,
-        onSuccess: (id: Long) -> Unit
-    ): Long {
-        val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
+        override fun getById(id: Long): Flow<Category> {
+            return categoryData.getById(id = id)
+        }
 
-        val id = categoryData.insert(model = model, version = categoryVersion, onError = onError) {
-            val netModel = categoryToCategoryNet(
-                Category(
-                    id = it,
-                    category = model.category,
-                    timestamp = model.timestamp
-                )
+        override fun getLast(): Flow<Category> {
+            return categoryData.getLast()
+        }
+
+        override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
+            synchronizer.syncData(
+                dataVersion = getDataVersion(versionData, Versions.CATEGORY_VERSION_ID),
+                networkVersion = getNetworkVersion(versionNetwork, Versions.CATEGORY_VERSION_ID),
+                dataList = getDataList(categoryData),
+                networkList = getNetworkList(categoryNetwork).map { categoryNetToCategory(it) },
+                onPush = { deleteIds, saveList, dtVersion ->
+                    deleteIds.forEach { categoryNetwork.delete(it) }
+                    saveList.forEach { categoryNetwork.insert(categoryToCategoryNet(it)) }
+                    versionNetwork.insert(versionToVersionNet(dtVersion))
+                },
+                onPull = { deleteIds, saveList, netVersion ->
+                    deleteIds.forEach { categoryData.deleteById(it, netVersion, {}) {} }
+                    saveList.forEach { categoryData.insert(it, netVersion, {}) {} }
+                    versionData.insert(netVersion, {}) {}
+                },
             )
 
-            CoroutineScope(ioDispatcher).launch {
-                try {
-                    categoryNetwork.insert(data = netModel)
-                    versionNetwork.insert(data = versionToVersionNet(categoryVersion))
-                    onSuccess(netModel.id)
+        override suspend fun update(
+            model: Category,
+            onError: (error: Int) -> Unit,
+            onSuccess: () -> Unit,
+        ) {
+            val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
+
+            categoryData.update(model = model, version = categoryVersion, onError = onError) {
+                CoroutineScope(ioDispatcher).launch {
+                    try {
+                        categoryNetwork.update(data = categoryToCategoryNet(model))
+                        versionNetwork.update(data = versionToVersionNet(categoryVersion))
+                        onSuccess()
+                    } catch (e: Exception) {
+                        onError(Errors.UPDATE_SERVER_ERROR)
+                    }
                 }
-                catch (e: Exception) { onError(Errors.INSERT_SERVER_ERROR) }
             }
         }
 
-        return id
+        override suspend fun insert(
+            model: Category,
+            onError: (error: Int) -> Unit,
+            onSuccess: (id: Long) -> Unit,
+        ): Long {
+            val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
+
+            val id =
+                categoryData.insert(model = model, version = categoryVersion, onError = onError) {
+                    val netModel =
+                        categoryToCategoryNet(
+                            Category(
+                                id = it,
+                                category = model.category,
+                                timestamp = model.timestamp,
+                            ),
+                        )
+
+                    CoroutineScope(ioDispatcher).launch {
+                        try {
+                            categoryNetwork.insert(data = netModel)
+                            versionNetwork.insert(data = versionToVersionNet(categoryVersion))
+                            onSuccess(netModel.id)
+                        } catch (e: Exception) {
+                            onError(Errors.INSERT_SERVER_ERROR)
+                        }
+                    }
+                }
+
+            return id
+        }
     }
-}

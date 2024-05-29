@@ -4,19 +4,19 @@ import com.bruno13palhano.core.data.domain.CustomerInfoUseCase
 import com.bruno13palhano.core.data.domain.FinancialUseCase
 import com.bruno13palhano.core.data.domain.SaleInfoUseCase
 import com.bruno13palhano.core.data.repository.catalog.CatalogRepository
-import com.bruno13palhano.core.data.repository.category.CategoryRepository
-import com.bruno13palhano.core.data.repository.customer.CustomerRepository
-import com.bruno13palhano.core.data.repository.product.ProductRepository
-import com.bruno13palhano.core.data.repository.sale.SaleRepository
-import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
-import com.bruno13palhano.core.data.repository.stock.StockRepository
 import com.bruno13palhano.core.data.repository.catalog.DefaultCatalogRepository
+import com.bruno13palhano.core.data.repository.category.CategoryRepository
 import com.bruno13palhano.core.data.repository.category.DefaultCategoryRepository
+import com.bruno13palhano.core.data.repository.customer.CustomerRepository
 import com.bruno13palhano.core.data.repository.customer.DefaultCustomerRepository
 import com.bruno13palhano.core.data.repository.product.DefaultProductRepository
+import com.bruno13palhano.core.data.repository.product.ProductRepository
 import com.bruno13palhano.core.data.repository.sale.DefaultSaleRepository
+import com.bruno13palhano.core.data.repository.sale.SaleRepository
 import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheRepository
+import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.data.repository.stock.DefaultStockRepository
+import com.bruno13palhano.core.data.repository.stock.StockRepository
 import com.bruno13palhano.core.data.repository.user.DefaultUserRepository
 import com.bruno13palhano.core.data.repository.user.UserRepository
 import dagger.Binds
@@ -62,7 +62,6 @@ annotation class CustomerInformation
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class RepositoryModule {
-
     @UserRep
     @Singleton
     @Binds
@@ -91,9 +90,7 @@ internal abstract class RepositoryModule {
     @SearchCacheRep
     @Singleton
     @Binds
-    abstract fun bindSearchCacheRepository(
-        repository: DefaultSearchCacheRepository
-    ): SearchCacheRepository
+    abstract fun bindSearchCacheRepository(repository: DefaultSearchCacheRepository): SearchCacheRepository
 
     @StockRep
     @Singleton
@@ -118,7 +115,5 @@ internal abstract class RepositoryModule {
     @CustomerInformation
     @Singleton
     @Binds
-    abstract fun bindCustomerInfoUseCase(
-        customerInformation: CustomerInfoUseCase
-    ): CustomerInfoUseCase
+    abstract fun bindCustomerInfoUseCase(customerInformation: CustomerInfoUseCase): CustomerInfoUseCase
 }

@@ -84,11 +84,12 @@ fun CustomersDebitScreen(
     }
 
     val debits by viewModel.debits.collectAsStateWithLifecycle()
-    val menuItems = arrayOf(
-        stringResource(id = R.string.ordered_by_name_label),
-        stringResource(id = R.string.ordered_by_price_label),
-        stringResource(id = R.string.ordered_by_last_label)
-    )
+    val menuItems =
+        arrayOf(
+            stringResource(id = R.string.ordered_by_name_label),
+            stringResource(id = R.string.ordered_by_price_label),
+            stringResource(id = R.string.ordered_by_last_label)
+        )
 
     var orderedByName by remember { mutableStateOf(false) }
     var orderedByPrice by remember { mutableStateOf(false) }
@@ -109,7 +110,9 @@ fun CustomersDebitScreen(
                     viewModel.getDebitBySalePrice(orderedByPrice)
                     orderedByPrice = toggleOrdered(orderedByPrice)
                 }
-                CustomersDebitMenu.ALL_DEBITS -> { viewModel.getDebits() }
+                CustomersDebitMenu.ALL_DEBITS -> {
+                    viewModel.getDebits()
+                }
             }
         },
         navigateUp = navigateUp
@@ -169,9 +172,10 @@ fun CustomersDebitContent(
         }
     ) {
         LazyColumn(
-            modifier = Modifier
-                .semantics { contentDescription = "List of debits" }
-                .padding(it),
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "List of debits" }
+                    .padding(it),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
             items(items = debits, key = { item -> item.saleId }) { item ->
@@ -185,53 +189,60 @@ fun CustomersDebitContent(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             AsyncImage(
-                                modifier = Modifier
-                                    .sharedElement(
-                                        sharedTransitionScope.rememberSharedContentState(
-                                            key = "product-${item.productId}"
-                                        ),
-                                        animatedVisibilityScope = animatedContentScope
-                                    )
-                                    .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                                    .size(64.dp)
-                                    .clip(RoundedCornerShape(5)),
-                                model = coil.request.ImageRequest.Builder(LocalContext.current)
-                                    .data(item.productPhoto)
-                                    .crossfade(true)
-                                    .placeholderMemoryCacheKey("product-${item.productId}")
-                                    .memoryCacheKey("product-${item.productId}")
-                                    .build(),
+                                modifier =
+                                    Modifier
+                                        .sharedElement(
+                                            sharedTransitionScope.rememberSharedContentState(
+                                                key = "product-${item.productId}"
+                                            ),
+                                            animatedVisibilityScope = animatedContentScope
+                                        )
+                                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                                        .size(64.dp)
+                                        .clip(RoundedCornerShape(5)),
+                                model =
+                                    coil.request.ImageRequest.Builder(LocalContext.current)
+                                        .data(item.productPhoto)
+                                        .crossfade(true)
+                                        .placeholderMemoryCacheKey("product-${item.productId}")
+                                        .memoryCacheKey("product-${item.productId}")
+                                        .build(),
                                 contentDescription = stringResource(id = R.string.item_image),
                                 contentScale = ContentScale.Crop
                             )
 
                             Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1F, true)
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .weight(1F, true)
                             ) {
                                 Text(
-                                    modifier = Modifier
-                                        .padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                                    modifier =
+                                        Modifier
+                                            .padding(start = 16.dp, top = 16.dp, end = 16.dp),
                                     text = item.customerName,
                                     style = MaterialTheme.typography.titleMedium
                                 )
                                 Text(
                                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                                    text = stringResource(
-                                        id = R.string.product_price_text_tag,
-                                        item.productName,
-                                        item.salePrice.toString()
-                                    ),
+                                    text =
+                                        stringResource(
+                                            id = R.string.product_price_text_tag,
+                                            item.productName,
+                                            item.salePrice.toString()
+                                        ),
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                                 Text(
-                                    modifier = Modifier
-                                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                                    text = stringResource(
-                                        id = R.string.date_of_sale_tag,
-                                        dateFormat.format(item.dateOfSale)
-                                    ),
+                                    modifier =
+                                        Modifier
+                                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                                    text =
+                                        stringResource(
+                                            id = R.string.date_of_sale_tag,
+                                            dateFormat.format(item.dateOfSale)
+                                        ),
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                             }

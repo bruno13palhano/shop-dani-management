@@ -60,7 +60,7 @@ fun NewStockSaleRoute(
         sharedTransitionScope = sharedTransitionScope,
         animatedContentScope = animatedContentScope,
         navigateUp = navigateUp
-   )
+    )
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -188,20 +188,24 @@ fun SaleScreen(
         stringResource(id = R.string.only_x_items_error_label, viewModel.stockQuantity)
     val errors = getErrors()
 
-    val menuItems = arrayOf(
-        stringResource(id = R.string.delete_label),
-        stringResource(id = R.string.cancel_label)
-    )
+    val menuItems =
+        arrayOf(
+            stringResource(id = R.string.delete_label),
+            stringResource(id = R.string.cancel_label)
+        )
 
     val title = stringResource(id = R.string.sale_payment_label)
-    val description = stringResource(
-        id = R.string.payment_tag,
-        viewModel.customerName,
-        viewModel.salePrice
-    )
+    val description =
+        stringResource(
+            id = R.string.payment_tag,
+            viewModel.customerName,
+            viewModel.salePrice
+        )
 
     when (saleState) {
-        UiState.Fail -> { showContent = true }
+        UiState.Fail -> {
+            showContent = true
+        }
 
         UiState.InProgress -> {
             showContent = false
@@ -243,14 +247,16 @@ fun SaleScreen(
                 }
             }
         ) {
-            dateOfSalePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.dateOfSale,
-                initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    DisplayMode.Picker
-                } else {
-                    DisplayMode.Input
-                }
-            )
+            dateOfSalePickerState =
+                rememberDatePickerState(
+                    initialSelectedDateMillis = viewModel.dateOfSale,
+                    initialDisplayMode =
+                        if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            DisplayMode.Picker
+                        } else {
+                            DisplayMode.Input
+                        }
+                )
             DatePicker(
                 state = dateOfSalePickerState,
                 showModeToggle = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -278,17 +284,19 @@ fun SaleScreen(
                 }
             }
         ) {
-            dateOfPaymentPickerState = rememberDatePickerState(
-                initialSelectedDateMillis = viewModel.dateOfPayment,
-                initialDisplayMode = if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    DisplayMode.Picker
-                } else {
-                    DisplayMode.Input
-                }
-            )
+            dateOfPaymentPickerState =
+                rememberDatePickerState(
+                    initialSelectedDateMillis = viewModel.dateOfPayment,
+                    initialDisplayMode =
+                        if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            DisplayMode.Picker
+                        } else {
+                            DisplayMode.Input
+                        }
+                )
             DatePicker(
                 state = dateOfPaymentPickerState,
-                showModeToggle = configuration.orientation == Configuration.ORIENTATION_PORTRAIT,
+                showModeToggle = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
             )
         }
     }
@@ -345,7 +353,7 @@ fun SaleScreen(
         },
         onMoreOptionsItemClick = { index ->
             when (index) {
-                SaleItemMenu.delete -> {
+                SaleItemMenu.DELETE -> {
                     viewModel.deleteSale(
                         saleId = saleId,
                         onError = { error ->
@@ -363,7 +371,7 @@ fun SaleScreen(
                     )
                 }
 
-                SaleItemMenu.cancel -> {
+                SaleItemMenu.CANCEL -> {
                     viewModel.updateSale(
                         saleId = saleId,
                         canceled = true,
@@ -444,6 +452,6 @@ fun SaleScreen(
 }
 
 private object SaleItemMenu {
-    const val delete = 0
-    const val cancel = 1
+    const val DELETE = 0
+    const val CANCEL = 1
 }

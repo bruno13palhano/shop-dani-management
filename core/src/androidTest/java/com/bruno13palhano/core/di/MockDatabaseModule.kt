@@ -15,17 +15,16 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [DatabaseModule::class]
+    replaces = [DatabaseModule::class],
 )
 object MockDatabaseModule {
-
     @Provides
     @Singleton
     fun provideShopDatabaseFactoryDriver(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): ShopDatabase {
         return MockDatabaseFactory(
-            driverFactory = MockDriverFactory(context = context)
+            driverFactory = MockDriverFactory(context = context),
         ).createDriver()
     }
 }

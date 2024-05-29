@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface CustomerRepository : RepositoryOperations<Customer>, Syncable {
     fun search(search: String): Flow<List<Customer>>
+
     fun getOrderedByName(isOrderedAsc: Boolean): Flow<List<Customer>>
+
     fun getOrderedByAddress(isOrderedAsc: Boolean): Flow<List<Customer>>
 }

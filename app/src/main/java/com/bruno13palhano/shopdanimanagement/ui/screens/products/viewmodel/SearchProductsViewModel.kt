@@ -2,10 +2,10 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.products.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.core.data.repository.product.ProductRepository
-import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.data.di.ProductRep
 import com.bruno13palhano.core.data.di.SearchCacheRep
+import com.bruno13palhano.core.data.repository.product.ProductRepository
+import com.bruno13palhano.core.data.repository.searchcache.SearchCacheRepository
 import com.bruno13palhano.core.model.SearchCache
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,78 +17,87 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchProductsViewModel @Inject constructor(
-    @ProductRep private val productRepository: ProductRepository,
-    @SearchCacheRep private val searchCacheRepository: SearchCacheRepository
-) : ViewModel() {
-    private val _searchCache = MutableStateFlow<List<SearchCache>>(emptyList())
-    val searchCache = _searchCache.asStateFlow()
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )
+class SearchProductsViewModel
+    @Inject
+    constructor(
+        @ProductRep private val productRepository: ProductRepository,
+        @SearchCacheRep private val searchCacheRepository: SearchCacheRepository
+    ) : ViewModel() {
+        private val _searchCache = MutableStateFlow<List<SearchCache>>(emptyList())
+        val searchCache =
+            _searchCache.asStateFlow()
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(5_000),
+                    initialValue = emptyList()
+                )
 
-    private val _products = MutableStateFlow(emptyList<CommonItem>())
-    val products = _products.asStateFlow()
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(),
-            initialValue = emptyList()
-        )
+        private val _products = MutableStateFlow(emptyList<CommonItem>())
+        val products =
+            _products.asStateFlow()
+                .stateIn(
+                    scope = viewModelScope,
+                    started = WhileSubscribed(),
+                    initialValue = emptyList()
+                )
 
-    fun search(search: String) {
-        if (search.trim().isNotEmpty()) {
-            viewModelScope.launch {
-                productRepository.search(search).collect {
-                    _products.value = it.map { product ->
-                        CommonItem(
-                            id = product.id,
-                            title = product.name,
-                            subtitle = product.company,
-                            description = product.description,
-                            photo = product.photo,
-                        )
+        fun search(search: String) {
+            if (search.trim().isNotEmpty()) {
+                viewModelScope.launch {
+                    productRepository.search(search).collect {
+                        _products.value =
+                            it.map { product ->
+                                CommonItem(
+                                    id = product.id,
+                                    title = product.name,
+                                    subtitle = product.company,
+                                    description = product.description,
+                                    photo = product.photo
+                                )
+                            }
                     }
                 }
             }
         }
-    }
 
-    fun searchPerCategory(search: String, categoryId: Long) {
-        if (search.trim().isNotEmpty()) {
-            viewModelScope.launch {
-                productRepository.searchPerCategory(
-                    value = search,
-                    categoryId = categoryId
-                ).collect {
-                    _products.value = it.map { product ->
-                        CommonItem(
-                            id = product.id,
-                            title = product.name,
-                            subtitle = product.company,
-                            description = product.description,
-                            photo = product.photo
-                        )
+        fun searchPerCategory(
+            search: String,
+            categoryId: Long
+        ) {
+            if (search.trim().isNotEmpty()) {
+                viewModelScope.launch {
+                    productRepository.searchPerCategory(
+                        value = search,
+                        categoryId = categoryId
+                    ).collect {
+                        _products.value =
+                            it.map { product ->
+                                CommonItem(
+                                    id = product.id,
+                                    title = product.name,
+                                    subtitle = product.company,
+                                    description = product.description,
+                                    photo = product.photo
+                                )
+                            }
                     }
                 }
             }
         }
-    }
 
-    fun getSearchCache() {
-        viewModelScope.launch {
-            searchCacheRepository.getAll().collect {
-                _searchCache.value = it
-            }
-        }
-    }
-
-    fun insertSearch(search: String) {
-        if (search.trim().isNotEmpty()) {
+        fun getSearchCache() {
             viewModelScope.launch {
-                searchCacheRepository.insert(SearchCache(search.trim()))
+                searchCacheRepository.getAll().collect {
+                    _searchCache.value = it
+                }
+            }
+        }
+
+        fun insertSearch(search: String) {
+            if (search.trim().isNotEmpty()) {
+                viewModelScope.launch {
+                    searchCacheRepository.insert(SearchCache(search.trim()))
+                }
             }
         }
     }
-}

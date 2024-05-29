@@ -27,7 +27,6 @@ import org.mockito.kotlin.mock
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class ProductViewModelTest {
-
     private lateinit var productRepository: ProductRepository
     private lateinit var categoryRepository: CategoryRepository
     private lateinit var sut: ProductViewModel
@@ -35,7 +34,7 @@ class ProductViewModelTest {
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private var name = "Essencial"
@@ -43,11 +42,12 @@ class ProductViewModelTest {
     private var description = "Perfume masculino"
     private var photo = byteArrayOf()
     private var date: Long = 0L
-    private var categories = listOf(
-        Category(id = 1L, category = "Perfumes", timestamp = ""),
-        Category(id = 2L, category = "Soaps", timestamp = ""),
-        Category(id = 3L, category = "Others", timestamp = "")
-    )
+    private var categories =
+        listOf(
+            Category(id = 1L, category = "Perfumes", timestamp = ""),
+            Category(id = 2L, category = "Soaps", timestamp = ""),
+            Category(id = 3L, category = "Others", timestamp = "")
+        )
     private var company = "Natura"
 
     @Before
@@ -58,31 +58,34 @@ class ProductViewModelTest {
     }
 
     @Test
-    fun getAllCategories_shouldSetAllCategoriesProperty() = runTest {
-        insertCategories()
-        val categoriesCheck = listOf(
-            CategoryCheck(id = 1L, category = "Perfumes", isChecked = false),
-            CategoryCheck(id = 2L, category = "Soaps", isChecked = false),
-            CategoryCheck(id = 3L, category = "Others", isChecked = false)
-        )
+    fun getAllCategories_shouldSetAllCategoriesProperty() =
+        runTest {
+            insertCategories()
+            val categoriesCheck =
+                listOf(
+                    CategoryCheck(id = 1L, category = "Perfumes", isChecked = false),
+                    CategoryCheck(id = 2L, category = "Soaps", isChecked = false),
+                    CategoryCheck(id = 3L, category = "Others", isChecked = false)
+                )
 
-        sut.getAllCategories {}
+            sut.getAllCategories {}
 
-        advanceUntilIdle()
+            advanceUntilIdle()
 
-        assertEquals(categoriesCheck, sut.allCategories)
-    }
+            assertEquals(categoriesCheck, sut.allCategories)
+        }
 
     @Test
-    fun getById_shouldSetProductProperties_ifProductExists() = runTest {
-        val product = productFromProperties()
-        productRepository.insert(model = product, {}, {})
+    fun getById_shouldSetProductProperties_ifProductExists() =
+        runTest {
+            val product = productFromProperties()
+            productRepository.insert(model = product, {}, {})
 
-        sut.getProduct(id = 1L)
+            sut.getProduct(id = 1L)
 
-        advanceUntilIdle()
-        assertProperties()
-    }
+            advanceUntilIdle()
+            assertProperties()
+        }
 
     @Test
     fun updateName_shouldChangeNameProperty() {
@@ -116,25 +119,27 @@ class ProductViewModelTest {
 
     @Test
     fun updateCategory_shouldChangeCategoryProperty() {
-        val category = listOf(
-            CategoryCheck(id = 1L, category = "Perfumes", isChecked = false),
-            CategoryCheck(id = 2L, category = "Soaps", isChecked = false),
-            CategoryCheck(id = 3L, category = "Others", isChecked = true)
-        )
+        val category =
+            listOf(
+                CategoryCheck(id = 1L, category = "Perfumes", isChecked = false),
+                CategoryCheck(id = 2L, category = "Soaps", isChecked = false),
+                CategoryCheck(id = 3L, category = "Others", isChecked = true)
+            )
         sut.updateCategories(category)
         assertEquals(category[2].category, sut.category)
     }
 
     @Test
-    fun setCategoryChecked_shouldChangeCategoryProperty() = runTest {
-        insertCategories()
-        sut.getAllCategories {}
+    fun setCategoryChecked_shouldChangeCategoryProperty() =
+        runTest {
+            insertCategories()
+            sut.getAllCategories {}
 
-        advanceUntilIdle()
+            advanceUntilIdle()
 
-        sut.setCategoryChecked(3L)
-        assertEquals(categories[2].category, sut.category)
-    }
+            sut.setCategoryChecked(3L)
+            assertEquals(categories[2].category, sut.category)
+        }
 
     @Test
     fun updateCompany_shouldChangeCompanyProperty() {
@@ -143,40 +148,43 @@ class ProductViewModelTest {
     }
 
     @Test
-    fun whenInsertProduct_shouldCallInsertFromProductRepository() = runTest {
-        val productRep = mock<ProductRepository>()
-        val categoryRep = mock<CategoryRepository>()
-        val sut = ProductViewModel(productRep,  categoryRep)
+    fun whenInsertProduct_shouldCallInsertFromProductRepository() =
+        runTest {
+            val productRep = mock<ProductRepository>()
+            val categoryRep = mock<CategoryRepository>()
+            val sut = ProductViewModel(productRep, categoryRep)
 
-        sut.insertProduct({}, {})
+            sut.insertProduct({}, {})
 
-        advanceUntilIdle()
-        verify(productRep).insert(any(), any(), any())
-    }
-
-    @Test
-    fun whenUpdateProduct_shouldCallUpdateFromProductRepository() = runTest {
-        val productRep = mock<ProductRepository>()
-        val categoryRep = mock<CategoryRepository>()
-        val sut = ProductViewModel(productRep,  categoryRep)
-
-        sut.deleteProduct(id = 1L, {}, {})
-
-        advanceUntilIdle()
-        verify(productRep).deleteById(any(), any(), any(), any())
-    }
+            advanceUntilIdle()
+            verify(productRep).insert(any(), any(), any())
+        }
 
     @Test
-    fun whenDeleteProduct_shouldCallDeleteByIdFromProductRepository() = runTest {
-        val productRep = mock<ProductRepository>()
-        val categoryRep = mock<CategoryRepository>()
-        val sut = ProductViewModel(productRep,  categoryRep)
+    fun whenUpdateProduct_shouldCallUpdateFromProductRepository() =
+        runTest {
+            val productRep = mock<ProductRepository>()
+            val categoryRep = mock<CategoryRepository>()
+            val sut = ProductViewModel(productRep, categoryRep)
 
-        sut.updateProduct(id = 1L, {}, {})
+            sut.deleteProduct(id = 1L, {}, {})
 
-        advanceUntilIdle()
-        verify(productRep).update(any(), any(), any())
-    }
+            advanceUntilIdle()
+            verify(productRep).deleteById(any(), any(), any(), any())
+        }
+
+    @Test
+    fun whenDeleteProduct_shouldCallDeleteByIdFromProductRepository() =
+        runTest {
+            val productRep = mock<ProductRepository>()
+            val categoryRep = mock<CategoryRepository>()
+            val sut = ProductViewModel(productRep, categoryRep)
+
+            sut.updateProduct(id = 1L, {}, {})
+
+            advanceUntilIdle()
+            verify(productRep).update(any(), any(), any())
+        }
 
     private fun assertProperties() {
         assertEquals(name, sut.name)
@@ -191,15 +199,16 @@ class ProductViewModelTest {
         categories.forEach { categoryRepository.insert(it, {}, {}) }
     }
 
-    private fun productFromProperties() = Product(
-        id = 1L,
-        name = name,
-        code = code,
-        description = description,
-        photo = photo,
-        date = date,
-        categories = categories,
-        company = company,
-        timestamp = ""
-    )
+    private fun productFromProperties() =
+        Product(
+            id = 1L,
+            name = name,
+            code = code,
+            description = description,
+            photo = photo,
+            date = date,
+            categories = categories,
+            company = company,
+            timestamp = ""
+        )
 }

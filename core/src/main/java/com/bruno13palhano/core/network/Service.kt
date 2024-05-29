@@ -18,107 +18,164 @@ import retrofit2.http.Path
 
 internal interface Service {
     @POST("users/login")
-    suspend fun login(@Body user: UserNet): Response<Unit>
+    suspend fun login(
+        @Body user: UserNet,
+    ): Response<Unit>
 
     @POST("users/insert")
-    suspend fun createUser(@Body user: UserNet): Response<UserNet>
+    suspend fun createUser(
+        @Body user: UserNet,
+    ): Response<UserNet>
 
     @PUT("users/update")
-    suspend fun updateUser(@Body user: UserNet): Response<Int>
+    suspend fun updateUser(
+        @Body user: UserNet,
+    ): Response<Int>
 
     @PUT("users/update/password")
-    suspend fun updateUserPassword(@Body user: UserNet): Response<Int>
+    suspend fun updateUserPassword(
+        @Body user: UserNet,
+    ): Response<Int>
 
     @GET("users/user/{username}")
-    suspend fun getUser(@Path("username") username: String): UserNet
+    suspend fun getUser(
+        @Path("username") username: String,
+    ): UserNet
 
     @POST("users/authenticated")
-    suspend fun authenticated(@Body token: String): Boolean
+    suspend fun authenticated(
+        @Body token: String,
+    ): Boolean
 
     @GET("catalog/all")
     suspend fun getCatalog(): List<CatalogNet>
 
     @POST("catalog/insert")
-    suspend fun insertCatalogItem(@Body catalogItem: CatalogNet)
+    suspend fun insertCatalogItem(
+        @Body catalogItem: CatalogNet,
+    )
 
     @PUT("catalog/update")
-    suspend fun updateCatalogItem(@Body catalogItem: CatalogNet)
+    suspend fun updateCatalogItem(
+        @Body catalogItem: CatalogNet,
+    )
 
     @DELETE("catalog/delete/{id}")
-    suspend fun deleteCatalogItem(@Path("id") id: Long)
+    suspend fun deleteCatalogItem(
+        @Path("id") id: Long,
+    )
 
     @GET("categories/all")
     suspend fun getAllCategories(): List<CategoryNet>
 
     @POST("categories/insert")
-    suspend fun insertCategory(@Body category: CategoryNet)
+    suspend fun insertCategory(
+        @Body category: CategoryNet,
+    )
 
     @PUT("categories/update")
-    suspend fun updateCategory(@Body category: CategoryNet)
+    suspend fun updateCategory(
+        @Body category: CategoryNet,
+    )
 
     @DELETE("categories/delete/{id}")
-    suspend fun deleteCategory(@Path("id") id: Long)
+    suspend fun deleteCategory(
+        @Path("id") id: Long,
+    )
 
     @GET("customers/all")
     suspend fun getAllCustomers(): List<CustomerNet>
 
     @POST("customers/insert")
-    suspend fun insertCustomer(@Body customer: CustomerNet)
+    suspend fun insertCustomer(
+        @Body customer: CustomerNet,
+    )
 
     @PUT("customers/update")
-    suspend fun updateCustomer(@Body customer: CustomerNet)
+    suspend fun updateCustomer(
+        @Body customer: CustomerNet,
+    )
 
     @DELETE("customers/delete/{id}")
-    suspend fun deleteCustomer(@Path("id") id: Long)
+    suspend fun deleteCustomer(
+        @Path("id") id: Long,
+    )
 
     @GET("products/all")
     suspend fun getAllProducts(): List<ProductNet>
 
     @POST("products/insert")
-    suspend fun insertProduct(@Body product: ProductNet)
+    suspend fun insertProduct(
+        @Body product: ProductNet,
+    )
 
     @PUT("products/update")
-    suspend fun updateProduct(@Body product: ProductNet)
+    suspend fun updateProduct(
+        @Body product: ProductNet,
+    )
 
     @DELETE("products/delete/{id}")
-    suspend fun deleteProduct(@Path("id") id: Long)
+    suspend fun deleteProduct(
+        @Path("id") id: Long,
+    )
 
     @GET("sales/all")
     suspend fun getAllSales(): List<SaleNet>
 
     @POST("sales/insert")
-    suspend fun insertSale(@Body saleNet: SaleNet)
+    suspend fun insertSale(
+        @Body saleNet: SaleNet,
+    )
 
     @PUT("sales/update")
-    suspend fun updateSale(@Body sale: SaleNet)
+    suspend fun updateSale(
+        @Body sale: SaleNet,
+    )
 
     @DELETE("sales/delete/{id}")
-    suspend fun deleteSale(@Path("id") id: Long)
+    suspend fun deleteSale(
+        @Path("id") id: Long,
+    )
 
     @GET("items/all")
     suspend fun getAllItems(): List<StockItemNet>
 
     @POST("items/insert")
-    suspend fun insertItem(@Body item: StockItemNet)
+    suspend fun insertItem(
+        @Body item: StockItemNet,
+    )
 
     @PUT("items/update")
-    suspend fun updateItem(@Body item: StockItemNet)
+    suspend fun updateItem(
+        @Body item: StockItemNet,
+    )
 
     @PUT("items/update/{id}/{quantity}")
-    suspend fun updateStockItemQuantity(@Path("id") id: Long, @Path("quantity") quantity: Int)
+    suspend fun updateStockItemQuantity(
+        @Path("id") id: Long,
+        @Path("quantity") quantity: Int,
+    )
 
     @DELETE("items/delete/{id}")
-    suspend fun deleteItem(@Path("id") id: Long)
+    suspend fun deleteItem(
+        @Path("id") id: Long,
+    )
 
     @GET("version/all")
     suspend fun getVersion(): List<DataVersionNet>
 
     @POST("version/insert")
-    suspend fun insertVersion(@Body version: DataVersionNet)
+    suspend fun insertVersion(
+        @Body version: DataVersionNet,
+    )
 
     @PUT("version/update")
-    suspend fun updateVersion(@Body version: DataVersionNet)
+    suspend fun updateVersion(
+        @Body version: DataVersionNet,
+    )
 
     @DELETE("version/delete/{id}")
-    suspend fun deleteVersion(@Path("id") id: Long)
+    suspend fun deleteVersion(
+        @Path("id") id: Long,
+    )
 }

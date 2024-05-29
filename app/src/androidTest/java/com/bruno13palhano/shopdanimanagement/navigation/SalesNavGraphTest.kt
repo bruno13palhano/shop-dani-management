@@ -23,7 +23,7 @@ import com.bruno13palhano.shopdanimanagement.ui.navigation.HomeDestinations
 import com.bruno13palhano.shopdanimanagement.ui.navigation.IS_ORDERED
 import com.bruno13palhano.shopdanimanagement.ui.navigation.ITEM_ID
 import com.bruno13palhano.shopdanimanagement.ui.navigation.MainNavGraph
-import com.bruno13palhano.shopdanimanagement.ui.navigation.SalesDestinations
+import com.bruno13palhano.shopdanimanagement.ui.navigation.home.SalesDestinations
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -34,7 +34,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class SalesNavGraphTest {
-
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 

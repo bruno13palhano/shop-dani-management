@@ -1,6 +1,5 @@
 package com.bruno13palhano.core.data.repository.category
 
-import com.bruno13palhano.core.data.DataOperations
 import com.bruno13palhano.core.data.RepositoryOperations
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.sync.Syncable

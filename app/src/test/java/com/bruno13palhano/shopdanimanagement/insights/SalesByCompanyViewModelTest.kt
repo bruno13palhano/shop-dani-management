@@ -32,42 +32,42 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class SalesByCompanyViewModelTest {
-
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var saleRepository: SaleRepository
     private lateinit var sut: SalesByCompanyViewModel
 
-    private val sales = listOf(
-        makeRandomSale(
-            id = 1L,
-            stockItem = makeRandomStockItem(id = 1L),
-            isOrderedByCustomer = true,
-            canceled = false
-        ),
-        makeRandomSale(
-            id = 2L,
-            stockItem = makeRandomStockItem(id = 2L),
-            isOrderedByCustomer = true,
-            canceled = false
-        ),
-        makeRandomSale(
-            id = 3L,
-            stockItem = makeRandomStockItem(id = 3L),
-            isOrderedByCustomer = false,
-            canceled = false
-        ),
-        makeRandomSale(
-            id = 4L,
-            stockItem = makeRandomStockItem(id = 4L),
-            isOrderedByCustomer = false,
-            canceled = false
+    private val sales =
+        listOf(
+            makeRandomSale(
+                id = 1L,
+                stockItem = makeRandomStockItem(id = 1L),
+                isOrderedByCustomer = true,
+                canceled = false
+            ),
+            makeRandomSale(
+                id = 2L,
+                stockItem = makeRandomStockItem(id = 2L),
+                isOrderedByCustomer = true,
+                canceled = false
+            ),
+            makeRandomSale(
+                id = 3L,
+                stockItem = makeRandomStockItem(id = 3L),
+                isOrderedByCustomer = false,
+                canceled = false
+            ),
+            makeRandomSale(
+                id = 4L,
+                stockItem = makeRandomStockItem(id = 4L),
+                isOrderedByCustomer = false,
+                canceled = false
+            )
         )
-    )
 
     @Before
     fun setup() {
@@ -76,31 +76,33 @@ class SalesByCompanyViewModelTest {
     }
 
     @Test
-    fun getChartByRange_shouldCallGetAllFromRepository() = runTest {
-        val saleRepository = mock<SaleRepository>()
-        val sut = SalesByCompanyViewModel(saleRepository)
+    fun getChartByRange_shouldCallGetAllFromRepository() =
+        runTest {
+            val saleRepository = mock<SaleRepository>()
+            val sut = SalesByCompanyViewModel(saleRepository)
 
-        whenever(saleRepository.getAll()).doAnswer { flowOf() }
+            whenever(saleRepository.getAll()).doAnswer { flowOf() }
 
-        sut.getChartByRange(rangeOfDays = 7)
-        advanceUntilIdle()
+            sut.getChartByRange(rangeOfDays = 7)
+            advanceUntilIdle()
 
-        verify(saleRepository).getAll()
-    }
+            verify(saleRepository).getAll()
+        }
 
     @Test
-    fun getChartByRange_shouldSetChartEntryProperty() = runTest {
-        insertSales()
+    fun getChartByRange_shouldSetChartEntryProperty() =
+        runTest {
+            insertSales()
 
-        val collectJob = launch { sut.chartEntry.collect() }
+            val collectJob = launch { sut.chartEntry.collect() }
 
-        sut.getChartByRange(7)
-        advanceUntilIdle()
+            sut.getChartByRange(7)
+            advanceUntilIdle()
 
-        assertEquals(mapToEntries(sales), sut.chartEntry.value)
+            assertEquals(mapToEntries(sales), sut.chartEntry.value)
 
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     private suspend fun insertSales() = sales.forEach { saleRepository.insert(it, {}, {}) }
 

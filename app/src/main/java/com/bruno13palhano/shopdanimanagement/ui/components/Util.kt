@@ -61,74 +61,81 @@ fun rememberIsKeyboardOpen(): State<Boolean> {
     }
 }
 
-fun Modifier.clearFocusOnKeyboardDismiss(): Modifier = composed {
-    var isFocused by remember { mutableStateOf(false) }
-    var keyboardAppearedSinceLastFocused by remember { mutableStateOf(false) }
+fun Modifier.clearFocusOnKeyboardDismiss(): Modifier =
+    composed {
+        var isFocused by remember { mutableStateOf(false) }
+        var keyboardAppearedSinceLastFocused by remember { mutableStateOf(false) }
 
-    if (isFocused) {
-        val isKeyboardOpen by rememberIsKeyboardOpen()
+        if (isFocused) {
+            val isKeyboardOpen by rememberIsKeyboardOpen()
 
-        val focusManager = LocalFocusManager.current
-        LaunchedEffect(key1 = isKeyboardOpen) {
-            if (isKeyboardOpen) {
-                keyboardAppearedSinceLastFocused = true
-            } else if (keyboardAppearedSinceLastFocused) {
-                focusManager.clearFocus()
+            val focusManager = LocalFocusManager.current
+            LaunchedEffect(key1 = isKeyboardOpen) {
+                if (isKeyboardOpen) {
+                    keyboardAppearedSinceLastFocused = true
+                } else if (keyboardAppearedSinceLastFocused) {
+                    focusManager.clearFocus()
+                }
+            }
+        }
+        onFocusEvent {
+            if (isFocused != it.isFocused) {
+                isFocused = it.isFocused
+                if (isFocused) {
+                    keyboardAppearedSinceLastFocused = false
+                }
             }
         }
     }
-    onFocusEvent {
-        if (isFocused != it.isFocused) {
-            isFocused = it.isFocused
-            if (isFocused) {
-                keyboardAppearedSinceLastFocused = false
-            }
-        }
-    }
-}
 
-fun Modifier.clickableNoEffect(onClick: () -> Unit): Modifier = composed {
-    clickable(
-        interactionSource = remember { MutableInteractionSource() },
-        indication = null,
-        onClick = onClick
-    )
-}
+fun Modifier.clickableNoEffect(onClick: () -> Unit): Modifier =
+    composed {
+        clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null,
+            onClick = onClick
+        )
+    }
 
 @Composable
 internal fun rememberMarker(): Marker {
     val labelBackgroundColor = MaterialTheme.colorScheme.onSurface
-    val labelBackground = remember(labelBackgroundColor) {
-        ShapeComponent(labelBackgroundShape, labelBackgroundColor.toArgb()).setShadow(
-            radius = LABEL_BACKGROUND_SHADOW_RADIUS,
-            dy = LABEL_BACKGROUND_SHADOW_DY,
-            applyElevationOverlay = true,
+    val labelBackground =
+        remember(labelBackgroundColor) {
+            ShapeComponent(labelBackgroundShape, labelBackgroundColor.toArgb()).setShadow(
+                radius = LABEL_BACKGROUND_SHADOW_RADIUS,
+                dy = LABEL_BACKGROUND_SHADOW_DY,
+                applyElevationOverlay = true
+            )
+        }
+    val label =
+        textComponent(
+            color = MaterialTheme.colorScheme.surface,
+            background = labelBackground,
+            lineCount = LABEL_LINE_COUNT,
+            padding = labelPadding,
+            typeface = Typeface.MONOSPACE
         )
-    }
-    val label = textComponent(
-        color = MaterialTheme.colorScheme.surface,
-        background = labelBackground,
-        lineCount = LABEL_LINE_COUNT,
-        padding = labelPadding,
-        typeface = Typeface.MONOSPACE,
-    )
     val indicatorInnerComponent = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.surface)
     val indicatorCenterComponent = shapeComponent(Shapes.pillShape, Color.White)
     val indicatorOuterComponent = shapeComponent(Shapes.pillShape, Color.White)
-    val indicator = overlayingComponent(
-        outer = indicatorOuterComponent,
-        inner = overlayingComponent(
-            outer = indicatorCenterComponent,
-            inner = indicatorInnerComponent,
-            innerPaddingAll = indicatorInnerAndCenterComponentPaddingValue,
-        ),
-        innerPaddingAll = indicatorCenterAndOuterComponentPaddingValue,
-    )
-    val guideline = lineComponent(
-        MaterialTheme.colorScheme.onSurface.copy(GUIDELINE_ALPHA),
-        guidelineThickness,
-        guidelineShape,
-    )
+    val indicator =
+        overlayingComponent(
+            outer = indicatorOuterComponent,
+            inner =
+                overlayingComponent(
+                    outer = indicatorCenterComponent,
+                    inner = indicatorInnerComponent,
+                    innerPaddingAll = indicatorInnerAndCenterComponentPaddingValue
+                ),
+            innerPaddingAll = indicatorCenterAndOuterComponentPaddingValue
+        )
+    val guideline =
+        lineComponent(
+            MaterialTheme.colorScheme.onSurface.copy(GUIDELINE_ALPHA),
+            guidelineThickness,
+            guidelineShape
+        )
     return remember(label, indicator, guideline) {
         object : MarkerComponent(label, indicator, guideline) {
             init {
@@ -148,8 +155,8 @@ internal fun rememberMarker(): Marker {
                 segmentProperties: SegmentProperties
             ) = with(context) {
                 outInsets.top = label.getHeight(context) + labelBackgroundShape.tickSizeDp.pixels +
-                        LABEL_BACKGROUND_SHADOW_RADIUS.pixels * SHADOW_RADIUS_MULTIPLIER -
-                        LABEL_BACKGROUND_SHADOW_DY.pixels
+                    LABEL_BACKGROUND_SHADOW_RADIUS.pixels * SHADOW_RADIUS_MULTIPLIER -
+                    LABEL_BACKGROUND_SHADOW_DY.pixels
             }
         }
     }

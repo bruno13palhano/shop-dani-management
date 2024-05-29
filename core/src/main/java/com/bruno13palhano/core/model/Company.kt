@@ -6,5 +6,5 @@ enum class Company(val company: String) {
     BOTICARIO("O Boticário"),
     EUDORA("Eudora"),
     BERENICE("Quem disse Berenice?"),
-    OUI("O.U.I")
+    OUI("O.U.I"),
 }

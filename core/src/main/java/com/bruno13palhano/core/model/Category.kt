@@ -8,5 +8,5 @@ package com.bruno13palhano.core.model
 data class Category(
     override val id: Long,
     val category: String,
-    override val timestamp: String
+    override val timestamp: String,
 ) : Model(id = id, timestamp = timestamp)

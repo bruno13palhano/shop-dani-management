@@ -64,11 +64,12 @@ fun DeliveriesScreen(
     }
     val deliveries by viewModel.deliveries.collectAsStateWithLifecycle()
 
-    val menuOptions = arrayOf(
-        stringResource(id = R.string.not_delivered_label),
-        stringResource(id = R.string.delivered_label),
-        stringResource(id = R.string.all_deliveries_label),
-    )
+    val menuOptions =
+        arrayOf(
+            stringResource(id = R.string.not_delivered_label),
+            stringResource(id = R.string.delivered_label),
+            stringResource(id = R.string.all_deliveries_label)
+        )
 
     DeliveriesContent(
         deliveries = deliveries,
@@ -140,27 +141,31 @@ fun DeliveriesContent(
         }
     ) {
         LazyColumn(
-            modifier = Modifier
-                .semantics { contentDescription = "List of deliveries" }
-                .padding(it),
+            modifier =
+                Modifier
+                    .semantics { contentDescription = "List of deliveries" }
+                    .padding(it),
             contentPadding = PaddingValues(vertical = 4.dp)
         ) {
             items(items = deliveries, key = { delivery -> delivery.id }) { delivery ->
                 SimpleExpandedItem(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     title = delivery.customerName,
-                    item1 = stringResource(
-                        id = R.string.delivery_date_tag,
-                        dateFormat.format(delivery.deliveryDate)
-                    ),
-                    item2 = stringResource(
-                        id = R.string.product_tag,
-                        delivery.productName
-                    ),
-                    item3 = stringResource(
-                        id = R.string.delivery_price_tag,
-                        delivery.deliveryPrice
-                    ),
+                    item1 =
+                        stringResource(
+                            id = R.string.delivery_date_tag,
+                            dateFormat.format(delivery.deliveryDate)
+                        ),
+                    item2 =
+                        stringResource(
+                            id = R.string.product_tag,
+                            delivery.productName
+                        ),
+                    item3 =
+                        stringResource(
+                            id = R.string.delivery_price_tag,
+                            delivery.deliveryPrice
+                        ),
                     item4 = stringResource(id = R.string.deliver_to_tag, delivery.address),
                     item5 = stringResource(id = R.string.phone_number_tag, delivery.phoneNumber),
                     onEditClick = { onItemClick(delivery.id) }

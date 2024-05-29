@@ -14,7 +14,7 @@ data class SaleInfo(
     val salePrice: Float,
     val deliveryPrice: Float,
     val quantity: Int,
-    val dateOfSale: Long
+    val dateOfSale: Long,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -57,21 +57,22 @@ data class SaleInfo(
     }
 
     companion object {
-        fun emptySaleInfo() = SaleInfo(
-            saleId = 0L,
-            productId = 0L,
-            customerId = 0L,
-            productName = "",
-            customerName = "",
-            productPhoto = byteArrayOf(),
-            customerPhoto = byteArrayOf(),
-            address = "",
-            phoneNumber = "",
-            email = "",
-            salePrice = 0F,
-            deliveryPrice = 0F,
-            quantity = 0,
-            dateOfSale = 0L
-        )
+        fun emptySaleInfo() =
+            SaleInfo(
+                saleId = 0L,
+                productId = 0L,
+                customerId = 0L,
+                productName = "",
+                customerName = "",
+                productPhoto = byteArrayOf(),
+                customerPhoto = byteArrayOf(),
+                address = "",
+                phoneNumber = "",
+                email = "",
+                salePrice = 0F,
+                deliveryPrice = 0F,
+                quantity = 0,
+                dateOfSale = 0L,
+            )
     }
 }

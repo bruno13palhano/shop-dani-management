@@ -7,7 +7,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class TestUserRepository : UserRepository {
-    override suspend fun login(user: User, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+    override suspend fun login(
+        user: User,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         if (user.id == 0L) {
             onError(UserCodeResponse.LOGIN_SERVER_ERROR)
         } else {
@@ -27,7 +31,11 @@ class TestUserRepository : UserRepository {
         }
     }
 
-    override suspend fun update(user: User, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+    override suspend fun update(
+        user: User,
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
         if (user.id == 0L) {
             onError(UserCodeResponse.UPDATE_SERVER_ERROR)
         } else {
@@ -40,7 +48,8 @@ class TestUserRepository : UserRepository {
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ): Flow<User> {
-        return flow { while (true) emit(
+        return flow {
+            while (true) emit(
                 User(
                     id = 1L,
                     username = "User",
@@ -55,8 +64,12 @@ class TestUserRepository : UserRepository {
         }
     }
 
-    override fun getCurrentUser(onError: (error: Int) -> Unit, onSuccess: () -> Unit): Flow<User> {
-        return flow { while (true) emit(
+    override fun getCurrentUser(
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ): Flow<User> {
+        return flow {
+            while (true) emit(
                 User(
                     id = 1L,
                     username = "User",
@@ -80,7 +93,6 @@ class TestUserRepository : UserRepository {
     }
 
     override fun logout() {
-
     }
 
     override suspend fun updateUserPassword(
@@ -88,6 +100,5 @@ class TestUserRepository : UserRepository {
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
-
     }
 }

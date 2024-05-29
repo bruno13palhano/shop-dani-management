@@ -23,47 +23,50 @@ import org.mockito.junit.MockitoRule
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
-class FinancialInfoViewModelTest {
-
+class InfoViewModelTest {
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    @get: Rule
+    @get:Rule
     val standardDispatcherRule = StandardDispatcherRule()
 
     private lateinit var saleRepository: SaleRepository
     private lateinit var sut: FinancialInfoViewModel
 
-    private val sales = listOf(
-        makeRandomSale(
-            id = 1L,
-            stockItem = makeRandomStockItem(
-                id = 1,
-                salePrice = 25F
+    private val sales =
+        listOf(
+            makeRandomSale(
+                id = 1L,
+                stockItem =
+                    makeRandomStockItem(
+                        id = 1,
+                        salePrice = 25F
+                    ),
+                quantity = 1,
+                canceled = false
             ),
-            quantity = 1,
-            canceled = false
-        ),
-        makeRandomSale(
-            id = 2L,
-            stockItem = makeRandomStockItem(
-                id = 2,
-                salePrice = 50F
+            makeRandomSale(
+                id = 2L,
+                stockItem =
+                    makeRandomStockItem(
+                        id = 2,
+                        salePrice = 50F
+                    ),
+                quantity = 1,
+                canceled = false
             ),
-            quantity = 1,
-            canceled = false
-        ),
-        makeRandomSale(
-            id = 3L,
-            stockItem = makeRandomStockItem(
-                id = 3,
-                salePrice = 75F
-            ),
-            isOrderedByCustomer = true,
-            quantity = 1,
-            canceled = false
+            makeRandomSale(
+                id = 3L,
+                stockItem =
+                    makeRandomStockItem(
+                        id = 3,
+                        salePrice = 75F
+                    ),
+                isOrderedByCustomer = true,
+                quantity = 1,
+                canceled = false
+            )
         )
-    )
 
     @Before
     fun setup() {
@@ -72,35 +75,38 @@ class FinancialInfoViewModelTest {
     }
 
     @Test
-    fun financial_shouldSetSalesAndDeliveriesValues() = runTest {
-        insertSales()
+    fun financial_shouldSetSalesAndDeliveriesValues() =
+        runTest {
+            insertSales()
 
-        val collectJob = launch { sut.financial.collect() }
-        advanceUntilIdle()
+            val collectJob = launch { sut.financial.collect() }
+            advanceUntilIdle()
 
-        assertEquals(mapToInfo(sales), sut.financial.value)
+            assertEquals(mapToInfo(sales), sut.financial.value)
 
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     @Test
-    fun entry_shouldSetChartProperties() = runTest {
-        insertSales()
+    fun entry_shouldSetChartProperties() =
+        runTest {
+            insertSales()
 
-        val collectJob = launch { sut.entry.collect() }
-        advanceUntilIdle()
+            val collectJob = launch { sut.entry.collect() }
+            advanceUntilIdle()
 
-        val info = mapToInfo(sales)
-        val expected = FinancialInfoViewModel.FinancialChartEntries(
-            allSalesEntries = Pair(0F, info.allSales),
-            stockSalesEntries = Pair(0F, info.stockSales),
-            ordersSalesEntries = Pair(0F, info.ordersSales),
-            profitEntries = Pair(0F, info.profit)
-        )
-        assertEquals(expected, sut.entry.value)
+            val info = mapToInfo(sales)
+            val expected =
+                FinancialInfoViewModel.FinancialChartEntries(
+                    allSalesEntries = Pair(0F, info.allSales),
+                    stockSalesEntries = Pair(0F, info.stockSales),
+                    ordersSalesEntries = Pair(0F, info.ordersSales),
+                    profitEntries = Pair(0F, info.profit)
+                )
+            assertEquals(expected, sut.entry.value)
 
-        collectJob.cancel()
-    }
+            collectJob.cancel()
+        }
 
     private fun mapToInfo(sales: List<Sale>): FinancialInfoViewModel.FinancialInfo {
         var allSalesPurchasePrice = 0F
@@ -128,7 +134,7 @@ class FinancialInfoViewModelTest {
             allSales = allSales,
             stockSales = stockSales,
             ordersSales = ordersSales,
-            profit = allSales - (allSalesPurchasePrice + allDeliveriesPrice),
+            profit = allSales - (allSalesPurchasePrice + allDeliveriesPrice)
         )
     }
 

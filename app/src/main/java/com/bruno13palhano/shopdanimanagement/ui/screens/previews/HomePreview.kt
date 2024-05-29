@@ -26,7 +26,7 @@ fun HomeDynamicPreview() {
                 lastSalesEntry = ChartEntryModelProducer(),
                 showProfit = false,
                 onOptionsItemClick = {},
-                onSalesItemClick = { _ ->},
+                onSalesItemClick = { _ -> },
                 onShowProfitChange = {},
                 onMenuClick = {}
             )

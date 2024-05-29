@@ -15,7 +15,7 @@ fun MainNavGraph(
     navController: NavHostController,
     showBottomMenu: (show: Boolean) -> Unit = {},
     gesturesEnabled: (enabled: Boolean) -> Unit = {},
-    onIconMenuClick: () -> Unit,
+    onIconMenuClick: () -> Unit
 ) {
     SharedTransitionLayout {
         NavHost(
@@ -28,7 +28,7 @@ fun MainNavGraph(
                 sharedTransitionScope = this@SharedTransitionLayout,
                 showBottomMenu = showBottomMenu,
                 onIconMenuClick = onIconMenuClick,
-                gesturesEnabled = gesturesEnabled,
+                gesturesEnabled = gesturesEnabled
             )
             financialNavGraph(
                 sharedTransitionScope = this@SharedTransitionLayout,
@@ -71,23 +71,23 @@ fun MainNavGraph(
 
 sealed interface MainRoutes {
     @Serializable
-    data object Home: MainRoutes
+    data object Home : MainRoutes
 
     @Serializable
-    data object Login: MainRoutes
+    data object Login : MainRoutes
 
     @Serializable
-    data object Financial: MainRoutes
+    data object Financial : MainRoutes
 
     @Serializable
-    data object Insights: MainRoutes
+    data object Insights : MainRoutes
 
     @Serializable
-    data object Products: MainRoutes
+    data object Products : MainRoutes
 
     @Serializable
-    data object Customers: MainRoutes
+    data object Customers : MainRoutes
 
     @Serializable
-    data object User: MainRoutes
+    data object User : MainRoutes
 }

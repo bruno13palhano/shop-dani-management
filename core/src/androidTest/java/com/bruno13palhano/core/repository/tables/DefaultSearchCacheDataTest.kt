@@ -40,68 +40,73 @@ class DefaultSearchCacheDataTest {
     }
 
     @Test
-    fun shouldInsertSearchCacheInDatabase() = runTest {
-        searchCacheTable.insert(firstCache)
+    fun shouldInsertSearchCacheInDatabase() =
+        runTest {
+            searchCacheTable.insert(firstCache)
 
-        launch(Dispatchers.IO) {
-            searchCacheTable.getAll().collect { searchCaches ->
-                assertThat(searchCaches).contains(firstCache)
-                cancel()
+            launch(Dispatchers.IO) {
+                searchCacheTable.getAll().collect { searchCaches ->
+                    assertThat(searchCaches).contains(firstCache)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldDeleteSearchCacheWithThisIdInDatabase_ifSearchCacheExists() = runTest {
-        searchCacheTable.insert(firstCache)
-        searchCacheTable.insert(secondCache)
+    fun shouldDeleteSearchCacheWithThisIdInDatabase_ifSearchCacheExists() =
+        runTest {
+            searchCacheTable.insert(firstCache)
+            searchCacheTable.insert(secondCache)
 
-        searchCacheTable.deleteById(firstCache.search)
+            searchCacheTable.deleteById(firstCache.search)
 
-        launch(Dispatchers.IO) {
-            searchCacheTable.getAll().collect { searchCaches ->
-                assertThat(searchCaches).doesNotContain(firstCache)
-                cancel()
+            launch(Dispatchers.IO) {
+                searchCacheTable.getAll().collect { searchCaches ->
+                    assertThat(searchCaches).doesNotContain(firstCache)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldNotDeleteSearchCacheInDatabase_ifSearchCacheWithThisIdNotExists() = runTest {
-        searchCacheTable.insert(firstCache)
-        searchCacheTable.insert(secondCache)
+    fun shouldNotDeleteSearchCacheInDatabase_ifSearchCacheWithThisIdNotExists() =
+        runTest {
+            searchCacheTable.insert(firstCache)
+            searchCacheTable.insert(secondCache)
 
-        searchCacheTable.deleteById(thirdCache.search)
+            searchCacheTable.deleteById(thirdCache.search)
 
-        launch(Dispatchers.IO) {
-            searchCacheTable.getAll().collect { searchCaches ->
-                assertThat(searchCaches).containsExactly(firstCache, secondCache)
-                cancel()
+            launch(Dispatchers.IO) {
+                searchCacheTable.getAll().collect { searchCaches ->
+                    assertThat(searchCaches).containsExactly(firstCache, secondCache)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldReturnAllSearchCachesInTheDatabase_ifDatabaseIsNotEmpty() = runTest {
-        searchCacheTable.insert(firstCache)
-        searchCacheTable.insert(secondCache)
-        searchCacheTable.insert(thirdCache)
+    fun shouldReturnAllSearchCachesInTheDatabase_ifDatabaseIsNotEmpty() =
+        runTest {
+            searchCacheTable.insert(firstCache)
+            searchCacheTable.insert(secondCache)
+            searchCacheTable.insert(thirdCache)
 
-        launch(Dispatchers.IO) {
-            searchCacheTable.getAll().collect { searchCaches ->
-                assertThat(searchCaches).containsExactly(firstCache, secondCache, thirdCache)
-                cancel()
+            launch(Dispatchers.IO) {
+                searchCacheTable.getAll().collect { searchCaches ->
+                    assertThat(searchCaches).containsExactly(firstCache, secondCache, thirdCache)
+                    cancel()
+                }
             }
         }
-    }
 
     @Test
-    fun shouldReturnEmptyList_ifDatabaseIsEmpty() = runTest {
-        launch(Dispatchers.IO) {
-            searchCacheTable.getAll().collect { searchCaches ->
-                assertThat(searchCaches).isEmpty()
-                cancel()
+    fun shouldReturnEmptyList_ifDatabaseIsEmpty() =
+        runTest {
+            launch(Dispatchers.IO) {
+                searchCacheTable.getAll().collect { searchCaches ->
+                    assertThat(searchCaches).isEmpty()
+                    cancel()
+                }
             }
         }
-    }
 }

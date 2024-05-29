@@ -61,9 +61,10 @@ fun BarcodeReader(
             modifier = Modifier.fillMaxSize()
         )
 
-        val options = BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(Barcode.FORMAT_EAN_13)
-            .build()
+        val options =
+            BarcodeScannerOptions.Builder()
+                .setBarcodeFormats(Barcode.FORMAT_EAN_13)
+                .build()
         val barcodeScanner = BarcodeScanning.getClient(options)
 
         cameraController.setImageAnalysisAnalyzer(
@@ -91,9 +92,10 @@ fun BarcodeReader(
             }
         )
         IconButton(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp),
             onClick = onClose
         ) {
             Icon(
@@ -103,18 +105,20 @@ fun BarcodeReader(
         }
 
         VerticalDivider(
-            modifier = Modifier
-                .padding(start = 40.dp)
-                .height(144.dp)
-                .align(Alignment.CenterStart),
+            modifier =
+                Modifier
+                    .padding(start = 40.dp)
+                    .height(144.dp)
+                    .align(Alignment.CenterStart),
             thickness = 2.dp,
             color = MaterialTheme.colorScheme.primary
         )
         VerticalDivider(
-            modifier = Modifier
-                .padding(end = 40.dp)
-                .height(144.dp)
-                .align(Alignment.CenterEnd),
+            modifier =
+                Modifier
+                    .padding(end = 40.dp)
+                    .height(144.dp)
+                    .align(Alignment.CenterEnd),
             thickness = 2.dp,
             color = MaterialTheme.colorScheme.primary
         )
@@ -124,9 +128,10 @@ fun BarcodeReader(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun CameraPermission() {
-    val cameraPermissionState = rememberPermissionState(
-        android.Manifest.permission.CAMERA
-    )
+    val cameraPermissionState =
+        rememberPermissionState(
+            android.Manifest.permission.CAMERA
+        )
 
     if (!cameraPermissionState.status.isGranted) {
         LaunchedEffect(key1 = Unit) {
