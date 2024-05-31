@@ -60,7 +60,12 @@ fun customerNetToCustomer(customerNet: CustomerNet) =
     Customer(
         id = customerNet.id,
         name = customerNet.name,
-        photo = Base64.getDecoder().decode(customerNet.photo),
+        photo =
+            try {
+                Base64.getDecoder().decode(customerNet.photo)
+            } catch (e: Exception) {
+                customerNet.photo.toByteArray()
+            },
         email = customerNet.email,
         address = customerNet.address,
         city = customerNet.city,
@@ -74,7 +79,12 @@ fun customerToCustomerNet(customer: Customer) =
     CustomerNet(
         id = customer.id,
         name = customer.name,
-        photo = Base64.getEncoder().encodeToString(customer.photo),
+        photo =
+            try {
+                Base64.getEncoder().encodeToString(customer.photo)
+            } catch (e: Exception) {
+                customer.photo.toString()
+            },
         email = customer.email,
         address = customer.address,
         city = customer.city,
@@ -90,7 +100,12 @@ fun productToProductNet(product: Product) =
         name = product.name,
         code = product.code,
         description = product.description,
-        photo = Base64.getEncoder().encodeToString(product.photo),
+        photo =
+            try {
+                Base64.getEncoder().encodeToString(product.photo)
+            } catch (e: Exception) {
+                product.photo.toString()
+            },
         date = product.date,
         categories = product.categories.map { categoryToCategoryNet(it) },
         company = product.company,
@@ -103,9 +118,14 @@ fun productNetToProduct(productNet: ProductNet) =
         name = productNet.name,
         code = productNet.code,
         description = productNet.description,
-        photo = Base64.getDecoder().decode(productNet.photo),
+        photo =
+            try {
+                Base64.getDecoder().decode(productNet.photo)
+            } catch (e: Exception) {
+                productNet.photo.toByteArray()
+            },
         date = productNet.date,
-        categories = productNet.categories.map { categoryNetToCategory(it) },
+        categories = emptyList(),
         company = productNet.company,
         timestamp = productNet.timestamp,
     )
@@ -227,7 +247,12 @@ fun userNetToUser(userNet: UserNet) =
         username = userNet.username,
         email = userNet.email,
         password = userNet.password,
-        photo = Base64.getDecoder().decode(userNet.photo),
+        photo =
+            try {
+                Base64.getDecoder().decode(userNet.photo)
+            } catch (e: Exception) {
+                userNet.photo.toByteArray()
+            },
         role = userNet.role,
         enabled = userNet.enabled,
         timestamp = userNet.timestamp,
@@ -239,7 +264,12 @@ fun userToUserNet(user: User) =
         username = user.username,
         email = user.email,
         password = user.password,
-        photo = Base64.getEncoder().encodeToString(user.photo),
+        photo =
+            try {
+                Base64.getEncoder().encodeToString(user.photo)
+            } catch (e: Exception) {
+                user.photo.toString()
+            },
         role = user.role,
         enabled = user.enabled,
         timestamp = user.timestamp,
