@@ -80,4 +80,6 @@ class LoginViewModel
         fun logout() {
             userRepository.logout()
         }
+
+        fun isAuthenticated() = userRepository.isAuthenticated()
     }

@@ -32,12 +32,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bruno13palhano.core.sync.Sync
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.CircularProgress
 import com.bruno13palhano.shopdanimanagement.ui.components.CustomPasswordField
@@ -68,6 +70,14 @@ fun LoginScreen(
     onCreateAccountClick: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = viewModel.isAuthenticated()) {
+        if (viewModel.isAuthenticated()) {
+            Sync.initialize(context)
+        }
+    }
+
     val loginStatus by viewModel.loginState.collectAsStateWithLifecycle()
     val isLoginValid by viewModel.isLoginValid.collectAsStateWithLifecycle()
     var showContent by remember { mutableStateOf(true) }
