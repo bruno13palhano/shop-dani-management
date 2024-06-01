@@ -9,7 +9,7 @@ import com.bruno13palhano.core.model.User
 import com.bruno13palhano.core.network.SessionManager
 import com.bruno13palhano.core.network.access.UserNetwork
 import com.bruno13palhano.core.network.di.DefaultSessionManager
-import com.bruno13palhano.core.network.di.DefaultUserNet
+import com.bruno13palhano.core.network.di.FirebaseUserNet
 import com.bruno13palhano.core.network.model.UserNet
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +22,7 @@ import javax.inject.Inject
 internal class DefaultUserRepository
     @Inject
     constructor(
-        @DefaultUserNet private val userNetwork: UserNetwork,
+        @FirebaseUserNet private val userNetwork: UserNetwork,
         @InternalUserLight private val userData: UserData,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
         @DefaultSessionManager private val sessionManager: SessionManager,
@@ -110,7 +110,7 @@ internal class DefaultUserRepository
                     try {
                         val authenticated = userNetwork.authenticated(it)
                         if (!authenticated) {
-                            sessionManager.saveAuthToken(token = "")
+                            saveToken(token = "")
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -129,7 +129,7 @@ internal class DefaultUserRepository
                     try {
                         val authenticated = userNetwork.authenticated(it)
                         if (!authenticated) {
-                            sessionManager.saveAuthToken(token = "")
+                            saveToken(token = "")
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -146,7 +146,7 @@ internal class DefaultUserRepository
         }
 
         override fun logout() {
-            sessionManager.saveAuthToken(token = "")
+            saveToken(token = "")
             sessionManager.saveCurrentUserId(id = 0L)
         }
 

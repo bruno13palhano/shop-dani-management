@@ -17,8 +17,8 @@ import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.network.access.CustomerNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.DefaultCustomerNet
-import com.bruno13palhano.core.network.di.DefaultVersionNet
+import com.bruno13palhano.core.network.di.FirebaseCustomerNet
+import com.bruno13palhano.core.network.di.FirebaseVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,10 +30,10 @@ import javax.inject.Inject
 internal class DefaultCustomerRepository
     @Inject
     constructor(
-        @DefaultCustomerNet private val customerNetwork: CustomerNetwork,
+        @FirebaseCustomerNet private val customerNetwork: CustomerNetwork,
         @InternalCustomerLight private val customerData: CustomerData,
         @InternalVersionLight private val versionData: VersionData,
-        @DefaultVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : CustomerRepository {
         override suspend fun insert(
@@ -145,7 +145,11 @@ internal class DefaultCustomerRepository
                 dataVersion = getDataVersion(versionData, Versions.CUSTOMER_VERSION_ID),
                 networkVersion = getNetworkVersion(versionNetwork, Versions.CUSTOMER_VERSION_ID),
                 dataList = getDataList(customerData),
-                networkList = getNetworkList(customerNetwork).map { customerNetToCustomer(it) },
+                networkList =
+                    getNetworkList(customerNetwork).map {
+                        println(it)
+                        customerNetToCustomer(it)
+                    },
                 onPush = { deleteIds, saveList, dtVersion ->
                     deleteIds.forEach { customerNetwork.delete(it) }
                     saveList.forEach { customerNetwork.insert(customerToCustomerNet(it)) }

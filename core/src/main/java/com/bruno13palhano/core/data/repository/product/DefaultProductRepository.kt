@@ -17,8 +17,8 @@ import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.Product
 import com.bruno13palhano.core.network.access.ProductNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.DefaultProductNet
-import com.bruno13palhano.core.network.di.DefaultVersionNet
+import com.bruno13palhano.core.network.di.FirebaseProductNet
+import com.bruno13palhano.core.network.di.FirebaseVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,10 +30,10 @@ import javax.inject.Inject
 internal class DefaultProductRepository
     @Inject
     constructor(
-        @DefaultProductNet private val productNetwork: ProductNetwork,
+        @FirebaseProductNet private val productNetwork: ProductNetwork,
         @InternalProductLight private val productData: ProductData,
         @InternalVersionLight private val versionData: VersionData,
-        @DefaultVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : ProductRepository {
         override suspend fun insert(

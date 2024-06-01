@@ -16,8 +16,8 @@ import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Catalog
 import com.bruno13palhano.core.network.access.CatalogNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.DefaultCatalogNet
-import com.bruno13palhano.core.network.di.DefaultVersionNet
+import com.bruno13palhano.core.network.di.FirebaseCatalogNet
+import com.bruno13palhano.core.network.di.FirebaseVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -29,10 +29,10 @@ import javax.inject.Inject
 internal class DefaultCatalogRepository
     @Inject
     constructor(
-        @DefaultCatalogNet private val catalogNetwork: CatalogNetwork,
+        @FirebaseCatalogNet private val catalogNetwork: CatalogNetwork,
         @InternalCatalogLight private val catalogData: CatalogData,
         @InternalVersionLight private val versionData: VersionData,
-        @DefaultVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : CatalogRepository {
         override suspend fun insert(

@@ -17,8 +17,8 @@ import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.StockItem
 import com.bruno13palhano.core.network.access.StockNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.DefaultStockNet
-import com.bruno13palhano.core.network.di.DefaultVersionNet
+import com.bruno13palhano.core.network.di.FirebaseStockNet
+import com.bruno13palhano.core.network.di.FirebaseVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,10 +30,10 @@ import javax.inject.Inject
 internal class DefaultStockRepository
     @Inject
     constructor(
-        @DefaultStockNet private val stockNetwork: StockNetwork,
+        @FirebaseStockNet private val stockNetwork: StockNetwork,
         @InternalStockLight private val stockData: StockData,
         @InternalVersionLight private val versionData: VersionData,
-        @DefaultVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : StockRepository {
         override suspend fun insert(

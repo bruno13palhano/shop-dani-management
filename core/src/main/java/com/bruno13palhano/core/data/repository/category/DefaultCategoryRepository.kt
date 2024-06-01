@@ -17,8 +17,8 @@ import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.network.access.CategoryNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.DefaultCategoryNet
-import com.bruno13palhano.core.network.di.DefaultVersionNet
+import com.bruno13palhano.core.network.di.FirebaseCategoryNet
+import com.bruno13palhano.core.network.di.FirebaseVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,10 +30,10 @@ import javax.inject.Inject
 internal class DefaultCategoryRepository
     @Inject
     constructor(
-        @DefaultCategoryNet private val categoryNetwork: CategoryNetwork,
+        @FirebaseCategoryNet private val categoryNetwork: CategoryNetwork,
         @InternalCategoryLight private val categoryData: CategoryData,
         @InternalVersionLight private val versionData: VersionData,
-        @DefaultVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : CategoryRepository {
         override fun search(value: String): Flow<List<Category>> {
@@ -135,6 +135,7 @@ internal class DefaultCategoryRepository
                             versionNetwork.insert(data = versionToVersionNet(categoryVersion))
                             onSuccess(netModel.id)
                         } catch (e: Exception) {
+                            e.printStackTrace()
                             onError(Errors.INSERT_SERVER_ERROR)
                         }
                     }

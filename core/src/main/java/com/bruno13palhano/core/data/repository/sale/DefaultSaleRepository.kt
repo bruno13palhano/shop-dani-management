@@ -24,9 +24,9 @@ import com.bruno13palhano.core.model.Sale
 import com.bruno13palhano.core.network.access.SaleNetwork
 import com.bruno13palhano.core.network.access.StockNetwork
 import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.DefaultSaleNet
 import com.bruno13palhano.core.network.di.DefaultStockNet
-import com.bruno13palhano.core.network.di.DefaultVersionNet
+import com.bruno13palhano.core.network.di.FirebaseSaleNet
+import com.bruno13palhano.core.network.di.FirebaseVersionNet
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -38,11 +38,11 @@ import javax.inject.Inject
 internal class DefaultSaleRepository
     @Inject
     constructor(
-        @DefaultSaleNet private val saleNetwork: SaleNetwork,
+        @FirebaseSaleNet private val saleNetwork: SaleNetwork,
         @DefaultStockNet private val stockNetwork: StockNetwork,
         @InternalSaleLight private val saleData: SaleData,
         @InternalVersionLight private val versionData: VersionData,
-        @DefaultVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
         @InternalDefaultExcelSheet private val excelSheet: ExcelSheet,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : SaleRepository {
