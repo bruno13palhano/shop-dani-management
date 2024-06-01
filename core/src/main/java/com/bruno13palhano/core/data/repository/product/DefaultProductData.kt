@@ -49,7 +49,7 @@ internal class DefaultProductData
                         id = productQueries.getLastId().executeAsOne()
 
                         productCategoriesQueries.insert(
-                            productId = productQueries.getLastId().executeAsOne(),
+                            productId = id,
                             categories = model.categories,
                         )
 
