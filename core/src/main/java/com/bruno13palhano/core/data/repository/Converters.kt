@@ -125,7 +125,7 @@ fun productNetToProduct(productNet: ProductNet) =
                 productNet.photo.toByteArray()
             },
         date = productNet.date,
-        categories = emptyList(),
+        categories = productNet.categories.map { categoryNetToCategory(it) },
         company = productNet.company,
         timestamp = productNet.timestamp,
     )

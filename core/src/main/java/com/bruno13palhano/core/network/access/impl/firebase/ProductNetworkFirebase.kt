@@ -20,6 +20,21 @@ internal class ProductNetworkFirebase
                 return snapshot.await()?.let {
                     if (!it.isEmpty) {
                         it.documents.map { firebaseProduct ->
+                            val categories =
+                                try {
+                                    (firebaseProduct["categories"] as ArrayList<Map<String, Any>>)
+                                        .map { category ->
+                                            CategoryNet(
+                                                id = category["id"] as Long,
+                                                category = category["category"].toString(),
+                                                timestamp = category["timestamp"].toString(),
+                                            )
+                                        }
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                    emptyList()
+                                }
+
                             ProductNet(
                                 id = firebaseProduct["id"] as Long,
                                 name = firebaseProduct["name"].toString(),
@@ -27,7 +42,7 @@ internal class ProductNetworkFirebase
                                 description = firebaseProduct["description"].toString(),
                                 photo = firebaseProduct["photo"].toString(),
                                 date = firebaseProduct["date"] as Long,
-                                categories = firebaseProduct["categories"] as List<CategoryNet>,
+                                categories = categories,
                                 company = firebaseProduct["company"].toString(),
                                 timestamp = firebaseProduct["timestamp"].toString(),
                             )
