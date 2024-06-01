@@ -111,7 +111,7 @@ internal class UserNetworkFirebase
                 auth.signInWithEmailAndPassword(user.username, user.password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            onSuccess("firebase")
+                            onSuccess(auth.currentUser?.uid.toString())
                         } else {
                             onError(UserCodeResponse.LOGIN_SERVER_ERROR)
                         }
