@@ -23,7 +23,51 @@ data class Product(
     val categories: List<Category>,
     val company: String,
     override val timestamp: String,
-) : Model(id = id, timestamp = timestamp) {
+) : Model(id = id, timestamp = timestamp), Salable, Reversible {
+    override fun reverse(purchase: Purchase): Receipt {
+        return Receipt(
+            id = purchase.id,
+            productId = id,
+            stockId = purchase.stockId,
+            customerId = purchase.customerId,
+            quantity = purchase.quantity,
+            purchasePrice = purchase.purchasePrice,
+            salePrice = purchase.salePrice,
+            deliveryPrice = purchase.deliveryPrice,
+            dateOfSale = purchase.dateOfSale,
+            dateOfPayment = purchase.dateOfPayment,
+            shippingDate = purchase.shippingDate,
+            deliveryDate = purchase.deliveryDate,
+            ordered = purchase.isOrderedByCustomer,
+            paid = purchase.isPaidByCustomer,
+            delivered = purchase.delivered,
+            cancelled = true,
+            timestamp = purchase.timestamp
+        )
+    }
+
+    override fun sell(purchase: Purchase): Receipt {
+        return Receipt(
+            id = purchase.id,
+            productId = id,
+            stockId = purchase.stockId,
+            customerId = purchase.customerId,
+            quantity = purchase.quantity,
+            purchasePrice = purchase.purchasePrice,
+            salePrice = purchase.salePrice,
+            deliveryPrice = purchase.deliveryPrice,
+            dateOfSale = purchase.dateOfSale,
+            dateOfPayment = purchase.dateOfPayment,
+            shippingDate = purchase.shippingDate,
+            deliveryDate = purchase.deliveryDate,
+            ordered = purchase.isOrderedByCustomer,
+            paid = purchase.isPaidByCustomer,
+            delivered = purchase.delivered,
+            cancelled = false,
+            timestamp  = purchase.timestamp
+        )
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
