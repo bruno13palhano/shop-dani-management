@@ -11,21 +11,7 @@ data class Customer(
     val gender: String,
     val age: Int,
     override val timestamp: String,
-) : Model(id = id, timestamp = timestamp), Buyable {
-    override fun buy(
-        salable: Salable,
-        purchase: Purchase,
-    ): Receipt {
-        return salable.sell(purchase = purchase)
-    }
-
-    override fun cancel(
-        reversible: Reversible,
-        purchase: Purchase,
-    ): Receipt {
-        return reversible.reverse(purchase = purchase)
-    }
-
+) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
