@@ -2,8 +2,8 @@ package com.bruno13palhano.core.data.repository.sale
 
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalDefaultExcelSheet
-import com.bruno13palhano.core.data.di.InternalSaleLight
-import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.InternalSale
+import com.bruno13palhano.core.data.di.InternalVersion
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.ExcelSheet
 import com.bruno13palhano.core.data.repository.Versions
@@ -21,12 +21,12 @@ import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.Sale
-import com.bruno13palhano.core.network.access.SaleNetwork
-import com.bruno13palhano.core.network.access.StockNetwork
-import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.DefaultStockNet
-import com.bruno13palhano.core.network.di.FirebaseSaleNet
-import com.bruno13palhano.core.network.di.FirebaseVersionNet
+import com.bruno13palhano.core.network.access.RemoteSaleData
+import com.bruno13palhano.core.network.access.RemoteStockData
+import com.bruno13palhano.core.network.access.RemoteVersionData
+import com.bruno13palhano.core.network.di.RetrofitStock
+import com.bruno13palhano.core.network.di.FirebaseSale
+import com.bruno13palhano.core.network.di.FirebaseVersion
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -38,11 +38,11 @@ import javax.inject.Inject
 internal class DefaultSaleRepository
     @Inject
     constructor(
-        @FirebaseSaleNet private val saleNetwork: SaleNetwork,
-        @DefaultStockNet private val stockNetwork: StockNetwork,
-        @InternalSaleLight private val saleData: SaleData,
-        @InternalVersionLight private val versionData: VersionData,
-        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseSale private val remoteSaleData: RemoteSaleData,
+        @RetrofitStock private val remoteStockData: RemoteStockData,
+        @InternalSale private val saleData: SaleData,
+        @InternalVersion private val versionData: VersionData,
+        @FirebaseVersion private val remoteVersionData: RemoteVersionData,
         @InternalDefaultExcelSheet private val excelSheet: ExcelSheet,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : SaleRepository {
@@ -72,11 +72,11 @@ internal class DefaultSaleRepository
 
                     CoroutineScope(ioDispatcher).launch {
                         try {
-                            saleNetwork.insert(data = netModel)
-                            versionNetwork.insert(data = versionToVersionNet(saleVersion))
+                            remoteSaleData.insert(data = netModel)
+                            remoteVersionData.insert(data = versionToVersionNet(saleVersion))
                             if (!netModel.isOrderedByCustomer) {
-                                stockNetwork.updateItemQuantity(id = netModel.stockId, quantity = quantity)
-                                versionNetwork.insert(data = versionToVersionNet(stockVersion))
+                                remoteStockData.updateItemQuantity(id = netModel.stockId, quantity = quantity)
+                                remoteVersionData.insert(data = versionToVersionNet(stockVersion))
                             }
                             onSuccess(netModel.id)
                         } catch (e: Exception) {
@@ -99,11 +99,11 @@ internal class DefaultSaleRepository
             saleData.update(model = model, version = saleVersion, onError = onError) { newItemQuantity ->
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        saleNetwork.update(data = saleToSaleNet(model))
-                        versionNetwork.update(versionToVersionNet(saleVersion))
+                        remoteSaleData.update(data = saleToSaleNet(model))
+                        remoteVersionData.update(versionToVersionNet(saleVersion))
                         if (!model.isOrderedByCustomer) {
-                            stockNetwork.updateItemQuantity(id = model.stockId, quantity = newItemQuantity)
-                            versionNetwork.update(versionToVersionNet(stockVersion))
+                            remoteStockData.updateItemQuantity(id = model.stockId, quantity = newItemQuantity)
+                            remoteVersionData.update(versionToVersionNet(stockVersion))
                         }
                         onSuccess()
                     } catch (e: Exception) {
@@ -199,8 +199,8 @@ internal class DefaultSaleRepository
             saleData.deleteById(id = id, version = saleVersion, onError = onError) {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        saleNetwork.delete(id = id)
-                        versionNetwork.update(versionToVersionNet(saleVersion))
+                        remoteSaleData.delete(id = id)
+                        remoteVersionData.update(versionToVersionNet(saleVersion))
                         onSuccess()
                     } catch (e: Exception) {
                         onError(Errors.DELETE_SERVER_ERROR)
@@ -272,13 +272,13 @@ internal class DefaultSaleRepository
         override suspend fun syncWith(synchronizer: Synchronizer) =
             synchronizer.syncData(
                 dataVersion = getDataVersion(versionData, Versions.SALE_VERSION_ID),
-                networkVersion = getNetworkVersion(versionNetwork, Versions.SALE_VERSION_ID),
+                networkVersion = getNetworkVersion(remoteVersionData, Versions.SALE_VERSION_ID),
                 dataList = getDataList(saleData),
-                networkList = getNetworkList(saleNetwork).map { saleNetToSale(it) },
+                networkList = getNetworkList(remoteSaleData).map { saleNetToSale(it) },
                 onPush = { deleteIds, saveList, dtVersion ->
-                    deleteIds.forEach { saleNetwork.delete(it) }
-                    saveList.forEach { saleNetwork.insert(saleToSaleNet(it)) }
-                    versionNetwork.insert(versionToVersionNet(dtVersion))
+                    deleteIds.forEach { remoteSaleData.delete(it) }
+                    saveList.forEach { remoteSaleData.insert(saleToSaleNet(it)) }
+                    remoteVersionData.insert(versionToVersionNet(dtVersion))
                 },
                 onPull = { deleteIds, saveList, netVersion ->
                     deleteIds.forEach { saleData.deleteById(it, netVersion, {}) {} }

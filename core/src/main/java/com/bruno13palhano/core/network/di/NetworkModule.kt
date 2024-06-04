@@ -1,29 +1,29 @@
 package com.bruno13palhano.core.network.di
 
-import com.bruno13palhano.core.network.access.CatalogNetwork
-import com.bruno13palhano.core.network.access.CategoryNetwork
-import com.bruno13palhano.core.network.access.CustomerNetwork
-import com.bruno13palhano.core.network.access.ProductNetwork
-import com.bruno13palhano.core.network.access.SaleNetwork
-import com.bruno13palhano.core.network.access.StockNetwork
-import com.bruno13palhano.core.network.access.UserNetwork
-import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.access.impl.CatalogNetworkRetrofit
-import com.bruno13palhano.core.network.access.impl.CategoryNetworkRetrofit
-import com.bruno13palhano.core.network.access.impl.CustomerNetworkRetrofit
-import com.bruno13palhano.core.network.access.impl.DataVersionNetworkRetrofit
-import com.bruno13palhano.core.network.access.impl.ProductNetworkRetrofit
-import com.bruno13palhano.core.network.access.impl.SaleNetworkRetrofit
-import com.bruno13palhano.core.network.access.impl.StockNetworkRetrofit
-import com.bruno13palhano.core.network.access.impl.UserNetworkRetrofit
-import com.bruno13palhano.core.network.access.impl.firebase.CatalogNetworkFirebase
-import com.bruno13palhano.core.network.access.impl.firebase.CategoryNetworkFirebase
-import com.bruno13palhano.core.network.access.impl.firebase.CustomerNetworkFirebase
-import com.bruno13palhano.core.network.access.impl.firebase.DataVersionNetworkFirebase
-import com.bruno13palhano.core.network.access.impl.firebase.ProductNetworkFirebase
-import com.bruno13palhano.core.network.access.impl.firebase.SaleNetworkFirebase
-import com.bruno13palhano.core.network.access.impl.firebase.StockNetworkFirebase
-import com.bruno13palhano.core.network.access.impl.firebase.UserNetworkFirebase
+import com.bruno13palhano.core.network.access.RemoteCatalogData
+import com.bruno13palhano.core.network.access.RemoteCategoryData
+import com.bruno13palhano.core.network.access.RemoteCustomerData
+import com.bruno13palhano.core.network.access.RemoteProductData
+import com.bruno13palhano.core.network.access.RemoteSaleData
+import com.bruno13palhano.core.network.access.RemoteStockData
+import com.bruno13palhano.core.network.access.RemoteUserData
+import com.bruno13palhano.core.network.access.RemoteVersionData
+import com.bruno13palhano.core.network.access.impl.RemoteCatalogRetrofit
+import com.bruno13palhano.core.network.access.impl.RemoteCategoryRetrofit
+import com.bruno13palhano.core.network.access.impl.RemoteCustomerRetrofit
+import com.bruno13palhano.core.network.access.impl.RemoteVersionRetrofit
+import com.bruno13palhano.core.network.access.impl.RemoteProductRetrofit
+import com.bruno13palhano.core.network.access.impl.RemoteSaleRetrofit
+import com.bruno13palhano.core.network.access.impl.RemoteStockRetrofit
+import com.bruno13palhano.core.network.access.impl.RemoteUserRetrofit
+import com.bruno13palhano.core.network.access.impl.firebase.RemoteCatalogFirebase
+import com.bruno13palhano.core.network.access.impl.firebase.RemoteCategoryFirebase
+import com.bruno13palhano.core.network.access.impl.firebase.RemoteCustomerFirebase
+import com.bruno13palhano.core.network.access.impl.firebase.RemoteVersionFirebase
+import com.bruno13palhano.core.network.access.impl.firebase.RemoteProductFirebase
+import com.bruno13palhano.core.network.access.impl.firebase.RemoteSaleFirebase
+import com.bruno13palhano.core.network.access.impl.firebase.RemoteStockFirebase
+import com.bruno13palhano.core.network.access.impl.firebase.RemoteUserFirebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -36,135 +36,135 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Qualifier
-internal annotation class DefaultUserNet
+internal annotation class RetrofitUser
 
 @Qualifier
-internal annotation class FirebaseUserNet
+internal annotation class FirebaseUser
 
 @Qualifier
-internal annotation class DefaultCatalogNet
+internal annotation class RetrofitCatalog
 
 @Qualifier
-internal annotation class FirebaseCatalogNet
+internal annotation class FirebaseCatalog
 
 @Qualifier
-internal annotation class DefaultCategoryNet
+internal annotation class RetrofitCategory
 
 @Qualifier
-internal annotation class FirebaseCategoryNet
+internal annotation class FirebaseCategory
 
 @Qualifier
-internal annotation class DefaultCustomerNet
+internal annotation class RetrofitCustomer
 
 @Qualifier
-internal annotation class FirebaseCustomerNet
+internal annotation class FirebaseCustomer
 
 @Qualifier
-internal annotation class DefaultProductNet
+internal annotation class RetrofitProduct
 
 @Qualifier
-internal annotation class FirebaseProductNet
+internal annotation class FirebaseProduct
 
 @Qualifier
-internal annotation class DefaultSaleNet
+internal annotation class RetrofitSale
 
 @Qualifier
-internal annotation class FirebaseSaleNet
+internal annotation class FirebaseSale
 
 @Qualifier
-internal annotation class DefaultStockNet
+internal annotation class RetrofitStock
 
 @Qualifier
-internal annotation class FirebaseStockNet
+internal annotation class FirebaseStock
 
 @Qualifier
-internal annotation class DefaultVersionNet
+internal annotation class RetrofitVersion
 
 @Qualifier
-internal annotation class FirebaseVersionNet
+internal annotation class FirebaseVersion
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class NetworkModule {
-    @DefaultUserNet
+    @RetrofitUser
     @Singleton
     @Binds
-    abstract fun bindUserNetwork(network: UserNetworkRetrofit): UserNetwork
+    abstract fun bindRetrofitUser(network: RemoteUserRetrofit): RemoteUserData
 
-    @FirebaseUserNet
+    @FirebaseUser
     @Singleton
     @Binds
-    abstract fun bindFirebaseUserNetwork(network: UserNetworkFirebase): UserNetwork
+    abstract fun bindFirebaseUser(network: RemoteUserFirebase): RemoteUserData
 
-    @DefaultCatalogNet
+    @RetrofitCatalog
     @Singleton
     @Binds
-    abstract fun bindCatalogNetwork(network: CatalogNetworkRetrofit): CatalogNetwork
+    abstract fun bindRetrofitCatalog(network: RemoteCatalogRetrofit): RemoteCatalogData
 
-    @FirebaseCatalogNet
+    @FirebaseCatalog
     @Singleton
     @Binds
-    abstract fun bindFirebaseCatalogNetwork(network: CatalogNetworkFirebase): CatalogNetwork
+    abstract fun bindFirebaseCatalog(network: RemoteCatalogFirebase): RemoteCatalogData
 
-    @DefaultCategoryNet
+    @RetrofitCategory
     @Singleton
     @Binds
-    abstract fun bindCategoryNetwork(network: CategoryNetworkRetrofit): CategoryNetwork
+    abstract fun bindRetrofitCategory(network: RemoteCategoryRetrofit): RemoteCategoryData
 
-    @FirebaseCategoryNet
+    @FirebaseCategory
     @Singleton
     @Binds
-    abstract fun bindFirebaseCategoryNetwork(network: CategoryNetworkFirebase): CategoryNetwork
+    abstract fun bindFirebaseCategory(network: RemoteCategoryFirebase): RemoteCategoryData
 
-    @DefaultCustomerNet
+    @RetrofitCustomer
     @Singleton
     @Binds
-    abstract fun bindCustomerNetwork(network: CustomerNetworkRetrofit): CustomerNetwork
+    abstract fun bindRetrofitCustomer(network: RemoteCustomerRetrofit): RemoteCustomerData
 
-    @FirebaseCustomerNet
+    @FirebaseCustomer
     @Singleton
     @Binds
-    abstract fun bindFirebaseCustomerNetwork(network: CustomerNetworkFirebase): CustomerNetwork
+    abstract fun bindFirebaseCustomer(network: RemoteCustomerFirebase): RemoteCustomerData
 
-    @DefaultProductNet
+    @RetrofitProduct
     @Singleton
     @Binds
-    abstract fun bindProductNetwork(network: ProductNetworkRetrofit): ProductNetwork
+    abstract fun bindRetrofitProduct(network: RemoteProductRetrofit): RemoteProductData
 
-    @FirebaseProductNet
+    @FirebaseProduct
     @Singleton
     @Binds
-    abstract fun bindFirebaseProductNetwork(network: ProductNetworkFirebase): ProductNetwork
+    abstract fun bindFirebaseProduct(network: RemoteProductFirebase): RemoteProductData
 
-    @DefaultSaleNet
+    @RetrofitSale
     @Singleton
     @Binds
-    abstract fun bindSaleNetwork(network: SaleNetworkRetrofit): SaleNetwork
+    abstract fun bindRetrofitSale(network: RemoteSaleRetrofit): RemoteSaleData
 
-    @FirebaseSaleNet
+    @FirebaseSale
     @Singleton
     @Binds
-    abstract fun bindFirebaseSaleNetwork(network: SaleNetworkFirebase): SaleNetwork
+    abstract fun bindFirebaseSale(network: RemoteSaleFirebase): RemoteSaleData
 
-    @DefaultStockNet
+    @RetrofitStock
     @Singleton
     @Binds
-    abstract fun bindStockNetwork(network: StockNetworkRetrofit): StockNetwork
+    abstract fun bindRetrofitStock(network: RemoteStockRetrofit): RemoteStockData
 
-    @FirebaseStockNet
+    @FirebaseStock
     @Singleton
     @Binds
-    abstract fun bindFirebaseStockNetwork(network: StockNetworkFirebase): StockNetwork
+    abstract fun bindFirebaseStock(network: RemoteStockFirebase): RemoteStockData
 
-    @DefaultVersionNet
+    @RetrofitVersion
     @Singleton
     @Binds
-    abstract fun bindVersionNetwork(network: DataVersionNetworkRetrofit): VersionNetwork
+    abstract fun bindRetrofitVersion(network: RemoteVersionRetrofit): RemoteVersionData
 
-    @FirebaseVersionNet
+    @FirebaseVersion
     @Singleton
     @Binds
-    abstract fun bindFirebaseVersionNetwork(network: DataVersionNetworkFirebase): VersionNetwork
+    abstract fun bindFirebaseVersion(network: RemoteVersionFirebase): RemoteVersionData
 }
 
 @InstallIn(SingletonComponent::class)

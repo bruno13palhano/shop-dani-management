@@ -1,8 +1,8 @@
 package com.bruno13palhano.core.data.repository.product
 
 import com.bruno13palhano.core.data.di.Dispatcher
-import com.bruno13palhano.core.data.di.InternalProductLight
-import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.InternalProduct
+import com.bruno13palhano.core.data.di.InternalVersion
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.getDataList
@@ -15,10 +15,10 @@ import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.Product
-import com.bruno13palhano.core.network.access.ProductNetwork
-import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.FirebaseProductNet
-import com.bruno13palhano.core.network.di.FirebaseVersionNet
+import com.bruno13palhano.core.network.access.RemoteProductData
+import com.bruno13palhano.core.network.access.RemoteVersionData
+import com.bruno13palhano.core.network.di.FirebaseProduct
+import com.bruno13palhano.core.network.di.FirebaseVersion
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,10 +30,10 @@ import javax.inject.Inject
 internal class DefaultProductRepository
     @Inject
     constructor(
-        @FirebaseProductNet private val productNetwork: ProductNetwork,
-        @InternalProductLight private val productData: ProductData,
-        @InternalVersionLight private val versionData: VersionData,
-        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseProduct private val remoteProductData: RemoteProductData,
+        @InternalProduct private val productData: ProductData,
+        @InternalVersion private val versionData: VersionData,
+        @FirebaseVersion private val remoteVersionData: RemoteVersionData,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : ProductRepository {
         override suspend fun insert(
@@ -62,8 +62,8 @@ internal class DefaultProductRepository
 
                     CoroutineScope(ioDispatcher).launch {
                         try {
-                            productNetwork.insert(data = netModel)
-                            versionNetwork.insert(data = versionToVersionNet(productVersion))
+                            remoteProductData.insert(data = netModel)
+                            remoteVersionData.insert(data = versionToVersionNet(productVersion))
                             onSuccess(netModel.id)
                         } catch (e: Exception) {
                             onError(Errors.INSERT_SERVER_ERROR)
@@ -84,8 +84,8 @@ internal class DefaultProductRepository
             productData.update(model = model, version = productVersion, onError = onError) {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        productNetwork.insert(data = productToProductNet(model))
-                        versionNetwork.insert(data = versionToVersionNet(productVersion))
+                        remoteProductData.insert(data = productToProductNet(model))
+                        remoteVersionData.insert(data = versionToVersionNet(productVersion))
                         onSuccess()
                     } catch (e: Exception) {
                         onError(Errors.UPDATE_SERVER_ERROR)
@@ -124,8 +124,8 @@ internal class DefaultProductRepository
             productData.deleteById(id = id, version = productVersion, onError = onError) {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        productNetwork.delete(id = id)
-                        versionNetwork.update(data = versionToVersionNet(productVersion))
+                        remoteProductData.delete(id = id)
+                        remoteVersionData.update(data = versionToVersionNet(productVersion))
                         onSuccess()
                     } catch (e: Exception) {
                         onError(Errors.DELETE_SERVER_ERROR)
@@ -149,13 +149,13 @@ internal class DefaultProductRepository
         override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
             synchronizer.syncData(
                 dataVersion = getDataVersion(versionData, Versions.PRODUCT_VERSION_ID),
-                networkVersion = getNetworkVersion(versionNetwork, Versions.PRODUCT_VERSION_ID),
+                networkVersion = getNetworkVersion(remoteVersionData, Versions.PRODUCT_VERSION_ID),
                 dataList = getDataList(productData),
-                networkList = getNetworkList(productNetwork).map { productNetToProduct(it) },
+                networkList = getNetworkList(remoteProductData).map { productNetToProduct(it) },
                 onPush = { deleteIds, saveList, dtVersion ->
-                    deleteIds.forEach { productNetwork.delete(it) }
-                    saveList.forEach { productNetwork.insert(productToProductNet(it)) }
-                    versionNetwork.insert(versionToVersionNet(dtVersion))
+                    deleteIds.forEach { remoteProductData.delete(it) }
+                    saveList.forEach { remoteProductData.insert(productToProductNet(it)) }
+                    remoteVersionData.insert(versionToVersionNet(dtVersion))
                 },
                 onPull = { deleteIds, saveList, netVersion ->
                     deleteIds.forEach { productData.deleteById(it, netVersion, {}) {} }

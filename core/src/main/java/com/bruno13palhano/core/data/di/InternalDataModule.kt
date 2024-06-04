@@ -3,22 +3,22 @@ package com.bruno13palhano.core.data.di
 import com.bruno13palhano.core.data.repository.DefaultExcelSheet
 import com.bruno13palhano.core.data.repository.ExcelSheet
 import com.bruno13palhano.core.data.repository.catalog.CatalogData
-import com.bruno13palhano.core.data.repository.catalog.DefaultCatalogData
+import com.bruno13palhano.core.data.repository.catalog.LocalCatalogData
 import com.bruno13palhano.core.data.repository.category.CategoryData
-import com.bruno13palhano.core.data.repository.category.DefaultCategoryData
+import com.bruno13palhano.core.data.repository.category.LocalCategoryData
 import com.bruno13palhano.core.data.repository.customer.CustomerData
-import com.bruno13palhano.core.data.repository.customer.DefaultCustomerData
-import com.bruno13palhano.core.data.repository.product.DefaultProductData
+import com.bruno13palhano.core.data.repository.customer.LocalCustomerData
+import com.bruno13palhano.core.data.repository.product.LocalProductData
 import com.bruno13palhano.core.data.repository.product.ProductData
-import com.bruno13palhano.core.data.repository.sale.DefaultSaleData
+import com.bruno13palhano.core.data.repository.sale.LocalSaleData
 import com.bruno13palhano.core.data.repository.sale.SaleData
-import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheData
+import com.bruno13palhano.core.data.repository.searchcache.LocalSearchCacheData
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheData
-import com.bruno13palhano.core.data.repository.stock.DefaultStockData
+import com.bruno13palhano.core.data.repository.stock.LocalStockData
 import com.bruno13palhano.core.data.repository.stock.StockData
-import com.bruno13palhano.core.data.repository.user.DefaultUserData
+import com.bruno13palhano.core.data.repository.user.LocalUserData
 import com.bruno13palhano.core.data.repository.user.UserData
-import com.bruno13palhano.core.data.repository.version.DefaultVersionData
+import com.bruno13palhano.core.data.repository.version.LocalVersionData
 import com.bruno13palhano.core.data.repository.version.VersionData
 import dagger.Binds
 import dagger.Module
@@ -28,31 +28,31 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Qualifier
-internal annotation class InternalUserLight
+internal annotation class InternalUser
 
 @Qualifier
-internal annotation class InternalCategoryLight
+internal annotation class InternalCategory
 
 @Qualifier
-internal annotation class InternalCustomerLight
+internal annotation class InternalCustomer
 
 @Qualifier
-internal annotation class InternalProductLight
+internal annotation class InternalProduct
 
 @Qualifier
-internal annotation class InternalSaleLight
+internal annotation class InternalSale
 
 @Qualifier
-internal annotation class InternalSearchCacheLight
+internal annotation class InternalSearchCache
 
 @Qualifier
-internal annotation class InternalStockLight
+internal annotation class InternalStock
 
 @Qualifier
-internal annotation class InternalCatalogLight
+internal annotation class InternalCatalog
 
 @Qualifier
-internal annotation class InternalVersionLight
+internal annotation class InternalVersion
 
 @Qualifier
 internal annotation class InternalDefaultExcelSheet
@@ -60,50 +60,50 @@ internal annotation class InternalDefaultExcelSheet
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class InternalDataModule {
-    @InternalUserLight
+    @InternalUser
     @Singleton
     @Binds
-    abstract fun bindInternalUserData(data: DefaultUserData): UserData
+    abstract fun bindInternalUser(data: LocalUserData): UserData
 
-    @InternalCategoryLight
+    @InternalCategory
     @Singleton
     @Binds
-    abstract fun bindInternalCategoryData(data: DefaultCategoryData): CategoryData
+    abstract fun bindInternalCategory(data: LocalCategoryData): CategoryData
 
-    @InternalCustomerLight
+    @InternalCustomer
     @Singleton
     @Binds
-    abstract fun bindInternalCustomerData(data: DefaultCustomerData): CustomerData
+    abstract fun bindInternalCustomer(data: LocalCustomerData): CustomerData
 
-    @InternalProductLight
+    @InternalProduct
     @Singleton
     @Binds
-    abstract fun bindInternalProductData(data: DefaultProductData): ProductData
+    abstract fun bindInternalProduct(data: LocalProductData): ProductData
 
-    @InternalSaleLight
+    @InternalSale
     @Singleton
     @Binds
-    abstract fun bindInternalSaleData(data: DefaultSaleData): SaleData
+    abstract fun bindInternalSale(data: LocalSaleData): SaleData
 
-    @InternalSearchCacheLight
+    @InternalSearchCache
     @Singleton
     @Binds
-    abstract fun bindInternalSearchCacheData(data: DefaultSearchCacheData): SearchCacheData
+    abstract fun bindInternalSearchCache(data: LocalSearchCacheData): SearchCacheData
 
-    @InternalStockLight
+    @InternalStock
     @Singleton
     @Binds
-    abstract fun bindInternalStockData(data: DefaultStockData): StockData
+    abstract fun bindInternalStock(data: LocalStockData): StockData
 
-    @InternalCatalogLight
+    @InternalCatalog
     @Singleton
     @Binds
-    abstract fun bindInternalCatalogData(data: DefaultCatalogData): CatalogData
+    abstract fun bindInternalCatalog(data: LocalCatalogData): CatalogData
 
-    @InternalVersionLight
+    @InternalVersion
     @Singleton
     @Binds
-    abstract fun bindInternalVersionData(data: DefaultVersionData): VersionData
+    abstract fun bindInternalVersion(data: LocalVersionData): VersionData
 
     @InternalDefaultExcelSheet
     @Singleton

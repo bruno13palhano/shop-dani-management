@@ -1,8 +1,8 @@
 package com.bruno13palhano.core.data.repository.catalog
 
 import com.bruno13palhano.core.data.di.Dispatcher
-import com.bruno13palhano.core.data.di.InternalCatalogLight
-import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.InternalCatalog
+import com.bruno13palhano.core.data.di.InternalVersion
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.catalogNetToCatalog
@@ -14,10 +14,10 @@ import com.bruno13palhano.core.data.repository.getNetworkVersion
 import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Catalog
-import com.bruno13palhano.core.network.access.CatalogNetwork
-import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.FirebaseCatalogNet
-import com.bruno13palhano.core.network.di.FirebaseVersionNet
+import com.bruno13palhano.core.network.access.RemoteCatalogData
+import com.bruno13palhano.core.network.access.RemoteVersionData
+import com.bruno13palhano.core.network.di.FirebaseCatalog
+import com.bruno13palhano.core.network.di.FirebaseVersion
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -29,10 +29,10 @@ import javax.inject.Inject
 internal class DefaultCatalogRepository
     @Inject
     constructor(
-        @FirebaseCatalogNet private val catalogNetwork: CatalogNetwork,
-        @InternalCatalogLight private val catalogData: CatalogData,
-        @InternalVersionLight private val versionData: VersionData,
-        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseCatalog private val remoteCatalogData: RemoteCatalogData,
+        @InternalCatalog private val catalogData: CatalogData,
+        @InternalVersion private val versionData: VersionData,
+        @FirebaseVersion private val remoteVersionData: RemoteVersionData,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : CatalogRepository {
         override suspend fun insert(
@@ -61,8 +61,8 @@ internal class DefaultCatalogRepository
 
                     CoroutineScope(ioDispatcher).launch {
                         try {
-                            catalogNetwork.insert(data = netModel)
-                            versionNetwork.insert(data = versionToVersionNet(catalogVersion))
+                            remoteCatalogData.insert(data = netModel)
+                            remoteVersionData.insert(data = versionToVersionNet(catalogVersion))
                             onSuccess(netModel.id)
                         } catch (e: Exception) {
                             onError(4)
@@ -83,8 +83,8 @@ internal class DefaultCatalogRepository
             catalogData.update(model = model, version = catalogVersion, onError = onError) {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        catalogNetwork.update(data = catalogToCatalogNet(model))
-                        versionNetwork.update(data = versionToVersionNet(catalogVersion))
+                        remoteCatalogData.update(data = catalogToCatalogNet(model))
+                        remoteVersionData.update(data = versionToVersionNet(catalogVersion))
                         onSuccess()
                     } catch (e: Exception) {
                         onError(5)
@@ -104,8 +104,8 @@ internal class DefaultCatalogRepository
             catalogData.deleteById(id = id, version = catalogVersion, onError = onError) {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        catalogNetwork.delete(id = id)
-                        versionNetwork.update(data = versionToVersionNet(catalogVersion))
+                        remoteCatalogData.delete(id = id)
+                        remoteVersionData.update(data = versionToVersionNet(catalogVersion))
                         onSuccess()
                     } catch (e: Exception) {
                         onError(6)
@@ -137,13 +137,13 @@ internal class DefaultCatalogRepository
         override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
             synchronizer.syncData(
                 dataVersion = getDataVersion(versionData, Versions.CATALOG_VERSION_ID),
-                networkVersion = getNetworkVersion(versionNetwork, Versions.CATALOG_VERSION_ID),
+                networkVersion = getNetworkVersion(remoteVersionData, Versions.CATALOG_VERSION_ID),
                 dataList = getDataList(catalogData),
-                networkList = getNetworkList(catalogNetwork).map { catalogNetToCatalog(it) },
+                networkList = getNetworkList(remoteCatalogData).map { catalogNetToCatalog(it) },
                 onPush = { deleteIds, saveList, dtVersion ->
-                    deleteIds.forEach { catalogNetwork.delete(it) }
-                    saveList.forEach { catalogNetwork.insert(catalogToCatalogNet(it)) }
-                    versionNetwork.insert(versionToVersionNet(dtVersion))
+                    deleteIds.forEach { remoteCatalogData.delete(it) }
+                    saveList.forEach { remoteCatalogData.insert(catalogToCatalogNet(it)) }
+                    remoteVersionData.insert(versionToVersionNet(dtVersion))
                 },
                 onPull = { deleteIds, saveList, netVersion ->
                     deleteIds.forEach { catalogData.deleteById(it, netVersion, {}) {} }

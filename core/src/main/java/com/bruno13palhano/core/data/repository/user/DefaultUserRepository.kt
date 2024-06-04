@@ -1,15 +1,15 @@
 package com.bruno13palhano.core.data.repository.user
 
 import com.bruno13palhano.core.data.di.Dispatcher
-import com.bruno13palhano.core.data.di.InternalUserLight
+import com.bruno13palhano.core.data.di.InternalUser
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.userNetToUser
 import com.bruno13palhano.core.data.repository.userToUserNet
 import com.bruno13palhano.core.model.User
 import com.bruno13palhano.core.network.SessionManager
-import com.bruno13palhano.core.network.access.UserNetwork
+import com.bruno13palhano.core.network.access.RemoteUserData
 import com.bruno13palhano.core.network.di.DefaultSessionManager
-import com.bruno13palhano.core.network.di.FirebaseUserNet
+import com.bruno13palhano.core.network.di.FirebaseUser
 import com.bruno13palhano.core.network.model.UserNet
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -22,8 +22,8 @@ import javax.inject.Inject
 internal class DefaultUserRepository
     @Inject
     constructor(
-        @FirebaseUserNet private val userNetwork: UserNetwork,
-        @InternalUserLight private val userData: UserData,
+        @FirebaseUser private val remoteUserData: RemoteUserData,
+        @InternalUser private val userData: UserData,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
         @DefaultSessionManager private val sessionManager: SessionManager,
     ) : UserRepository {
@@ -32,7 +32,7 @@ internal class DefaultUserRepository
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit,
         ) {
-            userNetwork.login(
+            remoteUserData.login(
                 user = userToUserNet(user),
                 onError = onError,
             ) {
@@ -52,7 +52,7 @@ internal class DefaultUserRepository
             onError: (error: Int) -> Unit,
             onSuccess: (id: Long) -> Unit,
         ) {
-            userNetwork.create(
+            remoteUserData.create(
                 user = userToUserNet(user),
                 onError = onError,
             ) { userNet ->
@@ -71,7 +71,7 @@ internal class DefaultUserRepository
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit,
         ) {
-            userNetwork.update(
+            remoteUserData.update(
                 user = userToUserNet(user),
                 onError = onError,
             ) {
@@ -108,7 +108,7 @@ internal class DefaultUserRepository
             token?.let {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        val authenticated = userNetwork.authenticated(it)
+                        val authenticated = remoteUserData.authenticated(it)
                         if (!authenticated) {
                             saveToken(token = "")
                         }
@@ -127,7 +127,7 @@ internal class DefaultUserRepository
             token?.let {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        val authenticated = userNetwork.authenticated(it)
+                        val authenticated = remoteUserData.authenticated(it)
                         if (!authenticated) {
                             saveToken(token = "")
                         }
@@ -155,7 +155,7 @@ internal class DefaultUserRepository
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit,
         ) {
-            userNetwork.updateUserPassword(
+            remoteUserData.updateUserPassword(
                 user = userToUserNet(user),
                 onError = onError,
             ) {
@@ -186,7 +186,7 @@ internal class DefaultUserRepository
             onError: (error: Int) -> Unit,
             onSuccess: (id: Long) -> Unit,
         ) {
-            val newUser = userNetwork.getByUsername(username = username)
+            val newUser = remoteUserData.getByUsername(username = username)
             sessionManager.saveCurrentUserId(id = newUser.id)
             userData.insert(
                 user = userNetToUser(newUser),

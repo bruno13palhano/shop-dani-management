@@ -4,8 +4,8 @@ import com.bruno13palhano.core.data.DataOperations
 import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.model.DataVersion
 import com.bruno13palhano.core.model.Model
-import com.bruno13palhano.core.network.access.CrudNetwork
-import com.bruno13palhano.core.network.access.VersionNetwork
+import com.bruno13palhano.core.network.access.Remote
+import com.bruno13palhano.core.network.access.RemoteVersionData
 import com.bruno13palhano.core.network.model.DataVersionNet
 import kotlinx.coroutines.flow.first
 
@@ -19,10 +19,10 @@ suspend fun getDataVersion(
 }
 
 suspend fun getNetworkVersion(
-    versionNetwork: VersionNetwork,
+    remoteVersionData: RemoteVersionData,
     id: Long,
 ) = try {
-    versionNetwork.getAll().find { it.id == id }!!
+    remoteVersionData.getAll().find { it.id == id }!!
 } catch (ignored: Exception) {
     DataVersionNet()
 }
@@ -34,7 +34,7 @@ suspend fun <T : Model> getDataList(data: DataOperations<T>) =
         emptyList()
     }
 
-suspend fun <T : Model> getNetworkList(network: CrudNetwork<T>) =
+suspend fun <T : Model> getNetworkList(network: Remote<T>) =
     try {
         network.getAll()
     } catch (ignored: Exception) {

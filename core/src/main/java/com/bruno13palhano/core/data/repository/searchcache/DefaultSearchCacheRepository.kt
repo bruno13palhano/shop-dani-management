@@ -1,6 +1,6 @@
 package com.bruno13palhano.core.data.repository.searchcache
 
-import com.bruno13palhano.core.data.di.InternalSearchCacheLight
+import com.bruno13palhano.core.data.di.InternalSearchCache
 import com.bruno13palhano.core.model.SearchCache
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -8,7 +8,7 @@ import javax.inject.Inject
 internal class DefaultSearchCacheRepository
     @Inject
     constructor(
-        @InternalSearchCacheLight private val searchCacheData: SearchCacheData,
+        @InternalSearchCache private val searchCacheData: SearchCacheData,
     ) : SearchCacheRepository {
         override suspend fun insert(model: SearchCache): Long {
             return searchCacheData.insert(model = model)

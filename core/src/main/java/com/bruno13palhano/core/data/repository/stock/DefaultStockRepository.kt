@@ -1,8 +1,8 @@
 package com.bruno13palhano.core.data.repository.stock
 
 import com.bruno13palhano.core.data.di.Dispatcher
-import com.bruno13palhano.core.data.di.InternalStockLight
-import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.InternalStock
+import com.bruno13palhano.core.data.di.InternalVersion
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.getDataList
@@ -15,10 +15,10 @@ import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Errors
 import com.bruno13palhano.core.model.StockItem
-import com.bruno13palhano.core.network.access.StockNetwork
-import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.FirebaseStockNet
-import com.bruno13palhano.core.network.di.FirebaseVersionNet
+import com.bruno13palhano.core.network.access.RemoteStockData
+import com.bruno13palhano.core.network.access.RemoteVersionData
+import com.bruno13palhano.core.network.di.FirebaseStock
+import com.bruno13palhano.core.network.di.FirebaseVersion
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,10 +30,10 @@ import javax.inject.Inject
 internal class DefaultStockRepository
     @Inject
     constructor(
-        @FirebaseStockNet private val stockNetwork: StockNetwork,
-        @InternalStockLight private val stockData: StockData,
-        @InternalVersionLight private val versionData: VersionData,
-        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseStock private val remoteStockData: RemoteStockData,
+        @InternalStock private val stockData: StockData,
+        @InternalVersion private val versionData: VersionData,
+        @FirebaseVersion private val remoteVersionData: RemoteVersionData,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : StockRepository {
         override suspend fun insert(
@@ -71,8 +71,8 @@ internal class DefaultStockRepository
 
                     CoroutineScope(ioDispatcher).launch {
                         try {
-                            stockNetwork.insert(data = netModel)
-                            versionNetwork.insert(data = versionToVersionNet(stockOrderVersion))
+                            remoteStockData.insert(data = netModel)
+                            remoteVersionData.insert(data = versionToVersionNet(stockOrderVersion))
                             onSuccess(netModel.id)
                         } catch (e: Exception) {
                             onError(Errors.INSERT_SERVER_ERROR)
@@ -93,8 +93,8 @@ internal class DefaultStockRepository
             stockData.update(model = model, version = stockOrderVersion, onError = onError) {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        stockNetwork.update(data = stockItemToStockItemNet(model))
-                        versionNetwork.insert(data = versionToVersionNet(stockOrderVersion))
+                        remoteStockData.update(data = stockItemToStockItemNet(model))
+                        remoteVersionData.insert(data = versionToVersionNet(stockOrderVersion))
                         onSuccess()
                     } catch (e: Exception) {
                         onError(Errors.UPDATE_SERVER_ERROR)
@@ -138,8 +138,8 @@ internal class DefaultStockRepository
             stockData.deleteById(id = id, version = stockOrderVersion, onError = onError) {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        stockNetwork.delete(id = id)
-                        versionNetwork.update(data = versionToVersionNet(stockOrderVersion))
+                        remoteStockData.delete(id = id)
+                        remoteVersionData.update(data = versionToVersionNet(stockOrderVersion))
                         onSuccess()
                     } catch (e: Exception) {
                         onError(Errors.DELETE_SERVER_ERROR)
@@ -183,13 +183,13 @@ internal class DefaultStockRepository
         override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
             synchronizer.syncData(
                 dataVersion = getDataVersion(versionData, Versions.STOCK_VERSION_ID),
-                networkVersion = getNetworkVersion(versionNetwork, Versions.STOCK_VERSION_ID),
+                networkVersion = getNetworkVersion(remoteVersionData, Versions.STOCK_VERSION_ID),
                 dataList = getDataList(stockData),
-                networkList = getNetworkList(stockNetwork).map { stockItemNetToStockItem(it) },
+                networkList = getNetworkList(remoteStockData).map { stockItemNetToStockItem(it) },
                 onPush = { deleteIds, saveList, dtVersion ->
-                    deleteIds.forEach { stockNetwork.delete(it) }
-                    saveList.forEach { stockNetwork.insert(stockItemToStockItemNet(it)) }
-                    versionNetwork.insert(versionToVersionNet(dtVersion))
+                    deleteIds.forEach { remoteStockData.delete(it) }
+                    saveList.forEach { remoteStockData.insert(stockItemToStockItemNet(it)) }
+                    remoteVersionData.insert(versionToVersionNet(dtVersion))
                 },
                 onPull = { deleteIds, saveList, netVersion ->
                     deleteIds.forEach { stockData.deleteById(it, netVersion, {}) {} }

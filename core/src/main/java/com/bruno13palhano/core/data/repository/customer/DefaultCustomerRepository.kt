@@ -1,8 +1,8 @@
 package com.bruno13palhano.core.data.repository.customer
 
 import com.bruno13palhano.core.data.di.Dispatcher
-import com.bruno13palhano.core.data.di.InternalCustomerLight
-import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.InternalCustomer
+import com.bruno13palhano.core.data.di.InternalVersion
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.customerNetToCustomer
@@ -15,10 +15,10 @@ import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Customer
 import com.bruno13palhano.core.model.Errors
-import com.bruno13palhano.core.network.access.CustomerNetwork
-import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.FirebaseCustomerNet
-import com.bruno13palhano.core.network.di.FirebaseVersionNet
+import com.bruno13palhano.core.network.access.RemoteCustomerData
+import com.bruno13palhano.core.network.access.RemoteVersionData
+import com.bruno13palhano.core.network.di.FirebaseCustomer
+import com.bruno13palhano.core.network.di.FirebaseVersion
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,10 +30,10 @@ import javax.inject.Inject
 internal class DefaultCustomerRepository
     @Inject
     constructor(
-        @FirebaseCustomerNet private val customerNetwork: CustomerNetwork,
-        @InternalCustomerLight private val customerData: CustomerData,
-        @InternalVersionLight private val versionData: VersionData,
-        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseCustomer private val remoteCustomerData: RemoteCustomerData,
+        @InternalCustomer private val customerData: CustomerData,
+        @InternalVersion private val versionData: VersionData,
+        @FirebaseVersion private val remoteVersionData: RemoteVersionData,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : CustomerRepository {
         override suspend fun insert(
@@ -63,8 +63,8 @@ internal class DefaultCustomerRepository
 
                     CoroutineScope(ioDispatcher).launch {
                         try {
-                            customerNetwork.insert(data = netModel)
-                            versionNetwork.insert(data = versionToVersionNet(customerVersion))
+                            remoteCustomerData.insert(data = netModel)
+                            remoteVersionData.insert(data = versionToVersionNet(customerVersion))
                             onSuccess(netModel.id)
                         } catch (e: Exception) {
                             onError(Errors.INSERT_SERVER_ERROR)
@@ -85,8 +85,8 @@ internal class DefaultCustomerRepository
             customerData.update(model = model, version = customerVersion, onError = onError) {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        customerNetwork.update(data = customerToCustomerNet(model))
-                        versionNetwork.update(data = versionToVersionNet(customerVersion))
+                        remoteCustomerData.update(data = customerToCustomerNet(model))
+                        remoteVersionData.update(data = versionToVersionNet(customerVersion))
                         onSuccess()
                     } catch (e: Exception) {
                         onError(Errors.UPDATE_SERVER_ERROR)
@@ -106,8 +106,8 @@ internal class DefaultCustomerRepository
             customerData.deleteById(id = id, version = customerVersion, onError = onError) {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        customerNetwork.delete(id = id)
-                        versionNetwork.update(data = versionToVersionNet(customerVersion))
+                        remoteCustomerData.delete(id = id)
+                        remoteVersionData.update(data = versionToVersionNet(customerVersion))
                         onSuccess()
                     } catch (e: Exception) {
                         onError(Errors.DELETE_SERVER_ERROR)
@@ -143,17 +143,17 @@ internal class DefaultCustomerRepository
         override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
             synchronizer.syncData(
                 dataVersion = getDataVersion(versionData, Versions.CUSTOMER_VERSION_ID),
-                networkVersion = getNetworkVersion(versionNetwork, Versions.CUSTOMER_VERSION_ID),
+                networkVersion = getNetworkVersion(remoteVersionData, Versions.CUSTOMER_VERSION_ID),
                 dataList = getDataList(customerData),
                 networkList =
-                    getNetworkList(customerNetwork).map {
+                    getNetworkList(remoteCustomerData).map {
                         println(it)
                         customerNetToCustomer(it)
                     },
                 onPush = { deleteIds, saveList, dtVersion ->
-                    deleteIds.forEach { customerNetwork.delete(it) }
-                    saveList.forEach { customerNetwork.insert(customerToCustomerNet(it)) }
-                    versionNetwork.insert(versionToVersionNet(dtVersion))
+                    deleteIds.forEach { remoteCustomerData.delete(it) }
+                    saveList.forEach { remoteCustomerData.insert(customerToCustomerNet(it)) }
+                    remoteVersionData.insert(versionToVersionNet(dtVersion))
                 },
                 onPull = { deleteIds, saveList, netVersion ->
                     deleteIds.forEach { customerData.deleteById(it, netVersion, {}) {} }

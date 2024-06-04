@@ -1,8 +1,8 @@
 package com.bruno13palhano.core.data.repository.category
 
 import com.bruno13palhano.core.data.di.Dispatcher
-import com.bruno13palhano.core.data.di.InternalCategoryLight
-import com.bruno13palhano.core.data.di.InternalVersionLight
+import com.bruno13palhano.core.data.di.InternalCategory
+import com.bruno13palhano.core.data.di.InternalVersion
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
 import com.bruno13palhano.core.data.repository.Versions
 import com.bruno13palhano.core.data.repository.categoryNetToCategory
@@ -15,10 +15,10 @@ import com.bruno13palhano.core.data.repository.version.VersionData
 import com.bruno13palhano.core.data.repository.versionToVersionNet
 import com.bruno13palhano.core.model.Category
 import com.bruno13palhano.core.model.Errors
-import com.bruno13palhano.core.network.access.CategoryNetwork
-import com.bruno13palhano.core.network.access.VersionNetwork
-import com.bruno13palhano.core.network.di.FirebaseCategoryNet
-import com.bruno13palhano.core.network.di.FirebaseVersionNet
+import com.bruno13palhano.core.network.access.RemoteCategoryData
+import com.bruno13palhano.core.network.access.RemoteVersionData
+import com.bruno13palhano.core.network.di.FirebaseCategory
+import com.bruno13palhano.core.network.di.FirebaseVersion
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,10 +30,10 @@ import javax.inject.Inject
 internal class DefaultCategoryRepository
     @Inject
     constructor(
-        @FirebaseCategoryNet private val categoryNetwork: CategoryNetwork,
-        @InternalCategoryLight private val categoryData: CategoryData,
-        @InternalVersionLight private val versionData: VersionData,
-        @FirebaseVersionNet private val versionNetwork: VersionNetwork,
+        @FirebaseCategory private val remoteCategoryData: RemoteCategoryData,
+        @InternalCategory private val categoryData: CategoryData,
+        @InternalVersion private val versionData: VersionData,
+        @FirebaseVersion private val remoteVersionData: RemoteVersionData,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     ) : CategoryRepository {
         override fun search(value: String): Flow<List<Category>> {
@@ -51,8 +51,8 @@ internal class DefaultCategoryRepository
             categoryData.deleteById(id = id, version = categoryVersion, onError = onError) {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        categoryNetwork.delete(id = id)
-                        versionNetwork.update(data = versionToVersionNet(categoryVersion))
+                        remoteCategoryData.delete(id = id)
+                        remoteVersionData.update(data = versionToVersionNet(categoryVersion))
                         onSuccess()
                     } catch (e: Exception) {
                         onError(Errors.DELETE_SERVER_ERROR)
@@ -76,13 +76,13 @@ internal class DefaultCategoryRepository
         override suspend fun syncWith(synchronizer: Synchronizer): Boolean =
             synchronizer.syncData(
                 dataVersion = getDataVersion(versionData, Versions.CATEGORY_VERSION_ID),
-                networkVersion = getNetworkVersion(versionNetwork, Versions.CATEGORY_VERSION_ID),
+                networkVersion = getNetworkVersion(remoteVersionData, Versions.CATEGORY_VERSION_ID),
                 dataList = getDataList(categoryData),
-                networkList = getNetworkList(categoryNetwork).map { categoryNetToCategory(it) },
+                networkList = getNetworkList(remoteCategoryData).map { categoryNetToCategory(it) },
                 onPush = { deleteIds, saveList, dtVersion ->
-                    deleteIds.forEach { categoryNetwork.delete(it) }
-                    saveList.forEach { categoryNetwork.insert(categoryToCategoryNet(it)) }
-                    versionNetwork.insert(versionToVersionNet(dtVersion))
+                    deleteIds.forEach { remoteCategoryData.delete(it) }
+                    saveList.forEach { remoteCategoryData.insert(categoryToCategoryNet(it)) }
+                    remoteVersionData.insert(versionToVersionNet(dtVersion))
                 },
                 onPull = { deleteIds, saveList, netVersion ->
                     deleteIds.forEach { categoryData.deleteById(it, netVersion, {}) {} }
@@ -101,8 +101,8 @@ internal class DefaultCategoryRepository
             categoryData.update(model = model, version = categoryVersion, onError = onError) {
                 CoroutineScope(ioDispatcher).launch {
                     try {
-                        categoryNetwork.update(data = categoryToCategoryNet(model))
-                        versionNetwork.update(data = versionToVersionNet(categoryVersion))
+                        remoteCategoryData.update(data = categoryToCategoryNet(model))
+                        remoteVersionData.update(data = versionToVersionNet(categoryVersion))
                         onSuccess()
                     } catch (e: Exception) {
                         onError(Errors.UPDATE_SERVER_ERROR)
@@ -131,8 +131,8 @@ internal class DefaultCategoryRepository
 
                     CoroutineScope(ioDispatcher).launch {
                         try {
-                            categoryNetwork.insert(data = netModel)
-                            versionNetwork.insert(data = versionToVersionNet(categoryVersion))
+                            remoteCategoryData.insert(data = netModel)
+                            remoteVersionData.insert(data = versionToVersionNet(categoryVersion))
                             onSuccess(netModel.id)
                         } catch (e: Exception) {
                             e.printStackTrace()
