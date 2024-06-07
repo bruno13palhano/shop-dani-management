@@ -2,7 +2,10 @@ package com.bruno13palhano.shopdanimanagement.ui.screens.customers
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
@@ -31,10 +34,13 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.Cust
 import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun NewCustomerRoute(
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     navigateUp: () -> Unit
 ) {
     showBottomMenu(true)
@@ -43,15 +49,20 @@ fun NewCustomerRoute(
         screenTitle = stringResource(id = R.string.new_customer_label),
         isEditable = false,
         customerId = 0L,
+        sharedTransitionScope = sharedTransitionScope,
+        animatedContentScope = animatedContentScope,
         navigateUp = navigateUp
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun EditCustomerRoute(
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
     customerId: Long,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     navigateUp: () -> Unit
 ) {
     showBottomMenu(true)
@@ -60,15 +71,20 @@ fun EditCustomerRoute(
         screenTitle = stringResource(id = R.string.edit_customer_label),
         isEditable = true,
         customerId = customerId,
+        sharedTransitionScope = sharedTransitionScope,
+        animatedContentScope = animatedContentScope,
         navigateUp = navigateUp
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CustomerScreen(
     screenTitle: String,
     isEditable: Boolean,
     customerId: Long,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     navigateUp: () -> Unit,
     viewModel: CustomerViewModel = hiltViewModel()
 ) {
@@ -127,6 +143,8 @@ fun CustomerScreen(
             phoneNumber = viewModel.phoneNumber,
             gender = viewModel.gender,
             age = viewModel.age,
+            sharedTransitionScope = sharedTransitionScope,
+            animatedContentScope = animatedContentScope,
             onNameChange = viewModel::updateName,
             onEmailChange = viewModel::updateEmail,
             onAddressChange = viewModel::updateAddress,

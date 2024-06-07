@@ -1,23 +1,31 @@
 package com.bruno13palhano.shopdanimanagement.ui.screens.customers
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -29,25 +37,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.bruno13palhano.core.model.CustomerInfo
 import com.bruno13palhano.shopdanimanagement.R
-import com.bruno13palhano.shopdanimanagement.ui.components.BottomSheet
-import com.bruno13palhano.shopdanimanagement.ui.components.CommonPhotoItemList
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.CustomersViewModel
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CustomersRoute(
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
     onItemClick: (id: Long) -> Unit,
@@ -58,6 +71,8 @@ fun CustomersRoute(
     showBottomMenu(true)
     gesturesEnabled(true)
     CustomersScreen(
+        sharedTransitionScope = sharedTransitionScope,
+        animatedContentScope = animatedContentScope,
         onItemClick = onItemClick,
         onSearchClick = onSearchClick,
         onAddButtonClick = onAddButtonClick,
@@ -65,8 +80,11 @@ fun CustomersRoute(
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CustomersScreen(
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     onItemClick: (id: Long) -> Unit,
     onSearchClick: () -> Unit,
     onAddButtonClick: () -> Unit,
@@ -106,6 +124,8 @@ fun CustomersScreen(
         openCustomerBottomSheet = openCustomerBottomSheet,
         chartEntries = chart,
         menuItems = menuItems,
+        sharedTransitionScope = sharedTransitionScope,
+        animatedContentScope = animatedContentScope,
         onItemClick = {
             openCustomerBottomSheet = true
             viewModel.getCustomerInfo(it)
@@ -134,7 +154,7 @@ fun CustomersScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun CustomersContent(
     customerList: List<CommonItem>,
@@ -142,6 +162,8 @@ fun CustomersContent(
     openCustomerBottomSheet: Boolean,
     chartEntries: ChartEntryModelProducer,
     menuItems: Array<String>,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     onItemClick: (id: Long) -> Unit,
     onSearchClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
@@ -213,32 +235,69 @@ fun CustomersContent(
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
         ) {
             items(items = customerList, key = { item -> item.id }) { item ->
-                CommonPhotoItemList(
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    title = item.title,
-                    subtitle = item.subtitle,
-                    photo = item.photo,
-                    onClick = { onItemClick(item.id) }
-                )
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { onEditCustomerClick(item.id) }
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        with(sharedTransitionScope) {
+                            AsyncImage(
+                                modifier =
+                                    Modifier
+                                        .sharedElement(
+                                            sharedTransitionScope.rememberSharedContentState(
+                                                key = "customer-${item.description}"
+                                            ),
+                                            animatedVisibilityScope = animatedContentScope
+                                        )
+                                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                                        .size(64.dp)
+                                        .clip(RoundedCornerShape(5)),
+                                model =
+                                    ImageRequest.Builder(LocalContext.current)
+                                        .data(item.photo)
+                                        .crossfade(true)
+                                        .placeholderMemoryCacheKey("customer-${item.description}")
+                                        .memoryCacheKey("customer-${item.description}")
+                                        .build(),
+                                contentDescription = stringResource(id = R.string.item_image),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+
+                        Column(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .weight(1F, true)
+                        ) {
+                            Text(
+                                modifier =
+                                    Modifier.padding(
+                                        start = 16.dp,
+                                        top = 16.dp,
+                                        end = 16.dp
+                                    ),
+                                text = item.title,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                modifier =
+                                    Modifier.padding(
+                                        start = 16.dp,
+                                        end = 16.dp,
+                                        bottom = 16.dp
+                                    ),
+                                text = item.subtitle,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
             }
-        }
-    }
-
-    AnimatedVisibility(visible = openCustomerBottomSheet) {
-        BottomSheet(onDismissBottomSheet = onDismissCustomerBottomSheet) {
-            val focusManager = LocalFocusManager.current
-
-            CustomerInfoContent(
-                name = customerInfo.name,
-                address = customerInfo.address,
-                photo = customerInfo.photo,
-                owingValue = customerInfo.owingValue,
-                purchasesValue = customerInfo.purchasesValue,
-                lastPurchaseValue = customerInfo.lastPurchaseValue,
-                entry = chartEntries,
-                onEditIconClick = { onEditCustomerClick(customerInfo.id) },
-                onOutsideClick = { focusManager.clearFocus(force = true) }
-            )
         }
     }
 }

@@ -18,6 +18,7 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CustomersDebit
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -27,24 +28,31 @@ fun CustomerDynamicPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            CustomersContent(
-                customerList = customerList,
-                customerInfo = CustomerInfo.emptyCustomerInfo(),
-                openCustomerBottomSheet = false,
-                chartEntries = ChartEntryModelProducer(),
-                menuItems = arrayOf(),
-                onItemClick = {},
-                onSearchClick = {},
-                onMoreOptionsItemClick = {},
-                onEditCustomerClick = {},
-                onDismissCustomerBottomSheet = {},
-                onAddButtonClick = {},
-                onIconMenuClick = {}
-            )
+            SharedTransitionLayout {
+                AnimatedContent(targetState = 0L, label = "") {
+                    CustomersContent(
+                        customerList = customerList,
+                        customerInfo = CustomerInfo.emptyCustomerInfo(),
+                        openCustomerBottomSheet = false,
+                        chartEntries = ChartEntryModelProducer(),
+                        menuItems = arrayOf(),
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this,
+                        onItemClick = {},
+                        onSearchClick = {},
+                        onMoreOptionsItemClick = {},
+                        onEditCustomerClick = {},
+                        onDismissCustomerBottomSheet = {},
+                        onAddButtonClick = { it },
+                        onIconMenuClick = {}
+                    )
+                }
+            }
         }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -56,20 +64,26 @@ fun CustomerPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            CustomersContent(
-                customerList = customerList,
-                customerInfo = CustomerInfo.emptyCustomerInfo(),
-                openCustomerBottomSheet = false,
-                chartEntries = ChartEntryModelProducer(),
-                menuItems = arrayOf(),
-                onItemClick = {},
-                onSearchClick = {},
-                onMoreOptionsItemClick = {},
-                onEditCustomerClick = {},
-                onDismissCustomerBottomSheet = {},
-                onAddButtonClick = {},
-                onIconMenuClick = {}
-            )
+            SharedTransitionLayout {
+                AnimatedContent(targetState = 0L, label = "") {
+                    CustomersContent(
+                        customerList = customerList,
+                        customerInfo = CustomerInfo.emptyCustomerInfo(),
+                        openCustomerBottomSheet = false,
+                        chartEntries = ChartEntryModelProducer(),
+                        menuItems = arrayOf(),
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this,
+                        onItemClick = {},
+                        onSearchClick = {},
+                        onMoreOptionsItemClick = {},
+                        onEditCustomerClick = {},
+                        onDismissCustomerBottomSheet = {},
+                        onAddButtonClick = {},
+                        onIconMenuClick = { it }
+                    )
+                }
+            }
         }
     }
 }

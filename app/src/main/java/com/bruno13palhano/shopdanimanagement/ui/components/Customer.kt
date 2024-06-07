@@ -1,10 +1,13 @@
 package com.bruno13palhano.shopdanimanagement.ui.components
 
-import androidx.compose.foundation.Image
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -13,7 +16,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.LocationCity
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
@@ -30,16 +32,17 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.bruno13palhano.shopdanimanagement.R
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun CustomerContent(
     screenTitle: String,
@@ -52,6 +55,8 @@ fun CustomerContent(
     phoneNumber: String,
     gender: String,
     age: String,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     onNameChange: (name: String) -> Unit,
     onEmailChange: (email: String) -> Unit,
     onAddressChange: (address: String) -> Unit,
@@ -94,37 +99,35 @@ fun CustomerContent(
                 Modifier
                     .padding(it)
                     .fillMaxHeight()
-                    .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+                    .verticalScroll(rememberScrollState())
         ) {
-            ElevatedCard(
-                modifier =
-                    Modifier
-                        .padding(16.dp),
-                onClick = onPhotoClick,
-                shape = RoundedCornerShape(5)
-            ) {
-                if (photo.isEmpty()) {
-                    Image(
+            with(sharedTransitionScope) {
+                ElevatedCard(
+                    modifier = Modifier.padding(8.dp),
+                    onClick = onPhotoClick,
+                    shape = RoundedCornerShape(5)
+                ) {
+                    AsyncImage(
+                        contentScale = ContentScale.Crop,
                         modifier =
                             Modifier
-                                .size(160.dp)
-                                .padding(8.dp)
+                                .sharedElement(
+                                    sharedTransitionScope.rememberSharedContentState(
+                                        key = "customer-$email"
+                                    ),
+                                    animatedVisibilityScope = animatedContentScope
+                                )
+                                .aspectRatio(1f)
+                                .fillMaxWidth()
                                 .clip(RoundedCornerShape(5)),
-                        imageVector = Icons.Filled.Image,
-                        contentDescription = stringResource(id = R.string.customer_photo_label),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    Image(
-                        modifier =
-                            Modifier
-                                .size(160.dp)
-                                .padding(8.dp)
-                                .clip(RoundedCornerShape(5)),
-                        painter = rememberAsyncImagePainter(model = photo),
-                        contentDescription = stringResource(id = R.string.customer_photo_label),
-                        contentScale = ContentScale.Crop
+                        model =
+                            ImageRequest.Builder(LocalContext.current)
+                                .data(photo)
+                                .crossfade(true)
+                                .placeholderMemoryCacheKey("customer-$email")
+                                .memoryCacheKey("customer-$email")
+                                .build(),
+                        contentDescription = stringResource(id = R.string.customer_photo_label)
                     )
                 }
             }

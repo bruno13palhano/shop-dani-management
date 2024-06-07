@@ -1,5 +1,7 @@
 package com.bruno13palhano.shopdanimanagement.ui.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -11,8 +13,10 @@ import com.bruno13palhano.shopdanimanagement.ui.screens.customers.NewCustomerRou
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.SearchCustomersRoute
 import kotlinx.serialization.Serializable
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.customersNavGraph(
     navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
     showBottomMenu: (show: Boolean) -> Unit,
     gesturesEnabled: (enabled: Boolean) -> Unit,
     onIconMenuClick: () -> Unit
@@ -20,6 +24,8 @@ fun NavGraphBuilder.customersNavGraph(
     navigation<MainRoutes.Customers>(startDestination = CustomersRoutes.Main) {
         composable<CustomersRoutes.Main> {
             CustomersRoute(
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = this@composable,
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 onItemClick = { id ->
@@ -47,6 +53,8 @@ fun NavGraphBuilder.customersNavGraph(
 
         composable<CustomersRoutes.NewCustomer> {
             NewCustomerRoute(
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = this@composable,
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 navigateUp = { navController.navigateUp() }
@@ -57,6 +65,8 @@ fun NavGraphBuilder.customersNavGraph(
             val customerId = backStackEntry.toRoute<CustomersRoutes.EditCustomer>().id
 
             EditCustomerRoute(
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = this@composable,
                 showBottomMenu = showBottomMenu,
                 gesturesEnabled = gesturesEnabled,
                 customerId = customerId,

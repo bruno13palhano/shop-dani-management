@@ -50,6 +50,7 @@ fun MainNavGraph(
                 gesturesEnabled = gesturesEnabled
             )
             customersNavGraph(
+                sharedTransitionScope = this@SharedTransitionLayout,
                 navController = navController,
                 showBottomMenu = showBottomMenu,
                 onIconMenuClick = onIconMenuClick,
