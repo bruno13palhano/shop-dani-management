@@ -240,176 +240,173 @@ fun SaleContent(
                         contentDescription = stringResource(id = R.string.product_image_label)
                     )
                 }
+            }
+            CustomTextField(
+                text = productName,
+                onTextChange = {},
+                icon = Icons.Filled.Title,
+                label = stringResource(id = R.string.name_label),
+                placeholder = stringResource(id = R.string.name_label),
+                readOnly = true
+            )
+            CustomIntegerField(
+                value = quantity,
+                onValueChange = onQuantityChange,
+                icon = Icons.Filled.ShoppingBag,
+                label = stringResource(id = R.string.quantity_label),
+                placeholder = stringResource(id = R.string.enter_quantity_label)
+            )
+            CustomClickField(
+                value = customerName,
+                onClick = { openCustomerSheet = true },
+                icon = Icons.Filled.Person,
+                label = stringResource(id = R.string.customer_name_label),
+                placeholder = stringResource(id = R.string.enter_customer_name_label)
+            )
+            CustomClickField(
+                value = dateOfSale,
+                onClick = onDateOfSaleClick,
+                icon = Icons.Filled.EditCalendar,
+                label = stringResource(id = R.string.date_of_sale_label),
+                placeholder = stringResource(id = R.string.enter_date_label)
+            )
+            CustomClickField(
+                value = dateOfPayment,
+                onClick = onDateOfPaymentClick,
+                icon = Icons.Filled.EditCalendar,
+                label = stringResource(id = R.string.date_of_payment_label),
+                placeholder = stringResource(id = R.string.enter_date_label)
+            )
 
-                Column {
-                    CustomTextField(
-                        text = productName,
-                        onTextChange = {},
-                        icon = Icons.Filled.Title,
-                        label = stringResource(id = R.string.name_label),
-                        placeholder = stringResource(id = R.string.name_label),
-                        readOnly = true
+            Row(
+                modifier =
+                    Modifier
+                        .padding(end = 8.dp)
+                        .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                Checkbox(
+                    checked = isAmazon,
+                    onCheckedChange = onIsAmazonChange
+                )
+                Text(text = stringResource(id = R.string.is_amazon_label))
+            }
+
+            AnimatedVisibility(visible = isAmazon) {
+                Column(
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .border(2.dp, MaterialTheme.colorScheme.primary, RectangleShape)
+                ) {
+                    CustomIntegerField(
+                        value = amazonCode,
+                        onValueChange = onAmazonCodeChange,
+                        icon = Icons.Filled.Numbers,
+                        label = stringResource(id = R.string.amazon_code_label),
+                        placeholder = stringResource(id = R.string.enter_amazon_code_label)
                     )
                     CustomIntegerField(
-                        value = quantity,
-                        onValueChange = onQuantityChange,
-                        icon = Icons.Filled.ShoppingBag,
-                        label = stringResource(id = R.string.quantity_label),
-                        placeholder = stringResource(id = R.string.enter_quantity_label)
+                        value = amazonRequestNumber,
+                        onValueChange = onAmazonRequestNumberChange,
+                        icon = Icons.Filled.Numbers,
+                        label = stringResource(id = R.string.amazon_request_number_label),
+                        placeholder =
+                            stringResource(
+                                id = R.string.enter_amazon_request_number_label
+                            )
                     )
-                    CustomClickField(
-                        value = customerName,
-                        onClick = { openCustomerSheet = true },
-                        icon = Icons.Filled.Person,
-                        label = stringResource(id = R.string.customer_name_label),
-                        placeholder = stringResource(id = R.string.enter_customer_name_label)
-                    )
-                    CustomClickField(
-                        value = dateOfSale,
-                        onClick = onDateOfSaleClick,
-                        icon = Icons.Filled.EditCalendar,
-                        label = stringResource(id = R.string.date_of_sale_label),
-                        placeholder = stringResource(id = R.string.enter_date_label)
-                    )
-                    CustomClickField(
-                        value = dateOfPayment,
-                        onClick = onDateOfPaymentClick,
-                        icon = Icons.Filled.EditCalendar,
-                        label = stringResource(id = R.string.date_of_payment_label),
-                        placeholder = stringResource(id = R.string.enter_date_label)
-                    )
-
-                    Row(
-                        modifier =
-                            Modifier
-                                .padding(end = 8.dp)
-                                .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        Checkbox(
-                            checked = isAmazon,
-                            onCheckedChange = onIsAmazonChange
-                        )
-                        Text(text = stringResource(id = R.string.is_amazon_label))
-                    }
-
-                    AnimatedVisibility(visible = isAmazon) {
-                        Column(
-                            modifier =
-                                Modifier
-                                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                                    .border(2.dp, MaterialTheme.colorScheme.primary, RectangleShape)
-                        ) {
-                            CustomIntegerField(
-                                value = amazonCode,
-                                onValueChange = onAmazonCodeChange,
-                                icon = Icons.Filled.Numbers,
-                                label = stringResource(id = R.string.amazon_code_label),
-                                placeholder = stringResource(id = R.string.enter_amazon_code_label)
-                            )
-                            CustomIntegerField(
-                                value = amazonRequestNumber,
-                                onValueChange = onAmazonRequestNumberChange,
-                                icon = Icons.Filled.Numbers,
-                                label = stringResource(id = R.string.amazon_request_number_label),
-                                placeholder =
-                                    stringResource(
-                                        id = R.string.enter_amazon_request_number_label
-                                    )
-                            )
-                            CustomFloatField(
-                                value = amazonPrice,
-                                onValueChange = onAmazonPriceChange,
-                                icon = Icons.Filled.Paid,
-                                label = stringResource(id = R.string.amazon_price_label),
-                                placeholder = stringResource(id = R.string.enter_amazon_price_label)
-                            )
-                            CustomFloatField(
-                                value = resaleProfit,
-                                onValueChange = onResaleProfitChange,
-                                icon = Icons.Filled.Paid,
-                                label = stringResource(id = R.string.resale_profit_label),
-                                placeholder = stringResource(id = R.string.enter_resale_profit_label)
-                            )
-                            CustomIntegerField(
-                                value = amazonTax,
-                                onValueChange = onAmazonTaxChange,
-                                icon = Icons.Filled.Paid,
-                                label = stringResource(id = R.string.amazon_tax_label),
-                                placeholder = stringResource(id = R.string.enter_amazon_tax_label)
-                            )
-                            CustomTextField(
-                                text = amazonProfit,
-                                onTextChange = {},
-                                icon = Icons.Filled.Paid,
-                                label = stringResource(id = R.string.amazon_profit_label),
-                                placeholder = stringResource(id = R.string.enter_amazon_profit_label),
-                                readOnly = true
-                            )
-                            CustomTextField(
-                                text = amazonSKU,
-                                onTextChange = onAmazonSKUChange,
-                                icon = Icons.Filled.Title,
-                                label = stringResource(id = R.string.amazon_sku_label),
-                                placeholder = stringResource(id = R.string.enter_amazon_sku_label)
-                            )
-                            CustomTextField(
-                                text = totalProfit,
-                                onTextChange = {},
-                                icon = Icons.Filled.Paid,
-                                label = stringResource(id = R.string.total_profit_label),
-                                placeholder = stringResource(id = R.string.enter_total_profit_label)
-                            )
-                        }
-                    }
-
                     CustomFloatField(
-                        value = purchasePrice,
-                        onValueChange = onPurchasePriceChange,
+                        value = amazonPrice,
+                        onValueChange = onAmazonPriceChange,
                         icon = Icons.Filled.Paid,
-                        label = stringResource(id = R.string.purchase_price_label),
-                        placeholder = stringResource(id = R.string.enter_purchase_price_label)
+                        label = stringResource(id = R.string.amazon_price_label),
+                        placeholder = stringResource(id = R.string.enter_amazon_price_label)
                     )
                     CustomFloatField(
-                        value = salePrice,
-                        onValueChange = onSalePriceChange,
-                        icon = Icons.Filled.PriceCheck,
-                        label = stringResource(id = R.string.sale_price_label),
-                        placeholder = stringResource(id = R.string.enter_sale_price_label)
+                        value = resaleProfit,
+                        onValueChange = onResaleProfitChange,
+                        icon = Icons.Filled.Paid,
+                        label = stringResource(id = R.string.resale_profit_label),
+                        placeholder = stringResource(id = R.string.enter_resale_profit_label)
                     )
-                    CustomFloatField(
-                        value = deliveryPrice,
-                        onValueChange = onDeliveryPriceChange,
-                        icon = Icons.Filled.LocalShipping,
-                        label = stringResource(id = R.string.delivery_price_label),
-                        placeholder = stringResource(id = R.string.enter_delivery_price_label)
+                    CustomIntegerField(
+                        value = amazonTax,
+                        onValueChange = onAmazonTaxChange,
+                        icon = Icons.Filled.Paid,
+                        label = stringResource(id = R.string.amazon_tax_label),
+                        placeholder = stringResource(id = R.string.enter_amazon_tax_label)
                     )
-                    CustomClickField(
-                        value = category,
-                        onClick = {},
-                        icon = Icons.Filled.Category,
-                        label = stringResource(id = R.string.categories_label),
-                        placeholder = ""
+                    CustomTextField(
+                        text = amazonProfit,
+                        onTextChange = {},
+                        icon = Icons.Filled.Paid,
+                        label = stringResource(id = R.string.amazon_profit_label),
+                        placeholder = stringResource(id = R.string.enter_amazon_profit_label),
+                        readOnly = true
                     )
-                    CustomClickField(
-                        value = company,
-                        onClick = {},
-                        icon = Icons.Filled.BusinessCenter,
-                        label = stringResource(id = R.string.company_label),
-                        placeholder = ""
+                    CustomTextField(
+                        text = amazonSKU,
+                        onTextChange = onAmazonSKUChange,
+                        icon = Icons.Filled.Title,
+                        label = stringResource(id = R.string.amazon_sku_label),
+                        placeholder = stringResource(id = R.string.enter_amazon_sku_label)
                     )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Checkbox(
-                            checked = isPaidByCustomer,
-                            onCheckedChange = onIsPaidByCustomerChange
-                        )
-                        Text(text = stringResource(id = R.string.is_paid_by_customer_label))
-                    }
+                    CustomTextField(
+                        text = totalProfit,
+                        onTextChange = {},
+                        icon = Icons.Filled.Paid,
+                        label = stringResource(id = R.string.total_profit_label),
+                        placeholder = stringResource(id = R.string.enter_total_profit_label)
+                    )
                 }
+            }
+
+            CustomFloatField(
+                value = purchasePrice,
+                onValueChange = onPurchasePriceChange,
+                icon = Icons.Filled.Paid,
+                label = stringResource(id = R.string.purchase_price_label),
+                placeholder = stringResource(id = R.string.enter_purchase_price_label)
+            )
+            CustomFloatField(
+                value = salePrice,
+                onValueChange = onSalePriceChange,
+                icon = Icons.Filled.PriceCheck,
+                label = stringResource(id = R.string.sale_price_label),
+                placeholder = stringResource(id = R.string.enter_sale_price_label)
+            )
+            CustomFloatField(
+                value = deliveryPrice,
+                onValueChange = onDeliveryPriceChange,
+                icon = Icons.Filled.LocalShipping,
+                label = stringResource(id = R.string.delivery_price_label),
+                placeholder = stringResource(id = R.string.enter_delivery_price_label)
+            )
+            CustomClickField(
+                value = category,
+                onClick = {},
+                icon = Icons.Filled.Category,
+                label = stringResource(id = R.string.categories_label),
+                placeholder = ""
+            )
+            CustomClickField(
+                value = company,
+                onClick = {},
+                icon = Icons.Filled.BusinessCenter,
+                label = stringResource(id = R.string.company_label),
+                placeholder = ""
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = isPaidByCustomer,
+                    onCheckedChange = onIsPaidByCustomerChange
+                )
+                Text(text = stringResource(id = R.string.is_paid_by_customer_label))
             }
         }
     }

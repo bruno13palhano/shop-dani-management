@@ -267,15 +267,15 @@ fun SalesContent(
             reverseLayout = true
         ) {
             items(items = saleList, key = { item -> item.saleId }) { item ->
-                with(sharedTransitionScope) {
-                    ElevatedCard(
-                        modifier = Modifier.padding(vertical = 4.dp),
-                        onClick = { onItemClick(item.saleId, item.productId) }
+                ElevatedCard(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    onClick = { onItemClick(item.saleId, item.productId) }
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                        with(sharedTransitionScope) {
                             AsyncImage(
                                 modifier =
                                     Modifier
@@ -298,42 +298,42 @@ fun SalesContent(
                                 contentDescription = stringResource(id = R.string.item_image),
                                 contentScale = ContentScale.Crop
                             )
+                        }
 
-                            Column(
+                        Column(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .weight(1F, true)
+                        ) {
+                            Text(
                                 modifier =
                                     Modifier
-                                        .fillMaxWidth()
-                                        .weight(1F, true)
-                            ) {
-                                Text(
-                                    modifier =
-                                        Modifier
-                                            .padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                                    text = item.customerName,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                                Text(
-                                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                                    text =
-                                        stringResource(
-                                            id = R.string.product_price_text_tag,
-                                            item.productName,
-                                            item.salePrice.toString()
-                                        ),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                                Text(
-                                    modifier =
-                                        Modifier
-                                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                                    text =
-                                        stringResource(
-                                            id = R.string.date_of_sale_tag,
-                                            dateFormat.format(item.dateOfSale)
-                                        ),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
+                                        .padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                                text = item.customerName,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                                text =
+                                    stringResource(
+                                        id = R.string.product_price_text_tag,
+                                        item.productName,
+                                        item.salePrice.toString()
+                                    ),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Text(
+                                modifier =
+                                    Modifier
+                                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                                text =
+                                    stringResource(
+                                        id = R.string.date_of_sale_tag,
+                                        dateFormat.format(item.dateOfSale)
+                                    ),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
                     }
                 }
