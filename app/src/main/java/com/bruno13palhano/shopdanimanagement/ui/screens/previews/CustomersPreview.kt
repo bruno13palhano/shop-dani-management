@@ -11,11 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
-import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerInfoContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomersContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.financial.CustomersDebitContent
 import com.bruno13palhano.shopdanimanagement.ui.theme.ShopDaniManagementTheme
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true)
@@ -89,56 +87,6 @@ private val customerList =
         CommonItem(8L, byteArrayOf(), "Henrique", "Carão", ""),
         CommonItem(9L, byteArrayOf(), "Bruno", "Rua 15 de novembro", "")
     )
-
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun CustomerInfoDynamicPreview() {
-    ShopDaniManagementTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            CustomerInfoContent(
-                name = "",
-                address = "",
-                photo = byteArrayOf(),
-                owingValue = "120.99",
-                purchasesValue = "1590.99",
-                lastPurchaseValue = "77.99",
-                entry = ChartEntryModelProducer(),
-                onEditIconClick = {},
-                onOutsideClick = {}
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun CustomerInfoPreview() {
-    ShopDaniManagementTheme(
-        dynamicColor = false
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            CustomerInfoContent(
-                name = "",
-                address = "",
-                photo = byteArrayOf(),
-                owingValue = "120.99",
-                purchasesValue = "1590.99",
-                lastPurchaseValue = "77.99",
-                entry = ChartEntryModelProducer(),
-                onEditIconClick = {},
-                onOutsideClick = {}
-            )
-        }
-    }
-}
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true)
