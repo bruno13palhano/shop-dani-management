@@ -48,13 +48,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.bruno13palhano.core.model.CustomerInfo
 import com.bruno13palhano.shopdanimanagement.R
 import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
-import com.bruno13palhano.shopdanimanagement.ui.screens.common.DateChartEntry
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.viewmodel.CustomersViewModel
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -93,19 +90,6 @@ fun CustomersScreen(
 ) {
     LaunchedEffect(key1 = Unit) { viewModel.getAllCustomers() }
 
-    val entries by viewModel.entry.collectAsStateWithLifecycle()
-    val customerInfo by viewModel.customerInfo.collectAsStateWithLifecycle()
-
-    val chart by remember { mutableStateOf(ChartEntryModelProducer()) }
-
-    LaunchedEffect(key1 = entries) {
-        chart.setEntries(
-            entries.mapIndexed { index, (date, y) ->
-                DateChartEntry(date, index.toFloat(), y)
-            }
-        )
-    }
-
     val customerList by viewModel.customerList.collectAsStateWithLifecycle()
     val menuItems =
         arrayOf(
@@ -116,21 +100,13 @@ fun CustomersScreen(
 
     var orderedByName by remember { mutableStateOf(false) }
     var orderedByAddress by remember { mutableStateOf(false) }
-    var openCustomerBottomSheet by remember { mutableStateOf(false) }
 
     CustomersContent(
         customerList = customerList,
-        customerInfo = customerInfo,
-        openCustomerBottomSheet = openCustomerBottomSheet,
-        chartEntries = chart,
         menuItems = menuItems,
         sharedTransitionScope = sharedTransitionScope,
         animatedContentScope = animatedContentScope,
-        onItemClick = {
-            openCustomerBottomSheet = true
-            viewModel.getCustomerInfo(it)
-            viewModel.getCustomerPurchases(it)
-        },
+        onItemClick = onItemClick,
         onSearchClick = onSearchClick,
         onMoreOptionsItemClick = { index ->
             when (index) {
@@ -147,8 +123,6 @@ fun CustomersScreen(
                 }
             }
         },
-        onEditCustomerClick = onItemClick,
-        onDismissCustomerBottomSheet = { openCustomerBottomSheet = false },
         onAddButtonClick = onAddButtonClick,
         onIconMenuClick = onIconMenuClick
     )
@@ -158,17 +132,12 @@ fun CustomersScreen(
 @Composable
 fun CustomersContent(
     customerList: List<CommonItem>,
-    customerInfo: CustomerInfo,
-    openCustomerBottomSheet: Boolean,
-    chartEntries: ChartEntryModelProducer,
     menuItems: Array<String>,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
     onItemClick: (id: Long) -> Unit,
     onSearchClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
-    onEditCustomerClick: (id: Long) -> Unit,
-    onDismissCustomerBottomSheet: () -> Unit,
     onAddButtonClick: () -> Unit,
     onIconMenuClick: () -> Unit
 ) {
@@ -237,7 +206,7 @@ fun CustomersContent(
             items(items = customerList, key = { item -> item.id }) { item ->
                 ElevatedCard(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { onEditCustomerClick(item.id) }
+                    onClick = { onItemClick(item.id) }
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),

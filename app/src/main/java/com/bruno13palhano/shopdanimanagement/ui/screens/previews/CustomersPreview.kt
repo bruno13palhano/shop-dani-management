@@ -10,7 +10,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.bruno13palhano.core.model.CustomerInfo
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.CommonItem
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomerInfoContent
 import com.bruno13palhano.shopdanimanagement.ui.screens.customers.CustomersContent
@@ -32,17 +31,12 @@ fun CustomerDynamicPreview() {
                 AnimatedContent(targetState = 0L, label = "") {
                     CustomersContent(
                         customerList = customerList,
-                        customerInfo = CustomerInfo.emptyCustomerInfo(),
-                        openCustomerBottomSheet = false,
-                        chartEntries = ChartEntryModelProducer(),
                         menuItems = arrayOf(),
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this,
                         onItemClick = {},
                         onSearchClick = {},
                         onMoreOptionsItemClick = {},
-                        onEditCustomerClick = {},
-                        onDismissCustomerBottomSheet = {},
                         onAddButtonClick = { it },
                         onIconMenuClick = {}
                     )
@@ -68,17 +62,12 @@ fun CustomerPreview() {
                 AnimatedContent(targetState = 0L, label = "") {
                     CustomersContent(
                         customerList = customerList,
-                        customerInfo = CustomerInfo.emptyCustomerInfo(),
-                        openCustomerBottomSheet = false,
-                        chartEntries = ChartEntryModelProducer(),
                         menuItems = arrayOf(),
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this,
                         onItemClick = {},
                         onSearchClick = {},
                         onMoreOptionsItemClick = {},
-                        onEditCustomerClick = {},
-                        onDismissCustomerBottomSheet = {},
                         onAddButtonClick = {},
                         onIconMenuClick = { it }
                     )
