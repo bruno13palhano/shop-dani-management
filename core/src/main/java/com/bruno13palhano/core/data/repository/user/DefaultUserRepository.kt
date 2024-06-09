@@ -50,7 +50,7 @@ internal class DefaultUserRepository
         override suspend fun create(
             user: User,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit
+            onSuccess: (uid: String) -> Unit
         ) {
             remoteUserData.create(
                 user = userToUserNet(user),
@@ -86,20 +86,20 @@ internal class DefaultUserRepository
         }
 
         override fun getById(
-            userId: Long,
+            uid: String,
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit
         ): Flow<User> {
-            return userData.getById(userId, onError = onError, onSuccess = onSuccess)
+            return userData.getById(uid = uid, onError = onError, onSuccess = onSuccess)
         }
 
         override fun getCurrentUser(
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit
         ): Flow<User> {
-            val userId = sessionManager.fetchCurrentUserId()
+            val uid = sessionManager.fetchCurrentUserUid() ?: ""
 
-            return userData.getById(userId = userId, onError = onError, onSuccess = onSuccess)
+            return userData.getById(uid = uid, onError = onError, onSuccess = onSuccess)
         }
 
         override fun isAuthenticated(): Boolean {
@@ -147,7 +147,7 @@ internal class DefaultUserRepository
 
         override fun logout() {
             saveToken(token = "")
-            sessionManager.saveCurrentUserId(id = 0L)
+            sessionManager.saveCurrentUserUid(uid = "")
         }
 
         override suspend fun updateUserPassword(
@@ -176,7 +176,7 @@ internal class DefaultUserRepository
         private suspend fun createUser(
             newUser: UserNet,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit
+            onSuccess: (uid: String) -> Unit
         ) {
             userData.insert(user = userNetToUser(newUser), onError = onError, onSuccess = onSuccess)
         }
@@ -184,10 +184,10 @@ internal class DefaultUserRepository
         private suspend fun saveUser(
             username: String,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit
+            onSuccess: (uid: String) -> Unit
         ) {
             val newUser = remoteUserData.getByUsername(username = username)
-            sessionManager.saveCurrentUserId(id = newUser.id)
+            sessionManager.saveCurrentUserUid(uid = newUser.uid)
             userData.insert(
                 user = userNetToUser(newUser),
                 onError = onError,

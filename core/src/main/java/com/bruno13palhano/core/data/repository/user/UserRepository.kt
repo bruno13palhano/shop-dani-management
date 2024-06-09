@@ -13,7 +13,7 @@ interface UserRepository {
     suspend fun create(
         user: User,
         onError: (error: Int) -> Unit,
-        onSuccess: (id: Long) -> Unit
+        onSuccess: (uid: String) -> Unit
     )
 
     suspend fun update(
@@ -23,7 +23,7 @@ interface UserRepository {
     )
 
     fun getById(
-        userId: Long,
+        uid: String,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ): Flow<User>

@@ -53,7 +53,7 @@ internal class RemoteUserFirebase
 
                                                 val newUser =
                                                     UserNet(
-                                                        id = 1L,
+                                                        uid = firebaseUser.uid,
                                                         username = username,
                                                         email = email,
                                                         password = "",
@@ -65,7 +65,7 @@ internal class RemoteUserFirebase
 
                                                 val fireUser =
                                                     hashMapOf(
-                                                        "id" to newUser.id,
+                                                        "uid" to newUser.uid,
                                                         "username" to newUser.username,
                                                         "email" to newUser.email,
                                                         "password" to newUser.password,
@@ -134,7 +134,7 @@ internal class RemoteUserFirebase
             try {
                 return userRef.get().await()?.data?.let {
                     UserNet(
-                        id = it["id"] as Long,
+                        uid = it["uid"].toString(),
                         username = it["username"].toString(),
                         email = it["email"].toString(),
                         password = "",
@@ -148,7 +148,7 @@ internal class RemoteUserFirebase
                 e.printStackTrace()
 
                 return UserNet(
-                    id = 0L,
+                    uid = "",
                     username = "",
                     email = "",
                     password = "",

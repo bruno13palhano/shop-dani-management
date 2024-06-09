@@ -52,7 +52,7 @@ class LoginViewModel
         fun login(onError: (error: Int) -> Unit) {
             val user =
                 User(
-                    id = 0L,
+                    uid = "",
                     username = username.trim(),
                     email = "",
                     password = password.trim(),

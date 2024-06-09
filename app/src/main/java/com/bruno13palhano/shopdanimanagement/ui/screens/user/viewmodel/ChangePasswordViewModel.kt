@@ -29,7 +29,7 @@ class ChangePasswordViewModel
         private var _updateState = MutableStateFlow<UiState>(UiState.Fail)
         val updateState = _updateState.asStateFlow()
 
-        private var userId = 0L
+        private var uid = ""
         private var username = ""
         private var email = ""
         private var timestamp = ""
@@ -60,7 +60,7 @@ class ChangePasswordViewModel
         fun getCurrentUser() {
             viewModelScope.launch {
                 userRepository.getCurrentUser(onError = {}, onSuccess = {}).collect {
-                    userId = it.id
+                    uid = it.uid
                     username = it.username
                     email = it.email
                     timestamp = getCurrentTimestamp()
@@ -74,7 +74,7 @@ class ChangePasswordViewModel
 
                 val user =
                     User(
-                        id = userId,
+                        uid = uid,
                         username = username,
                         email = email,
                         password = newPassword,

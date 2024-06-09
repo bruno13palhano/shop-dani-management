@@ -75,7 +75,7 @@ class CreateAccountViewModel
                 _loginState.value = LoginState.InProgress
                 val user =
                     User(
-                        id = 0L,
+                        uid = "",
                         username = username,
                         email = email,
                         password = password,

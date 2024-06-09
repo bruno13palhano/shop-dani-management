@@ -22,7 +22,7 @@ class SessionManager
 
         companion object {
             const val USER_TOKEN = "user_token"
-            const val CURRENT_USER_ID = "current_user_id"
+            const val CURRENT_USER_ID = "current_user_uid"
         }
 
         fun saveAuthToken(token: String) {
@@ -31,9 +31,9 @@ class SessionManager
             editor.apply()
         }
 
-        fun saveCurrentUserId(id: Long) {
+        fun saveCurrentUserUid(uid: String) {
             val editor = preferences.edit()
-            editor.putLong(CURRENT_USER_ID, id)
+            editor.putString(CURRENT_USER_ID, uid)
             editor.apply()
         }
 
@@ -41,7 +41,7 @@ class SessionManager
             return preferences.getString(USER_TOKEN, null)
         }
 
-        fun fetchCurrentUserId(): Long {
-            return preferences.getLong(CURRENT_USER_ID, 0L)
+        fun fetchCurrentUserUid(): String? {
+            return preferences.getString(CURRENT_USER_ID, null)
         }
     }

@@ -21,36 +21,20 @@ internal class LocalUserData
         override suspend fun insert(
             user: User,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit
+            onSuccess: (uid: String) -> Unit
         ) {
             try {
-                if (user.id == 0L) {
-                    usersTableQueries.transaction {
-                        usersTableQueries.insert(
-                            username = user.username,
-                            password = user.password,
-                            email = user.email,
-                            photo = user.photo,
-                            role = user.role,
-                            enabled = user.enabled,
-                            timestamp = user.timestamp
-                        )
-                        val id = usersTableQueries.lastId().executeAsOne()
-                        onSuccess(id)
-                    }
-                } else {
-                    usersTableQueries.insertWithId(
-                        id = user.id,
-                        username = user.username,
-                        password = user.password,
-                        email = user.email,
-                        photo = user.photo,
-                        role = user.role,
-                        enabled = user.enabled,
-                        timestamp = user.timestamp
-                    )
-                    onSuccess(user.id)
-                }
+                usersTableQueries.insertWithId(
+                    uid = user.uid,
+                    username = user.username,
+                    password = user.password,
+                    email = user.email,
+                    photo = user.photo,
+                    role = user.role,
+                    enabled = user.enabled,
+                    timestamp = user.timestamp
+                )
+                onSuccess(user.uid)
             } catch (e: Exception) {
                 e.printStackTrace()
                 onError(Errors.INSERT_DATABASE_ERROR)
@@ -67,7 +51,7 @@ internal class LocalUserData
                     username = user.username,
                     photo = user.photo,
                     timestamp = user.timestamp,
-                    id = user.id
+                    uid = user.uid
                 )
                 onSuccess()
             } catch (e: Exception) {
@@ -77,11 +61,11 @@ internal class LocalUserData
         }
 
         override fun getById(
-            userId: Long,
+            uid: String,
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit
         ): Flow<User> {
-            return usersTableQueries.getById(id = userId, mapper = ::mapUser)
+            return usersTableQueries.getById(uid = uid, mapper = ::mapUser)
                 .asFlow().mapToOne(ioDispatcher)
                 .catch { it.printStackTrace() }
         }
@@ -92,7 +76,7 @@ internal class LocalUserData
             onSuccess: () -> Unit
         ) {
             try {
-                usersTableQueries.updatePassword(timestamp = user.timestamp, id = user.id)
+                usersTableQueries.updatePassword(timestamp = user.timestamp, uid = user.uid)
                 onSuccess()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -101,7 +85,7 @@ internal class LocalUserData
         }
 
         private fun mapUser(
-            id: Long,
+            uid: String,
             username: String,
             email: String,
             password: String,
@@ -110,7 +94,7 @@ internal class LocalUserData
             enabled: Boolean,
             timestamp: String
         ) = User(
-            id = id,
+            uid = uid,
             username = username,
             email = email,
             password = password,

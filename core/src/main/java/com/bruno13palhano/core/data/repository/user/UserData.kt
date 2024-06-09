@@ -7,7 +7,7 @@ interface UserData {
     suspend fun insert(
         user: User,
         onError: (error: Int) -> Unit,
-        onSuccess: (id: Long) -> Unit
+        onSuccess: (uid: String) -> Unit
     )
 
     suspend fun update(
@@ -17,7 +17,7 @@ interface UserData {
     )
 
     fun getById(
-        userId: Long,
+        uid: String,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ): Flow<User>

@@ -1,7 +1,7 @@
 import kotlin.Boolean;
 
 CREATE TABLE UsersTable (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    uid TEXT NOT NULL PRIMARY KEY,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
     email TEXT NOT NULL,
@@ -11,27 +11,17 @@ CREATE TABLE UsersTable (
     timestamp TEXT NOT NULL
 );
 
-insert:
-INSERT INTO UsersTable (username, password, email, photo, role, enabled, timestamp)
-VALUES (?,?,?,?,?,?,?);
-
 insertWithId:
-INSERT OR REPLACE INTO UsersTable (id, username, password, email, photo, role, enabled, timestamp)
+INSERT OR REPLACE INTO UsersTable (uid, username, password, email, photo, role, enabled, timestamp)
 VALUES (?,?,?,?,?,?,?,?);
 
 update:
 UPDATE UsersTable SET username = ?, photo = ?, timestamp = ?
-WHERE id = ?;
+WHERE uid = ?;
 
 updatePassword:
-UPDATE UsersTable SET timestamp = ? WHERE id = ?;
-
-delete:
-DELETE FROM UsersTable WHERE id = ?;
+UPDATE UsersTable SET timestamp = ? WHERE uid = ?;
 
 getById:
-SELECT U.id, U.username, U.email, U.password, U.photo, U.role, U.enabled, U.timestamp
-FROM UsersTable U WHERE id = ?;
-
-lastId:
-SELECT last_insert_rowid();
+SELECT U.uid, U.username, U.email, U.password, U.photo, U.role, U.enabled, U.timestamp
+FROM UsersTable U WHERE uid = ?;

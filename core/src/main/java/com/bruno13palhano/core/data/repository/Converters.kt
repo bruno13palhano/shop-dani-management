@@ -243,7 +243,7 @@ fun stockItemNetToStockItem(stockItemNet: StockItemNet) =
 
 fun userNetToUser(userNet: UserNet) =
     User(
-        id = userNet.id,
+        uid = userNet.uid,
         username = userNet.username,
         email = userNet.email,
         password = userNet.password,
@@ -260,7 +260,7 @@ fun userNetToUser(userNet: UserNet) =
 
 fun userToUserNet(user: User) =
     UserNet(
-        id = user.id,
+        uid = user.uid,
         username = user.username,
         email = user.email,
         password = user.password,

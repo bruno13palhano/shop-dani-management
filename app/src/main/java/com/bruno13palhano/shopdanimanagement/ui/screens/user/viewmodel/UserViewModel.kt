@@ -25,7 +25,7 @@ class UserViewModel
         private var _updateState = MutableStateFlow<UiState>(UiState.Fail)
         val updateState = _updateState.asStateFlow()
 
-        private var userId = 0L
+        private var uid = ""
         var photo by mutableStateOf(byteArrayOf())
             private set
         var username by mutableStateOf("")
@@ -46,7 +46,7 @@ class UserViewModel
         fun getCurrentUser() {
             viewModelScope.launch {
                 userRepository.getCurrentUser(onError = {}, onSuccess = {}).collect {
-                    userId = it.id
+                    uid = it.uid
                     photo = it.photo
                     username = it.username
                     email = it.email
@@ -58,7 +58,7 @@ class UserViewModel
         fun updateUser(onError: (error: Int) -> Unit) {
             val user =
                 User(
-                    id = userId,
+                    uid = uid,
                     username = username,
                     email = email,
                     password = "",
