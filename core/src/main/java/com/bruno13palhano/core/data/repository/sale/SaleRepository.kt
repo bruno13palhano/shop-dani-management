@@ -16,19 +16,19 @@ interface SaleRepository : RepositoryOperations<Sale>, Syncable {
 
     fun getLastSales(
         offset: Int,
-        limit: Int,
+        limit: Int
     ): Flow<List<Sale>>
 
     fun getAmazonSale(): Flow<List<Sale>>
 
     fun getAllStockSales(
         offset: Int,
-        limit: Int,
+        limit: Int
     ): Flow<List<Sale>>
 
     fun getAllOrdersSales(
         offset: Int,
-        limit: Int,
+        limit: Int
     ): Flow<List<Sale>>
 
     fun getAllCanceledSales(): Flow<List<Sale>>
@@ -51,12 +51,12 @@ interface SaleRepository : RepositoryOperations<Sale>, Syncable {
 
     fun getSalesByCustomerName(
         isPaidByCustomer: Boolean,
-        isOrderedAsc: Boolean,
+        isOrderedAsc: Boolean
     ): Flow<List<Sale>>
 
     fun getSalesBySalePrice(
         isPaidByCustomer: Boolean,
-        isOrderedAsc: Boolean,
+        isOrderedAsc: Boolean
     ): Flow<List<Sale>>
 
     fun getAllSalesByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>>

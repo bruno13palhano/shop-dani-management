@@ -12,5 +12,5 @@ data class Delivery(
     val shippingDate: Long,
     val deliveryDate: Long,
     val delivered: Boolean,
-    override val timestamp: String,
+    override val timestamp: String
 ) : Model(id = id, timestamp = timestamp)

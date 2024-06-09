@@ -28,5 +28,5 @@ data class SaleNet(
     @Json(name = "delivered") val delivered: Boolean,
     @Json(name = "canceled") val canceled: Boolean,
     @Json(name = "isAmazon") val isAmazon: Boolean,
-    @Json(name = "timestamp") override val timestamp: String,
+    @Json(name = "timestamp") override val timestamp: String
 ) : Model(id = id, timestamp = timestamp)

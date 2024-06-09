@@ -7,30 +7,30 @@ interface UserRepository {
     suspend fun login(
         user: User,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit,
+        onSuccess: () -> Unit
     )
 
     suspend fun create(
         user: User,
         onError: (error: Int) -> Unit,
-        onSuccess: (id: Long) -> Unit,
+        onSuccess: (id: Long) -> Unit
     )
 
     suspend fun update(
         user: User,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit,
+        onSuccess: () -> Unit
     )
 
     fun getById(
         userId: Long,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit,
+        onSuccess: () -> Unit
     ): Flow<User>
 
     fun getCurrentUser(
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit,
+        onSuccess: () -> Unit
     ): Flow<User>
 
     fun isAuthenticated(): Boolean
@@ -42,6 +42,6 @@ interface UserRepository {
     suspend fun updateUserPassword(
         user: User,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit,
+        onSuccess: () -> Unit
     )
 }

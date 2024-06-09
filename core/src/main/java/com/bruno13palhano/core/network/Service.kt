@@ -19,32 +19,32 @@ import retrofit2.http.Path
 internal interface Service {
     @POST("users/login")
     suspend fun login(
-        @Body user: UserNet,
+        @Body user: UserNet
     ): Response<Unit>
 
     @POST("users/insert")
     suspend fun createUser(
-        @Body user: UserNet,
+        @Body user: UserNet
     ): Response<UserNet>
 
     @PUT("users/update")
     suspend fun updateUser(
-        @Body user: UserNet,
+        @Body user: UserNet
     ): Response<Int>
 
     @PUT("users/update/password")
     suspend fun updateUserPassword(
-        @Body user: UserNet,
+        @Body user: UserNet
     ): Response<Int>
 
     @GET("users/user/{username}")
     suspend fun getUser(
-        @Path("username") username: String,
+        @Path("username") username: String
     ): UserNet
 
     @POST("users/authenticated")
     suspend fun authenticated(
-        @Body token: String,
+        @Body token: String
     ): Boolean
 
     @GET("catalog/all")
@@ -52,17 +52,17 @@ internal interface Service {
 
     @POST("catalog/insert")
     suspend fun insertCatalogItem(
-        @Body catalogItem: CatalogNet,
+        @Body catalogItem: CatalogNet
     )
 
     @PUT("catalog/update")
     suspend fun updateCatalogItem(
-        @Body catalogItem: CatalogNet,
+        @Body catalogItem: CatalogNet
     )
 
     @DELETE("catalog/delete/{id}")
     suspend fun deleteCatalogItem(
-        @Path("id") id: Long,
+        @Path("id") id: Long
     )
 
     @GET("categories/all")
@@ -70,17 +70,17 @@ internal interface Service {
 
     @POST("categories/insert")
     suspend fun insertCategory(
-        @Body category: CategoryNet,
+        @Body category: CategoryNet
     )
 
     @PUT("categories/update")
     suspend fun updateCategory(
-        @Body category: CategoryNet,
+        @Body category: CategoryNet
     )
 
     @DELETE("categories/delete/{id}")
     suspend fun deleteCategory(
-        @Path("id") id: Long,
+        @Path("id") id: Long
     )
 
     @GET("customers/all")
@@ -88,17 +88,17 @@ internal interface Service {
 
     @POST("customers/insert")
     suspend fun insertCustomer(
-        @Body customer: CustomerNet,
+        @Body customer: CustomerNet
     )
 
     @PUT("customers/update")
     suspend fun updateCustomer(
-        @Body customer: CustomerNet,
+        @Body customer: CustomerNet
     )
 
     @DELETE("customers/delete/{id}")
     suspend fun deleteCustomer(
-        @Path("id") id: Long,
+        @Path("id") id: Long
     )
 
     @GET("products/all")
@@ -106,17 +106,17 @@ internal interface Service {
 
     @POST("products/insert")
     suspend fun insertProduct(
-        @Body product: ProductNet,
+        @Body product: ProductNet
     )
 
     @PUT("products/update")
     suspend fun updateProduct(
-        @Body product: ProductNet,
+        @Body product: ProductNet
     )
 
     @DELETE("products/delete/{id}")
     suspend fun deleteProduct(
-        @Path("id") id: Long,
+        @Path("id") id: Long
     )
 
     @GET("sales/all")
@@ -124,17 +124,17 @@ internal interface Service {
 
     @POST("sales/insert")
     suspend fun insertSale(
-        @Body saleNet: SaleNet,
+        @Body saleNet: SaleNet
     )
 
     @PUT("sales/update")
     suspend fun updateSale(
-        @Body sale: SaleNet,
+        @Body sale: SaleNet
     )
 
     @DELETE("sales/delete/{id}")
     suspend fun deleteSale(
-        @Path("id") id: Long,
+        @Path("id") id: Long
     )
 
     @GET("items/all")
@@ -142,23 +142,23 @@ internal interface Service {
 
     @POST("items/insert")
     suspend fun insertItem(
-        @Body item: StockItemNet,
+        @Body item: StockItemNet
     )
 
     @PUT("items/update")
     suspend fun updateItem(
-        @Body item: StockItemNet,
+        @Body item: StockItemNet
     )
 
     @PUT("items/update/{id}/{quantity}")
     suspend fun updateStockItemQuantity(
         @Path("id") id: Long,
-        @Path("quantity") quantity: Int,
+        @Path("quantity") quantity: Int
     )
 
     @DELETE("items/delete/{id}")
     suspend fun deleteItem(
-        @Path("id") id: Long,
+        @Path("id") id: Long
     )
 
     @GET("version/all")
@@ -166,16 +166,16 @@ internal interface Service {
 
     @POST("version/insert")
     suspend fun insertVersion(
-        @Body version: DataVersionNet,
+        @Body version: DataVersionNet
     )
 
     @PUT("version/update")
     suspend fun updateVersion(
-        @Body version: DataVersionNet,
+        @Body version: DataVersionNet
     )
 
     @DELETE("version/delete/{id}")
     suspend fun deleteVersion(
-        @Path("id") id: Long,
+        @Path("id") id: Long
     )
 }

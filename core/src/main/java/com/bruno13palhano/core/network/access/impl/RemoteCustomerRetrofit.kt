@@ -8,7 +8,7 @@ import javax.inject.Inject
 internal class RemoteCustomerRetrofit
     @Inject
     constructor(
-        private val apiService: Service,
+        private val apiService: Service
     ) : RemoteCustomerData {
         override suspend fun getAll(): List<CustomerNet> {
             return try {

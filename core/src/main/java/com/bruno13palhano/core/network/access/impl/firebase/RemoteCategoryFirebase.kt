@@ -10,7 +10,7 @@ import javax.inject.Inject
 internal class RemoteCategoryFirebase
     @Inject
     constructor(
-        private val firestore: FirebaseFirestore,
+        private val firestore: FirebaseFirestore
     ) : RemoteCategoryData {
         override suspend fun getAll(): List<CategoryNet> {
             val snapshot = firestore.collection("categories").get()
@@ -22,7 +22,7 @@ internal class RemoteCategoryFirebase
                             CategoryNet(
                                 id = firebaseSale["id"] as Long,
                                 category = firebaseSale["category"].toString(),
-                                timestamp = firebaseSale["timestamp"].toString(),
+                                timestamp = firebaseSale["timestamp"].toString()
                             )
                         }
                     } else {
@@ -43,8 +43,8 @@ internal class RemoteCategoryFirebase
                         hashMapOf(
                             "id" to data.id,
                             "category" to data.category,
-                            "timestamp" to data.timestamp,
-                        ),
+                            "timestamp" to data.timestamp
+                        )
                     )
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -58,7 +58,7 @@ internal class RemoteCategoryFirebase
                 hashMapOf<String, Any>(
                     "id" to data.id,
                     "category" to data.category,
-                    "timestamp" to data.timestamp,
+                    "timestamp" to data.timestamp
                 )
 
             docRef.update(updates)
@@ -71,7 +71,7 @@ internal class RemoteCategoryFirebase
                 hashMapOf<String, Any>(
                     "id" to FieldValue.delete(),
                     "category" to FieldValue.delete(),
-                    "timestamp" to FieldValue.delete(),
+                    "timestamp" to FieldValue.delete()
                 )
 
             docRef.update(updates)

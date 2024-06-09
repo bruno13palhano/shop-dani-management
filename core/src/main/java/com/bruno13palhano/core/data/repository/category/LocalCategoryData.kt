@@ -21,13 +21,13 @@ internal class LocalCategoryData
     constructor(
         private val categoryQueries: CategoryTableQueries,
         private val versionQueries: VersionTableQueries,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : CategoryData {
         override suspend fun insert(
             model: Category,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ): Long {
             var id = 0L
 
@@ -36,14 +36,14 @@ internal class LocalCategoryData
                     categoryQueries.transaction {
                         categoryQueries.insert(
                             name = model.category,
-                            timestamp = model.timestamp,
+                            timestamp = model.timestamp
                         )
                         id = categoryQueries.getLastId().executeAsOne()
 
                         versionQueries.insertWithId(
                             name = version.name,
                             timestamp = version.timestamp,
-                            id = version.id,
+                            id = version.id
                         )
 
                         onSuccess(id)
@@ -53,13 +53,13 @@ internal class LocalCategoryData
                         categoryQueries.insertWithId(
                             id = model.id,
                             name = model.category,
-                            timestamp = model.timestamp,
+                            timestamp = model.timestamp
                         )
 
                         versionQueries.insertWithId(
                             name = version.name,
                             timestamp = version.timestamp,
-                            id = version.id,
+                            id = version.id
                         )
 
                         id = model.id
@@ -78,20 +78,20 @@ internal class LocalCategoryData
             model: Category,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 categoryQueries.transaction {
                     categoryQueries.update(
                         id = model.id,
                         name = model.category,
-                        timestamp = model.timestamp,
+                        timestamp = model.timestamp
                     )
 
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.timestamp,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess()
@@ -106,7 +106,7 @@ internal class LocalCategoryData
             id: Long,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 categoryQueries.transaction {
@@ -115,7 +115,7 @@ internal class LocalCategoryData
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.timestamp,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess()
@@ -151,12 +151,12 @@ internal class LocalCategoryData
         private fun mapCategory(
             id: Long,
             name: String,
-            timestamp: String,
+            timestamp: String
         ): Category {
             return Category(
                 id = id,
                 category = name,
-                timestamp = timestamp,
+                timestamp = timestamp
             )
         }
     }

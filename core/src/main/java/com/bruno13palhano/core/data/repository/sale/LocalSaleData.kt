@@ -26,14 +26,14 @@ internal class LocalSaleData
         private val saleQueries: SaleTableQueries,
         private val stockQueries: StockTableQueries,
         private val versionQueries: VersionTableQueries,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : SaleData {
         override suspend fun insert(
             model: Sale,
             version: DataVersion,
             pushed: Boolean,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long, stockItem: Int) -> Unit,
+            onSuccess: (id: Long, stockItem: Int) -> Unit
         ): Long {
             var id = 0L
             var quantity: Int
@@ -68,28 +68,28 @@ internal class LocalSaleData
                                 delivered = model.delivered,
                                 canceled = model.canceled,
                                 isAmazon = model.isAmazon,
-                                timestamp = model.timestamp,
+                                timestamp = model.timestamp
                             )
                         } else {
                             if (pushed) {
                                 val stockItem =
                                     stockQueries.getById(
                                         id = model.stockId,
-                                        mapper = ::mapStockItem,
+                                        mapper = ::mapStockItem
                                     ).executeAsOne()
 
                                 quantity = stockItem.quantity - model.quantity
 
                                 stockQueries.updateStockQuantity(
                                     id = stockItem.id,
-                                    quantity = quantity.toLong(),
+                                    quantity = quantity.toLong()
                                 )
                             }
 
                             newQuantity =
                                 stockQueries.getById(
                                     id = model.stockId,
-                                    mapper = ::mapStockItem,
+                                    mapper = ::mapStockItem
                                 ).executeAsOne().quantity
 
                             saleQueries.insert(
@@ -116,7 +116,7 @@ internal class LocalSaleData
                                 delivered = model.delivered,
                                 canceled = model.canceled,
                                 isAmazon = model.isAmazon,
-                                timestamp = model.timestamp,
+                                timestamp = model.timestamp
                             )
                         }
                         id = saleQueries.getLastId().executeAsOne()
@@ -124,13 +124,13 @@ internal class LocalSaleData
                         versionQueries.insertWithId(
                             id = version.id,
                             name = version.name,
-                            timestamp = version.timestamp,
+                            timestamp = version.timestamp
                         )
 
                         versionQueries.insertWithId(
                             id = stockVersion.id,
                             name = stockVersion.name,
-                            timestamp = stockVersion.timestamp,
+                            timestamp = stockVersion.timestamp
                         )
 
                         onSuccess(id, newQuantity)
@@ -163,28 +163,28 @@ internal class LocalSaleData
                                 delivered = model.delivered,
                                 canceled = model.canceled,
                                 isAmazon = model.isAmazon,
-                                timestamp = model.timestamp,
+                                timestamp = model.timestamp
                             )
                         } else {
                             if (pushed) {
                                 val stockItem =
                                     stockQueries.getById(
                                         id = model.stockId,
-                                        mapper = ::mapStockItem,
+                                        mapper = ::mapStockItem
                                     ).executeAsOne()
 
                                 quantity = stockItem.quantity - model.quantity
 
                                 stockQueries.updateStockQuantity(
                                     id = stockItem.id,
-                                    quantity = quantity.toLong(),
+                                    quantity = quantity.toLong()
                                 )
                             }
 
                             newQuantity =
                                 stockQueries.getById(
                                     id = model.stockId,
-                                    mapper = ::mapStockItem,
+                                    mapper = ::mapStockItem
                                 ).executeAsOne().quantity
 
                             saleQueries.insertWithId(
@@ -212,19 +212,19 @@ internal class LocalSaleData
                                 delivered = model.delivered,
                                 canceled = model.canceled,
                                 isAmazon = model.isAmazon,
-                                timestamp = model.timestamp,
+                                timestamp = model.timestamp
                             )
                         }
                         versionQueries.insertWithId(
                             id = version.id,
                             name = version.name,
-                            timestamp = version.timestamp,
+                            timestamp = version.timestamp
                         )
 
                         versionQueries.insertWithId(
                             id = stockVersion.id,
                             name = stockVersion.name,
-                            timestamp = stockVersion.timestamp,
+                            timestamp = stockVersion.timestamp
                         )
 
                         id = model.id
@@ -243,7 +243,7 @@ internal class LocalSaleData
             model: Sale,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: (itemQuantity: Int) -> Unit,
+            onSuccess: (itemQuantity: Int) -> Unit
         ) {
             var newStockQuantity = 0L
 
@@ -253,7 +253,7 @@ internal class LocalSaleData
                         val saleQuantity =
                             saleQueries.getById(
                                 id = model.id,
-                                mapper = ::mapSale,
+                                mapper = ::mapSale
                             ).executeAsOne().quantity
 
                         if (saleQuantity != model.quantity) {
@@ -262,7 +262,7 @@ internal class LocalSaleData
                             newStockQuantity = stockQuantity + (saleQuantity - model.quantity)
                             stockQueries.updateStockQuantity(
                                 quantity = newStockQuantity,
-                                id = model.stockId,
+                                id = model.stockId
                             )
                         }
                     }
@@ -292,13 +292,13 @@ internal class LocalSaleData
                         canceled = model.canceled,
                         isAmazon = model.isAmazon,
                         timestamp = model.timestamp,
-                        id = model.id,
+                        id = model.id
                     )
 
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.timestamp,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess(newStockQuantity.toInt())
@@ -316,7 +316,7 @@ internal class LocalSaleData
                 id = sale.stockId,
                 quantity =
                     stockQueries.getStockQuantity(id = sale.stockId).executeAsOne() +
-                        sale.quantity,
+                        sale.quantity
             )
         }
 
@@ -357,18 +357,18 @@ internal class LocalSaleData
         override fun getDeliveries(delivered: Boolean): Flow<List<Sale>> {
             return saleQueries.getDeliveries(
                 delivered = delivered,
-                mapper = ::mapSale,
+                mapper = ::mapSale
             ).asFlow().mapToList(ioDispatcher)
         }
 
         override fun getLastSales(
             offset: Int,
-            limit: Int,
+            limit: Int
         ): Flow<List<Sale>> {
             return saleQueries.getLastSales(
                 offset = offset.toLong(),
                 limit = limit.toLong(),
-                mapper = ::mapSale,
+                mapper = ::mapSale
             ).asFlow().mapToList(ioDispatcher)
         }
 
@@ -378,23 +378,23 @@ internal class LocalSaleData
 
         override fun getAllStockSales(
             offset: Int,
-            limit: Int,
+            limit: Int
         ): Flow<List<Sale>> {
             return saleQueries.getAllStockSales(
                 offset = offset.toLong(),
                 limit = limit.toLong(),
-                mapper = ::mapSale,
+                mapper = ::mapSale
             ).asFlow().mapToList(ioDispatcher)
         }
 
         override fun getAllOrdersSales(
             offset: Int,
-            limit: Int,
+            limit: Int
         ): Flow<List<Sale>> {
             return saleQueries.getAllOrdersSales(
                 offset = offset.toLong(),
                 limit = limit.toLong(),
-                mapper = ::mapSale,
+                mapper = ::mapSale
             ).asFlow().mapToList(ioDispatcher)
         }
 
@@ -402,7 +402,7 @@ internal class LocalSaleData
             id: Long,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 saleQueries.transaction {
@@ -411,7 +411,7 @@ internal class LocalSaleData
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.timestamp,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess()
@@ -475,40 +475,40 @@ internal class LocalSaleData
                 amazonRequestNumber = search,
                 amazonSKU = search,
                 company = search,
-                mapper = ::mapSale,
+                mapper = ::mapSale
             ).asFlow().mapToList(ioDispatcher)
         }
 
         override fun getSalesByCustomerName(
             isPaidByCustomer: Boolean,
-            isOrderedAsc: Boolean,
+            isOrderedAsc: Boolean
         ): Flow<List<Sale>> {
             return if (isOrderedAsc) {
                 saleQueries.getSalesByCustomerNameAsc(
                     isPaidByCustomer = isPaidByCustomer,
-                    mapper = ::mapSale,
+                    mapper = ::mapSale
                 ).asFlow().mapToList(ioDispatcher)
             } else {
                 saleQueries.getSalesByCustomerNameDesc(
                     isPaidByCustomer = isPaidByCustomer,
-                    mapper = ::mapSale,
+                    mapper = ::mapSale
                 ).asFlow().mapToList(ioDispatcher)
             }
         }
 
         override fun getSalesBySalePrice(
             isPaidByCustomer: Boolean,
-            isOrderedAsc: Boolean,
+            isOrderedAsc: Boolean
         ): Flow<List<Sale>> {
             return if (isOrderedAsc) {
                 saleQueries.getSalesBySalePriceAsc(
                     isPaidByCustomer = isPaidByCustomer,
-                    mapper = ::mapSale,
+                    mapper = ::mapSale
                 ).asFlow().mapToList(ioDispatcher)
             } else {
                 saleQueries.getSalesBySalePriceDesc(
                     isPaidByCustomer = isPaidByCustomer,
-                    mapper = ::mapSale,
+                    mapper = ::mapSale
                 ).asFlow().mapToList(ioDispatcher)
             }
         }
@@ -582,7 +582,7 @@ internal class LocalSaleData
             delivered: Boolean,
             canceled: Boolean,
             isAmazon: Boolean,
-            timestamp: String,
+            timestamp: String
         ): Sale {
             return Sale(
                 id = id,
@@ -616,7 +616,7 @@ internal class LocalSaleData
                 delivered = delivered,
                 canceled = canceled,
                 isAmazon = isAmazon,
-                timestamp = timestamp,
+                timestamp = timestamp
             )
         }
 
@@ -634,7 +634,7 @@ internal class LocalSaleData
             purchasePrice: Double,
             salePrice: Double,
             isPaid: Boolean,
-            timestamp: String,
+            timestamp: String
         ) = StockItem(
             id = id,
             productId = productId,
@@ -649,6 +649,6 @@ internal class LocalSaleData
             purchasePrice = purchasePrice.toFloat(),
             salePrice = salePrice.toFloat(),
             isPaid = isPaid,
-            timestamp = timestamp,
+            timestamp = timestamp
         )
     }

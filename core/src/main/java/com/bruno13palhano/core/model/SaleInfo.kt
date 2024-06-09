@@ -14,7 +14,7 @@ data class SaleInfo(
     val salePrice: Float,
     val deliveryPrice: Float,
     val quantity: Int,
-    val dateOfSale: Long,
+    val dateOfSale: Long
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -72,7 +72,7 @@ data class SaleInfo(
                 salePrice = 0F,
                 deliveryPrice = 0F,
                 quantity = 0,
-                dateOfSale = 0L,
+                dateOfSale = 0L
             )
     }
 }

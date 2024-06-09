@@ -8,7 +8,7 @@ import javax.inject.Inject
 internal class RemoteVersionRetrofit
     @Inject
     constructor(
-        private val apiService: Service,
+        private val apiService: Service
     ) : RemoteVersionData {
         override suspend fun getAll(): List<DataVersionNet> {
             return try {

@@ -10,7 +10,7 @@ import javax.inject.Singleton
 class AuthenticatorInterceptor
     @Inject
     constructor(
-        @DefaultSessionManager private val sessionManager: SessionManager,
+        @DefaultSessionManager private val sessionManager: SessionManager
     ) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val requestBuilder = chain.request().newBuilder()

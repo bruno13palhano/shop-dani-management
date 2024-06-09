@@ -27,10 +27,10 @@ internal object DatabaseModule {
     @Provides
     @Singleton
     fun provideShopDatabaseFactoryDriver(
-        @ApplicationContext context: Context,
+        @ApplicationContext context: Context
     ): ShopDatabase {
         return DatabaseFactory(
-            driverFactory = DriverFactory(context = context),
+            driverFactory = DriverFactory(context = context)
         ).createDriver()
     }
 

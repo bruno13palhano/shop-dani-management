@@ -8,7 +8,7 @@ import javax.inject.Inject
 internal class RemoteCategoryRetrofit
     @Inject
     constructor(
-        private val apiService: Service,
+        private val apiService: Service
     ) : RemoteCategoryData {
         override suspend fun getAll(): List<CategoryNet> {
             return try {

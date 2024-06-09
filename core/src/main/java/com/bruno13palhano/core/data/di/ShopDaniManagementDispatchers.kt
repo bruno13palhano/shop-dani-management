@@ -8,5 +8,5 @@ annotation class Dispatcher(val shopDaniDispatcher: ShopDaniManagementDispatcher
 
 enum class ShopDaniManagementDispatchers {
     IO,
-    DEFAULT,
+    DEFAULT
 }

@@ -10,7 +10,7 @@ import javax.inject.Inject
 internal class RemoteCustomerFirebase
     @Inject
     constructor(
-        private val firestore: FirebaseFirestore,
+        private val firestore: FirebaseFirestore
     ) : RemoteCustomerData {
         override suspend fun getAll(): List<CustomerNet> {
             val snapshot = firestore.collection("customers").get()
@@ -29,7 +29,7 @@ internal class RemoteCustomerFirebase
                                 phoneNumber = firebaseCustomer["phoneNumber"].toString(),
                                 gender = firebaseCustomer["gender"].toString(),
                                 age = (firebaseCustomer["age"] as Long).toInt(),
-                                timestamp = firebaseCustomer["timestamp"].toString(),
+                                timestamp = firebaseCustomer["timestamp"].toString()
                             )
                         }
                     } else {
@@ -57,8 +57,8 @@ internal class RemoteCustomerFirebase
                             "phoneNumber" to data.phoneNumber,
                             "gender" to data.gender,
                             "age" to data.age,
-                            "timestamp" to data.timestamp,
-                        ),
+                            "timestamp" to data.timestamp
+                        )
                     )
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -79,7 +79,7 @@ internal class RemoteCustomerFirebase
                     "phoneNumber" to data.phoneNumber,
                     "gender" to data.gender,
                     "age" to data.age,
-                    "timestamp" to data.timestamp,
+                    "timestamp" to data.timestamp
                 )
 
             docRef.update(updates)
@@ -99,7 +99,7 @@ internal class RemoteCustomerFirebase
                     "phoneNumber" to FieldValue.delete(),
                     "gender" to FieldValue.delete(),
                     "age" to FieldValue.delete(),
-                    "timestamp" to FieldValue.delete(),
+                    "timestamp" to FieldValue.delete()
                 )
 
             docRef.update(updates)

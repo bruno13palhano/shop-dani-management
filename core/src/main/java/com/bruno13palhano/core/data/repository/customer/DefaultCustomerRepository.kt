@@ -34,12 +34,12 @@ internal class DefaultCustomerRepository
         @InternalCustomer private val customerData: CustomerData,
         @InternalVersion private val versionData: VersionData,
         @FirebaseVersion private val remoteVersionData: RemoteVersionData,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : CustomerRepository {
         override suspend fun insert(
             model: Customer,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ): Long {
             val customerVersion = Versions.customerVersion(timestamp = model.timestamp)
 
@@ -57,8 +57,8 @@ internal class DefaultCustomerRepository
                                 phoneNumber = model.phoneNumber,
                                 gender = model.gender,
                                 age = model.age,
-                                timestamp = model.timestamp,
-                            ),
+                                timestamp = model.timestamp
+                            )
                         )
 
                     CoroutineScope(ioDispatcher).launch {
@@ -78,7 +78,7 @@ internal class DefaultCustomerRepository
         override suspend fun update(
             model: Customer,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val customerVersion = Versions.customerVersion(timestamp = model.timestamp)
 
@@ -99,7 +99,7 @@ internal class DefaultCustomerRepository
             id: Long,
             timestamp: String,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val customerVersion = Versions.customerVersion(timestamp = timestamp)
 
@@ -159,6 +159,6 @@ internal class DefaultCustomerRepository
                     deleteIds.forEach { customerData.deleteById(it, netVersion, {}) {} }
                     saveList.forEach { customerData.insert(it, netVersion, {}) {} }
                     versionData.insert(netVersion, {}) {}
-                },
+                }
             )
     }

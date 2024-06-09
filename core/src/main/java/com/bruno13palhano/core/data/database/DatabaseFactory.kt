@@ -11,8 +11,8 @@ internal class DatabaseFactory(private val driverFactory: DriverFactory) {
             driver = driverFactory.createDriver(),
             ProductCategoriesTableAdapter =
                 ProductCategoriesTable.Adapter(
-                    categoriesAdapter = listOfCategoryAdapter,
-                ),
+                    categoriesAdapter = listOfCategoryAdapter
+                )
         )
     }
 }
@@ -28,7 +28,7 @@ private val listOfCategoryAdapter =
                     Category(
                         id = params[0].toLong(),
                         category = params[1],
-                        timestamp = params[2],
+                        timestamp = params[2]
                     )
                 }
             }

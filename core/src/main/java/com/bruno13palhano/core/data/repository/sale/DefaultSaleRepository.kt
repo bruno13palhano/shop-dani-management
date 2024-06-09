@@ -44,12 +44,12 @@ internal class DefaultSaleRepository
         @InternalVersion private val versionData: VersionData,
         @FirebaseVersion private val remoteVersionData: RemoteVersionData,
         @InternalDefaultExcelSheet private val excelSheet: ExcelSheet,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : SaleRepository {
         override suspend fun insert(
             model: Sale,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ): Long {
             val saleVersion = Versions.saleVersion(timestamp = model.timestamp)
             val stockVersion = Versions.stockVersion(timestamp = model.timestamp)
@@ -59,15 +59,15 @@ internal class DefaultSaleRepository
                     model = model,
                     version = saleVersion,
                     pushed = true,
-                    onError = onError,
+                    onError = onError
                 ) { saleId, quantity ->
                     val netModel =
                         saleToSaleNet(
                             createSale(
                                 sale = model,
                                 saleId = saleId,
-                                stockOrderId = model.stockId,
-                            ),
+                                stockOrderId = model.stockId
+                            )
                         )
 
                     CoroutineScope(ioDispatcher).launch {
@@ -91,7 +91,7 @@ internal class DefaultSaleRepository
         override suspend fun update(
             model: Sale,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val saleVersion = Versions.saleVersion(timestamp = model.timestamp)
             val stockVersion = Versions.stockVersion(timestamp = model.timestamp)
@@ -127,7 +127,7 @@ internal class DefaultSaleRepository
                 excelSheet.createExcel(
                     sheetName = sheetName,
                     headers = salesSheetHeaders,
-                    data = salesToSheet,
+                    data = salesToSheet
                 )
             }
         }
@@ -142,7 +142,7 @@ internal class DefaultSaleRepository
                 excelSheet.createExcel(
                     sheetName = sheetName,
                     headers = amazonSalesSheetHeaders,
-                    data = amazonSalesToSheet,
+                    data = amazonSalesToSheet
                 )
             }
         }
@@ -165,7 +165,7 @@ internal class DefaultSaleRepository
 
         override fun getLastSales(
             offset: Int,
-            limit: Int,
+            limit: Int
         ): Flow<List<Sale>> {
             return saleData.getLastSales(offset = offset, limit = limit)
         }
@@ -176,14 +176,14 @@ internal class DefaultSaleRepository
 
         override fun getAllStockSales(
             offset: Int,
-            limit: Int,
+            limit: Int
         ): Flow<List<Sale>> {
             return saleData.getAllStockSales(offset = offset, limit = limit)
         }
 
         override fun getAllOrdersSales(
             offset: Int,
-            limit: Int,
+            limit: Int
         ): Flow<List<Sale>> {
             return saleData.getAllOrdersSales(offset = offset, limit = limit)
         }
@@ -192,7 +192,7 @@ internal class DefaultSaleRepository
             id: Long,
             timestamp: String,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val saleVersion = Versions.saleVersion(timestamp = timestamp)
 
@@ -235,21 +235,21 @@ internal class DefaultSaleRepository
 
         override fun getSalesByCustomerName(
             isPaidByCustomer: Boolean,
-            isOrderedAsc: Boolean,
+            isOrderedAsc: Boolean
         ): Flow<List<Sale>> {
             return saleData.getSalesByCustomerName(
                 isPaidByCustomer = isPaidByCustomer,
-                isOrderedAsc = isOrderedAsc,
+                isOrderedAsc = isOrderedAsc
             )
         }
 
         override fun getSalesBySalePrice(
             isPaidByCustomer: Boolean,
-            isOrderedAsc: Boolean,
+            isOrderedAsc: Boolean
         ): Flow<List<Sale>> {
             return saleData.getSalesBySalePrice(
                 isPaidByCustomer = isPaidByCustomer,
-                isOrderedAsc = isOrderedAsc,
+                isOrderedAsc = isOrderedAsc
             )
         }
 
@@ -284,7 +284,7 @@ internal class DefaultSaleRepository
                     deleteIds.forEach { saleData.deleteById(it, netVersion, {}) {} }
                     saveList.forEach { saleData.insert(it, netVersion, false, {}) { _, _ -> } }
                     versionData.insert(netVersion, {}) {}
-                },
+                }
             )
 
         override fun getDebitSales(): Flow<List<Sale>> {
@@ -294,7 +294,7 @@ internal class DefaultSaleRepository
         private fun createSale(
             sale: Sale,
             saleId: Long,
-            stockOrderId: Long,
+            stockOrderId: Long
         ) = Sale(
             id = saleId,
             productId = sale.productId,
@@ -327,6 +327,6 @@ internal class DefaultSaleRepository
             delivered = sale.delivered,
             canceled = sale.canceled,
             isAmazon = sale.isAmazon,
-            timestamp = sale.timestamp,
+            timestamp = sale.timestamp
         )
     }

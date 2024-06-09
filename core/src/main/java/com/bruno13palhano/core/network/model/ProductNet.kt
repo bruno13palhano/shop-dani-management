@@ -12,7 +12,7 @@ data class ProductNet(
     @Json(name = "date") val date: Long,
     @Json(name = "categories") val categories: List<CategoryNet>,
     @Json(name = "company") val company: String,
-    @Json(name = "timestamp") override val timestamp: String,
+    @Json(name = "timestamp") override val timestamp: String
 ) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

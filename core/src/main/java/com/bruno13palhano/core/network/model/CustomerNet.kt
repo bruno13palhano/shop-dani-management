@@ -13,7 +13,7 @@ data class CustomerNet(
     @Json(name = "phoneNumber") val phoneNumber: String,
     @Json(name = "gender") val gender: String,
     @Json(name = "age") val age: Int,
-    @Json(name = "timestamp") override val timestamp: String,
+    @Json(name = "timestamp") override val timestamp: String
 ) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

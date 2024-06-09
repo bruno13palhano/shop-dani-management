@@ -34,12 +34,12 @@ internal class DefaultStockRepository
         @InternalStock private val stockData: StockData,
         @InternalVersion private val versionData: VersionData,
         @FirebaseVersion private val remoteVersionData: RemoteVersionData,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : StockRepository {
         override suspend fun insert(
             model: StockItem,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ): Long {
             val stockOrderVersion = Versions.stockVersion(timestamp = model.timestamp)
 
@@ -47,7 +47,7 @@ internal class DefaultStockRepository
                 stockData.insert(
                     model = model,
                     version = stockOrderVersion,
-                    onError = onError,
+                    onError = onError
                 ) {
                     val netModel =
                         stockItemToStockItemNet(
@@ -65,8 +65,8 @@ internal class DefaultStockRepository
                                 purchasePrice = model.purchasePrice,
                                 salePrice = model.salePrice,
                                 isPaid = model.isPaid,
-                                timestamp = model.timestamp,
-                            ),
+                                timestamp = model.timestamp
+                            )
                         )
 
                     CoroutineScope(ioDispatcher).launch {
@@ -86,7 +86,7 @@ internal class DefaultStockRepository
         override suspend fun update(
             model: StockItem,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val stockOrderVersion = Versions.stockVersion(timestamp = model.timestamp)
 
@@ -122,7 +122,7 @@ internal class DefaultStockRepository
         override suspend fun updateStockQuantity(
             id: Long,
             quantity: Int,
-            timestamp: String,
+            timestamp: String
         ) {
             stockData.updateStockQuantity(id = id, quantity = quantity)
         }
@@ -131,7 +131,7 @@ internal class DefaultStockRepository
             id: Long,
             timestamp: String,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val stockOrderVersion = Versions.stockVersion(timestamp = timestamp)
 
@@ -195,6 +195,6 @@ internal class DefaultStockRepository
                     deleteIds.forEach { stockData.deleteById(it, netVersion, {}) {} }
                     saveList.forEach { stockData.insert(it, netVersion, {}) {} }
                     versionData.insert(netVersion, {}) {}
-                },
+                }
             )
     }

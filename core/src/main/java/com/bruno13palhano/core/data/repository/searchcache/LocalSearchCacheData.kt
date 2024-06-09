@@ -14,7 +14,7 @@ internal class LocalSearchCacheData
     @Inject
     constructor(
         private val searchQueries: SearchCacheTableQueries,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : SearchCacheData {
         override suspend fun insert(model: SearchCache): Long {
             searchQueries.insert(model.search, model.search)
@@ -32,8 +32,8 @@ internal class LocalSearchCacheData
 
         private fun mapSearchCache(
             id: String,
-            search: String,
+            search: String
         ) = SearchCache(
-            search = search,
+            search = search
         )
     }

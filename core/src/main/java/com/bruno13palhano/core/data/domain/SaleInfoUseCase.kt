@@ -13,15 +13,15 @@ class SaleInfoUseCase
     @Inject
     constructor(
         @SaleRep private val saleRepository: SaleRepository,
-        @CustomerRep private val customerRepository: CustomerRepository,
+        @CustomerRep private val customerRepository: CustomerRepository
     ) {
         operator fun invoke(
             saleId: Long,
-            customerId: Long,
+            customerId: Long
         ): Flow<SaleInfo> {
             return combine(
                 saleRepository.getById(id = saleId),
-                customerRepository.getById(id = customerId),
+                customerRepository.getById(id = customerId)
             ) { sale, customer ->
                 if (sale.customerId == customer.id) {
                     SaleInfo(
@@ -38,7 +38,7 @@ class SaleInfoUseCase
                         salePrice = sale.salePrice,
                         deliveryPrice = sale.deliveryPrice,
                         quantity = sale.quantity,
-                        dateOfSale = sale.dateOfSale,
+                        dateOfSale = sale.dateOfSale
                     )
                 } else {
                     SaleInfo.emptySaleInfo()

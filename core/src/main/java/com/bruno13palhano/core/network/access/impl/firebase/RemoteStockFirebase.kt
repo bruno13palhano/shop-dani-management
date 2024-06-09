@@ -10,11 +10,11 @@ import javax.inject.Inject
 internal class RemoteStockFirebase
     @Inject
     constructor(
-        private val firestore: FirebaseFirestore,
+        private val firestore: FirebaseFirestore
     ) : RemoteStockData {
         override suspend fun updateItemQuantity(
             id: Long,
-            quantity: Int,
+            quantity: Int
         ) {
             TODO("Not yet implemented")
         }
@@ -36,7 +36,7 @@ internal class RemoteStockFirebase
                                 purchasePrice = (firebaseStock["purchasePrice"] as Double).toFloat(),
                                 salePrice = (firebaseStock["salePrice"] as Double).toFloat(),
                                 isPaid = firebaseStock["isPaid"] as Boolean,
-                                timestamp = firebaseStock["timestamp"].toString(),
+                                timestamp = firebaseStock["timestamp"].toString()
                             )
                         }
                     } else {
@@ -64,8 +64,8 @@ internal class RemoteStockFirebase
                             "purchasePrice" to data.purchasePrice,
                             "salePrice" to data.salePrice,
                             "isPaid" to data.isPaid,
-                            "timestamp" to data.timestamp,
-                        ),
+                            "timestamp" to data.timestamp
+                        )
                     )
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -86,7 +86,7 @@ internal class RemoteStockFirebase
                     "purchasePrice" to data.purchasePrice,
                     "salePrice" to data.salePrice,
                     "isPaid" to data.isPaid,
-                    "timestamp" to data.timestamp,
+                    "timestamp" to data.timestamp
                 )
 
             docRef.update(updates)
@@ -106,7 +106,7 @@ internal class RemoteStockFirebase
                     "purchasePrice" to FieldValue.delete(),
                     "salePrice" to FieldValue.delete(),
                     "isPaid" to FieldValue.delete(),
-                    "timestamp" to FieldValue.delete(),
+                    "timestamp" to FieldValue.delete()
                 )
 
             docRef.update(updates)

@@ -25,13 +25,13 @@ object CoroutinesScopesModule {
     @ApplicationScope
     @Provides
     fun providesCoroutineScope(
-        @Dispatcher(ShopDaniManagementDispatchers.DEFAULT) dispatcher: CoroutineDispatcher,
+        @Dispatcher(ShopDaniManagementDispatchers.DEFAULT) dispatcher: CoroutineDispatcher
     ): CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
 
     @Singleton
     @IOScope
     @Provides
     fun providesIOScope(
-        @Dispatcher(ShopDaniManagementDispatchers.IO) dispatcher: CoroutineDispatcher,
+        @Dispatcher(ShopDaniManagementDispatchers.IO) dispatcher: CoroutineDispatcher
     ): CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
 }

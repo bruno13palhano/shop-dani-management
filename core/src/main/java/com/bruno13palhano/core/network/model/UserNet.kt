@@ -11,5 +11,5 @@ data class UserNet(
     @Json(name = "photo") val photo: String,
     @Json(name = "role") val role: String,
     @Json(name = "enabled") val enabled: Boolean,
-    @Json(name = "timestamp") override val timestamp: String,
+    @Json(name = "timestamp") override val timestamp: String
 ) : Model(id = id, timestamp = timestamp)

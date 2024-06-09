@@ -7,7 +7,7 @@ data class CustomerInfo(
     val photo: ByteArray,
     val owingValue: String,
     val purchasesValue: String,
-    val lastPurchaseValue: String,
+    val lastPurchaseValue: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -44,7 +44,7 @@ data class CustomerInfo(
                 photo = byteArrayOf(),
                 owingValue = "",
                 purchasesValue = "",
-                lastPurchaseValue = "",
+                lastPurchaseValue = ""
             )
     }
 }

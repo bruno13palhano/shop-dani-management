@@ -12,12 +12,12 @@ private const val TOKEN_FILE_NAME = "Shopdani Management"
 class SessionManager
     @Inject
     constructor(
-        @ApplicationContext context: Context,
+        @ApplicationContext context: Context
     ) {
         private var preferences: SharedPreferences =
             context.getSharedPreferences(
                 TOKEN_FILE_NAME,
-                Context.MODE_PRIVATE,
+                Context.MODE_PRIVATE
             )
 
         companion object {

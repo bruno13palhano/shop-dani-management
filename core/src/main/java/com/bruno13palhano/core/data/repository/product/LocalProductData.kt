@@ -24,13 +24,13 @@ internal class LocalProductData
         private val productQueries: ShopDatabaseQueries,
         private val productCategoriesQueries: ProductCategoriesTableQueries,
         private val versionQueries: VersionTableQueries,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : ProductData {
         override suspend fun insert(
             model: Product,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ): Long {
             var id = 0L
 
@@ -44,19 +44,19 @@ internal class LocalProductData
                             photo = model.photo,
                             date = model.date,
                             company = model.company,
-                            timestamp = model.timestamp,
+                            timestamp = model.timestamp
                         )
                         id = productQueries.getLastId().executeAsOne()
 
                         productCategoriesQueries.insert(
                             productId = id,
-                            categories = model.categories,
+                            categories = model.categories
                         )
 
                         versionQueries.insertWithId(
                             id = version.id,
                             name = version.name,
-                            timestamp = version.timestamp,
+                            timestamp = version.timestamp
                         )
 
                         onSuccess(id)
@@ -71,7 +71,7 @@ internal class LocalProductData
                             photo = model.photo,
                             date = model.date,
                             company = model.company,
-                            timestamp = model.timestamp,
+                            timestamp = model.timestamp
                         )
                         try {
                             val categoryId =
@@ -79,19 +79,19 @@ internal class LocalProductData
                             productCategoriesQueries.update(
                                 id = categoryId,
                                 productId = model.id,
-                                categories = model.categories,
+                                categories = model.categories
                             )
                         } catch (e: Exception) {
                             productCategoriesQueries.insert(
                                 productId = model.id,
-                                categories = model.categories,
+                                categories = model.categories
                             )
                         }
 
                         versionQueries.insertWithId(
                             id = version.id,
                             name = version.name,
-                            timestamp = version.timestamp,
+                            timestamp = version.timestamp
                         )
 
                         id = model.id
@@ -110,7 +110,7 @@ internal class LocalProductData
             model: Product,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 productQueries.transaction {
@@ -119,7 +119,7 @@ internal class LocalProductData
                     productCategoriesQueries.update(
                         productId = model.id,
                         categories = model.categories,
-                        id = categoryId,
+                        id = categoryId
                     )
 
                     productQueries.update(
@@ -130,13 +130,13 @@ internal class LocalProductData
                         date = model.date,
                         company = model.company,
                         id = model.id,
-                        timestamp = model.timestamp,
+                        timestamp = model.timestamp
                     )
 
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.name,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess()
@@ -153,20 +153,20 @@ internal class LocalProductData
                 name = value,
                 description = value,
                 company = value,
-                mapper = ::mapProduct,
+                mapper = ::mapProduct
             ).asFlow().mapToList(ioDispatcher)
         }
 
         override fun searchPerCategory(
             value: String,
-            categoryId: Long,
+            categoryId: Long
         ): Flow<List<Product>> {
             return productQueries.searchPerCategory(
                 name = value,
                 description = value,
                 company = value,
                 categoryId = categoryId,
-                mapper = ::mapProduct,
+                mapper = ::mapProduct
             ).asFlow().mapToList(ioDispatcher)
         }
 
@@ -179,7 +179,7 @@ internal class LocalProductData
             id: Long,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 productQueries.transaction {
@@ -188,7 +188,7 @@ internal class LocalProductData
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.timestamp,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess()
@@ -229,7 +229,7 @@ internal class LocalProductData
             date: Long,
             categories: List<Category>,
             company: String,
-            timestamp: String,
+            timestamp: String
         ): Product {
             return Product(
                 id = id,
@@ -240,7 +240,7 @@ internal class LocalProductData
                 date = date,
                 categories = categories,
                 company = company,
-                timestamp = timestamp,
+                timestamp = timestamp
             )
         }
     }

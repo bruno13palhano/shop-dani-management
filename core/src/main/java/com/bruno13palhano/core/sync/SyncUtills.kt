@@ -20,7 +20,7 @@ suspend fun <T : Model> Synchronizer.syncData(
     dataList: List<T>,
     networkList: List<T>,
     onPush: suspend (deleteIds: List<Long>, saveList: List<T>, dtVersion: DataVersion) -> Unit,
-    onPull: suspend (deleteIds: List<Long>, saveList: List<T>, netVersion: DataVersion) -> Unit,
+    onPull: suspend (deleteIds: List<Long>, saveList: List<T>, netVersion: DataVersion) -> Unit
 ) = suspendRunCatching {
     if (dataVersion.id != 0L || networkVersion.id != 0L) {
         if (dataVersion.timestamp > networkVersion.timestamp) {

@@ -33,12 +33,12 @@ internal class DefaultCatalogRepository
         @InternalCatalog private val catalogData: CatalogData,
         @InternalVersion private val versionData: VersionData,
         @FirebaseVersion private val remoteVersionData: RemoteVersionData,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : CatalogRepository {
         override suspend fun insert(
             model: Catalog,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ): Long {
             val catalogVersion = Versions.catalogVersion(timestamp = model.timestamp)
 
@@ -55,8 +55,8 @@ internal class DefaultCatalogRepository
                                 description = model.description,
                                 discount = model.discount,
                                 price = model.price,
-                                timestamp = model.timestamp,
-                            ),
+                                timestamp = model.timestamp
+                            )
                         )
 
                     CoroutineScope(ioDispatcher).launch {
@@ -76,7 +76,7 @@ internal class DefaultCatalogRepository
         override suspend fun update(
             model: Catalog,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val catalogVersion = Versions.catalogVersion(timestamp = model.timestamp)
 
@@ -97,7 +97,7 @@ internal class DefaultCatalogRepository
             id: Long,
             timestamp: String,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val catalogVersion = Versions.catalogVersion(timestamp = timestamp)
 
@@ -149,6 +149,6 @@ internal class DefaultCatalogRepository
                     deleteIds.forEach { catalogData.deleteById(it, netVersion, {}) {} }
                     saveList.forEach { catalogData.insert(it, netVersion, {}) {} }
                     versionData.insert(netVersion, {}) {}
-                },
+                }
             )
     }

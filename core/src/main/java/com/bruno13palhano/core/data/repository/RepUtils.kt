@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.first
 
 suspend fun getDataVersion(
     versionData: VersionData,
-    id: Long,
+    id: Long
 ) = try {
     versionData.getById(id = id).first()
 } catch (ignored: Exception) {
@@ -20,7 +20,7 @@ suspend fun getDataVersion(
 
 suspend fun getNetworkVersion(
     remoteVersionData: RemoteVersionData,
-    id: Long,
+    id: Long
 ) = try {
     remoteVersionData.getAll().find { it.id == id }!!
 } catch (ignored: Exception) {
@@ -59,41 +59,41 @@ object Versions {
         DataVersion(
             id = CATEGORY_VERSION_ID,
             name = CATEGORY_NAME,
-            timestamp = timestamp,
+            timestamp = timestamp
         )
 
     fun productVersion(timestamp: String) =
         DataVersion(
             id = PRODUCT_VERSION_ID,
             name = PRODUCT_NAME,
-            timestamp = timestamp,
+            timestamp = timestamp
         )
 
     fun stockVersion(timestamp: String) =
         DataVersion(
             id = STOCK_VERSION_ID,
             name = STOCK_NAME,
-            timestamp = timestamp,
+            timestamp = timestamp
         )
 
     fun saleVersion(timestamp: String) =
         DataVersion(
             id = SALE_VERSION_ID,
             name = SALE_NAME,
-            timestamp = timestamp,
+            timestamp = timestamp
         )
 
     fun customerVersion(timestamp: String) =
         DataVersion(
             id = CUSTOMER_VERSION_ID,
             name = CUSTOMER_NAME,
-            timestamp = timestamp,
+            timestamp = timestamp
         )
 
     fun catalogVersion(timestamp: String) =
         DataVersion(
             id = CATALOG_VERSION_ID,
             name = CATALOG_NAME,
-            timestamp = timestamp,
+            timestamp = timestamp
         )
 }

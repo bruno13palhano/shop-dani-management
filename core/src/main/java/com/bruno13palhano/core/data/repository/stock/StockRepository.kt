@@ -17,7 +17,7 @@ interface StockRepository : RepositoryOperations<StockItem>, Syncable {
     suspend fun updateStockQuantity(
         id: Long,
         quantity: Int,
-        timestamp: String,
+        timestamp: String
     )
 
     fun getStockItems(): Flow<List<StockItem>>

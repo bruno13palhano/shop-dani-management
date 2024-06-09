@@ -17,12 +17,12 @@ internal class RemoteUserFirebase
     constructor(
         private val auth: FirebaseAuth,
         private val firestore: FirebaseFirestore,
-        private val storage: FirebaseStorage,
+        private val storage: FirebaseStorage
     ) : RemoteUserData {
         override suspend fun create(
             user: UserNet,
             onError: (error: Int) -> Unit,
-            onSuccess: (userNet: UserNet) -> Unit,
+            onSuccess: (userNet: UserNet) -> Unit
         ) {
             val storageRef = storage.reference
 
@@ -32,7 +32,7 @@ internal class RemoteUserFirebase
                         auth.currentUser?.let { firebaseUser ->
                             val profilePhotoRef =
                                 storageRef.child(
-                                    "${firebaseUser.email}/${user.username}/profile_image.jpg",
+                                    "${firebaseUser.email}/${user.username}/profile_image.jpg"
                                 )
                             val uploadTask =
                                 profilePhotoRef.putBytes(Base64.getDecoder().decode(user.photo))
@@ -60,7 +60,7 @@ internal class RemoteUserFirebase
                                                         photo = user.photo,
                                                         role = user.role,
                                                         enabled = user.enabled,
-                                                        timestamp = user.timestamp,
+                                                        timestamp = user.timestamp
                                                     )
 
                                                 val fireUser =
@@ -72,7 +72,7 @@ internal class RemoteUserFirebase
                                                         "photo" to uri,
                                                         "role" to newUser.role,
                                                         "enabled" to newUser.enabled,
-                                                        "timestamp" to newUser.timestamp,
+                                                        "timestamp" to newUser.timestamp
                                                     )
 
                                                 auth.uid?.let {
@@ -98,14 +98,14 @@ internal class RemoteUserFirebase
         override suspend fun update(
             user: UserNet,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
         }
 
         override suspend fun login(
             user: UserNet,
             onError: (error: Int) -> Unit,
-            onSuccess: (token: String) -> Unit,
+            onSuccess: (token: String) -> Unit
         ) {
             try {
                 auth.signInWithEmailAndPassword(user.username, user.password)
@@ -141,7 +141,7 @@ internal class RemoteUserFirebase
                         photo = photo,
                         role = it["role"].toString(),
                         enabled = it["enabled"] as Boolean,
-                        timestamp = it["timestamp"].toString(),
+                        timestamp = it["timestamp"].toString()
                     )
                 }!!
             } catch (e: Exception) {
@@ -155,7 +155,7 @@ internal class RemoteUserFirebase
                     photo = "",
                     role = "",
                     enabled = false,
-                    timestamp = "",
+                    timestamp = ""
                 )
             }
         }
@@ -163,7 +163,7 @@ internal class RemoteUserFirebase
         override suspend fun updateUserPassword(
             user: UserNet,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             TODO("Not yet implemented")
         }

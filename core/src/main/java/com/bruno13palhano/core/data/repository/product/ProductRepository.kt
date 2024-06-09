@@ -15,7 +15,7 @@ interface ProductRepository : RepositoryOperations<Product>, Syncable {
 
     fun searchPerCategory(
         value: String,
-        categoryId: Long,
+        categoryId: Long
     ): Flow<List<Product>>
 
     /**

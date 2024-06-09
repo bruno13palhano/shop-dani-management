@@ -11,7 +11,7 @@ import javax.inject.Inject
 class FinancialUseCase
     @Inject
     constructor(
-        @SaleRep private val saleRepository: SaleRepository,
+        @SaleRep private val saleRepository: SaleRepository
     ) {
         operator fun invoke(): Flow<FinancialInfo> {
             return saleRepository.getAll().map { mapToFinancialInfo(it) }
@@ -45,19 +45,19 @@ class FinancialUseCase
                     calculateProfit(
                         sales = allSales,
                         salesPurchasePrice = allSalesPurchasePrice,
-                        deliveriesPrice = allDeliveriesPrice,
-                    ),
+                        deliveriesPrice = allDeliveriesPrice
+                    )
             )
         }
 
         private fun saleAmount(
             price: Float,
-            quantity: Int,
+            quantity: Int
         ) = (price * quantity)
 
         private fun calculateProfit(
             sales: Float,
             salesPurchasePrice: Float,
-            deliveriesPrice: Float,
+            deliveriesPrice: Float
         ) = sales - (salesPurchasePrice + deliveriesPrice)
     }

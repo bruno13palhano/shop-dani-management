@@ -16,12 +16,12 @@ internal class LocalUserData
     @Inject
     constructor(
         private val usersTableQueries: UsersTableQueries,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : UserData {
         override suspend fun insert(
             user: User,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ) {
             try {
                 if (user.id == 0L) {
@@ -33,7 +33,7 @@ internal class LocalUserData
                             photo = user.photo,
                             role = user.role,
                             enabled = user.enabled,
-                            timestamp = user.timestamp,
+                            timestamp = user.timestamp
                         )
                         val id = usersTableQueries.lastId().executeAsOne()
                         onSuccess(id)
@@ -47,7 +47,7 @@ internal class LocalUserData
                         photo = user.photo,
                         role = user.role,
                         enabled = user.enabled,
-                        timestamp = user.timestamp,
+                        timestamp = user.timestamp
                     )
                     onSuccess(user.id)
                 }
@@ -60,14 +60,14 @@ internal class LocalUserData
         override suspend fun update(
             user: User,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 usersTableQueries.update(
                     username = user.username,
                     photo = user.photo,
                     timestamp = user.timestamp,
-                    id = user.id,
+                    id = user.id
                 )
                 onSuccess()
             } catch (e: Exception) {
@@ -79,7 +79,7 @@ internal class LocalUserData
         override fun getById(
             userId: Long,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ): Flow<User> {
             return usersTableQueries.getById(id = userId, mapper = ::mapUser)
                 .asFlow().mapToOne(ioDispatcher)
@@ -89,7 +89,7 @@ internal class LocalUserData
         override suspend fun updateUserPassword(
             user: User,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 usersTableQueries.updatePassword(timestamp = user.timestamp, id = user.id)
@@ -108,7 +108,7 @@ internal class LocalUserData
             photo: ByteArray,
             role: String,
             enabled: Boolean,
-            timestamp: String,
+            timestamp: String
         ) = User(
             id = id,
             username = username,
@@ -117,6 +117,6 @@ internal class LocalUserData
             photo = photo,
             role = role,
             enabled = enabled,
-            timestamp = timestamp,
+            timestamp = timestamp
         )
     }

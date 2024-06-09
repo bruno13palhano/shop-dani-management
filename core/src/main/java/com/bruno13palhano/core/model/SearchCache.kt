@@ -7,5 +7,5 @@ package com.bruno13palhano.core.model
  * @property search the value of the search.
  */
 data class SearchCache(
-    val search: String,
+    val search: String
 )

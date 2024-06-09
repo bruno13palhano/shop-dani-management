@@ -10,7 +10,7 @@ import javax.inject.Inject
 internal class RemoteVersionFirebase
     @Inject
     constructor(
-        private val firestore: FirebaseFirestore,
+        private val firestore: FirebaseFirestore
     ) : RemoteVersionData {
         override suspend fun getAll(): List<DataVersionNet> {
             val snapshot = firestore.collection("versions").get()
@@ -22,7 +22,7 @@ internal class RemoteVersionFirebase
                             DataVersionNet(
                                 id = firebaseVersion["id"] as Long,
                                 name = firebaseVersion["name"].toString(),
-                                timestamp = firebaseVersion["timestamp"].toString(),
+                                timestamp = firebaseVersion["timestamp"].toString()
                             )
                         }
                     } else {
@@ -43,8 +43,8 @@ internal class RemoteVersionFirebase
                         hashMapOf(
                             "id" to data.id,
                             "name" to data.name,
-                            "timestamp" to data.timestamp,
-                        ),
+                            "timestamp" to data.timestamp
+                        )
                     )
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -58,7 +58,7 @@ internal class RemoteVersionFirebase
                 hashMapOf<String, Any>(
                     "id" to data.id,
                     "name" to data.name,
-                    "timestamp" to data.timestamp,
+                    "timestamp" to data.timestamp
                 )
 
             docRef.update(updates)
@@ -71,7 +71,7 @@ internal class RemoteVersionFirebase
                 hashMapOf<String, Any>(
                     "id" to FieldValue.delete(),
                     "name" to FieldValue.delete(),
-                    "timestamp" to FieldValue.delete(),
+                    "timestamp" to FieldValue.delete()
                 )
 
             docRef.update(updates)

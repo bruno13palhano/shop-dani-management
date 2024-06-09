@@ -10,14 +10,14 @@ interface StockData : DataOperations<StockItem> {
         model: StockItem,
         version: DataVersion,
         onError: (error: Int) -> Unit,
-        onSuccess: (id: Long) -> Unit,
+        onSuccess: (id: Long) -> Unit
     ): Long
 
     suspend fun update(
         model: StockItem,
         version: DataVersion,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit,
+        onSuccess: () -> Unit
     )
 
     fun getItems(): Flow<List<StockItem>>
@@ -30,7 +30,7 @@ interface StockData : DataOperations<StockItem> {
 
     suspend fun updateStockQuantity(
         id: Long,
-        quantity: Int,
+        quantity: Int
     )
 
     fun getStockItems(): Flow<List<StockItem>>

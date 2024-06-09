@@ -20,13 +20,13 @@ internal class LocalCustomerData
     constructor(
         private val customerQueries: CustomerTableQueries,
         private val versionQueries: VersionTableQueries,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : CustomerData {
         override suspend fun insert(
             model: Customer,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ): Long {
             var id = 0L
 
@@ -42,14 +42,14 @@ internal class LocalCustomerData
                             phoneNumber = model.phoneNumber,
                             gender = model.gender,
                             age = model.age.toLong(),
-                            timestamp = model.timestamp,
+                            timestamp = model.timestamp
                         )
                         id = customerQueries.getLastId().executeAsOne()
 
                         versionQueries.insertWithId(
                             id = version.id,
                             name = version.name,
-                            timestamp = version.timestamp,
+                            timestamp = version.timestamp
                         )
 
                         onSuccess(id)
@@ -66,13 +66,13 @@ internal class LocalCustomerData
                             phoneNumber = model.phoneNumber,
                             gender = model.gender,
                             age = model.age.toLong(),
-                            timestamp = model.timestamp,
+                            timestamp = model.timestamp
                         )
 
                         versionQueries.insertWithId(
                             id = version.id,
                             name = version.name,
-                            timestamp = version.timestamp,
+                            timestamp = version.timestamp
                         )
 
                         id = model.id
@@ -91,7 +91,7 @@ internal class LocalCustomerData
             model: Customer,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 customerQueries.transaction {
@@ -105,13 +105,13 @@ internal class LocalCustomerData
                         phoneNumber = model.phoneNumber,
                         gender = model.gender,
                         age = model.age.toLong(),
-                        timestamp = model.timestamp,
+                        timestamp = model.timestamp
                     )
 
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.timestamp,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess()
@@ -126,7 +126,7 @@ internal class LocalCustomerData
             id: Long,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 customerQueries.transaction {
@@ -135,7 +135,7 @@ internal class LocalCustomerData
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.timestamp,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess()
@@ -157,7 +157,7 @@ internal class LocalCustomerData
                 email = search,
                 address = search,
                 phoneNumber = search,
-                mapper = ::mapCustomer,
+                mapper = ::mapCustomer
             ).asFlow().mapToList(ioDispatcher)
         }
 
@@ -203,7 +203,7 @@ internal class LocalCustomerData
             phoneNumber: String,
             gender: String,
             age: Long,
-            timestamp: String,
+            timestamp: String
         ) = Customer(
             id = id,
             name = name,
@@ -214,6 +214,6 @@ internal class LocalCustomerData
             phoneNumber = phoneNumber,
             gender = gender,
             age = age.toInt(),
-            timestamp = timestamp,
+            timestamp = timestamp
         )
     }

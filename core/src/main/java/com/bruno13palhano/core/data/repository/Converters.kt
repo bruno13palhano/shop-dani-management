@@ -26,7 +26,7 @@ fun catalogToCatalogNet(model: Catalog) =
         description = model.description,
         discount = model.discount,
         price = model.price,
-        timestamp = model.timestamp,
+        timestamp = model.timestamp
     )
 
 fun catalogNetToCatalog(model: CatalogNet) =
@@ -39,21 +39,21 @@ fun catalogNetToCatalog(model: CatalogNet) =
         description = model.description,
         discount = model.discount,
         price = model.price,
-        timestamp = model.timestamp,
+        timestamp = model.timestamp
     )
 
 fun categoryNetToCategory(categoryNet: CategoryNet) =
     Category(
         id = categoryNet.id,
         category = categoryNet.category,
-        timestamp = categoryNet.timestamp,
+        timestamp = categoryNet.timestamp
     )
 
 fun categoryToCategoryNet(category: Category) =
     CategoryNet(
         id = category.id,
         category = category.category,
-        timestamp = category.timestamp,
+        timestamp = category.timestamp
     )
 
 fun customerNetToCustomer(customerNet: CustomerNet) =
@@ -72,7 +72,7 @@ fun customerNetToCustomer(customerNet: CustomerNet) =
         phoneNumber = customerNet.phoneNumber,
         gender = customerNet.gender,
         age = customerNet.age,
-        timestamp = customerNet.timestamp,
+        timestamp = customerNet.timestamp
     )
 
 fun customerToCustomerNet(customer: Customer) =
@@ -91,7 +91,7 @@ fun customerToCustomerNet(customer: Customer) =
         phoneNumber = customer.phoneNumber,
         gender = customer.gender,
         age = customer.age,
-        timestamp = customer.timestamp,
+        timestamp = customer.timestamp
     )
 
 fun productToProductNet(product: Product) =
@@ -109,7 +109,7 @@ fun productToProductNet(product: Product) =
         date = product.date,
         categories = product.categories.map { categoryToCategoryNet(it) },
         company = product.company,
-        timestamp = product.timestamp,
+        timestamp = product.timestamp
     )
 
 fun productNetToProduct(productNet: ProductNet) =
@@ -127,21 +127,21 @@ fun productNetToProduct(productNet: ProductNet) =
         date = productNet.date,
         categories = productNet.categories.map { categoryNetToCategory(it) },
         company = productNet.company,
-        timestamp = productNet.timestamp,
+        timestamp = productNet.timestamp
     )
 
 fun versionToVersionNet(version: DataVersion) =
     DataVersionNet(
         id = version.id,
         name = version.name,
-        timestamp = version.timestamp,
+        timestamp = version.timestamp
     )
 
 fun versionNetToVersion(versionNet: DataVersionNet) =
     DataVersion(
         id = versionNet.id,
         name = versionNet.name,
-        timestamp = versionNet.timestamp,
+        timestamp = versionNet.timestamp
     )
 
 fun saleToSaleNet(sale: Sale) =
@@ -170,7 +170,7 @@ fun saleToSaleNet(sale: Sale) =
         delivered = sale.delivered,
         canceled = sale.canceled,
         isAmazon = sale.isAmazon,
-        timestamp = sale.timestamp,
+        timestamp = sale.timestamp
     )
 
 fun saleNetToSale(saleNet: SaleNet) =
@@ -206,7 +206,7 @@ fun saleNetToSale(saleNet: SaleNet) =
         delivered = saleNet.delivered,
         canceled = saleNet.canceled,
         isAmazon = saleNet.isAmazon,
-        timestamp = saleNet.timestamp,
+        timestamp = saleNet.timestamp
     )
 
 fun stockItemToStockItemNet(stockItem: StockItem) =
@@ -220,7 +220,7 @@ fun stockItemToStockItemNet(stockItem: StockItem) =
         purchasePrice = stockItem.purchasePrice,
         salePrice = stockItem.salePrice,
         isPaid = stockItem.isPaid,
-        timestamp = stockItem.timestamp,
+        timestamp = stockItem.timestamp
     )
 
 fun stockItemNetToStockItem(stockItemNet: StockItemNet) =
@@ -238,7 +238,7 @@ fun stockItemNetToStockItem(stockItemNet: StockItemNet) =
         purchasePrice = stockItemNet.purchasePrice,
         salePrice = stockItemNet.salePrice,
         isPaid = stockItemNet.isPaid,
-        timestamp = stockItemNet.timestamp,
+        timestamp = stockItemNet.timestamp
     )
 
 fun userNetToUser(userNet: UserNet) =
@@ -255,7 +255,7 @@ fun userNetToUser(userNet: UserNet) =
             },
         role = userNet.role,
         enabled = userNet.enabled,
-        timestamp = userNet.timestamp,
+        timestamp = userNet.timestamp
     )
 
 fun userToUserNet(user: User) =
@@ -272,5 +272,5 @@ fun userToUserNet(user: User) =
             },
         role = user.role,
         enabled = user.enabled,
-        timestamp = user.timestamp,
+        timestamp = user.timestamp
     )

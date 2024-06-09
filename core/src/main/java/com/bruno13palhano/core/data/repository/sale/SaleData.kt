@@ -11,14 +11,14 @@ interface SaleData : DataOperations<Sale> {
         version: DataVersion,
         pushed: Boolean,
         onError: (error: Int) -> Unit,
-        onSuccess: (id: Long, itemQuantity: Int) -> Unit,
+        onSuccess: (id: Long, itemQuantity: Int) -> Unit
     ): Long
 
     suspend fun update(
         model: Sale,
         version: DataVersion,
         onError: (error: Int) -> Unit,
-        onSuccess: (stockQuantity: Int) -> Unit,
+        onSuccess: (stockQuantity: Int) -> Unit
     )
 
     fun getByCustomerId(customerId: Long): Flow<List<Sale>>
@@ -31,19 +31,19 @@ interface SaleData : DataOperations<Sale> {
 
     fun getLastSales(
         offset: Int,
-        limit: Int,
+        limit: Int
     ): Flow<List<Sale>>
 
     fun getAmazonSales(): Flow<List<Sale>>
 
     fun getAllStockSales(
         offset: Int,
-        limit: Int,
+        limit: Int
     ): Flow<List<Sale>>
 
     fun getAllOrdersSales(
         offset: Int,
-        limit: Int,
+        limit: Int
     ): Flow<List<Sale>>
 
     fun getAllCanceledSales(): Flow<List<Sale>>
@@ -66,12 +66,12 @@ interface SaleData : DataOperations<Sale> {
 
     fun getSalesByCustomerName(
         isPaidByCustomer: Boolean,
-        isOrderedAsc: Boolean,
+        isOrderedAsc: Boolean
     ): Flow<List<Sale>>
 
     fun getSalesBySalePrice(
         isPaidByCustomer: Boolean,
-        isOrderedAsc: Boolean,
+        isOrderedAsc: Boolean
     ): Flow<List<Sale>>
 
     fun getAllSalesByCustomerName(isOrderedAsc: Boolean): Flow<List<Sale>>

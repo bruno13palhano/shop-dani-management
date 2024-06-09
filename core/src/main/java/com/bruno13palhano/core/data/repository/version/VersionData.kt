@@ -7,19 +7,19 @@ interface VersionData {
     suspend fun insert(
         model: DataVersion,
         onError: (error: Int) -> Unit,
-        onSuccess: (id: Long) -> Unit,
+        onSuccess: (id: Long) -> Unit
     ): Long
 
     suspend fun update(
         model: DataVersion,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit,
+        onSuccess: () -> Unit
     )
 
     suspend fun deleteById(
         id: Long,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit,
+        onSuccess: () -> Unit
     )
 
     fun getAll(): Flow<List<DataVersion>>

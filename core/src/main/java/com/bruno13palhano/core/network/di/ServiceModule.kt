@@ -34,7 +34,7 @@ internal object ServiceModule {
     @Provides
     @Singleton
     fun provideApiService(
-        @DefaultAuthenticationInterceptor authenticatorInterceptor: Interceptor,
+        @DefaultAuthenticationInterceptor authenticatorInterceptor: Interceptor
     ): Service {
         val moshi =
             Moshi.Builder()
@@ -65,13 +65,13 @@ internal object ServiceModule {
     @DefaultSessionManager
     @Provides
     fun provideSession(
-        @ApplicationContext context: Context,
+        @ApplicationContext context: Context
     ): SessionManager = SessionManager(context)
 
     @Singleton
     @DefaultAuthenticationInterceptor
     @Provides
     fun provideAuthenticationInterceptor(
-        @DefaultSessionManager sessionManager: SessionManager,
+        @DefaultSessionManager sessionManager: SessionManager
     ): Interceptor = AuthenticatorInterceptor(sessionManager)
 }

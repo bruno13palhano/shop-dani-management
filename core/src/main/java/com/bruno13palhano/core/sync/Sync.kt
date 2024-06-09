@@ -11,7 +11,7 @@ object Sync {
             enqueueUniqueWork(
                 SYNC_WORK_NAME,
                 ExistingWorkPolicy.KEEP,
-                FetchDataWork.startUpSyncWork(),
+                FetchDataWork.startUpSyncWork()
             )
         }
     }

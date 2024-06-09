@@ -34,7 +34,7 @@ internal class DefaultCategoryRepository
         @InternalCategory private val categoryData: CategoryData,
         @InternalVersion private val versionData: VersionData,
         @FirebaseVersion private val remoteVersionData: RemoteVersionData,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : CategoryRepository {
         override fun search(value: String): Flow<List<Category>> {
             return categoryData.search(value = value)
@@ -44,7 +44,7 @@ internal class DefaultCategoryRepository
             id: Long,
             timestamp: String,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val categoryVersion = Versions.categoryVersion(timestamp = timestamp)
 
@@ -88,13 +88,13 @@ internal class DefaultCategoryRepository
                     deleteIds.forEach { categoryData.deleteById(it, netVersion, {}) {} }
                     saveList.forEach { categoryData.insert(it, netVersion, {}) {} }
                     versionData.insert(netVersion, {}) {}
-                },
+                }
             )
 
         override suspend fun update(
             model: Category,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
 
@@ -114,7 +114,7 @@ internal class DefaultCategoryRepository
         override suspend fun insert(
             model: Category,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ): Long {
             val categoryVersion = Versions.categoryVersion(timestamp = model.timestamp)
 
@@ -125,8 +125,8 @@ internal class DefaultCategoryRepository
                             Category(
                                 id = it,
                                 category = model.category,
-                                timestamp = model.timestamp,
-                            ),
+                                timestamp = model.timestamp
+                            )
                         )
 
                     CoroutineScope(ioDispatcher).launch {

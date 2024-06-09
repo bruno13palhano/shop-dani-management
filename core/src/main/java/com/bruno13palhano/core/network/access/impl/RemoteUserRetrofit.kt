@@ -16,12 +16,12 @@ internal class RemoteUserRetrofit
     @Inject
     constructor(
         private val apiService: Service,
-        @IOScope private val ioScope: CoroutineScope,
+        @IOScope private val ioScope: CoroutineScope
     ) : RemoteUserData {
         override suspend fun create(
             user: UserNet,
             onError: (error: Int) -> Unit,
-            onSuccess: (userNet: UserNet) -> Unit,
+            onSuccess: (userNet: UserNet) -> Unit
         ) {
             ioScope.launch {
                 try {
@@ -46,7 +46,7 @@ internal class RemoteUserRetrofit
         override suspend fun update(
             user: UserNet,
             onError: (Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             ioScope.launch {
                 try {
@@ -69,7 +69,7 @@ internal class RemoteUserRetrofit
         override suspend fun login(
             user: UserNet,
             onError: (Int) -> Unit,
-            onSuccess: (token: String) -> Unit,
+            onSuccess: (token: String) -> Unit
         ) {
             ioScope.launch {
                 try {
@@ -98,7 +98,7 @@ internal class RemoteUserRetrofit
         override suspend fun updateUserPassword(
             user: UserNet,
             onError: (Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 val response = apiService.updateUserPassword(user = user)

@@ -39,7 +39,7 @@ class FetchDataWork
         @StockRep val stockRepository: StockRepository,
         @SaleRep val saleRepository: SaleRepository,
         @CatalogRep val catalogRepository: CatalogRepository,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : CoroutineWorker(context, params), Synchronizer {
         override suspend fun doWork(): Result =
             withContext(ioDispatcher) {
@@ -50,7 +50,7 @@ class FetchDataWork
                         customerSynced = customerRepository.sync(),
                         stockOrderSynced = stockRepository.sync(),
                         saleSynced = saleRepository.sync(),
-                        catalogSynced = catalogRepository.sync(),
+                        catalogSynced = catalogRepository.sync()
                     )
 
                 if (synced) {
@@ -66,7 +66,7 @@ class FetchDataWork
                     .setConstraints(
                         Constraints.Builder()
                             .setRequiredNetworkType(NetworkType.CONNECTED)
-                            .build(),
+                            .build()
                     )
                     .build()
         }
@@ -77,7 +77,7 @@ class FetchDataWork
             customerSynced: Boolean,
             stockOrderSynced: Boolean,
             saleSynced: Boolean,
-            catalogSynced: Boolean,
+            catalogSynced: Boolean
         ) = categorySynced && productSynced && customerSynced && stockOrderSynced && saleSynced &&
             catalogSynced
     }

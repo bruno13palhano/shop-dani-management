@@ -25,23 +25,23 @@ internal class DefaultUserRepository
         @FirebaseUser private val remoteUserData: RemoteUserData,
         @InternalUser private val userData: UserData,
         @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
-        @DefaultSessionManager private val sessionManager: SessionManager,
+        @DefaultSessionManager private val sessionManager: SessionManager
     ) : UserRepository {
         override suspend fun login(
             user: User,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             remoteUserData.login(
                 user = userToUserNet(user),
-                onError = onError,
+                onError = onError
             ) {
                 saveToken(token = it)
                 CoroutineScope(ioDispatcher).launch {
                     saveUser(
                         username = user.username,
                         onError = onError,
-                        onSuccess = { onSuccess() },
+                        onSuccess = { onSuccess() }
                     )
                 }
             }
@@ -50,17 +50,17 @@ internal class DefaultUserRepository
         override suspend fun create(
             user: User,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ) {
             remoteUserData.create(
                 user = userToUserNet(user),
-                onError = onError,
+                onError = onError
             ) { userNet ->
                 CoroutineScope(ioDispatcher).launch {
                     createUser(
                         newUser = userNet,
                         onError = onError,
-                        onSuccess = onSuccess,
+                        onSuccess = onSuccess
                     )
                 }
             }
@@ -69,17 +69,17 @@ internal class DefaultUserRepository
         override suspend fun update(
             user: User,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             remoteUserData.update(
                 user = userToUserNet(user),
-                onError = onError,
+                onError = onError
             ) {
                 CoroutineScope(ioDispatcher).launch {
                     userData.update(
                         user = user,
                         onError = onError,
-                        onSuccess = onSuccess,
+                        onSuccess = onSuccess
                     )
                 }
             }
@@ -88,14 +88,14 @@ internal class DefaultUserRepository
         override fun getById(
             userId: Long,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ): Flow<User> {
             return userData.getById(userId, onError = onError, onSuccess = onSuccess)
         }
 
         override fun getCurrentUser(
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ): Flow<User> {
             val userId = sessionManager.fetchCurrentUserId()
 
@@ -153,17 +153,17 @@ internal class DefaultUserRepository
         override suspend fun updateUserPassword(
             user: User,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             remoteUserData.updateUserPassword(
                 user = userToUserNet(user),
-                onError = onError,
+                onError = onError
             ) {
                 CoroutineScope(ioDispatcher).launch {
                     userData.updateUserPassword(
                         user = user,
                         onError = onError,
-                        onSuccess = onSuccess,
+                        onSuccess = onSuccess
                     )
                 }
             }
@@ -176,7 +176,7 @@ internal class DefaultUserRepository
         private suspend fun createUser(
             newUser: UserNet,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ) {
             userData.insert(user = userNetToUser(newUser), onError = onError, onSuccess = onSuccess)
         }
@@ -184,14 +184,14 @@ internal class DefaultUserRepository
         private suspend fun saveUser(
             username: String,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ) {
             val newUser = remoteUserData.getByUsername(username = username)
             sessionManager.saveCurrentUserId(id = newUser.id)
             userData.insert(
                 user = userNetToUser(newUser),
                 onError = onError,
-                onSuccess = onSuccess,
+                onSuccess = onSuccess
             )
         }
     }

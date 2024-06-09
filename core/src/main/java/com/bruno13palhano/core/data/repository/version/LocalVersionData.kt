@@ -17,18 +17,18 @@ internal class LocalVersionData
     @Inject
     constructor(
         private val versionQueries: VersionTableQueries,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : VersionData {
         override suspend fun insert(
             model: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ): Long {
             try {
                 if (model.isNew()) {
                     versionQueries.insert(
                         name = model.name,
-                        timestamp = model.timestamp,
+                        timestamp = model.timestamp
                     )
                     val id = versionQueries.getLastId().executeAsOne()
                     onSuccess(id)
@@ -38,7 +38,7 @@ internal class LocalVersionData
                     versionQueries.insertWithId(
                         id = model.id,
                         name = model.name,
-                        timestamp = model.timestamp,
+                        timestamp = model.timestamp
                     )
                     onSuccess(model.id)
 
@@ -55,13 +55,13 @@ internal class LocalVersionData
         override suspend fun update(
             model: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 versionQueries.update(
                     name = model.name,
                     timestamp = model.timestamp,
-                    id = model.id,
+                    id = model.id
                 )
                 onSuccess()
             } catch (e: Exception) {
@@ -73,7 +73,7 @@ internal class LocalVersionData
         override suspend fun deleteById(
             id: Long,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 versionQueries.delete(id = id)
@@ -103,10 +103,10 @@ internal class LocalVersionData
         private fun mapVersion(
             id: Long,
             name: String,
-            timestamp: String,
+            timestamp: String
         ) = DataVersion(
             id = id,
             name = name,
-            timestamp = timestamp,
+            timestamp = timestamp
         )
     }

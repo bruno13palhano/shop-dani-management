@@ -6,19 +6,19 @@ interface RemoteUserData {
     suspend fun create(
         user: UserNet,
         onError: (error: Int) -> Unit,
-        onSuccess: (userNet: UserNet) -> Unit,
+        onSuccess: (userNet: UserNet) -> Unit
     )
 
     suspend fun update(
         user: UserNet,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit,
+        onSuccess: () -> Unit
     )
 
     suspend fun login(
         user: UserNet,
         onError: (error: Int) -> Unit,
-        onSuccess: (token: String) -> Unit,
+        onSuccess: (token: String) -> Unit
     )
 
     suspend fun authenticated(token: String): Boolean
@@ -28,6 +28,6 @@ interface RemoteUserData {
     suspend fun updateUserPassword(
         user: UserNet,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit,
+        onSuccess: () -> Unit
     )
 }

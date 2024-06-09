@@ -11,7 +11,7 @@ import javax.inject.Inject
 internal class RemoteProductFirebase
     @Inject
     constructor(
-        private val firestore: FirebaseFirestore,
+        private val firestore: FirebaseFirestore
     ) : RemoteProductData {
         override suspend fun getAll(): List<ProductNet> {
             val snapshot = firestore.collection("products").get()
@@ -27,7 +27,7 @@ internal class RemoteProductFirebase
                                             CategoryNet(
                                                 id = category["id"] as Long,
                                                 category = category["category"].toString(),
-                                                timestamp = category["timestamp"].toString(),
+                                                timestamp = category["timestamp"].toString()
                                             )
                                         }
                                 } catch (e: Exception) {
@@ -44,7 +44,7 @@ internal class RemoteProductFirebase
                                 date = firebaseProduct["date"] as Long,
                                 categories = categories,
                                 company = firebaseProduct["company"].toString(),
-                                timestamp = firebaseProduct["timestamp"].toString(),
+                                timestamp = firebaseProduct["timestamp"].toString()
                             )
                         }
                     } else {
@@ -71,8 +71,8 @@ internal class RemoteProductFirebase
                             "date" to data.date,
                             "categories" to data.categories,
                             "company" to data.company,
-                            "timestamp" to data.timestamp,
-                        ),
+                            "timestamp" to data.timestamp
+                        )
                     )
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -92,7 +92,7 @@ internal class RemoteProductFirebase
                     "date" to data.date,
                     "categories" to data.categories,
                     "company" to data.company,
-                    "timestamp" to data.timestamp,
+                    "timestamp" to data.timestamp
                 )
 
             docRef.update(updates)
@@ -111,7 +111,7 @@ internal class RemoteProductFirebase
                     "date" to FieldValue.delete(),
                     "categories" to FieldValue.delete(),
                     "company" to FieldValue.delete(),
-                    "timestamp" to FieldValue.delete(),
+                    "timestamp" to FieldValue.delete()
                 )
 
             docRef.update(updates)

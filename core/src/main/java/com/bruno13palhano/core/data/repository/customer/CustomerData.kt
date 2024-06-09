@@ -10,14 +10,14 @@ interface CustomerData : DataOperations<Customer> {
         model: Customer,
         version: DataVersion,
         onError: (error: Int) -> Unit,
-        onSuccess: (id: Long) -> Unit,
+        onSuccess: (id: Long) -> Unit
     ): Long
 
     suspend fun update(
         model: Customer,
         version: DataVersion,
         onError: (error: Int) -> Unit,
-        onSuccess: () -> Unit,
+        onSuccess: () -> Unit
     )
 
     fun search(search: String): Flow<List<Customer>>

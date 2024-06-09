@@ -34,12 +34,12 @@ internal class DefaultProductRepository
         @InternalProduct private val productData: ProductData,
         @InternalVersion private val versionData: VersionData,
         @FirebaseVersion private val remoteVersionData: RemoteVersionData,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : ProductRepository {
         override suspend fun insert(
             model: Product,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ): Long {
             val productVersion = Versions.productVersion(timestamp = model.timestamp)
 
@@ -56,8 +56,8 @@ internal class DefaultProductRepository
                                 date = model.date,
                                 categories = model.categories,
                                 company = model.company,
-                                timestamp = model.timestamp,
-                            ),
+                                timestamp = model.timestamp
+                            )
                         )
 
                     CoroutineScope(ioDispatcher).launch {
@@ -77,7 +77,7 @@ internal class DefaultProductRepository
         override suspend fun update(
             model: Product,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val productVersion = Versions.productVersion(timestamp = model.timestamp)
 
@@ -100,7 +100,7 @@ internal class DefaultProductRepository
 
         override fun searchPerCategory(
             value: String,
-            categoryId: Long,
+            categoryId: Long
         ): Flow<List<Product>> {
             return productData.searchPerCategory(value = value, categoryId = categoryId)
         }
@@ -117,7 +117,7 @@ internal class DefaultProductRepository
             id: Long,
             timestamp: String,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             val productVersion = Versions.productVersion(timestamp = timestamp)
 
@@ -161,6 +161,6 @@ internal class DefaultProductRepository
                     deleteIds.forEach { productData.deleteById(it, netVersion, {}) {} }
                     saveList.forEach { productData.insert(it, netVersion, {}) {} }
                     versionData.insert(netVersion, {}) {}
-                },
+                }
             )
     }

@@ -20,15 +20,15 @@ internal class LocalCatalogData
     constructor(
         private val catalogQueries: CatalogTableQueries,
         private val versionQueries: VersionTableQueries,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : CatalogData {
         override suspend fun insert(
             model: Catalog,
             version: DataVersion,
             onError: (error: Int) -> Unit,
             onSuccess: (
-                id: Long,
-            ) -> Unit,
+                id: Long
+            ) -> Unit
         ): Long {
             var id = 0L
 
@@ -41,14 +41,14 @@ internal class LocalCatalogData
                             description = model.description,
                             discount = model.discount,
                             price = model.price.toDouble(),
-                            timestamp = model.timestamp,
+                            timestamp = model.timestamp
                         )
                         id = catalogQueries.getLastId().executeAsOne()
 
                         versionQueries.insertWithId(
                             id = version.id,
                             name = version.name,
-                            timestamp = version.timestamp,
+                            timestamp = version.timestamp
                         )
 
                         onSuccess(id)
@@ -62,13 +62,13 @@ internal class LocalCatalogData
                             description = model.description,
                             discount = model.discount,
                             price = model.price.toDouble(),
-                            timestamp = model.timestamp,
+                            timestamp = model.timestamp
                         )
 
                         versionQueries.insertWithId(
                             id = version.id,
                             name = version.name,
-                            timestamp = version.timestamp,
+                            timestamp = version.timestamp
                         )
 
                         id = model.id
@@ -87,7 +87,7 @@ internal class LocalCatalogData
             model: Catalog,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 catalogQueries.transaction {
@@ -97,13 +97,13 @@ internal class LocalCatalogData
                         discount = model.discount,
                         price = model.price.toDouble(),
                         id = model.id,
-                        timestamp = model.timestamp,
+                        timestamp = model.timestamp
                     )
 
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.timestamp,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess()
@@ -118,7 +118,7 @@ internal class LocalCatalogData
             id: Long,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 catalogQueries.transaction {
@@ -127,7 +127,7 @@ internal class LocalCatalogData
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.timestamp,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess()
@@ -184,7 +184,7 @@ internal class LocalCatalogData
             description: String,
             discount: Long,
             price: Double,
-            timestamp: String,
+            timestamp: String
         ) = Catalog(
             id = id,
             productId = productId,
@@ -194,6 +194,6 @@ internal class LocalCatalogData
             description = description,
             discount = discount,
             price = price.toFloat(),
-            timestamp = timestamp,
+            timestamp = timestamp
         )
     }

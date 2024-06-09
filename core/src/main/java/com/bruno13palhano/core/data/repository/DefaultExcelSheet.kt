@@ -22,12 +22,12 @@ internal class DefaultExcelSheet
     @Inject
     constructor(
         @DefaultWorkbook private val workbook: Workbook,
-        @ApplicationContext private val context: Context,
+        @ApplicationContext private val context: Context
     ) : ExcelSheet {
         override suspend fun createExcel(
             sheetName: String,
             headers: List<String>,
-            data: List<List<String>>,
+            data: List<List<String>>
         ) {
             createWorkbook(sheetName = sheetName, headers = headers, data = data)
             val appDirectory = context.getExternalFilesDir("ShopdaniManagementSystem")
@@ -51,7 +51,7 @@ internal class DefaultExcelSheet
         private fun createWorkbook(
             sheetName: String,
             headers: List<String>,
-            data: List<List<String>>,
+            data: List<List<String>>
         ): Workbook {
             val sheet: Sheet =
                 if (workbook.getSheet(sheetName) == null) {
@@ -89,7 +89,7 @@ internal class DefaultExcelSheet
         private fun createSheetHeader(
             headers: List<String>,
             cellStyle: CellStyle,
-            sheet: Sheet,
+            sheet: Sheet
         ) {
             val row = sheet.createRow(0)
 
@@ -105,7 +105,7 @@ internal class DefaultExcelSheet
         private fun addData(
             rowIndex: Int,
             sheet: Sheet,
-            data: List<List<String>>,
+            data: List<List<String>>
         ) {
             val row = sheet.createRow(rowIndex)
 
@@ -119,7 +119,7 @@ internal class DefaultExcelSheet
         private fun createCell(
             row: Row,
             columnIndex: Int,
-            value: String?,
+            value: String?
         ) {
             val cell = row.createCell(columnIndex)
             cell?.setCellValue(value)

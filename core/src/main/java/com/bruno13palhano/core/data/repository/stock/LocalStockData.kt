@@ -22,13 +22,13 @@ internal class LocalStockData
     constructor(
         private val stockOrderQueries: StockTableQueries,
         private val versionQueries: VersionTableQueries,
-        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
     ) : StockData {
         override suspend fun insert(
             model: StockItem,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: (id: Long) -> Unit,
+            onSuccess: (id: Long) -> Unit
         ): Long {
             var id = 0L
 
@@ -44,14 +44,14 @@ internal class LocalStockData
                             purchasePrice = model.purchasePrice.toDouble(),
                             salePrice = model.salePrice.toDouble(),
                             isPaid = model.isPaid,
-                            timestamp = model.timestamp,
+                            timestamp = model.timestamp
                         )
                         id = stockOrderQueries.lastId().executeAsOne()
 
                         versionQueries.insertWithId(
                             id = version.id,
                             name = version.name,
-                            timestamp = version.timestamp,
+                            timestamp = version.timestamp
                         )
 
                         onSuccess(id)
@@ -68,13 +68,13 @@ internal class LocalStockData
                             purchasePrice = model.purchasePrice.toDouble(),
                             salePrice = model.salePrice.toDouble(),
                             isPaid = model.isPaid,
-                            timestamp = model.timestamp,
+                            timestamp = model.timestamp
                         )
 
                         versionQueries.insertWithId(
                             id = version.id,
                             name = version.name,
-                            timestamp = version.timestamp,
+                            timestamp = version.timestamp
                         )
 
                         id = model.id
@@ -93,7 +93,7 @@ internal class LocalStockData
             model: StockItem,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 stockOrderQueries.transaction {
@@ -107,13 +107,13 @@ internal class LocalStockData
                         purchasePrice = model.purchasePrice.toDouble(),
                         salePrice = model.salePrice.toDouble(),
                         isPaid = model.isPaid,
-                        timestamp = model.timestamp,
+                        timestamp = model.timestamp
                     )
 
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.timestamp,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess()
@@ -138,20 +138,20 @@ internal class LocalStockData
                 name = value,
                 company = value,
                 description = value,
-                mapper = ::mapStockOrder,
+                mapper = ::mapStockOrder
             ).asFlow().mapToList(ioDispatcher)
         }
 
         override fun getByCategory(category: String): Flow<List<StockItem>> {
             return stockOrderQueries.getByCategory(
                 category = category,
-                mapper = ::mapStockOrder,
+                mapper = ::mapStockOrder
             ).asFlow().mapToList(ioDispatcher)
         }
 
         override suspend fun updateStockQuantity(
             id: Long,
-            quantity: Int,
+            quantity: Int
         ) {
             stockOrderQueries.updateStockQuantity(quantity = quantity.toLong(), id = id)
         }
@@ -160,7 +160,7 @@ internal class LocalStockData
             id: Long,
             version: DataVersion,
             onError: (error: Int) -> Unit,
-            onSuccess: () -> Unit,
+            onSuccess: () -> Unit
         ) {
             try {
                 stockOrderQueries.transaction {
@@ -169,7 +169,7 @@ internal class LocalStockData
                     versionQueries.update(
                         name = version.name,
                         timestamp = version.timestamp,
-                        id = version.id,
+                        id = version.id
                     )
 
                     onSuccess()
@@ -197,7 +197,7 @@ internal class LocalStockData
 
         override fun getStockItems(): Flow<List<StockItem>> {
             return stockOrderQueries.getStockItems(
-                mapper = ::mapStockOrder,
+                mapper = ::mapStockOrder
             ).asFlow().mapToList(ioDispatcher)
         }
 
@@ -247,7 +247,7 @@ internal class LocalStockData
             purchasePrice: Double,
             salePrice: Double,
             isPaid: Boolean,
-            timestamp: String,
+            timestamp: String
         ) = StockItem(
             id = id,
             productId = productId,
@@ -262,6 +262,6 @@ internal class LocalStockData
             purchasePrice = purchasePrice.toFloat(),
             salePrice = salePrice.toFloat(),
             isPaid = isPaid,
-            timestamp = timestamp,
+            timestamp = timestamp
         )
     }

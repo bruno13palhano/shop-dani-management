@@ -9,7 +9,7 @@ data class Catalog(
     val description: String,
     val discount: Long,
     val price: Float,
-    override val timestamp: String,
+    override val timestamp: String
 ) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

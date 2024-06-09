@@ -8,7 +8,7 @@ import javax.inject.Inject
 internal class DefaultSearchCacheRepository
     @Inject
     constructor(
-        @InternalSearchCache private val searchCacheData: SearchCacheData,
+        @InternalSearchCache private val searchCacheData: SearchCacheData
     ) : SearchCacheRepository {
         override suspend fun insert(model: SearchCache): Long {
             return searchCacheData.insert(model = model)
