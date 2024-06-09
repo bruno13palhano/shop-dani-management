@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.network.access.impl.firebase
+package com.bruno13palhano.core.network.access.firebase
 
 import com.bruno13palhano.core.network.access.RemoteCatalogData
 import com.bruno13palhano.core.network.model.CatalogNet

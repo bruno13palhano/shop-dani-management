@@ -1,4 +1,4 @@
-package com.bruno13palhano.core.network.access.impl
+package com.bruno13palhano.core.network.access.retorfit
 
 import com.bruno13palhano.core.data.di.IOScope
 import com.bruno13palhano.core.model.UserCodeResponse
