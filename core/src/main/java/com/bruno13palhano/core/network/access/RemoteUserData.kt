@@ -30,4 +30,9 @@ interface RemoteUserData {
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     )
+
+    suspend fun logout(
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    )
 }

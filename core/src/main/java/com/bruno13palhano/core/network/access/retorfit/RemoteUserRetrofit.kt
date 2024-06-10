@@ -116,6 +116,13 @@ internal class RemoteUserRetrofit
             }
         }
 
+        override suspend fun logout(
+            onError: (Int) -> Unit,
+            onSuccess: () -> Unit
+        ) {
+            TODO("Not yet implemented")
+        }
+
         private fun codeToInt(code: String) =
             try {
                 code.toInt()
