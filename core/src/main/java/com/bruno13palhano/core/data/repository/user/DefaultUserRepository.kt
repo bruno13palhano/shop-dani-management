@@ -145,9 +145,16 @@ internal class DefaultUserRepository
             }
         }
 
-        override fun logout() {
+        override suspend fun logout(
+            onError: (error: Int) -> Unit,
+            onSuccess: () -> Unit
+        ) {
             saveToken(token = "")
             sessionManager.saveCurrentUserUid(uid = "")
+            remoteUserData.logout(
+                onError = onError,
+                onSuccess = onSuccess
+            )
         }
 
         override suspend fun updateUserPassword(
