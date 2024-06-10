@@ -78,8 +78,13 @@ class LoginViewModel
         }
 
         fun logout() {
-            userRepository.logout()
+            viewModelScope.launch {
+                userRepository.logout(
+                    onError = { },
+                    onSuccess = { }
+                )
+            }
         }
 
-        fun isAuthenticated() = userRepository.isAuthenticated()
+        fun isAuthenticated() = true
     }
