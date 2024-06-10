@@ -12,6 +12,10 @@ android {
     namespace 'com.bruno13palhano.core'
     compileSdk 34
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         minSdk 26
         targetSdk 34
