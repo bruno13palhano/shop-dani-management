@@ -24,75 +24,80 @@ internal class RemoteUserFirebase
             onError: (error: Int) -> Unit,
             onSuccess: (userNet: UserNet) -> Unit
         ) {
-            val storageRef = storage.reference
+            try {
+                val storageRef = storage.reference
 
-            auth.createUserWithEmailAndPassword(user.email, user.password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        auth.currentUser?.let { firebaseUser ->
-                            val profilePhotoRef =
-                                storageRef.child(
-                                    "${firebaseUser.email}/${user.username}/profile_image.jpg"
-                                )
-                            val uploadTask =
-                                profilePhotoRef.putBytes(Base64.getDecoder().decode(user.photo))
+                auth.createUserWithEmailAndPassword(user.email, user.password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            auth.currentUser?.let { firebaseUser ->
+                                val profilePhotoRef =
+                                    storageRef.child(
+                                        "${firebaseUser.email}/${user.username}/profile_image.jpg"
+                                    )
+                                val uploadTask =
+                                    profilePhotoRef.putBytes(Base64.getDecoder().decode(user.photo))
 
-                            uploadTask.addOnSuccessListener { _ ->
-                                profilePhotoRef.downloadUrl.addOnSuccessListener { uri ->
-                                    val profileUpdates =
-                                        userProfileChangeRequest {
-                                            displayName = user.username
-                                            photoUri = uri
-                                        }
-
-                                    firebaseUser.updateProfile(profileUpdates)
-                                        .addOnCompleteListener { t ->
-                                            if (t.isSuccessful) {
-                                                val username = firebaseUser.displayName ?: ""
-                                                val email = firebaseUser.email ?: ""
-
-                                                val newUser =
-                                                    UserNet(
-                                                        uid = firebaseUser.uid,
-                                                        username = username,
-                                                        email = email,
-                                                        password = "",
-                                                        photo = user.photo,
-                                                        role = user.role,
-                                                        enabled = user.enabled,
-                                                        timestamp = user.timestamp
-                                                    )
-
-                                                val fireUser =
-                                                    hashMapOf(
-                                                        "uid" to newUser.uid,
-                                                        "username" to newUser.username,
-                                                        "email" to newUser.email,
-                                                        "password" to newUser.password,
-                                                        "photo" to uri,
-                                                        "role" to newUser.role,
-                                                        "enabled" to newUser.enabled,
-                                                        "timestamp" to newUser.timestamp
-                                                    )
-
-                                                auth.uid?.let {
-                                                    firestore.collection("users")
-                                                        .document(it)
-                                                        .set(fireUser)
-                                                }
-
-                                                onSuccess(newUser)
-                                            } else {
-                                                onError(INSERT_SERVER_ERROR)
+                                uploadTask.addOnSuccessListener { _ ->
+                                    profilePhotoRef.downloadUrl.addOnSuccessListener { uri ->
+                                        val profileUpdates =
+                                            userProfileChangeRequest {
+                                                displayName = user.username
+                                                photoUri = uri
                                             }
-                                        }
+
+                                        firebaseUser.updateProfile(profileUpdates)
+                                            .addOnCompleteListener { t ->
+                                                if (t.isSuccessful) {
+                                                    val username = firebaseUser.displayName ?: ""
+                                                    val email = firebaseUser.email ?: ""
+
+                                                    val newUser =
+                                                        UserNet(
+                                                            uid = firebaseUser.uid,
+                                                            username = username,
+                                                            email = email,
+                                                            password = "",
+                                                            photo = user.photo,
+                                                            role = user.role,
+                                                            enabled = user.enabled,
+                                                            timestamp = user.timestamp
+                                                        )
+
+                                                    val fireUser =
+                                                        hashMapOf(
+                                                            "uid" to newUser.uid,
+                                                            "username" to newUser.username,
+                                                            "email" to newUser.email,
+                                                            "password" to newUser.password,
+                                                            "photo" to uri,
+                                                            "role" to newUser.role,
+                                                            "enabled" to newUser.enabled,
+                                                            "timestamp" to newUser.timestamp
+                                                        )
+
+                                                    auth.uid?.let {
+                                                        firestore.collection("users")
+                                                            .document(it)
+                                                            .set(fireUser)
+                                                    }
+
+                                                    onSuccess(newUser)
+                                                } else {
+                                                    onError(INSERT_SERVER_ERROR)
+                                                }
+                                            }
+                                    }
                                 }
                             }
+                        } else {
+                            onError(INSERT_SERVER_ERROR)
                         }
-                    } else {
-                        onError(INSERT_SERVER_ERROR)
                     }
-                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(INSERT_SERVER_ERROR)
+            }
         }
 
         override suspend fun update(
@@ -100,6 +105,27 @@ internal class RemoteUserFirebase
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit
         ) {
+            try {
+                val docRef = firestore.collection("users").document(user.uid)
+
+                val updates =
+                    hashMapOf<String, Any>(
+                        "name" to user.username,
+                        "photo" to user.photo,
+                        "timestamp" to user.timestamp
+                    )
+
+                docRef.update(updates).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        onSuccess()
+                    } else {
+                        onError(UserCodeResponse.UPDATE_SERVER_ERROR)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(UserCodeResponse.UPDATE_SERVER_ERROR)
+            }
         }
 
         override suspend fun login(
@@ -165,6 +191,32 @@ internal class RemoteUserFirebase
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit
         ) {
-            TODO("Not yet implemented")
+            try {
+                val currentUser = auth.currentUser!!
+                currentUser.updatePassword(user.password)
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            onSuccess()
+                        } else {
+                            onError(UserCodeResponse.UPDATE_SERVER_ERROR)
+                        }
+                    }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(UserCodeResponse.UPDATE_SERVER_ERROR)
+            }
+        }
+
+        override suspend fun logout(
+            onError: (error: Int) -> Unit,
+            onSuccess: () -> Unit
+        ) {
+            try {
+                auth.signOut()
+                onSuccess()
+            } catch (e: Exception) {
+                onError(UserCodeResponse.UPDATE_SERVER_ERROR)
+                e.printStackTrace()
+            }
         }
     }
