@@ -114,9 +114,9 @@ fun LoginScreen(
     ) {
         LoginContent(
             snackbarHostState = snackbarHostState,
-            username = viewModel.username,
+            email = viewModel.email,
             password = viewModel.password,
-            onUsernameChange = viewModel::updateUsername,
+            onEmailChange = viewModel::updateEmail,
             onPasswordChange = viewModel::updatePassword,
             onOutsideClick = {
                 keyboardController?.hide()
@@ -145,9 +145,9 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     snackbarHostState: SnackbarHostState,
-    username: String,
+    email: String,
     password: String,
-    onUsernameChange: (username: String) -> Unit,
+    onEmailChange: (email: String) -> Unit,
     onPasswordChange: (password: String) -> Unit,
     onOutsideClick: () -> Unit,
     onCreateAccountClick: () -> Unit,
@@ -178,11 +178,11 @@ fun LoginContent(
                     .verticalScroll(rememberScrollState())
         ) {
             CustomTextField(
-                text = username,
-                onTextChange = onUsernameChange,
+                text = email,
+                onTextChange = onEmailChange,
                 icon = Icons.Filled.Title,
-                label = stringResource(id = R.string.username_label),
-                placeholder = stringResource(id = R.string.enter_username_label)
+                label = stringResource(id = R.string.email_label),
+                placeholder = stringResource(id = R.string.enter_email_label)
             )
             CustomPasswordField(
                 password = password,

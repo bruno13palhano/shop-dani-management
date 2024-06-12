@@ -23,9 +23,9 @@ fun LoginPreview() {
         ) {
             LoginContent(
                 snackbarHostState = SnackbarHostState(),
-                username = "bruno13palhano",
+                email = "bruno13palhano",
                 password = "12345678",
-                onUsernameChange = {},
+                onEmailChange = {},
                 onPasswordChange = {},
                 onOutsideClick = {},
                 onCreateAccountClick = {},
@@ -45,9 +45,9 @@ fun LoginDynamicPreview() {
         ) {
             LoginContent(
                 snackbarHostState = SnackbarHostState(),
-                username = "bruno13palhano",
+                email = "bruno13palhano",
                 password = "12345678",
-                onUsernameChange = {},
+                onEmailChange = {},
                 onPasswordChange = {},
                 onOutsideClick = {},
                 onCreateAccountClick = {},

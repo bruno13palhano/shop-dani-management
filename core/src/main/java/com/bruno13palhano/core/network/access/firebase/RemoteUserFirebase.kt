@@ -134,7 +134,7 @@ internal class RemoteUserFirebase
             onSuccess: (token: String) -> Unit
         ) {
             try {
-                auth.signInWithEmailAndPassword(user.username, user.password)
+                auth.signInWithEmailAndPassword(user.email, user.password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             onSuccess(auth.currentUser?.uid.toString())

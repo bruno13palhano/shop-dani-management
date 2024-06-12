@@ -28,21 +28,21 @@ class LoginViewModel
         private val _loginState = MutableStateFlow<LoginState>(LoginState.SignedOut)
         val loginState = _loginState.asStateFlow()
 
-        var username by mutableStateOf("")
+        var email by mutableStateOf("")
             private set
         var password by mutableStateOf("")
             private set
 
         val isLoginValid =
-            snapshotFlow { username.isNotEmpty() && password.isNotEmpty() }
+            snapshotFlow { email.isNotEmpty() && password.isNotEmpty() }
                 .stateIn(
                     scope = viewModelScope,
                     started = WhileSubscribed(5_000),
                     initialValue = false
                 )
 
-        fun updateUsername(username: String) {
-            this.username = username
+        fun updateEmail(username: String) {
+            this.email = username
         }
 
         fun updatePassword(password: String) {
@@ -53,8 +53,8 @@ class LoginViewModel
             val user =
                 User(
                     uid = "",
-                    username = username.trim(),
-                    email = "",
+                    username = "",
+                    email = email.trim(),
                     password = password.trim(),
                     photo = byteArrayOf(),
                     role = "",
