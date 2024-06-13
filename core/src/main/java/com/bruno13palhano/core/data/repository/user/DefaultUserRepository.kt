@@ -1,5 +1,6 @@
 package com.bruno13palhano.core.data.repository.user
 
+import com.bruno13palhano.core.data.di.DefaultSessionManager
 import com.bruno13palhano.core.data.di.Dispatcher
 import com.bruno13palhano.core.data.di.InternalUser
 import com.bruno13palhano.core.data.di.ShopDaniManagementDispatchers.IO
@@ -8,7 +9,6 @@ import com.bruno13palhano.core.data.repository.userToUserNet
 import com.bruno13palhano.core.model.User
 import com.bruno13palhano.core.network.SessionManager
 import com.bruno13palhano.core.network.access.RemoteUserData
-import com.bruno13palhano.core.network.di.DefaultSessionManager
 import com.bruno13palhano.core.network.di.FirebaseUser
 import com.bruno13palhano.core.network.model.UserNet
 import kotlinx.coroutines.CoroutineDispatcher
