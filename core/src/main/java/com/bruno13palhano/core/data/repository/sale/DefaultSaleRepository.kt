@@ -25,8 +25,8 @@ import com.bruno13palhano.core.network.access.RemoteSaleData
 import com.bruno13palhano.core.network.access.RemoteStockData
 import com.bruno13palhano.core.network.access.RemoteVersionData
 import com.bruno13palhano.core.network.di.FirebaseSale
+import com.bruno13palhano.core.network.di.FirebaseStock
 import com.bruno13palhano.core.network.di.FirebaseVersion
-import com.bruno13palhano.core.network.di.RetrofitStock
 import com.bruno13palhano.core.sync.Synchronizer
 import com.bruno13palhano.core.sync.syncData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -39,7 +39,7 @@ internal class DefaultSaleRepository
     @Inject
     constructor(
         @FirebaseSale private val remoteSaleData: RemoteSaleData,
-        @RetrofitStock private val remoteStockData: RemoteStockData,
+        @FirebaseStock private val remoteStockData: RemoteStockData,
         @InternalSale private val saleData: SaleData,
         @InternalVersion private val versionData: VersionData,
         @FirebaseVersion private val remoteVersionData: RemoteVersionData,
