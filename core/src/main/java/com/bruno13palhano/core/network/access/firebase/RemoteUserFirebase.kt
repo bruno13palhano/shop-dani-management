@@ -4,6 +4,7 @@ import com.bruno13palhano.core.model.UserCodeResponse
 import com.bruno13palhano.core.model.UserCodeResponse.INSERT_SERVER_ERROR
 import com.bruno13palhano.core.network.access.RemoteUserData
 import com.bruno13palhano.core.network.model.UserNet
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
@@ -187,20 +188,30 @@ internal class RemoteUserFirebase
         }
 
         override suspend fun updateUserPassword(
-            user: UserNet,
+            oldPassword: String,
+            newPassword: String,
+            email: String,
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit
         ) {
             try {
                 val currentUser = auth.currentUser!!
-                currentUser.updatePassword(user.password)
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            onSuccess()
-                        } else {
-                            onError(UserCodeResponse.UPDATE_SERVER_ERROR)
-                        }
+                val credential = EmailAuthProvider.getCredential(email, oldPassword)
+
+                currentUser.reauthenticate(credential).addOnCompleteListener { reAuth ->
+                    if (reAuth.isSuccessful) {
+                        currentUser.updatePassword(newPassword)
+                            .addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    onSuccess()
+                                } else {
+                                    onError(UserCodeResponse.UPDATE_SERVER_ERROR)
+                                }
+                            }
+                    } else {
+                        onError(UserCodeResponse.UPDATE_SERVER_ERROR)
                     }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 onError(UserCodeResponse.UPDATE_SERVER_ERROR)

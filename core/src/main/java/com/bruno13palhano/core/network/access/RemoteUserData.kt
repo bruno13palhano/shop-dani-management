@@ -26,7 +26,9 @@ interface RemoteUserData {
     suspend fun getByUsername(username: String): UserNet
 
     suspend fun updateUserPassword(
-        user: UserNet,
+        oldPassword: String,
+        newPassword: String,
+        email: String,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     )

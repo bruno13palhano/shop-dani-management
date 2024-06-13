@@ -36,10 +36,10 @@ internal class DefaultUserRepository
                 user = userToUserNet(user),
                 onError = onError
             ) {
-                saveToken(token = it)
                 CoroutineScope(ioDispatcher).launch {
                     saveUser(
                         username = user.username,
+                        password = user.password,
                         onError = onError,
                         onSuccess = { onSuccess() }
                     )
@@ -97,20 +97,20 @@ internal class DefaultUserRepository
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit
         ): Flow<User> {
-            val uid = sessionManager.fetchCurrentUserUid() ?: ""
+            val uid = getCurrentUserUid() ?: ""
 
             return userData.getById(uid = uid, onError = onError, onSuccess = onSuccess)
         }
 
         override fun isAuthenticated(): Boolean {
-            val token = sessionManager.fetchAuthToken()
+            val uid = getCurrentUserUid()
 
-            token?.let {
+            uid?.let {
                 CoroutineScope(ioDispatcher).launch {
                     try {
                         val authenticated = remoteUserData.authenticated(it)
                         if (!authenticated) {
-                            saveToken(token = "")
+                            saveUserCredentials(uid = "", password = "")
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -118,18 +118,18 @@ internal class DefaultUserRepository
                 }
             }
 
-            return !token.isNullOrEmpty()
+            return !uid.isNullOrEmpty()
         }
 
         override fun authenticated(): Flow<Boolean> {
-            val token = sessionManager.fetchAuthToken()
+            val token = sessionManager.fetchCurrentUserUid()
 
             token?.let {
                 CoroutineScope(ioDispatcher).launch {
                     try {
                         val authenticated = remoteUserData.authenticated(it)
                         if (!authenticated) {
-                            saveToken(token = "")
+                            saveUserCredentials(uid = "", password = "")
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -149,8 +149,7 @@ internal class DefaultUserRepository
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit
         ) {
-            saveToken(token = "")
-            sessionManager.saveCurrentUserUid(uid = "")
+            saveUserCredentials(uid = "", password = "")
             remoteUserData.logout(
                 onError = onError,
                 onSuccess = onSuccess
@@ -162,8 +161,12 @@ internal class DefaultUserRepository
             onError: (error: Int) -> Unit,
             onSuccess: () -> Unit
         ) {
+            val oldPassword = getCurrentUserPassword() ?: ""
+
             remoteUserData.updateUserPassword(
-                user = userToUserNet(user),
+                oldPassword = user.password,
+                newPassword = oldPassword,
+                email = user.email,
                 onError = onError
             ) {
                 CoroutineScope(ioDispatcher).launch {
@@ -176,10 +179,6 @@ internal class DefaultUserRepository
             }
         }
 
-        private fun saveToken(token: String) {
-            sessionManager.saveAuthToken(token = token)
-        }
-
         private suspend fun createUser(
             newUser: UserNet,
             onError: (error: Int) -> Unit,
@@ -190,15 +189,32 @@ internal class DefaultUserRepository
 
         private suspend fun saveUser(
             username: String,
+            password: String,
             onError: (error: Int) -> Unit,
             onSuccess: (uid: String) -> Unit
         ) {
             val newUser = remoteUserData.getByUsername(username = username)
-            sessionManager.saveCurrentUserUid(uid = newUser.uid)
+            saveUserCredentials(uid = newUser.uid, password)
             userData.insert(
                 user = userNetToUser(newUser),
                 onError = onError,
                 onSuccess = onSuccess
             )
+        }
+
+        private fun saveUserCredentials(
+            uid: String,
+            password: String
+        ) {
+            sessionManager.saveCurrentUserUid(uid = uid)
+            sessionManager.saveCurrentUserPassword(password = password)
+        }
+
+        private fun getCurrentUserUid(): String? {
+            return sessionManager.fetchCurrentUserUid()
+        }
+
+        private fun getCurrentUserPassword(): String? {
+            return sessionManager.fetchCurrentUserPassword()
         }
     }
