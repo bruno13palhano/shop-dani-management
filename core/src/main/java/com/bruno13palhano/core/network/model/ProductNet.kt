@@ -1,18 +1,17 @@
 package com.bruno13palhano.core.network.model
 
 import com.bruno13palhano.core.model.Model
-import com.squareup.moshi.Json
 
 data class ProductNet(
-    @Json(name = "id") override val id: Long,
-    @Json(name = "name") val name: String,
-    @Json(name = "code") val code: String,
-    @Json(name = "description") val description: String,
-    @Json(name = "photo") val photo: String,
-    @Json(name = "date") val date: Long,
-    @Json(name = "categories") val categories: List<CategoryNet>,
-    @Json(name = "company") val company: String,
-    @Json(name = "timestamp") override val timestamp: String
+    override val id: Long,
+    val name: String,
+    val code: String,
+    val description: String,
+    val photo: String,
+    val date: Long,
+    val categories: List<CategoryNet>,
+    val company: String,
+    override val timestamp: String
 ) : Model(id = id, timestamp = timestamp) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
