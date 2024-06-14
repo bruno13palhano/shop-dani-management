@@ -22,7 +22,7 @@ fun UserDynamicPreview() {
             UserContent(
                 snackbarHostState = SnackbarHostState(),
                 menuItems = arrayOf(),
-                photo = byteArrayOf(),
+                photo = "",
                 username = "bruno",
                 email = "test@gmail.com",
                 role = "",
@@ -50,7 +50,7 @@ fun UserPreview() {
             UserContent(
                 snackbarHostState = SnackbarHostState(),
                 menuItems = arrayOf(),
-                photo = byteArrayOf(),
+                photo = "",
                 username = "bruno",
                 email = "test@gmail.com",
                 role = "",

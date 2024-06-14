@@ -26,7 +26,7 @@ class UserViewModel
         val updateState = _updateState.asStateFlow()
 
         private var uid = ""
-        var photo by mutableStateOf(byteArrayOf())
+        var photo by mutableStateOf("")
             private set
         var username by mutableStateOf("")
             private set
@@ -35,7 +35,7 @@ class UserViewModel
         var role by mutableStateOf("")
             private set
 
-        fun updatePhoto(photo: ByteArray) {
+        fun updatePhoto(photo: String) {
             this.photo = photo
         }
 
@@ -50,7 +50,6 @@ class UserViewModel
                     photo = it.photo
                     username = it.username
                     email = it.email
-                    role = it.role
                 }
             }
         }
@@ -62,9 +61,7 @@ class UserViewModel
                     username = username,
                     email = email,
                     password = "",
-                    photo = photo,
-                    enabled = true,
-                    role = role,
+                    photo = "",
                     timestamp = getCurrentTimestamp()
                 )
 

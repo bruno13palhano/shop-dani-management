@@ -29,7 +29,7 @@ class CreateAccountViewModel
         private val _loginState = MutableStateFlow<LoginState>(LoginState.SignedOut)
         val loginState = _loginState.asStateFlow()
 
-        var photo by mutableStateOf(byteArrayOf())
+        var photo by mutableStateOf("")
             private set
         var username by mutableStateOf("")
             private set
@@ -50,7 +50,7 @@ class CreateAccountViewModel
                 initialValue = false
             )
 
-        fun updatePhoto(photo: ByteArray) {
+        fun updatePhoto(photo: String) {
             this.photo = photo
         }
 
@@ -80,8 +80,6 @@ class CreateAccountViewModel
                         email = email,
                         password = password,
                         photo = photo,
-                        role = "",
-                        enabled = true,
                         timestamp = getCurrentTimestamp()
                     )
                 viewModelScope.launch {

@@ -47,7 +47,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -62,7 +61,6 @@ import com.bruno13palhano.shopdanimanagement.ui.components.MoreOptionsMenu
 import com.bruno13palhano.shopdanimanagement.ui.components.clickableNoEffect
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.UiState
 import com.bruno13palhano.shopdanimanagement.ui.screens.common.getUserResponse
-import com.bruno13palhano.shopdanimanagement.ui.screens.getBytes
 import com.bruno13palhano.shopdanimanagement.ui.screens.user.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -96,13 +94,10 @@ fun UserScreen(
 
     val updateState by viewModel.updateState.collectAsStateWithLifecycle()
 
-    val context = LocalContext.current
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) { uri ->
             uri?.let {
-                getBytes(context, it)?.let { imageByteArray ->
-                    viewModel.updatePhoto(photo = imageByteArray)
-                }
+                viewModel.updatePhoto(photo = it.toString())
             }
         }
     val focusManager = LocalFocusManager.current
@@ -183,7 +178,7 @@ fun UserScreen(
 fun UserContent(
     snackbarHostState: SnackbarHostState,
     menuItems: Array<String>,
-    photo: ByteArray,
+    photo: String,
     username: String,
     email: String,
     role: String,

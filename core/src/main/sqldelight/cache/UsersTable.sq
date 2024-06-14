@@ -1,19 +1,15 @@
-import kotlin.Boolean;
-
 CREATE TABLE UsersTable (
     uid TEXT NOT NULL PRIMARY KEY,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
     email TEXT NOT NULL,
-    photo BLOB NOT NULL,
-    role TEXT NOT NULL,
-    enabled INTEGER AS Boolean NOT NULL,
+    photo TEXT NOT NULL,
     timestamp TEXT NOT NULL
 );
 
 insertWithId:
-INSERT OR REPLACE INTO UsersTable (uid, username, password, email, photo, role, enabled, timestamp)
-VALUES (?,?,?,?,?,?,?,?);
+INSERT OR REPLACE INTO UsersTable (uid, username, password, email, photo, timestamp)
+VALUES (?,?,?,?,?,?);
 
 update:
 UPDATE UsersTable SET username = ?, photo = ?, timestamp = ?
@@ -23,5 +19,5 @@ updatePassword:
 UPDATE UsersTable SET timestamp = ? WHERE uid = ?;
 
 getById:
-SELECT U.uid, U.username, U.email, U.password, U.photo, U.role, U.enabled, U.timestamp
+SELECT U.uid, U.username, U.email, U.password, U.photo, U.timestamp
 FROM UsersTable U WHERE uid = ?;

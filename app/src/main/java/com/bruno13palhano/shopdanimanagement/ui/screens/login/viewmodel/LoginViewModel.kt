@@ -56,9 +56,7 @@ class LoginViewModel
                     username = "",
                     email = email.trim(),
                     password = password.trim(),
-                    photo = byteArrayOf(),
-                    role = "",
-                    enabled = true,
+                    photo = "",
                     timestamp = getCurrentTimestamp()
                 )
 

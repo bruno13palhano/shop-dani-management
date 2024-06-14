@@ -1,5 +1,6 @@
 package com.bruno13palhano.core.network.access.firebase
 
+import android.net.Uri
 import com.bruno13palhano.core.model.UserCodeResponse
 import com.bruno13palhano.core.model.UserCodeResponse.INSERT_SERVER_ERROR
 import com.bruno13palhano.core.network.access.RemoteUserData
@@ -10,7 +11,6 @@ import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
-import java.util.Base64
 import javax.inject.Inject
 
 internal class RemoteUserFirebase
@@ -37,7 +37,7 @@ internal class RemoteUserFirebase
                                         "${firebaseUser.email}/${user.username}/profile_image.jpg"
                                     )
                                 val uploadTask =
-                                    profilePhotoRef.putBytes(Base64.getDecoder().decode(user.photo))
+                                    profilePhotoRef.putFile(Uri.parse(user.photo))
 
                                 uploadTask.addOnSuccessListener { _ ->
                                     profilePhotoRef.downloadUrl.addOnSuccessListener { uri ->
@@ -59,9 +59,7 @@ internal class RemoteUserFirebase
                                                             username = username,
                                                             email = email,
                                                             password = "",
-                                                            photo = user.photo,
-                                                            role = user.role,
-                                                            enabled = user.enabled,
+                                                            photo = firebaseUser.photoUrl.toString(),
                                                             timestamp = user.timestamp
                                                         )
 
@@ -72,8 +70,6 @@ internal class RemoteUserFirebase
                                                             "email" to newUser.email,
                                                             "password" to newUser.password,
                                                             "photo" to uri,
-                                                            "role" to newUser.role,
-                                                            "enabled" to newUser.enabled,
                                                             "timestamp" to newUser.timestamp
                                                         )
 
@@ -166,8 +162,6 @@ internal class RemoteUserFirebase
                         email = it["email"].toString(),
                         password = "",
                         photo = photo,
-                        role = it["role"].toString(),
-                        enabled = it["enabled"] as Boolean,
                         timestamp = it["timestamp"].toString()
                     )
                 }!!
@@ -180,8 +174,6 @@ internal class RemoteUserFirebase
                     email = "",
                     password = "",
                     photo = "",
-                    role = "",
-                    enabled = false,
                     timestamp = ""
                 )
             }

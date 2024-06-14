@@ -30,8 +30,6 @@ internal class LocalUserData
                     password = user.password,
                     email = user.email,
                     photo = user.photo,
-                    role = user.role,
-                    enabled = user.enabled,
                     timestamp = user.timestamp
                 )
                 onSuccess(user.uid)
@@ -89,9 +87,7 @@ internal class LocalUserData
             username: String,
             email: String,
             password: String,
-            photo: ByteArray,
-            role: String,
-            enabled: Boolean,
+            photo: String,
             timestamp: String
         ) = User(
             uid = uid,
@@ -99,8 +95,6 @@ internal class LocalUserData
             email = email,
             password = password,
             photo = photo,
-            role = role,
-            enabled = enabled,
             timestamp = timestamp
         )
     }

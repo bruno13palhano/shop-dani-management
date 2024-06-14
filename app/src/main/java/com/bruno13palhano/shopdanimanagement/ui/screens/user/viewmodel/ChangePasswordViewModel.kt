@@ -78,9 +78,7 @@ class ChangePasswordViewModel
                         username = username,
                         email = email,
                         password = newPassword,
-                        photo = byteArrayOf(),
-                        role = "",
-                        enabled = true,
+                        photo = "",
                         timestamp = timestamp
                     )
 

@@ -6,7 +6,5 @@ data class UserNet(
     val email: String,
     val password: String,
     val photo: String,
-    val role: String,
-    val enabled: Boolean,
     val timestamp: String
 )

@@ -247,14 +247,7 @@ fun userNetToUser(userNet: UserNet) =
         username = userNet.username,
         email = userNet.email,
         password = userNet.password,
-        photo =
-            try {
-                Base64.getDecoder().decode(userNet.photo)
-            } catch (e: Exception) {
-                userNet.photo.toByteArray()
-            },
-        role = userNet.role,
-        enabled = userNet.enabled,
+        photo = userNet.photo,
         timestamp = userNet.timestamp
     )
 
@@ -264,13 +257,6 @@ fun userToUserNet(user: User) =
         username = user.username,
         email = user.email,
         password = user.password,
-        photo =
-            try {
-                Base64.getEncoder().encodeToString(user.photo)
-            } catch (e: Exception) {
-                user.photo.toString()
-            },
-        role = user.role,
-        enabled = user.enabled,
+        photo = user.photo,
         timestamp = user.timestamp
     )
