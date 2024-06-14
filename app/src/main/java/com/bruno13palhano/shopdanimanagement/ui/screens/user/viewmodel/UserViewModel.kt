@@ -32,8 +32,6 @@ class UserViewModel
             private set
         var email by mutableStateOf("")
             private set
-        var role by mutableStateOf("")
-            private set
 
         fun updatePhoto(photo: String) {
             this.photo = photo

@@ -139,7 +139,6 @@ fun UserScreen(
             photo = viewModel.photo,
             username = viewModel.username,
             email = viewModel.email,
-            role = viewModel.role,
             onUsernameChange = viewModel::updateUsername,
             onPhotoClick = { galleryLauncher.launch(arrayOf("image/*")) },
             onMoreOptionsItemClick = { index ->
@@ -181,7 +180,6 @@ fun UserContent(
     photo: String,
     username: String,
     email: String,
-    role: String,
     onUsernameChange: (username: String) -> Unit,
     onPhotoClick: () -> Unit,
     onMoreOptionsItemClick: (index: Int) -> Unit,
@@ -291,14 +289,6 @@ fun UserContent(
                 onTextChange = {},
                 icon = Icons.Filled.Email,
                 label = stringResource(id = R.string.email_label),
-                placeholder = ""
-            )
-            CustomTextField(
-                text = role,
-                onTextChange = {},
-                icon = Icons.Filled.AdminPanelSettings,
-                readOnly = true,
-                label = stringResource(id = R.string.role_label),
                 placeholder = ""
             )
         }
