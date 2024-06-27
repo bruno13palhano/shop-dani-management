@@ -8,7 +8,7 @@ buildscript {
         kotlin_version = '2.0.0'
     }
     ext.lifecycle_version = '2.5.1'
-    ext.nav_version = '2.8.0-beta03'
+    ext.nav_version = '2.8.0-beta04'
     ext.versions_work = "2.9.0"
     ext.media_version = "1.0.1"
 }
@@ -17,10 +17,10 @@ plugins {
     id 'com.android.application' version '8.5.0' apply false
     id 'com.android.library' version '8.5.0' apply false
     id 'org.jetbrains.kotlin.android' version '2.0.0' apply false
-    id 'com.google.dagger.hilt.android' version "2.49" apply false
+    id 'com.google.dagger.hilt.android' version "2.51.1" apply false
     id 'org.jetbrains.kotlin.jvm' version '2.0.0' apply false
     id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.0' apply false
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' version '2.0.1' apply false
     id 'org.jetbrains.kotlin.plugin.compose' version '2.0.0' apply false
-    id("com.google.gms.google-services") version "4.4.1" apply false
+    id("com.google.gms.google-services") version "4.4.2" apply false
 }
