@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class TestCategoryRepository : CategoryRepository {
+class FakeCategoryRepository : CategoryRepository {
     private val categories = mutableListOf<Category>()
 
     override fun search(value: String): Flow<List<Category>> {

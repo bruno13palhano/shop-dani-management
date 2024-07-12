@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class TestCustomerRepository : CustomerRepository {
+class FakeCustomerRepository : CustomerRepository {
     private val customers = mutableListOf<Customer>()
 
     override fun search(search: String): Flow<List<Customer>> {

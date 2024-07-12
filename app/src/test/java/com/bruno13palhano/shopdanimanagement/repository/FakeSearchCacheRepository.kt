@@ -5,7 +5,7 @@ import com.bruno13palhano.core.model.SearchCache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class TestSearchCacheRepository : SearchCacheRepository {
+class FakeSearchCacheRepository : SearchCacheRepository {
     private val searchCacheList = mutableListOf<SearchCache>()
 
     override suspend fun insert(model: SearchCache): Long {

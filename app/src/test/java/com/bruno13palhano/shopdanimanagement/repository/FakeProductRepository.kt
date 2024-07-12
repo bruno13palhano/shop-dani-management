@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
-class TestProductRepository : ProductRepository {
+class FakeProductRepository : ProductRepository {
     private val productList = mutableListOf<Product>()
 
     override fun search(value: String): Flow<List<Product>> {
@@ -40,6 +40,14 @@ class TestProductRepository : ProductRepository {
                 product.categories.joinToString(", ") { category ->
                     category.category
                 }.contains(category)
+            }
+        }
+    }
+
+    override fun getByCode(code: String): Flow<List<Product>> {
+        return flowOf(productList).map {
+            it.filter { product ->
+                product.code == code
             }
         }
     }

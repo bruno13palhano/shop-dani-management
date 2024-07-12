@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
-class TestSaleRepository : SaleRepository {
+class FakeSaleRepository : SaleRepository {
     private val sales = mutableListOf<Sale>()
 
     override fun getByCustomerId(customerId: Long): Flow<List<Sale>> {
@@ -39,6 +39,10 @@ class TestSaleRepository : SaleRepository {
         limit: Int
     ): Flow<List<Sale>> {
         return flowOf(sales)
+    }
+
+    override fun getAmazonSale(): Flow<List<Sale>> {
+        TODO("Not yet implemented")
     }
 
     override fun getAllStockSales(
@@ -83,6 +87,10 @@ class TestSaleRepository : SaleRepository {
         }
     }
 
+    override fun searchAmazonSales(search: String): Flow<List<Sale>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun cancelSale(saleId: Long) {
         val index = getIndex(id = saleId, list = sales)
 
@@ -106,6 +114,13 @@ class TestSaleRepository : SaleRepository {
                     deliveryPrice = currentSale.deliveryPrice,
                     categories = currentSale.categories,
                     company = currentSale.company,
+                    amazonCode = currentSale.amazonCode,
+                    amazonRequestNumber = currentSale.amazonRequestNumber,
+                    amazonTax = currentSale.amazonTax,
+                    amazonProfit = currentSale.amazonProfit,
+                    amazonSKU = currentSale.amazonSKU,
+                    resaleProfit = currentSale.resaleProfit,
+                    totalProfit = currentSale.totalProfit,
                     dateOfSale = currentSale.dateOfSale,
                     dateOfPayment = currentSale.dateOfPayment,
                     shippingDate = currentSale.shippingDate,
@@ -114,11 +129,20 @@ class TestSaleRepository : SaleRepository {
                     isPaidByCustomer = currentSale.isPaidByCustomer,
                     delivered = currentSale.delivered,
                     canceled = true,
+                    isAmazon = currentSale.isAmazon,
                     timestamp = currentSale.timestamp
                 )
 
             sales[index] = sale
         }
+    }
+
+    override suspend fun exportExcelSheet(sheetName: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun exportAmazonExcelSheet(sheetName: String) {
+        TODO("Not yet implemented")
     }
 
     override fun getDebitSales(): Flow<List<Sale>> = flowOf(sales.filter { !it.isPaidByCustomer && !it.canceled })

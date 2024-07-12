@@ -6,7 +6,7 @@ import com.bruno13palhano.core.sync.Synchronizer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class TestStockRepository : StockRepository {
+class FakeStockRepository : StockRepository {
     private val stockItemList = mutableListOf<StockItem>()
 
     override fun getItems(): Flow<List<StockItem>> {
@@ -23,6 +23,11 @@ class TestStockRepository : StockRepository {
                 item.categories.joinToString(", ") { it.category }.contains(category)
             }
         )
+    }
+
+    // Not yet implemented because the code is directly related to the product
+    override fun getByCode(code: String): Flow<List<StockItem>> {
+        return flowOf(emptyList())
     }
 
     override suspend fun updateStockQuantity(
@@ -42,6 +47,7 @@ class TestStockRepository : StockRepository {
                     name = currentItem.name,
                     photo = currentItem.photo,
                     date = currentItem.date,
+                    dateOfPayment = currentItem.dateOfPayment,
                     validity = currentItem.validity,
                     quantity = quantity,
                     categories = currentItem.categories,

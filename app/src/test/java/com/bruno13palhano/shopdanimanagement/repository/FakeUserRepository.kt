@@ -6,13 +6,13 @@ import com.bruno13palhano.core.model.UserCodeResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class TestUserRepository : UserRepository {
+class FakeUserRepository : UserRepository {
     override suspend fun login(
         user: User,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
-        if (user.id == 0L) {
+        if (user.uid.isEmpty()) {
             onError(UserCodeResponse.LOGIN_SERVER_ERROR)
         } else {
             onSuccess()
@@ -22,10 +22,10 @@ class TestUserRepository : UserRepository {
     override suspend fun create(
         user: User,
         onError: (error: Int) -> Unit,
-        onSuccess: (id: Long) -> Unit
+        onSuccess: (uid: String) -> Unit
     ) {
-        if (user.id == 0L) {
-            onSuccess(1L)
+        if (user.uid.isEmpty()) {
+            onSuccess("")
         } else {
             onError(UserCodeResponse.INSERT_SERVER_ERROR)
         }
@@ -36,7 +36,7 @@ class TestUserRepository : UserRepository {
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ) {
-        if (user.id == 0L) {
+        if (user.uid.isEmpty()) {
             onError(UserCodeResponse.UPDATE_SERVER_ERROR)
         } else {
             onSuccess()
@@ -44,20 +44,18 @@ class TestUserRepository : UserRepository {
     }
 
     override fun getById(
-        userId: Long,
+        uid: String,
         onError: (error: Int) -> Unit,
         onSuccess: () -> Unit
     ): Flow<User> {
         return flow {
             while (true) emit(
                 User(
-                    id = 1L,
+                    uid = "ABCD1234",
                     username = "User",
                     email = "user@email.com",
                     password = "",
-                    photo = byteArrayOf(),
-                    role = "ROLE_USER",
-                    enabled = true,
+                    photo = "",
                     timestamp = "2024-01-01T20:00:00Z"
                 )
             )
@@ -71,13 +69,11 @@ class TestUserRepository : UserRepository {
         return flow {
             while (true) emit(
                 User(
-                    id = 1L,
+                    uid = "ABCD1234",
                     username = "User",
                     email = "user@email.com",
                     password = "",
-                    photo = byteArrayOf(),
-                    role = "ROLE_USER",
-                    enabled = true,
+                    photo = "",
                     timestamp = "2024-01-01T20:00:00Z"
                 )
             )
@@ -92,7 +88,10 @@ class TestUserRepository : UserRepository {
         return flow { while (true) emit(true) }
     }
 
-    override fun logout() {
+    override suspend fun logout(
+        onError: (error: Int) -> Unit,
+        onSuccess: () -> Unit
+    ) {
     }
 
     override suspend fun updateUserPassword(
