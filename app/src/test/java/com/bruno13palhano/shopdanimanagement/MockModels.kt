@@ -51,7 +51,10 @@ fun makeRandomCustomer(
     photo: ByteArray = byteArrayOf(),
     email: String = getRandomString(),
     address: String = getRandomString(),
+    city: String = getRandomString(),
     phoneNumber: String = getRandomString(),
+    gender: String = getRandomString(),
+    age: Int = getRandomInt(),
     timestamp: String = getRandomString()
 ) = Customer(
     id = id,
@@ -59,7 +62,10 @@ fun makeRandomCustomer(
     photo = photo,
     email = email,
     address = address,
+    city = city,
     phoneNumber = phoneNumber,
+    gender = gender,
+    age = age,
     timestamp = timestamp
 )
 
@@ -122,6 +128,7 @@ fun makeRandomStockItem(
     id: Long,
     product: Product = makeRandomProduct(id = id),
     date: Long = getRandomLong(),
+    dateOfPayment: Long = getRandomLong(),
     validity: Long = getRandomLong(),
     quantity: Int = getRandomInt(),
     purchasePrice: Float = getRandomFloat(),
@@ -134,6 +141,7 @@ fun makeRandomStockItem(
     name = product.name,
     photo = product.photo,
     date = date,
+    dateOfPayment = dateOfPayment,
     validity = validity,
     quantity = quantity,
     categories = product.categories,
@@ -151,6 +159,13 @@ fun makeRandomSale(
     customer: Customer = makeRandomCustomer(id = id),
     isOrderedByCustomer: Boolean = getRandomBoolean(),
     quantity: Int = getRandomInt(),
+    amazonCode: String = getRandomString(),
+    amazonRequestNumber: Long = getRandomLong(),
+    amazonTax: Int = getRandomInt(),
+    amazonProfit: Float = getRandomFloat(),
+    amazonSKU: String = getRandomString(),
+    resaleProfit: Float = getRandomFloat(),
+    totalProfit: Float = getRandomFloat(),
     dateOfSale: Long = getRandomLong(),
     dateOfPayment: Long = getRandomLong(),
     shippingDate: Long = getRandomLong(),
@@ -158,6 +173,7 @@ fun makeRandomSale(
     isPaidByCustomer: Boolean = getRandomBoolean(),
     delivered: Boolean = getRandomBoolean(),
     canceled: Boolean = getRandomBoolean(),
+    isAmazon: Boolean = getRandomBoolean(),
     timestamp: String = getRandomString()
 ) = Sale(
     id = id,
@@ -170,6 +186,13 @@ fun makeRandomSale(
     address = customer.address,
     phoneNumber = customer.phoneNumber,
     quantity = quantity,
+    amazonCode = amazonCode,
+    amazonRequestNumber = amazonRequestNumber,
+    amazonTax = amazonTax,
+    amazonProfit = amazonProfit,
+    amazonSKU = amazonSKU,
+    resaleProfit = resaleProfit,
+    totalProfit = totalProfit,
     purchasePrice = stockItem.purchasePrice,
     salePrice = stockItem.salePrice,
     deliveryPrice = delivery.deliveryPrice,
@@ -183,6 +206,7 @@ fun makeRandomSale(
     isPaidByCustomer = isPaidByCustomer,
     delivered = delivered,
     canceled = canceled,
+    isAmazon = isAmazon,
     timestamp = timestamp
 )
 
