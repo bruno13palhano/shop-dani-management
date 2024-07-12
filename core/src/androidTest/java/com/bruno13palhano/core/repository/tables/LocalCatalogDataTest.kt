@@ -2,7 +2,7 @@ package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.repository.catalog.CatalogData
-import com.bruno13palhano.core.data.repository.catalog.DefaultCatalogData
+import com.bruno13palhano.core.data.repository.catalog.LocalCatalogData
 import com.bruno13palhano.core.data.repository.product.LocalProductData
 import com.bruno13palhano.core.mocks.makeRandomCatalog
 import com.bruno13palhano.core.mocks.makeRandomDataVersion
@@ -23,7 +23,7 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class DefaultCatalogDataTest {
+class LocalCatalogDataTest {
     @Inject lateinit var database: ShopDatabase
     private lateinit var catalogTable: CatalogData
     private lateinit var firstItem: Catalog
@@ -47,7 +47,7 @@ class DefaultCatalogDataTest {
                     Dispatchers.IO,
                 )
             catalogTable =
-                DefaultCatalogData(
+                LocalCatalogData(
                     database.catalogTableQueries,
                     database.versionTableQueries,
                     Dispatchers.IO,

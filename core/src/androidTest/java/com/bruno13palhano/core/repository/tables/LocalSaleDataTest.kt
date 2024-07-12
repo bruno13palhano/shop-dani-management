@@ -1,11 +1,11 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.repository.customer.DefaultCustomerData
+import com.bruno13palhano.core.data.repository.customer.LocalCustomerData
 import com.bruno13palhano.core.data.repository.product.LocalProductData
-import com.bruno13palhano.core.data.repository.sale.DefaultSaleData
+import com.bruno13palhano.core.data.repository.sale.LocalSaleData
 import com.bruno13palhano.core.data.repository.sale.SaleData
-import com.bruno13palhano.core.data.repository.stock.DefaultStockData
+import com.bruno13palhano.core.data.repository.stock.LocalStockData
 import com.bruno13palhano.core.mocks.makeRandomCustomer
 import com.bruno13palhano.core.mocks.makeRandomDataVersion
 import com.bruno13palhano.core.mocks.makeRandomDelivery
@@ -31,7 +31,7 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class DefaultSaleDataTest {
+class LocalSaleDataTest {
     @Inject
     lateinit var database: ShopDatabase
     private lateinit var saleTable: SaleData
@@ -523,7 +523,7 @@ class DefaultSaleDataTest {
 
     private suspend fun init() {
         saleTable =
-            DefaultSaleData(
+            LocalSaleData(
                 database.saleTableQueries,
                 database.stockTableQueries,
                 database.versionTableQueries,
@@ -532,13 +532,13 @@ class DefaultSaleDataTest {
 
         dataVersion = makeRandomDataVersion(id = 1L)
         val stockTable =
-            DefaultStockData(
+            LocalStockData(
                 database.stockTableQueries,
                 database.versionTableQueries,
                 Dispatchers.IO,
             )
         val customerTable =
-            DefaultCustomerData(
+            LocalCustomerData(
                 database.customerTableQueries,
                 database.versionTableQueries,
                 Dispatchers.IO,

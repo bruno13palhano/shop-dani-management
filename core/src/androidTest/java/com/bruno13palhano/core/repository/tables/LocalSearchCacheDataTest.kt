@@ -1,7 +1,7 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.repository.searchcache.DefaultSearchCacheData
+import com.bruno13palhano.core.data.repository.searchcache.LocalSearchCacheData
 import com.bruno13palhano.core.data.repository.searchcache.SearchCacheData
 import com.bruno13palhano.core.mocks.makeRandomSearchCache
 import com.bruno13palhano.core.model.SearchCache
@@ -18,7 +18,7 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class DefaultSearchCacheDataTest {
+class LocalSearchCacheDataTest {
     @Inject lateinit var database: ShopDatabase
     private lateinit var searchCacheTable: SearchCacheData
     private lateinit var firstCache: SearchCache
@@ -32,7 +32,7 @@ class DefaultSearchCacheDataTest {
     fun before() {
         hiltTestRule.inject()
 
-        searchCacheTable = DefaultSearchCacheData(database.searchCacheTableQueries, Dispatchers.IO)
+        searchCacheTable = LocalSearchCacheData(database.searchCacheTableQueries, Dispatchers.IO)
 
         firstCache = makeRandomSearchCache(search = "Bruno")
         secondCache = makeRandomSearchCache(search = "Perfumes")

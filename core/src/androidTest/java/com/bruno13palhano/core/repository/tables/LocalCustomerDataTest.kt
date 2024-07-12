@@ -2,7 +2,7 @@ package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.repository.customer.CustomerData
-import com.bruno13palhano.core.data.repository.customer.DefaultCustomerData
+import com.bruno13palhano.core.data.repository.customer.LocalCustomerData
 import com.bruno13palhano.core.mocks.makeRandomCustomer
 import com.bruno13palhano.core.mocks.makeRandomDataVersion
 import com.bruno13palhano.core.model.Customer
@@ -20,7 +20,7 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class DefaultCustomerDataTest {
+class LocalCustomerDataTest {
     @Inject lateinit var database: ShopDatabase
     private lateinit var customerTable: CustomerData
     private lateinit var firstCustomer: Customer
@@ -36,7 +36,7 @@ class DefaultCustomerDataTest {
         hiltTestRule.inject()
 
         customerTable =
-            DefaultCustomerData(
+            LocalCustomerData(
                 database.customerTableQueries,
                 database.versionTableQueries,
                 Dispatchers.IO,

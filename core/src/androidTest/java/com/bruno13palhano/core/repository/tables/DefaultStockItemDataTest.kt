@@ -1,8 +1,8 @@
 package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
-import com.bruno13palhano.core.data.repository.product.DefaultProductData
-import com.bruno13palhano.core.data.repository.stock.DefaultStockData
+import com.bruno13palhano.core.data.repository.product.LocalProductData
+import com.bruno13palhano.core.data.repository.stock.LocalStockData
 import com.bruno13palhano.core.data.repository.stock.StockData
 import com.bruno13palhano.core.mocks.makeRandomDataVersion
 import com.bruno13palhano.core.mocks.makeRandomProduct
@@ -45,14 +45,14 @@ class DefaultStockItemDataTest {
             hiltTestRule.inject()
 
             stockItemTable =
-                DefaultStockData(
+                LocalStockData(
                     database.stockTableQueries,
                     database.versionTableQueries,
                     Dispatchers.IO,
                 )
 
             val productTable =
-                DefaultProductData(
+                LocalProductData(
                     database.shopDatabaseQueries,
                     database.productCategoriesTableQueries,
                     database.versionTableQueries,

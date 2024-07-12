@@ -2,7 +2,7 @@ package com.bruno13palhano.core.repository.tables
 
 import com.bruno13palhano.cache.ShopDatabase
 import com.bruno13palhano.core.data.repository.category.CategoryData
-import com.bruno13palhano.core.data.repository.category.DefaultCategoryData
+import com.bruno13palhano.core.data.repository.category.LocalCategoryData
 import com.bruno13palhano.core.mocks.makeRandomCategory
 import com.bruno13palhano.core.mocks.makeRandomDataVersion
 import com.bruno13palhano.core.model.Category
@@ -21,7 +21,7 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class DefaultCategoryDataTest {
+class LocalCategoryDataTest {
     @Inject lateinit var database: ShopDatabase
     private lateinit var categoryTable: CategoryData
     private lateinit var firstCategory: Category
@@ -37,7 +37,7 @@ class DefaultCategoryDataTest {
         hiltTestRule.inject()
 
         categoryTable =
-            DefaultCategoryData(
+            LocalCategoryData(
                 database.categoryTableQueries,
                 database.versionTableQueries,
                 Dispatchers.IO,
